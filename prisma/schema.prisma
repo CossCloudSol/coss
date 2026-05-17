@@ -1,0 +1,135 @@
+// COSS — Prisma schema
+// Run:
+//   npx prisma generate           (after any schema change)
+//   npx prisma migrate dev        (apply during development)
+//   npx prisma studio             (visual DB editor)
+//
+// DATABASE_URL is read from .env.local (or .env) — set it before running.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// Lead captured from public-site forms. status: new -> contacted -> enrolled | lost.
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  email     String?
+  course    String?
+  branch    String
+  formType  String
+  status    String   @default("new")
+  message   String?
+  createdAt DateTime @default(now())
+
+  activities LeadActivity[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([branch])
+}
+
+/// Corporate-training leads with company-level info.
+model CorporateLead {
+  id             String   @id @default(cuid())
+  companyName    String
+  contactPerson  String
+  phone          String
+  email          String
+  trainingDomain String
+  employeeCount  String
+  status         String   @default("new")
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([status])
+}
+
+/// Per-page SEO overrides. One row per public page slug.
+model PageSeo {
+  id              String   @id @default(cuid())
+  pageSlug        String   @unique
+  pageTitle       String
+  metaTitle       String?
+  metaDescription String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImage         String?
+  canonicalUrl    String?
+  noIndex         Boolean  @default(false)
+  noFollow        Boolean  @default(false)
+  schemaMarkup    String?
+  focusKeyword    String?
+  keywords        String?
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+}
+
+/// Site-wide SEO knobs. Singleton.
+model SeoSettings {
+  id                    String   @id @default(cuid())
+  googleAnalyticsId     String?
+  googleSearchConsoleId String?
+  defaultOgImage        String?
+  siteTitle             String?
+  twitterHandle         String?
+  robotsTxt             String?
+  updatedAt             DateTime @updatedAt
+}
+
+/// Announcement bar settings. Singleton.
+/// Spec name -> DB column: isEnabled->enabled, announcementText->text, backgroundColor->bgColor
+model AnnouncementBar {
+  id        String   @id @default(cuid())
+  enabled   Boolean  @default(true)
+  text      String   @default("New batch starting soon - Limited seats available!")
+  ctaLabel  String   @default("Enroll Now")
+  ctaUrl    String   @default("/enroll-now-with-coss/")
+  bgColor   String   @default("#0f766e")
+  textColor String   @default("#ffffff")
+  updatedAt DateTime @updatedAt
+}
+
+/// Admin users with role-based access. SUPER_ADMIN is the only role that can
+/// manage this table. Env-var admin (ADMIN_EMAIL/ADMIN_PASSWORD) is a separate
+/// fallback and does not appear here.
+enum AdminRole {
+  SUPER_ADMIN
+  ADMISSIONS_SALES
+  SUPPORT_HELPDESK
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(ADMISSIONS_SALES)
+  permissions  String[]
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+}
+
+/// Timeline entries against a Lead. Cascades on Lead delete.
+model LeadActivity {
+  id        String   @id @default(cuid())
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  action    String
+  note      String
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+  @@index([createdAt])
+}

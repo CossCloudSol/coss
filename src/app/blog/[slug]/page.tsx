@@ -1,0 +1,229 @@
+import { getPostBySlug, getAllPosts } from '@/lib/posts';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import type { Metadata } from 'next';
+import { ResponsivePageStyles } from '@/components/shared';
+import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
+
+/**
+ * Normalises a frontmatter value to a safe display string.
+ * Guards against both actual JS objects AND the literal string
+ * "[object Object]" that WP exporters sometimes write into YAML.
+ */
+function tagToString(value: unknown): string {
+  if (typeof value === 'string') {
+    if (value === '[object Object]') return '';
+    return value;
+  }
+  if (value !== null && typeof value === 'object') {
+    const obj = value as Record<string, unknown>;
+    if (typeof obj.name === 'string') return obj.name;
+    if (typeof obj.title === 'string') return obj.title;
+    if (typeof obj.label === 'string') return obj.label;
+    if (typeof obj.slug === 'string') return obj.slug;
+  }
+  if (value === null || value === undefined) return '';
+  return String(value);
+}
+
+import { getBlogImageUrl } from '@/lib/cloudinary';
+
+export async function generateStaticParams() {
+  const posts = await getAllPosts();
+  return posts.map(p => ({ slug: p.slug }));
+}
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
+  if (!post) return { title: 'Not Found' };
+
+  const titleStr = tagToString(post.frontmatter.title) || params.slug;
+  // Frontmatter excerpt is often WP shortcode garbage — use a clean fallback
+  const rawExcerpt = tagToString(post.frontmatter.excerpt);
+  const isCleanExcerpt = rawExcerpt.length > 20 && !rawExcerpt.includes('[vc_');
+  const description = isCleanExcerpt
+    ? rawExcerpt.slice(0, 158)
+    : `${titleStr} — Expert IT training insights from COSS Cloud Solutions, Hyderabad's leading IT institute.`.slice(0, 158);
+
+  const canonicalUrl = `${SITE_URL}/blog/${params.slug}/`;
+
+  const fallback: Metadata = {
+    title: `${titleStr} | COSS Cloud Solutions`,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title: titleStr,
+      description,
+      url: canonicalUrl,
+      siteName: 'COSS Cloud Solutions',
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: titleStr,
+      description,
+    },
+  };
+
+  return buildPageMetadataWithFallback(`blog/${params.slug}`, fallback);
+}
+
+const RELATED = [
+  { title: 'SOC Analyst Course Training in Dilsukhnagar',  href: '/blog/soc-analyst-training-hyderabad' },
+  { title: 'AWS DevOps Multi-Cloud Certification Course',   href: '/blog/aws-devops-multi-cloud-course-dilsukhnagar' },
+  { title: 'Cyber Security Course Training in Hyderabad',  href: '/blog/cyber-security-training-dilsukhnagar-hyderabad' },
+  { title: 'Digital Marketing Course Training',             href: '/blog/digital-marketing-course-training-dilsukhnagar-hyderabad' },
+];
+
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const post = await getPostBySlug(params.slug);
+  if (!post) notFound();
+
+  const cldImage = getBlogImageUrl(params.slug, 1200, 450);
+
+  const titleStr   = tagToString(post.frontmatter.title) || params.slug;
+  const dateStr    = tagToString(post.frontmatter.date);
+  const readingStr = tagToString(post.frontmatter.readingTime);
+  const categories = Array.isArray(post.frontmatter.categories)
+    ? post.frontmatter.categories
+    : [];
+
+  return (
+    <>
+      <ResponsivePageStyles />
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 20px 0' }}>
+        <Link
+          href="/blog"
+          style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}
+        >
+          &larr; Back to Blog
+        </Link>
+        <h1
+          style={{
+            fontFamily: 'Poppins, sans-serif',
+            fontSize: 'clamp(24px, 4.5vw, 36px)',
+            fontWeight: 700,
+            color: 'var(--text)',
+            marginTop: '12px',
+            lineHeight: 1.25,
+          }}
+        >
+          {titleStr}
+        </h1>
+      </div>
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 20px 48px' }}>
+        <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>
+
+          <article>
+            {/* Meta row */}
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '24px', padding: '12px 18px', background: 'var(--bg-alt)', borderRadius: '10px', fontSize: '13px', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
+              {dateStr ? <span>{dateStr}</span> : null}
+              {readingStr ? <span>{readingStr}</span> : null}
+              {categories.map((c, i) => {
+                const label = tagToString(c);
+                if (label === '') return null;
+                return (
+                  <span
+                    key={`cat-${i}-${label}`}
+                    style={{
+                      background: 'var(--primary)',
+                      color: '#fff',
+                      padding: '2px 10px',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontFamily: 'Poppins, sans-serif',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {label}
+                  </span>
+                );
+              })}
+            </div>
+
+            
+
+            {/* Content */}
+            <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }}>
+              {post.contentHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+              ) : (
+                <div style={{ whiteSpace: 'pre-wrap' }}>{post.content}</div>
+              )}
+            </div>
+
+            {/* Tags — gray pills, dark-mode aware, clickable */}
+            {Array.isArray(post.frontmatter.tags) && post.frontmatter.tags.length > 0 ? (
+              <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">
+                <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>
+                  Tags:
+                </span>
+                {post.frontmatter.tags.map((tag, i) => {
+                  const label = tagToString(tag);
+                  if (label === '') return null;
+                  return (
+                    <Link
+                      key={`tag-${i}-${label}`}
+                      href={`/blog?tag=${encodeURIComponent(label)}`}
+                      className="text-xs px-3 py-1 rounded-full border bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            {/* CTA */}
+            <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
+              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
+              <Link href="/free-demo-class/" style={{ background: 'var(--primary)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
+                Book Free Demo Class
+              </Link>
+            </div>
+          </article>
+
+          {/* Sidebar */}
+          <div>
+            <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '24px', color: '#fff', marginBottom: '20px' }}>
+              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Enroll Now</h3>
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '16px' }}>Start your IT career with COSS</p>
+              <input type="text" placeholder="Full Name" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', marginBottom: '10px', outline: 'none' }} />
+              <input type="tel" placeholder="Mobile Number" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', marginBottom: '14px', outline: 'none' }} />
+              <Link href="/free-demo-class/" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+                Book Free Demo Class
+              </Link>
+            </div>
+
+            <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', marginBottom: '20px' }}>
+              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>
+                Related Articles
+              </h4>
+              <div style={{ marginTop: '10px' }}>
+                {RELATED.map(p => (
+                  <Link key={p.href} href={p.href} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                    &rsaquo; {p.title}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
+              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
+                <a href="tel:8885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</a><br />
+                <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </>
+  );
+}

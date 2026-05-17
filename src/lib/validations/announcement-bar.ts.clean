@@ -1,0 +1,129 @@
+/**
+ * Zod v4 validation schemas for the Announcement Bar settings.
+ *
+ * Field names use the user-facing convention defined in the admin spec:
+ *   isEnabled        -> DB column: enabled
+ *   announcementText -> DB column: text
+ *   ctaLabel         -> DB column: ctaLabel
+ *   ctaUrl           -> DB column: ctaUrl
+ *   backgroundColor  -> DB column: bgColor
+ *   textColor        -> DB column: textColor
+ */
+
+import { z } from 'zod';
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
+/** Validates a CSS hex colour string: #RGB or #RRGGBB (case-insensitive). */
+const hexColor = z
+  .string()
+  .regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+    message: 'Must be a valid hex colour (e.g. #fff or #0f766e)',
+  });
+
+// ── Full schema ────────────────────────────────────────────────────────────────
+
+export const announcementBarSchema = z.object({
+  /** Whether the bar is visible on the public site. */
+  isEnabled: z.boolean(),
+
+  /** The main copy shown in the bar. Max 200 characters. */
+  announcementText: z
+    .string()
+    .min(1, 'announcementText cannot be empty')
+    .max(200, 'announcementText must be 200 characters or fewer'),
+
+  /** The call-to-action button label. Max 40 characters. */
+  ctaLabel: z
+    .string()
+    .min(1, 'ctaLabel cannot be empty')
+    .max(40, 'ctaLabel must be 40 characters or fewer'),
+
+  /**
+   * The call-to-action URL.
+   * Accepts absolute URLs (https://...) or root-relative paths (/page/).
+   */
+  ctaUrl: z
+    .string()
+    .min(1, 'ctaUrl cannot be empty')
+    .max(500, 'ctaUrl must be 500 characters or fewer')
+    .refine(
+      (val) => val.startsWith('/') || val.startsWith('http://') || val.startsWith('https://'),
+      { message: 'ctaUrl must be a relative path (starts with /) or an absolute URL' },
+    ),
+
+  /** Bar background colour as a hex string (e.g. "#0f766e"). */
+  backgroundColor: hexColor,
+
+  /** Bar text/foreground colour as a hex string (e.g. "#ffffff"). */
+  textColor: hexColor,
+});
+
+export type AnnouncementBarInput = z.infer<typeof announcementBarSchema>;
+
+// ── Partial schema (PATCH — any subset of fields is valid) ─────────────────────
+
+export const announcementBarPatchSchema = announcementBarSchema
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: 'Request body must contain at least one field to update',
+  });
+
+export type AnnouncementBarPatch = z.infer<typeof announcementBarPatchSchema>;
+
+// ── DB field-name mapping ──────────────────────────────────────────────────────
+
+export function toDbFields(input: AnnouncementBarInput) {
+  return {
+    enabled:   input.isEnabled,
+    text:      input.announcementText,
+    ctaLabel:  input.ctaLabel,
+    ctaUrl:    input.ctaUrl,
+    bgColor:   input.backgroundColor,
+    textColor: input.textColor,
+  };
+}
+
+export function toDbFieldsPartial(input: AnnouncementBarPatch) {
+  const out: Record<string, unknown> = {};
+  if (input.isEnabled        !== undefined) out.enabled   = input.isEnabled;
+  if (input.announcementText !== undefined) out.text      = input.announcementText;
+  if (input.ctaLabel         !== undefined) out.ctaLabel  = input.ctaLabel;
+  if (input.ctaUrl           !== undefined) out.ctaUrl    = input.ctaUrl;
+  if (input.backgroundColor  !== undefined) out.bgColor   = input.backgroundColor;
+  if (input.textColor        !== undefined) out.textColor = input.textColor;
+  return out;
+}
+
+export function fromDbRow(row: {
+  id: string;
+  enabled: boolean;
+  text: string;
+  ctaLabel: string;
+  ctaUrl: string;
+  bgColor: string;
+  textColor: string;
+  updatedAt: Date;
+}) {
+  return {
+    id:               row.id,
+    isEnabled:        row.enabled,
+    announcementText: row.text,
+    ctaLabel:         row.ctaLabel,
+    ctaUrl:           row.ctaUrl,
+    backgroundColor:  row.bgColor,
+    textColor:        row.textColor,
+    updatedAt:        row.updatedAt.toISOString(),
+  };
+}
+
+// ── Defaults ───────────────────────────────────────────────────────────────────
+
+export const ANNOUNCEMENT_BAR_DEFAULTS: AnnouncementBarInput = {
+  isEnabled:        true,
+  announcementText: '\u{1F393} New batch starting soon \u2014 Limited seats available!',
+  ctaLabel:         'Enroll Now',
+  ctaUrl:           '/enroll-now-with-coss/',
+  backgroundColor:  '#0f766e',
+  textColor:        '#ffffff',
+};
