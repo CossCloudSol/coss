@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
+import ContactForm from '@/components/ContactForm';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -63,51 +64,7 @@ export default function ContactUsPage() {
             <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: 'clamp(20px,3.5vw,26px)', color: 'var(--text)', marginBottom: '8px' }}>Send Us a Message</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Our team will get back to you within 24 hours.</p>
 
-            <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-                <div>
-                  <label style={labelStyle}>Full Name *</label>
-                  <input type="text" placeholder="Your full name" style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Mobile Number *</label>
-                  <input type="tel" placeholder="+91 XXXXX XXXXX" style={inputStyle} />
-                </div>
-              </div>
-              <div style={{ marginBottom: '14px' }}>
-                <label style={labelStyle}>Email Address</label>
-                <input type="email" placeholder="your@email.com" style={inputStyle} />
-              </div>
-              <div style={{ marginBottom: '14px' }}>
-                <label style={labelStyle}>Subject</label>
-                <select style={inputStyle}>
-                  <option value="">Select Subject</option>
-                  <option>Course Enquiry</option>
-                  <option>Demo Class Request</option>
-                  <option>Corporate Training</option>
-                  <option>Placement Query</option>
-                  <option>Fee & Schedule</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div style={{ marginBottom: '14px' }}>
-                <label style={labelStyle}>Preferred Branch</label>
-                <div style={{ display: 'flex', gap: '20px', marginTop: '4px' }}>
-                  {['Dilsukhnagar', 'Ameerpet', 'Online'].map(b => (
-                    <label key={b} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '14px', color: 'var(--text)' }}>
-                      <input type="radio" name="branch" value={b} style={{ accentColor: '#e8401c' }} /> {b}
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={labelStyle}>Message *</label>
-                <textarea placeholder="Write your message here..." rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
-              </div>
-              <Link href="#" style={{ display: 'block', textAlign: 'center', background: '#e8401c', color: '#fff', padding: '14px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px' }}>
-                Send Message →
-              </Link>
-            </div>
+            <ContactForm />
           </div>
 
           {/* Right info */}
@@ -159,15 +116,15 @@ export default function ContactUsPage() {
           <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '20px', textAlign: 'center' }}>Find Our Branches</h3>
           <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             {[
-              { title: 'Dilsukhnagar Branch', q: 'Coss+Cloud+Solutions+Dilsukhnagar' },
-              { title: 'Ameerpet Branch', q: 'Coss+Cloud+Solutions+Ameerpet' },
+              { title: 'Dilsukhnagar Branch', src: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5285426!3d17.3677401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98ec55555555%3A0xdd694f49845605aa!2sComplete%20Open%20Source%20Solutions%20(COSS)!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin' },
+              { title: 'Ameerpet Branch', src: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin' },
             ].map(b => (
               <div key={b.title} style={{ background: 'var(--bg-card)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 14px rgba(0,0,0,0.08)' }}>
                 <div style={{ background: '#1a1a2e', padding: '14px 18px' }}>
                   <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: '#fff' }}>{b.title}</h4>
                 </div>
                 <iframe
-                  src={`https://www.google.com/maps?q=${b.q}&output=embed`}
+                  src={b.src}
                   width="100%" height="220" style={{ border: 0, display: 'block' }}
                   allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
                 />
@@ -180,6 +137,3 @@ export default function ContactUsPage() {
   );
 }
 
-// CSS vars: theme-aware form element styles — works in both light and dark mode
-const labelStyle: React.CSSProperties = { display: 'block', fontSize: '13px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, color: 'var(--text)', marginBottom: '6px' };
-const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 13px', borderRadius: '8px', border: '1.5px solid var(--border)', background: 'var(--bg-alt)', color: 'var(--text)', fontSize: '14px', outline: 'none', fontFamily: 'Open Sans, sans-serif' };
