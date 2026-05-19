@@ -209,7 +209,7 @@ export default function WhatsAppWidget(): JSX.Element | null {
         position: 'fixed',
         bottom: '24px',
         right: '24px',
-        zIndex: 999,
+        zIndex: 99999,
         opacity: visible ? 1 : 0,
         transition: 'opacity 0.3s ease',
         /* width is auto — sized to content (button or panel) */
@@ -223,6 +223,7 @@ export default function WhatsAppWidget(): JSX.Element | null {
           aria-modal="true"
           aria-label="Chat with COSS on WhatsApp"
           className="wa-panel"
+          style={{ zIndex: 99999 }}
           onKeyDown={trapFocus}
         >
           {/* Header */}

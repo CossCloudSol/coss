@@ -79,6 +79,7 @@ export default function SiteHeader() {
     <header
       ref={headerRef}
       className={`site-header${scrolled ? ' header-scrolled' : ''}`}
+      style={{ zIndex: 9999 }}
     >
       {/* ── Main Header ───────────────────────────────────────────────── */}
       <div className="header-inner">
