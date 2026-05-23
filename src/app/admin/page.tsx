@@ -319,6 +319,31 @@ export default async function AdminOverviewPage(): Promise<JSX.Element> {
         <BranchBreakdown byBranch={stats.byBranch} />
       </div>
 
+      {/* Content stats row */}
+      <div className="col-span-12">
+        <section className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Content</h2>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="rounded-lg border border-gray-100 dark:border-gray-700 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Published Courses</p>
+              <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{stats.content.publishedCourses.toLocaleString()}</p>
+            </div>
+            <div className="rounded-lg border border-gray-100 dark:border-gray-700 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Published Posts</p>
+              <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{stats.content.publishedPosts.toLocaleString()}</p>
+            </div>
+            <div className="rounded-lg border border-gray-100 dark:border-gray-700 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Total Blog Views</p>
+              <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{stats.content.totalBlogViews.toLocaleString()}</p>
+            </div>
+            <div className="rounded-lg border border-gray-100 dark:border-gray-700 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Drafts Pending</p>
+              <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">{stats.content.draftsPending.toLocaleString()}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
       {/* Bottom row — weekly sparkline */}
       <div className="col-span-12">
         <WeeklySparkline dailyLeads={stats.dailyLeads} />

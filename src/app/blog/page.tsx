@@ -5,6 +5,36 @@ import type { Post } from '@/lib/posts';
 import type { Metadata } from 'next';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import { headers } from 'next/headers';
+
+export const dynamic = 'force-dynamic';
+
+interface DbPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string;
+  thumbnail: string | null;
+  author: string;
+  readTime: string | null;
+  featured: boolean;
+  publishedAt: string | null;
+}
+
+async function getDbPosts(): Promise<DbPost[]> {
+  const headerList = headers();
+  const host = headerList.get('host') ?? 'localhost:3000';
+  const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
+  try {
+    const res = await fetch(`${proto}://${host}/api/blog?limit=50`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.posts ?? [];
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('blog');
@@ -119,8 +149,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const rawCat = searchParams?.category ?? 'All';
   const activeCategory = categories.includes(rawCat) ? rawCat : 'All';
 
-  const allPosts = await getAllPosts();
+  const [allPosts, dbPosts] = await Promise.all([getAllPosts(), getDbPosts()]);
   const posts = allPosts.filter((p) => postMatchesCategory(p, activeCategory));
+
+  // DB posts shown as a featured section at top when present
+  const filteredDbPosts = activeCategory === 'All'
+    ? dbPosts
+    : dbPosts.filter((p) => p.category.toLowerCase().includes(activeCategory.toLowerCase()) || activeCategory.toLowerCase().includes(p.category.toLowerCase()));
 
   return (
     <>
@@ -173,6 +208,44 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             );
           })}
         </div>
+
+        {/* ── DB Posts (featured section) ──────────────────────────── */}
+        {filteredDbPosts.length > 0 && (
+          <div style={{ marginBottom: '36px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', margin: 0 }}>
+                Latest from Our Blog
+              </h2>
+              <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '11px', fontWeight: 600, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif' }}>New</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }} className="course-list-grid">
+              {filteredDbPosts.map((p) => (
+                <article key={p.id} style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}>
+                  {p.thumbnail ? (
+                    <div style={{ position: 'relative', height: '140px', overflow: 'hidden' }}>
+                      <Image src={p.thumbnail} alt={p.title} fill sizes="320px" style={{ objectFit: 'cover' }} />
+                    </div>
+                  ) : (
+                    <div style={{ height: '80px', background: 'linear-gradient(135deg, #0a5260, #0d7a8e)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px' }}>COSS</span>
+                    </div>
+                  )}
+                  <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ color: 'var(--primary)', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>{p.category}</span>
+                    <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', lineHeight: '1.45', marginBottom: '8px', flex: 1 }}>
+                      <Link href={`/blog/${p.slug}`} style={{ color: 'var(--text)' }}>{p.title}</Link>
+                    </h3>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', marginBottom: '10px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.excerpt}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                      <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>{p.author}{p.readTime ? ` · ${p.readTime}` : ''}</span>
+                      <Link href={`/blog/${p.slug}`} style={{ color: 'var(--primary)', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Read →</Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '36px', alignItems: 'start' }}>
 

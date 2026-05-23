@@ -4,6 +4,12 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
+import { headers } from 'next/headers';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { prisma } from '@/lib/db';
+
+export const dynamic = 'force-dynamic';
 
 /**
  * Normalises a frontmatter value to a safe display string.
@@ -36,6 +42,14 @@ export async function generateStaticParams() {
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  // Try DB post first
+  const dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+  if (dbPost) {
+    const title = dbPost.seoTitle ?? `${dbPost.title} | COSS Cloud Solutions`;
+    const description = dbPost.seoDesc ?? dbPost.excerpt;
+    return { title, description, openGraph: { title: dbPost.title, description, type: 'article' } };
+  }
+
   const post = await getPostBySlug(params.slug);
   if (!post) return { title: 'Not Found' };
 
@@ -78,6 +92,76 @@ const RELATED = [
 ];
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  // Try DB post first — renders with react-markdown
+  const dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+  if (dbPost) {
+    // Increment views (fire-and-forget)
+    void prisma.blogPost.update({ where: { id: dbPost.id }, data: { views: { increment: 1 } } });
+
+    return (
+      <>
+        <ResponsivePageStyles />
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 20px 0' }}>
+          <Link href="/blog" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
+            &larr; Back to Blog
+          </Link>
+          <h1 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(24px, 4.5vw, 36px)', fontWeight: 700, color: 'var(--text)', marginTop: '12px', lineHeight: 1.25 }}>
+            {dbPost.title}
+          </h1>
+        </div>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 20px 48px' }}>
+          <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>
+            <article>
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '24px', padding: '12px 18px', background: 'var(--bg-alt)', borderRadius: '10px', fontSize: '13px', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
+                {dbPost.publishedAt && <span>{new Date(dbPost.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
+                {dbPost.readTime && <span>{dbPost.readTime}</span>}
+                <span style={{ background: 'var(--primary)', color: '#fff', padding: '2px 10px', borderRadius: '12px', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{dbPost.category}</span>
+                <span style={{ marginLeft: 'auto', fontSize: '12px' }}>by {dbPost.author}</span>
+              </div>
+              <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{dbPost.content}</ReactMarkdown>
+              </div>
+              {dbPost.tags.length > 0 && (
+                <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">
+                  <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>Tags:</span>
+                  {dbPost.tags.map((tag) => (
+                    <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`} className="text-xs px-3 py-1 rounded-full border bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
+                      {tag}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
+                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
+                <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
+                <Link href="/free-demo-class/" style={{ background: 'var(--primary)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
+                  Book Free Demo Class
+                </Link>
+              </div>
+            </article>
+            <div>
+              <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '24px', color: '#fff', marginBottom: '20px' }}>
+                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Enroll Now</h3>
+                <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '16px' }}>Start your IT career with COSS</p>
+                <Link href="/free-demo-class/" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+                  Book Free Demo Class
+                </Link>
+              </div>
+              <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
+                <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
+                  <a href="tel:8885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</a><br />
+                  <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Fall back to file-system post
   const post = await getPostBySlug(params.slug);
   if (!post) notFound();
 

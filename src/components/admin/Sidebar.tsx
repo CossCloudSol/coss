@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BarChart2,
+  BookOpen,
   Building2,
+  GraduationCap,
   LayoutDashboard,
   LogOut,
   Megaphone,
@@ -28,6 +30,8 @@ const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '/admin',           label: 'Overview',          icon: LayoutDashboard, permissionKey: 'dashboard:view' },
   { href: '/admin/leads',     label: 'All Leads',         icon: Users,           permissionKey: 'leads:view' },
   { href: '/admin/corporate', label: 'Corporate',         icon: Building2,       permissionKey: 'corporate:view' },
+  { href: '/admin/courses',   label: 'Courses',           icon: GraduationCap,   permissionKey: 'dashboard:view' },
+  { href: '/admin/blog',      label: 'Blog Posts',        icon: BookOpen,        permissionKey: 'dashboard:view' },
   { href: '/admin/whatsapp',  label: 'WhatsApp Log',      icon: MessageCircle,   permissionKey: 'whatsapp:view' },
   { href: '/admin/seo',       label: 'SEO Manager',       icon: Search,          permissionKey: 'seo:view' },
   { href: '/admin/analytics', label: 'Analytics',         icon: BarChart2,       permissionKey: 'analytics:view' },
