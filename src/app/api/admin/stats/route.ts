@@ -14,6 +14,12 @@ export interface AdminStatsResponse {
     newToday: number;
     enrolled: number;
   };
+  content: {
+    publishedCourses: number;
+    publishedPosts: number;
+    totalBlogViews: number;
+    draftsPending: number;
+  };
   byBranch: {
     dilsukhnagar: number;
     ameerpet: number;
@@ -88,6 +94,11 @@ export async function GET(req: NextRequest): Promise<Response> {
       byStatusRaw,
       recentLeadsRaw,
       dailyLeadsRaw,
+      publishedCourses,
+      publishedPosts,
+      blogViewsAgg,
+      draftCourses,
+      draftPosts,
     ] = await Promise.all([
       prisma.lead.count(),
       prisma.corporateLead.count(),
@@ -112,6 +123,11 @@ export async function GET(req: NextRequest): Promise<Response> {
         where: { createdAt: { gte: sevenDaysAgo } },
         select: { createdAt: true },
       }),
+      prisma.course.count({ where: { status: 'published' } }),
+      prisma.blogPost.count({ where: { status: 'published' } }),
+      prisma.blogPost.aggregate({ _sum: { views: true } }),
+      prisma.course.count({ where: { status: 'draft' } }),
+      prisma.blogPost.count({ where: { status: 'draft' } }),
     ]);
 
     // Shape byBranch: seed the three expected keys to 0 so the UI doesn't have
@@ -164,6 +180,12 @@ export async function GET(req: NextRequest): Promise<Response> {
         corporate: totalCorporate,
         newToday: newTodayCount,
         enrolled: enrolledCount,
+      },
+      content: {
+        publishedCourses,
+        publishedPosts,
+        totalBlogViews: blogViewsAgg._sum.views ?? 0,
+        draftsPending: draftCourses + draftPosts,
       },
       byBranch,
       byStatus,
