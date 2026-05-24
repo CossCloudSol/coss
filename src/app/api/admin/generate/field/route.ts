@@ -1,11 +1,11 @@
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSession } from '@/lib/session'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const client = new Anthropic()
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 const FIELD_PROMPTS: Record<string, string> = {
   slug: 'Return ONLY valid JSON: {"value": "seo-slug-5-8-words-in-hyderabad"}. SEO-friendly slug, 5-8 words, ends with -in-hyderabad.',
@@ -51,23 +51,14 @@ Title: "${title}"
 Category: "${categoryName}"
 Institute: COSS, Hyderabad${body.currentContent ? `\nCurrent content to improve: "${body.currentContent}"` : ''}`
 
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1200,
-      system: `You are a content writer at COSS Hyderabad training institute. ${fieldPrompt}`,
-      messages: [{ role: 'user', content: userPrompt }],
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      systemInstruction: `You are a content writer at COSS Hyderabad training institute. ${fieldPrompt}`,
+      generationConfig: { responseMimeType: 'application/json' },
     })
 
-    const rawText = message.content
-      .filter((block): block is Anthropic.TextBlock => block.type === 'text')
-      .map((block) => block.text)
-      .join('')
-
-    const cleanText = rawText
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/i, '')
-      .trim()
+    const result = await model.generateContent(userPrompt)
+    const cleanText = result.response.text().trim()
 
     const parsed = JSON.parse(cleanText)
     return NextResponse.json({ success: true, value: parsed.value })

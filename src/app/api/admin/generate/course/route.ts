@@ -1,11 +1,11 @@
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSession } from '@/lib/session'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-const client = new Anthropic()
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 const COURSE_SYSTEM_PROMPT = `You are a senior content writer at COSS (Cloud & Open Source Solutions), a training institute in Hyderabad with centres in Dilsukhnagar and Ameerpet. You write like an experienced trainer who knows students personally — direct, specific, confident, never corporate or generic.
 
@@ -95,23 +95,14 @@ Make the content feel like it was written by the actual trainer who runs this co
 Include real tool versions, real certification exam codes, and specific Hyderabad job market context.
 The description should read like a trainer talking to a prospective student, not a marketing brochure.`
 
-    const message = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 2000,
-      system: COURSE_SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: userPrompt }],
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      systemInstruction: COURSE_SYSTEM_PROMPT,
+      generationConfig: { responseMimeType: 'application/json' },
     })
 
-    const rawText = message.content
-      .filter((block): block is Anthropic.TextBlock => block.type === 'text')
-      .map((block) => block.text)
-      .join('')
-
-    const cleanText = rawText
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/i, '')
-      .trim()
+    const result = await model.generateContent(userPrompt)
+    const cleanText = result.response.text().trim()
 
     const generated = JSON.parse(cleanText)
     return NextResponse.json({ success: true, data: generated })
