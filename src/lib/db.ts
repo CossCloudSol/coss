@@ -83,6 +83,26 @@ type AdminUserDelegate = {
   delete(args: { where: { id: string } }): Promise<AdminUserRecord>;
 };
 
+// ─── CourseCategory ───────────────────────────────────────────────────────────
+// After `prisma generate`, these types are built into PrismaClient natively.
+// The stubs below keep TypeScript happy when the generated client is stale.
+
+export type CourseCategoryRecord = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  color: string | null;
+  sortOrder: number;
+  isLegacy: boolean;
+  status: string;
+  seoTitle: string | null;
+  seoDesc: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 // ─── Extended client type ─────────────────────────────────────────────────────
 
 /** PrismaClient extended with models added after the last `prisma generate`. */
