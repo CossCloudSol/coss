@@ -110,6 +110,9 @@ export async function POST(req: NextRequest): Promise<Response> {
         sortOrder: Number(body.sortOrder ?? 0),
         seoTitle: (body.seoTitle as string) || null,
         seoDesc: (body.seoDesc as string) || null,
+        categorySlug: (body.categorySlug as string) || null,
+        urlType: (body.urlType as string) || 'legacy',
+        ...(body.categoryId ? { categoryId: body.categoryId as string } : {}),
       },
     });
     return NextResponse.json(course, { status: 201 });

@@ -7,7 +7,7 @@ import { getCourseUrl } from '@/lib/course-url';
 
 export const dynamic = 'force-dynamic';
 
-interface SyllabusItem { week: string; topic: string; details: string }
+interface SyllabusItem { week?: string; topic?: string; details?: string; module?: string; topics?: string[] }
 
 interface CourseDetail {
   id: string;
@@ -54,7 +54,11 @@ async function getCourse(slug: string): Promise<CourseDetail | null> {
   try {
     const res = await fetch(`${base}/api/courses/${slug}`, { cache: 'no-store' });
     if (!res.ok) return null;
-    return res.json();
+    const data = await res.json();
+    // The /api/courses/[slug] endpoint returns { courses: [] } when the slug
+    // matches a category rather than a course — ignore those responses here.
+    if (!data?.title) return null;
+    return data;
   } catch {
     return null;
   }
@@ -205,12 +209,17 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
                     <details key={i} style={{ borderBottom: '1px solid var(--border)', padding: '0' }}>
                       <summary style={{ padding: '14px 0', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', listStyle: 'none', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', color: 'var(--text)' }}>
                         <span style={{ background: '#0f766e', color: '#fff', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', flexShrink: 0 }}>{i + 1}</span>
-                        <span style={{ flex: 1 }}>{item.week}{item.topic ? ` — ${item.topic}` : ''}</span>
+                        <span style={{ flex: 1 }}>{item.module ?? item.week}{(item.topic) ? ` — ${item.topic}` : ''}</span>
                         <span style={{ color: 'var(--text-muted)', fontSize: '18px', fontWeight: 400 }}>+</span>
                       </summary>
-                      {item.details && (
+                      {(item.details || (item.topics && item.topics.length > 0)) && (
                         <div style={{ padding: '0 0 14px 38px', color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.7' }}>
                           {item.details}
+                          {item.topics && item.topics.length > 0 && (
+                            <ul style={{ margin: '4px 0 0', paddingLeft: '16px' }}>
+                              {item.topics.map((t, ti) => <li key={ti}>{t}</li>)}
+                            </ul>
+                          )}
                         </div>
                       )}
                     </details>
