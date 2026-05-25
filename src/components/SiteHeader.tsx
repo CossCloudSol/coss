@@ -19,19 +19,6 @@ import {
 import ThemeToggle from '@/components/ThemeToggle';
 import { useTheme } from '@/components/ThemeProvider';
 
-const courses = [
-  { label: 'Data, Analytics & BI',         href: '/courses/data-analytics-bi/' },
-  { label: 'Cloud Computing',               href: '/courses/cloud-computing/' },
-  { label: 'DevOps & Multi-Cloud',          href: '/courses/devops-multi-cloud/' },
-  { label: 'Programming & Full Stack',      href: '/courses/programming-full-stack/' },
-  { label: 'Data Engineering',              href: '/courses/data-engineering/' },
-  { label: 'Cyber Security & Networking',   href: '/courses/cyber-security/' },
-  { label: 'ERP, CRM & Enterprise Tools',   href: '/courses/erp-crm-enterprise-tools/' },
-  { label: 'Software Testing & OS',         href: '/courses/software-testing-os/' },
-  { label: 'Digital & Design',              href: '/courses/digital-design/' },
-  { label: 'Professional & Soft Skills',    href: '/courses/professional-soft-skills/' },
-];
-
 const aboutLinks = [
   { label: 'About Us',       href: '/about-us/' },
   { label: 'Why Us',         href: '/why-us/' },
@@ -44,6 +31,7 @@ export default function SiteHeader() {
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [aboutOpen,   setAboutOpen]   = useState(false);
   const [scrolled,    setScrolled]    = useState(false);
+  const [courses, setCourses] = useState<Array<{ label: string; href: string }>>([]);
 
   const { theme, toggleTheme } = useTheme();
 
@@ -54,6 +42,17 @@ export default function SiteHeader() {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  /* ── Fetch categories from DB ── */
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((r) => (r.ok ? r.json() : { categories: [] }))
+      .then((data: { categories?: Array<{ name: string; slug: string }> }) => {
+        const cats = data.categories ?? [];
+        setCourses(cats.map((c) => ({ label: c.name, href: `/courses/${c.slug}/` })));
+      })
+      .catch(() => {});
   }, []);
 
   /* ── Close on outside click ── */

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import { prisma } from '@/lib/db';
 import {
   Award,
   BarChart2,
@@ -9,14 +10,10 @@ import {
   Building,
   Calendar,
   Clock,
-  Cloud,
-  Code,
-  Database,
   GraduationCap,
   IndianRupee,
   MessageSquare,
   Monitor,
-  Palette,
   Rocket,
   Settings,
   Shield,
@@ -24,147 +21,24 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react';
+import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons';
 import WpImg from '@/components/WpImg';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
 import { siteImages } from '@/lib/wpImages';
 
-interface CourseCategory {
-  name: string;
-  slug: string;
-  href: string;
-  /** Tailwind class kept for legacy use; card now uses `color` for styling. */
-  iconBg: string;
-  /** Hex accent colour — drives banner gradient, tag tint, and CTA button. */
-  color: string;
-  Icon: LucideIcon;
-  duration: string;
-  level: string;
-  description: string;
-  tags: ReadonlyArray<string>;
+async function getCategories() {
+  try {
+    return await prisma.courseCategory.findMany({
+      where: { status: 'published' },
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        _count: { select: { courses: { where: { status: 'published' } } } },
+      },
+    });
+  } catch {
+    return [];
+  }
 }
-
-const courseCategories: ReadonlyArray<CourseCategory> = [
-  {
-    name: 'Data, Analytics & BI',
-    slug: 'data-analytics-bi',
-    href: '/courses/data-analytics-bi/',
-    iconBg: 'bg-blue-500',
-    color: '#1d4ed8',
-    Icon: BarChart2,
-    duration: '3–5 Months',
-    level: 'Beginner to Advanced',
-    description: 'Master Python, SQL, Power BI, Tableau, and machine learning fundamentals for analytics careers.',
-    tags: ['Python', 'SQL', 'Power BI', 'Tableau'],
-  },
-  {
-    name: 'Cloud Computing',
-    slug: 'cloud-computing',
-    href: '/courses/cloud-computing/',
-    iconBg: 'bg-cyan-500',
-    color: '#0e7490',
-    Icon: Cloud,
-    duration: '3–5 Months',
-    level: 'Beginner to Advanced',
-    description: 'Industry-aligned training on AWS, Azure, and Google Cloud for modern cloud engineers.',
-    tags: ['AWS', 'Azure', 'GCP', 'Multi-Cloud'],
-  },
-  {
-    name: 'DevOps & Multi-Cloud',
-    slug: 'devops-multi-cloud',
-    href: '/courses/devops-multi-cloud/',
-    iconBg: 'bg-orange-500',
-    color: '#c2410c',
-    Icon: Settings,
-    duration: '3–5 Months',
-    level: 'Intermediate to Advanced',
-    description: 'CI/CD pipelines, Docker, Kubernetes, Jenkins, Terraform — the complete modern DevOps stack.',
-    tags: ['Docker', 'Kubernetes', 'Jenkins', 'Terraform'],
-  },
-  {
-    name: 'Programming & Full Stack',
-    slug: 'programming-full-stack',
-    href: '/courses/programming-full-stack/',
-    iconBg: 'bg-green-500',
-    color: '#15803d',
-    Icon: Code,
-    duration: '4–6 Months',
-    level: 'Beginner to Advanced',
-    description: 'Java, Python, JavaScript, React, and Spring Boot for full-stack engineering roles.',
-    tags: ['Java', 'Python', 'React', 'Spring Boot'],
-  },
-  {
-    name: 'Data Engineering',
-    slug: 'data-engineering',
-    href: '/courses/data-engineering/',
-    iconBg: 'bg-purple-500',
-    color: '#7e22ce',
-    Icon: Database,
-    duration: '3–5 Months',
-    level: 'Intermediate to Advanced',
-    description: 'Build and operate modern data platforms with Spark, Airflow, Snowflake, and ETL pipelines.',
-    tags: ['Spark', 'Airflow', 'Snowflake', 'ETL'],
-  },
-  {
-    name: 'Cyber Security',
-    slug: 'cyber-security',
-    href: '/courses/cyber-security/',
-    iconBg: 'bg-amber-500',
-    color: '#b45309',
-    Icon: Shield,
-    duration: '3–5 Months',
-    level: 'Beginner to Advanced',
-    description: 'Ethical hacking, SOC operations, network defense, and vulnerability assessment skills.',
-    tags: ['Ethical Hacking', 'SOC', 'Network', 'VAPT'],
-  },
-  {
-    name: 'ERP, CRM & Enterprise Tools',
-    slug: 'erp-crm-enterprise-tools',
-    href: '/courses/erp-crm-enterprise-tools/',
-    iconBg: 'bg-teal-500',
-    color: '#0f766e',
-    Icon: Building,
-    duration: '2–4 Months',
-    level: 'Beginner to Advanced',
-    description: 'SAP, Salesforce, Oracle Fusion HCM, and MS Dynamics — globally recognized enterprise tools.',
-    tags: ['SAP', 'Salesforce', 'Oracle', 'MS Dynamics'],
-  },
-  {
-    name: 'Software Testing & OS',
-    slug: 'software-testing-os',
-    href: '/courses/software-testing-os/',
-    iconBg: 'bg-pink-500',
-    color: '#be185d',
-    Icon: TestTube,
-    duration: '2–4 Months',
-    level: 'Beginner to Intermediate',
-    description: 'Manual testing, Selenium automation, API testing, and Linux administration fundamentals.',
-    tags: ['Selenium', 'Manual Testing', 'Linux', 'API Testing'],
-  },
-  {
-    name: 'Digital & Design',
-    slug: 'digital-design',
-    href: '/courses/digital-design/',
-    iconBg: 'bg-red-500',
-    color: '#b91c1c',
-    Icon: Palette,
-    duration: '2–4 Months',
-    level: 'Beginner to Intermediate',
-    description: 'SEO, social media marketing, UI/UX design, and the Adobe Creative Suite for designers.',
-    tags: ['SEO', 'Social Media', 'UI/UX', 'Adobe'],
-  },
-  {
-    name: 'Professional & Soft Skills',
-    slug: 'professional-soft-skills',
-    href: '/courses/professional-soft-skills/',
-    iconBg: 'bg-indigo-500',
-    color: '#4338ca',
-    Icon: Users,
-    duration: '1–3 Months',
-    level: 'Beginner to Advanced',
-    description: 'Spoken English, professional communication, MS Office, and interview readiness training.',
-    tags: ['Communication', 'MS Office', 'Interview Prep'],
-  },
-];
 
 interface Testimonial {
   name: string;
@@ -287,7 +161,8 @@ const CORP_BOTTOM_BAR: Array<{ Icon: LucideIcon; title: string; desc: string }> 
 const CORP_QR_SRC =
   'https://api.qrserver.com/v1/create-qr-code/?size=88x88&data=https%3A%2F%2Fwa.me%2F918885166007&bgcolor=ffffff&color=083344&margin=4';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const categories = await getCategories();
   return (
     <>
       {/* ── Hero ── */}
@@ -418,58 +293,33 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {courseCategories.map((course) => {
-              const { Icon: CourseIcon } = course;
-              const c = course.color;
+            {categories.map((cat) => {
+              const c = cat.color ?? '#0e7490';
+              const Icon = CATEGORY_ICONS[cat.slug] ?? DEFAULT_ICON;
               return (
-                <article key={course.href} className="course-card-v2">
-                  {/* Coloured top banner */}
+                <article key={cat.slug} className="course-card-v2">
                   <div
                     className="course-card-v2-banner"
                     style={{ background: `linear-gradient(135deg, ${c}cc 0%, ${c} 100%)` }}
                   >
                     <div className="course-card-v2-icon" aria-hidden="true">
-                      <CourseIcon className="w-7 h-7 text-white" />
+                      <Icon className="w-7 h-7 text-white" />
                     </div>
                   </div>
 
-                  {/* Card body */}
                   <div className="course-card-v2-body">
-                    <h3 className="course-card-v2-title">{course.name}</h3>
-                    <p className="course-card-v2-desc">{course.description}</p>
+                    <h3 className="course-card-v2-title">{cat.name}</h3>
+                    <p className="course-card-v2-desc">{cat.description ?? ''}</p>
 
-                    {/* Duration + level pills */}
                     <div className="course-card-v2-pills">
                       <span className="course-pill">
-                        <Clock className="w-3 h-3" aria-hidden="true" />
-                        {course.duration}
-                      </span>
-                      <span className="course-pill">
-                        <Monitor className="w-3 h-3" aria-hidden="true" />
-                        {course.level}
+                        <BookOpen className="w-3 h-3" aria-hidden="true" />
+                        {cat._count.courses} Courses
                       </span>
                     </div>
 
-                    {/* Tech-stack tags — tinted with the card colour */}
-                    <div className="course-card-v2-tags">
-                      {course.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="course-tag"
-                          style={{
-                            color: c,
-                            borderColor: `${c}40`,
-                            background: `${c}12`,
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* CTA — full-width, matches card colour */}
                     <Link
-                      href={course.href}
+                      href={`/courses/${cat.slug}/`}
                       className="course-card-v2-cta"
                       style={{ background: c }}
                     >
