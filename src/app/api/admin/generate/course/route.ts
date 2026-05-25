@@ -96,7 +96,7 @@ Include real tool versions, real certification exam codes, and specific Hyderaba
 The description should read like a trainer talking to a prospective student, not a marketing brochure.`
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: COURSE_SYSTEM_PROMPT,
       generationConfig: { responseMimeType: 'application/json' },
     })
