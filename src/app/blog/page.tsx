@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { getAllPosts } from '@/lib/posts';
 import type { Post } from '@/lib/posts';
 import type { Metadata } from 'next';
@@ -219,30 +218,36 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '11px', fontWeight: 600, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif' }}>New</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }} className="course-list-grid">
-              {filteredDbPosts.map((p) => (
-                <article key={p.id} style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}>
-                  {p.thumbnail ? (
-                    <div style={{ position: 'relative', height: '140px', overflow: 'hidden' }}>
-                      <Image src={p.thumbnail} alt={p.title} fill sizes="320px" style={{ objectFit: 'cover' }} />
+              {filteredDbPosts.map((p, dbIdx) => {
+                const date = p.publishedAt ? new Date(p.publishedAt) : null;
+                return (
+                  <article key={p.id} className="blog-card">
+                    <div className="blog-card-img" style={{ background: CARD_GRADIENTS[dbIdx % CARD_GRADIENTS.length] }}>
+                      {date && (
+                        <div className="blog-date-badge">
+                          <span className="blog-date-day">{date.getDate()}</span>
+                          <span className="blog-date-mon">{date.toLocaleString('en', { month: 'short' }).toUpperCase()}</span>
+                        </div>
+                      )}
+                      <p className="blog-card-brand">COSS CLOUD SOLUTIONS</p>
+                      <h3 className="blog-card-img-title">{p.category}</h3>
+                      <span className="blog-card-pill">Training in Hyderabad</span>
                     </div>
-                  ) : (
-                    <div style={{ height: '80px', background: 'linear-gradient(135deg, #0a5260, #0d7a8e)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '1px' }}>COSS</span>
+                    <div className="blog-card-body">
+                      <h3><Link href={`/blog/${p.slug}`}>{p.title}</Link></h3>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.excerpt}</p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                        {date && (
+                          <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>
+                            📅 {date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
+                        )}
+                        <Link href={`/blog/${p.slug}`} className="blog-read-more">Read More →</Link>
+                      </div>
                     </div>
-                  )}
-                  <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ color: 'var(--primary)', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>{p.category}</span>
-                    <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', lineHeight: '1.45', marginBottom: '8px', flex: 1 }}>
-                      <Link href={`/blog/${p.slug}`} style={{ color: 'var(--text)' }}>{p.title}</Link>
-                    </h3>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', marginBottom: '10px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.excerpt}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                      <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>{p.author}{p.readTime ? ` · ${p.readTime}` : ''}</span>
-                      <Link href={`/blog/${p.slug}`} style={{ color: 'var(--primary)', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Read →</Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
         )}
@@ -277,76 +282,39 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px' }} className="course-list-grid">
-                {posts.map((post, idx) => (
-                  <article
-                    key={post.slug}
-                    style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}
-                  >
-                    {/* Thumbnail */}
-                    <div className="blog-card__image" style={{ position: 'relative', height: '160px', overflow: 'hidden' }}>
-                      {post.frontmatter.featuredImage ? (
-                        <Image
-                          src={post.frontmatter.featuredImage}
-                          alt={post.frontmatter.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 400px"
-                          style={{ objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <div style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length], height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '16px' }}>
-                          <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                            COSS Cloud Solutions
-                          </span>
-                          <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: '16px', color: '#fff', textAlign: 'center', lineHeight: 1.3 }}>
-                            {getCategoryLabel(post.frontmatter.title)}
-                          </span>
-                          <span style={{ display: 'inline-block', marginTop: '4px', padding: '3px 10px', borderRadius: '12px', background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)', fontSize: '11px', fontFamily: 'Open Sans, sans-serif' }}>
-                            Training in Hyderabad
-                          </span>
-                        </div>
-                      )}
-                      {post.frontmatter.date && (
-                        <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'var(--primary)', color: '#fff', borderRadius: '6px', padding: '5px 9px', textAlign: 'center', fontFamily: 'Poppins, sans-serif' }}>
-                          <span style={{ display: 'block', fontSize: '18px', fontWeight: 700, lineHeight: 1 }}>
-                            {new Date(post.frontmatter.date).getDate() || '-'}
-                          </span>
-                          <span style={{ fontSize: '10px', textTransform: 'uppercase' }}>
-                            {post.frontmatter.date.split(' ')[1]?.substring(0, 3) ?? ''}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Body */}
-                    <div style={{ padding: '18px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                      {(post.frontmatter.categories?.length ?? 0) > 0 && (
-                        <span style={{ color: 'var(--primary)', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>
-                          {post.frontmatter.categories?.[0]}
-                        </span>
-                      )}
-                      <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', lineHeight: '1.45', marginBottom: '10px', flex: 1 }}>
-                        <Link href={`/blog/${post.slug}`} style={{ color: 'var(--text)' }}>
-                          {post.frontmatter.title}
-                        </Link>
-                      </h2>
-                      {post.frontmatter.excerpt && (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.6', marginBottom: '12px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                          {post.frontmatter.excerpt}
-                        </p>
-                      )}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                        {post.frontmatter.date && (
-                          <span style={{ color: 'var(--text-light)', fontSize: '12px' }}>
-                            {'📅'} {post.frontmatter.date}
-                          </span>
+                {posts.map((post, idx) => {
+                  const d = post.frontmatter.date ? new Date(post.frontmatter.date) : null;
+                  const validDate = d && !isNaN(d.getTime()) ? d : null;
+                  return (
+                    <article key={post.slug} className="blog-card">
+                      <div className="blog-card-img" style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length] }}>
+                        {validDate && (
+                          <div className="blog-date-badge">
+                            <span className="blog-date-day">{validDate.getDate()}</span>
+                            <span className="blog-date-mon">{validDate.toLocaleString('en', { month: 'short' }).toUpperCase()}</span>
+                          </div>
                         )}
-                        <Link href={`/blog/${post.slug}`} style={{ color: 'var(--primary)', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>
-                          Read More {'→'}
-                        </Link>
+                        <p className="blog-card-brand">COSS CLOUD SOLUTIONS</p>
+                        <h3 className="blog-card-img-title">{getCategoryLabel(post.frontmatter.title)}</h3>
+                        <span className="blog-card-pill">Training in Hyderabad</span>
                       </div>
-                    </div>
-                  </article>
-                ))}
+                      <div className="blog-card-body">
+                        <h3><Link href={`/blog/${post.slug}`}>{post.frontmatter.title}</Link></h3>
+                        {post.frontmatter.excerpt && (
+                          <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                            {post.frontmatter.excerpt}
+                          </p>
+                        )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                          {post.frontmatter.date && (
+                            <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>📅 {post.frontmatter.date}</span>
+                          )}
+                          <Link href={`/blog/${post.slug}`} className="blog-read-more">Read More →</Link>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             )}
           </div>
