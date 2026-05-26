@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 interface Props {
   hasAdminEmail: boolean
 }
 
 export default function AdminLoginForm({ hasAdminEmail }: Props) {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -26,7 +24,10 @@ export default function AdminLoginForm({ hasAdminEmail }: Props) {
       })
       const data = await res.json()
       if (res.ok) {
-        router.push('/admin')
+        // Full reload bypasses the Next.js router cache so AdminLayout
+        // re-runs getServerSession() fresh and the sidebar renders with
+        // the correct permissions on first visit.
+        window.location.href = '/admin'
       } else {
         setError(data.message || data.error || 'Invalid credentials')
       }

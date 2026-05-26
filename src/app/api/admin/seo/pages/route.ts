@@ -4,6 +4,7 @@ import { getSession } from '@/lib/session';
 import { seedSeoPages, seedCoursePages, seedCategoryPages, seedBlogPosts, SEED_PAGE_SLUGS } from '@/lib/seo-seed';
 import { COURSES } from '@/data/courses-data';
 import { CATEGORY_PAGES } from '@/lib/all-pages-registry';
+import { getCourseUrl } from '@/lib/course-url';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -87,6 +88,34 @@ export async function GET(req: NextRequest): Promise<Response> {
   if (courseGap) await seedCoursePages();
   if (categoryGap) await seedCategoryPages();
   if (blogGap) await seedBlogPosts();
+
+  // Sync published DB courses (admin-created, not in static COURSES array).
+  const dbCourses = await prisma.course.findMany({
+    where: { status: 'published' },
+    select: { title: true, slug: true, urlType: true, categorySlug: true, seoTitle: true, seoDesc: true },
+  });
+  for (const course of dbCourses) {
+    const pageSlug = getCourseUrl({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }).slice(1);
+    await prisma.pageSeo.upsert({
+      where: { pageSlug },
+      update: { pageTitle: course.title },
+      create: { pageSlug, pageTitle: course.title, metaTitle: course.seoTitle ?? null, metaDescription: course.seoDesc ?? null },
+    });
+  }
+
+  // Sync published DB blog posts (admin-created, not in filesystem content/posts).
+  const dbBlogs = await prisma.blogPost.findMany({
+    where: { status: 'published' },
+    select: { title: true, slug: true, seoTitle: true, seoDesc: true },
+  });
+  for (const blog of dbBlogs) {
+    const pageSlug = `blog/${blog.slug}`;
+    await prisma.pageSeo.upsert({
+      where: { pageSlug },
+      update: { pageTitle: blog.title },
+      create: { pageSlug, pageTitle: blog.title, metaTitle: blog.seoTitle ?? null, metaDescription: blog.seoDesc ?? null },
+    });
+  }
 
   const rows = await prisma.pageSeo.findMany({
     orderBy: { pageTitle: 'asc' },
