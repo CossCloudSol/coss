@@ -52,7 +52,7 @@ Category: "${categoryName}"
 Institute: COSS, Hyderabad${body.currentContent ? `\nCurrent content to improve: "${body.currentContent}"` : ''}`
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: `You are a content writer at COSS Hyderabad training institute. ${fieldPrompt}`,
       generationConfig: { responseMimeType: 'application/json' },
     })

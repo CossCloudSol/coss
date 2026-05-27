@@ -83,7 +83,7 @@ Write it like a trainer talking to someone who is genuinely considering this car
 Include real salary data, real employer names, and genuine Hyderabad job market context.`
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       systemInstruction: BLOG_SYSTEM_PROMPT,
       generationConfig: { responseMimeType: 'application/json' },
     })
