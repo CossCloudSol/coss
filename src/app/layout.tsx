@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+
+// Force dynamic rendering so Prisma DB reads (announcement bar, SEO settings)
+// are never cached at build time — admin changes show up immediately.
+export const dynamic = 'force-dynamic';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import FooterLogo from '@/components/FooterLogo';
@@ -296,6 +300,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <option>Demo Class</option>
                   <option>Corporate Training</option>
                   <option>Placement Assistance</option>
+                  <option>Certification</option>
                 </select>
                 <Link href="/enroll-now-with-coss/" className="footer-enroll-btn">ENROLL NOW</Link>
               </div>

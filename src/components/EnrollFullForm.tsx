@@ -192,6 +192,7 @@ export default function EnrollFullForm(): JSX.Element {
             <option>Corporate Training</option>
             <option>Placement Assistance</option>
             <option>Fee &amp; Schedule</option>
+            <option>Certification</option>
           </select>
           {errors.inquiryType && <span className="ef-error" role="alert">{errors.inquiryType.message}</span>}
         </div>

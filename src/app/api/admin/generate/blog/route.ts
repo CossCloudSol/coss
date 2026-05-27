@@ -58,6 +58,9 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
+  console.log('GEMINI_API_KEY present:', !!process.env.GEMINI_API_KEY)
+  console.log('GEMINI_API_KEY length:', process.env.GEMINI_API_KEY?.length ?? 0)
+
   let body: { title?: string; categoryName?: string }
   try {
     body = await req.json()
