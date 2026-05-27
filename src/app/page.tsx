@@ -19,8 +19,10 @@ import {
   Shield,
   TestTube,
   Users,
+  Wifi,
   type LucideIcon,
 } from 'lucide-react';
+import { formatBatchDate } from '@/lib/batch-utils';
 import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons';
 import WpImg from '@/components/WpImg';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
@@ -161,8 +163,39 @@ const CORP_BOTTOM_BAR: Array<{ Icon: LucideIcon; title: string; desc: string }> 
 const CORP_QR_SRC =
   'https://api.qrserver.com/v1/create-qr-code/?size=88x88&data=https%3A%2F%2Fwa.me%2F918885166007&bgcolor=ffffff&color=083344&margin=4';
 
+async function getFeaturedJobs() {
+  try {
+    const now = new Date();
+    return await prisma.job.findMany({
+      where: {
+        status: 'active',
+        featured: true,
+        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+      },
+      orderBy: { postedAt: 'desc' },
+      take: 4,
+      select: { id: true, title: true, company: true, category: true, salary: true, mode: true },
+    });
+  } catch { return []; }
+}
+
+async function getUpcomingBatches() {
+  try {
+    return await prisma.batch.findMany({
+      where: { status: { in: ['upcoming', 'ongoing'] }, featured: true },
+      include: { course: { select: { title: true, categorySlug: true } } },
+      orderBy: { startDate: 'asc' },
+      take: 3,
+    });
+  } catch { return []; }
+}
+
 export default async function HomePage() {
-  const categories = await getCategories();
+  const [categories, featuredJobs, upcomingBatches] = await Promise.all([
+    getCategories(),
+    getFeaturedJobs(),
+    getUpcomingBatches(),
+  ]);
   return (
     <>
       {/* ── Hero ── */}
@@ -786,6 +819,98 @@ export default async function HomePage() {
 
         </div>
       </section>
+
+      {/* ── Latest Jobs Widget ── */}
+      {featuredJobs.length > 0 && (
+        <section className="section section-white" aria-label="Job openings">
+          <div className="section-inner">
+            <div className="section-header">
+              <div className="section-tag">Placement Board</div>
+              <h2 className="section-title">Jobs Our Students Get Hired For</h2>
+              <p className="section-subtitle">Partner companies actively hiring in Hyderabad</p>
+            </div>
+            <div className="flex flex-col gap-3 max-w-3xl mx-auto">
+              {featuredJobs.map((job) => {
+                const color = '#0f766e';
+                const initial = job.company.trim()[0]?.toUpperCase() ?? '?';
+                return (
+                  <Link
+                    key={job.id}
+                    href={`/jobs`}
+                    className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold shrink-0" style={{ background: color }}>
+                      {initial}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{job.title}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{job.company}</p>
+                    </div>
+                    {job.salary && (
+                      <span className="text-xs font-bold text-teal-600 dark:text-teal-400 shrink-0">{job.salary}</span>
+                    )}
+                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 shrink-0">{job.category}</span>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="center-btn mt-6">
+              <Link href="/jobs" className="btn-primary" style={{ display: 'inline-flex' }}>
+                View all job openings →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Upcoming Batches Widget ── */}
+      {upcomingBatches.length > 0 && (
+        <section className="section section-light" aria-label="Upcoming batches">
+          <div className="section-inner">
+            <div className="section-header">
+              <div className="section-tag">Training Schedule</div>
+              <h2 className="section-title">Batches Starting Soon</h2>
+              <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+              {upcomingBatches.map((batch) => {
+                const d = new Date(batch.startDate);
+                const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
+                const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
+                const dateStr = formatBatchDate(batch.startDate);
+                const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
+                return (
+                  <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
+                    <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
+                      <span className="text-base font-extrabold leading-none">{day}</span>
+                      <span className="text-[10px] font-bold leading-none">{mon}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
+                      {batch.mode === 'Online' ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
+                          <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
+                        </span>
+                      ) : seatsOk ? (
+                        <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
+                          {batch.seatsAvailable} seats left
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="center-btn mt-6">
+              <Link href="/batches" className="btn-primary" style={{ display: 'inline-flex' }}>
+                View all upcoming batches →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Testimonials ── */}
       <section className="section section-light" aria-label="Student testimonials">

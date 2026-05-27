@@ -166,6 +166,7 @@ model Course {
   categorySlug  String?
   urlType       String          @default("legacy")
   courseCategory CourseCategory? @relation(fields: [categoryId], references: [id])
+  batches       Batch[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
 
@@ -200,6 +201,57 @@ model BlogPost {
   @@index([status])
   @@index([category])
   @@index([slug])
+}
+
+model Job {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  company         String
+  companyLogo     String?
+  location        String
+  type            String
+  mode            String
+  category        String
+  experience      String
+  salary          String?
+  description     String    @db.Text
+  skills          String[]
+  applyUrl        String?
+  relatedCourseId String?
+  status          String    @default("active")
+  featured        Boolean   @default(false)
+  expiresAt       DateTime?
+  postedAt        DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([slug])
+}
+
+model Batch {
+  id             String    @id @default(cuid())
+  courseId       String
+  course         Course    @relation(fields: [courseId], references: [id])
+  batchName      String
+  mode           String
+  centre         String?
+  startDate      DateTime
+  endDate        DateTime?
+  schedule       String
+  totalSeats     Int?
+  seatsAvailable Int?
+  trainer        String?
+  price          Float?
+  status         String    @default("upcoming")
+  featured       Boolean   @default(false)
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status])
+  @@index([courseId])
 }
 
 /// Timeline entries against a Lead. Cascades on Lead delete.

@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
+import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
+import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 
 export const dynamic = 'force-dynamic';
 
@@ -228,6 +230,7 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
               </div>
             )}
 
+            <CourseBatches courseId={course.id} courseTitle={course.title} />
             <RelatedCourses category={course.category} excludeSlug={course.slug} />
           </div>
 
@@ -237,6 +240,75 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
         </div>
       </div>
     </>
+  );
+}
+
+interface BatchItem {
+  id: string; batchName: string; mode: string; centre: string | null;
+  startDate: string; schedule: string; totalSeats: number | null;
+  seatsAvailable: number | null; status: string;
+  course: { title: string };
+}
+
+async function getCourseBatches(courseId: string): Promise<BatchItem[]> {
+  const base = await getBaseUrl();
+  try {
+    const res = await fetch(`${base}/api/batches?courseId=${courseId}`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.batches ?? []).slice(0, 3);
+  } catch { return []; }
+}
+
+async function CourseBatches({ courseId, courseTitle }: { courseId: string; courseTitle: string }) {
+  const batches = await getCourseBatches(courseId);
+  if (batches.length === 0) return null;
+
+  return (
+    <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
+          Upcoming Batches for this Course
+        </h2>
+        <Link href="/batches" style={{ fontSize: '13px', color: '#0f766e', fontWeight: 600, textDecoration: 'none' }}>
+          View all →
+        </Link>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {batches.map((b) => {
+          const badge = getBatchStatusBadge(b.status);
+          const dateStr = formatBatchDate(b.startDate);
+          const waMsg = batchBookingMessage({ courseName: courseTitle, mode: b.mode, startDate: dateStr, centre: b.centre, schedule: b.schedule });
+          const waUrl = buildWhatsAppUrl(waMsg);
+          return (
+            <div key={b.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
+              <div style={{ flex: 1, minWidth: '180px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{dateStr}</span>
+                  <span style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '10px', background: badge.color === 'blue' ? '#dbeafe' : badge.color === 'green' ? '#dcfce7' : '#f1f5f9', color: badge.color === 'blue' ? '#1d4ed8' : badge.color === 'green' ? '#15803d' : '#64748b' }}>
+                    {badge.label}
+                  </span>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                  {b.mode}{b.centre ? ` · ${b.centre}` : ''} · {b.schedule}
+                </p>
+              </div>
+              {b.mode !== 'Online' && b.seatsAvailable !== null && (
+                <span style={{ fontSize: '12px', fontWeight: 600, color: b.seatsAvailable <= 3 ? '#dc2626' : b.seatsAvailable <= 6 ? '#d97706' : '#16a34a' }}>
+                  {b.seatsAvailable} seats left
+                </span>
+              )}
+              {b.mode === 'Online' && (
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>Unlimited</span>
+              )}
+              <a href={waUrl} target="_blank" rel="noopener noreferrer" style={{ background: '#e47538', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                Book Seat
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

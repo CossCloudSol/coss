@@ -6,6 +6,7 @@ import {
   Award,
   Briefcase,
   Building2,
+  Calendar,
   CalendarCheck,
   ChevronDown,
   Home,
@@ -138,6 +139,14 @@ export default function SiteHeader() {
             <Briefcase className="nav-item-icon" aria-hidden="true" />Placements
           </Link>
 
+          <Link href="/jobs" className="nav-item" onClick={closeAll}>
+            <Briefcase className="nav-item-icon" aria-hidden="true" />Jobs
+          </Link>
+
+          <Link href="/batches" className="nav-item" onClick={closeAll}>
+            <Calendar className="nav-item-icon" aria-hidden="true" />Batches
+          </Link>
+
           <div className="nav-dropdown-wrap">
             <Link href="/about-us/" className="nav-item nav-has-dropdown">
               <Users className="nav-item-icon" aria-hidden="true" />
@@ -253,6 +262,20 @@ export default function SiteHeader() {
         <Link href="/placements/" className="mobile-nav-item" onClick={closeAll}>
           <span className="mobile-nav-item-inner">
             <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />Placements
+          </span>
+        </Link>
+
+        {/* Jobs */}
+        <Link href="/jobs" className="mobile-nav-item" onClick={closeAll}>
+          <span className="mobile-nav-item-inner">
+            <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />Jobs
+          </span>
+        </Link>
+
+        {/* Batches */}
+        <Link href="/batches" className="mobile-nav-item" onClick={closeAll}>
+          <span className="mobile-nav-item-inner">
+            <Calendar className="w-4 h-4 shrink-0" aria-hidden="true" />Batches
           </span>
         </Link>
 

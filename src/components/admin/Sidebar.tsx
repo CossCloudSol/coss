@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation';
 import {
   BarChart2,
   BookOpen,
+  Briefcase,
   Building2,
+  Calendar,
   FolderOpen,
   GraduationCap,
   LayoutDashboard,
@@ -34,6 +36,8 @@ const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '/admin/categories', label: 'Categories',        icon: FolderOpen,      permissionKey: 'dashboard:view' },
   { href: '/admin/courses',   label: 'Courses',           icon: GraduationCap,   permissionKey: 'dashboard:view' },
   { href: '/admin/blog',      label: 'Blog Posts',        icon: BookOpen,        permissionKey: 'dashboard:view' },
+  { href: '/admin/jobs',      label: 'Jobs',              icon: Briefcase,       permissionKey: 'dashboard:view' },
+  { href: '/admin/batches',   label: 'Batches',           icon: Calendar,        permissionKey: 'dashboard:view' },
   { href: '/admin/whatsapp',  label: 'WhatsApp Log',      icon: MessageCircle,   permissionKey: 'whatsapp:view' },
   { href: '/admin/seo',       label: 'SEO Manager',       icon: Search,          permissionKey: 'seo:view' },
   { href: '/admin/analytics', label: 'Analytics',         icon: BarChart2,       permissionKey: 'analytics:view' },
