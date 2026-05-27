@@ -132,6 +132,62 @@ export default function ContactUsPage() {
             ))}
           </div>
         </div>
+
+        {/* ── Pay Course Fee Online ── */}
+        <div style={{ marginTop: '56px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+            <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.12)', color: '#F97316', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Online Payment</div>
+            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>Pay Course Fee Online</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Secure payment via Razorpay — pay anytime, anywhere</p>
+          </div>
+
+          <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+            <div style={{ background: 'linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%)', borderRadius: '20px', padding: '40px 36px', boxShadow: '0 8px 32px rgba(0,0,0,0.18)', border: '1px solid rgba(249,115,22,0.25)', textAlign: 'center' }}>
+              {/* Lock icon */}
+              <div style={{ fontSize: '40px', marginBottom: '18px' }}>🔒</div>
+
+              {/* CTA button */}
+              <a
+                href="https://razorpay.me/@cosscloudsolutions"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: '#F97316', color: '#fff',
+                  padding: '16px 36px', borderRadius: '10px',
+                  fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '17px',
+                  textDecoration: 'none', marginBottom: '22px',
+                  boxShadow: '0 4px 18px rgba(249,115,22,0.45)',
+                  transition: 'transform 0.15s',
+                }}
+              >
+                Pay Now via Razorpay →
+              </a>
+
+              {/* Accepted methods */}
+              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12.5px', marginBottom: '14px' }}>
+                Accepted: UPI, Credit/Debit Card, Net Banking, EMI
+              </p>
+
+              {/* Payment method badges */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginBottom: '22px' }}>
+                {['UPI', 'Visa', 'Mastercard', 'Net Banking', 'EMI'].map(m => (
+                  <span key={m} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontSize: '11.5px', padding: '5px 12px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{m}</span>
+                ))}
+              </div>
+
+              {/* Trust line */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', color: 'rgba(255,255,255,0.5)', fontSize: '12px' }}>
+                <span>✅</span>
+                <span>100% Secure</span>
+                <span style={{ opacity: 0.4 }}>·</span>
+                <span>SSL Encrypted</span>
+                <span style={{ opacity: 0.4 }}>·</span>
+                <span>Instant Confirmation</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

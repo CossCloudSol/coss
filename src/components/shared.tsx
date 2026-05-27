@@ -94,7 +94,7 @@ export function CorporateHeroBanner() {
         { value: '5,000+', label: 'EMPLOYEES TRAINED' },
         { value: '4.8★',   label: 'GOOGLE RATING' },
         { value: '30+',    label: 'PROGRAMS OFFERED' },
-        { value: '8+',     label: 'YEARS OF EXCELLENCE' },
+        { value: '15+',    label: 'YEARS OF EXCELLENCE' },
       ]}
       ctaText="Free training proposal · Counsellor responds within 2 hours · Mon–Sat 9 am–7 pm"
       breadcrumb={[{ label: 'Corporate Training', href: '/corporate-training/' }]}

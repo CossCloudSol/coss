@@ -186,6 +186,69 @@ export default function PlacementsPage() {
         </div>
       </div>
 
+      {/* ── Fee Structure ── */}
+      <div style={{ background: '#0f1e3d', padding: '64px 20px' }}>
+        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.15)', color: '#F97316', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>Pricing</div>
+            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(24px,4vw,34px)', fontWeight: 700, color: '#fff', marginBottom: '10px' }}>Fee Structure</h2>
+            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px' }}>Transparent pricing with flexible payment options</p>
+          </div>
+
+          {/* Two-column cards */}
+          <div className="placement-fee-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
+
+            {/* LEFT — Pre-Placement */}
+            <div style={{ background: '#fff', borderRadius: '16px', padding: '32px 28px', boxShadow: '0 4px 24px rgba(0,0,0,0.18)' }}>
+              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: '#1a1a2e', marginBottom: '6px' }}>Pre-Placement Fee</h3>
+              <div style={{ fontFamily: 'Poppins, sans-serif', fontSize: '36px', fontWeight: 800, color: '#F97316', marginBottom: '6px', lineHeight: 1.1 }}>₹7,000 <span style={{ fontSize: '16px', fontWeight: 600, color: '#555' }}>+ GST</span></div>
+              <p style={{ color: '#666', fontSize: '14px', marginBottom: '14px', fontStyle: 'italic' }}>One-time non-refundable fee</p>
+              <div style={{ background: '#fff8f5', border: '1px solid #fdd6b8', borderRadius: '10px', padding: '14px 16px' }}>
+                <p style={{ color: '#7c4a1e', fontSize: '13.5px', lineHeight: '1.7', margin: 0 }}>
+                  Covers registration, training materials &amp; placement assistance
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT — Post-Placement */}
+            <div style={{ background: '#fff', borderRadius: '16px', padding: '32px 28px', boxShadow: '0 4px 24px rgba(0,0,0,0.18)' }}>
+              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: '#1a1a2e', marginBottom: '20px' }}>Post-Placement Fee</h3>
+              {[
+                { label: 'Fresher', amount: '₹30,000', note: '+ GST (Payable After Placement)' },
+                { label: 'Experienced (5.1 – 10 LPA)', amount: '₹50,000', note: '+ GST (Payable After Placement)' },
+                { label: 'Experienced (10.1 – 25 LPA)', amount: 'One Month Salary', note: '+ GST (Payable After Placement)' },
+              ].map((tier, i, arr) => (
+                <div
+                  key={tier.label}
+                  style={{
+                    paddingTop: i === 0 ? 0 : '16px',
+                    paddingBottom: i === arr.length - 1 ? 0 : '16px',
+                    borderBottom: i === arr.length - 1 ? 'none' : '1px solid #eee',
+                  }}
+                >
+                  <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13.5px', color: '#333', marginBottom: '4px' }}>{tier.label}</div>
+                  <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: '22px', color: '#F97316', lineHeight: 1.1, marginBottom: '2px' }}>{tier.amount}</div>
+                  <div style={{ color: '#888', fontSize: '12px' }}>{tier.note}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* GST note + CTA */}
+          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '12.5px', textAlign: 'center', marginBottom: '24px' }}>
+            * All fees are subject to GST as applicable
+          </p>
+          <div style={{ textAlign: 'center' }}>
+            <a href="/contact-us/" style={{ display: 'inline-block', background: '#F97316', color: '#fff', padding: '14px 36px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', textDecoration: 'none', boxShadow: '0 4px 18px rgba(249,115,22,0.4)' }}>
+              Apply for Placement Program →
+            </a>
+          </div>
+        </div>
+
+        {/* Mobile stack override */}
+        <style>{`@media(max-width:640px){.placement-fee-grid{grid-template-columns:1fr!important;}}`}</style>
+      </div>
+
       {/* Testimonials */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>

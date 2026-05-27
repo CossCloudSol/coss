@@ -263,7 +263,7 @@ export default async function HomePage() {
                 { Icon: Users,    number: '5000+', label: 'Students Trained' },
                 { Icon: BookOpen, number: '30+',   label: 'Courses' },
                 { Icon: Award,    number: '100%',  label: 'Placement Support' },
-                { Icon: Calendar, number: '10+',   label: 'Years Experience' },
+                { Icon: Calendar, number: '15+',   label: 'Years Experience' },
               ] as const).map(({ Icon, number, label }) => (
                 <div key={label} className="hero-stat-item">
                   <Icon size={26} className="hero-stat-icon" aria-hidden="true" />
@@ -568,7 +568,7 @@ export default async function HomePage() {
               { Icon: Users,     number: '5,000+', label: 'Students Trained'     },
               { Icon: Briefcase, number: '200+',   label: 'Hiring Partners'      },
               { Icon: Award,     number: '100%',   label: 'Placement Assistance' },
-              { Icon: Shield,    number: '10+',    label: 'Years Experience'     },
+              { Icon: Shield,    number: '15+',    label: 'Years Experience'     },
             ].map(({ Icon, number, label }, i) => (
               <div key={label} className="wcu-stat-item">
                 {i > 0 && <div className="wcu-stat-divider" aria-hidden="true" />}

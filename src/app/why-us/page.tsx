@@ -43,7 +43,7 @@ export default function WhyUsPage() {
         subtitle="Small batches, real-project training, certified trainers with 10+ years of experience & 100% placement support — see what sets COSS apart."
         stats={[
           { value: '5,000+', label: 'STUDENTS TRAINED' },
-          { value: '10+',    label: 'YEARS EXPERIENCE' },
+          { value: '15+',    label: 'YEARS EXPERIENCE' },
           { value: '50+',    label: 'HIRING PARTNERS' },
           { value: '100%',   label: 'PLACEMENT SUPPORT' },
         ]}
