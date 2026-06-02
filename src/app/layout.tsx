@@ -1,5 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Raleway, Roboto } from 'next/font/google';
+
+const raleway = Raleway({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-raleway',
+  display: 'swap',
+});
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+  variable: '--font-roboto',
+  display: 'swap',
+});
 
 // Force dynamic rendering so Prisma DB reads (announcement bar, SEO settings)
 // are never cached at build time — admin changes show up immediately.
@@ -143,7 +158,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const globalSchemas = buildGlobalSchemas();
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${raleway.variable} ${roboto.variable}`}>
       <head>
         {/* Theme init — synchronous, prevents dark-mode flash on first paint */}
         <script
@@ -165,11 +180,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="COSS Cloud Solutions" />
 
-        {/* Fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        {/* Fonts are served by next/font from /_next/static — no external requests */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {/* Global JSON-LD schemas: Organization, WebSite, LocalBusiness (×2)
@@ -294,7 +305,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <div className="footer-form">
                 <input type="text" placeholder="Your Full Name" className="footer-input" />
                 <input type="tel" placeholder="Mobile Number" className="footer-input" />
-                <select className="footer-select">
+                <select className="footer-select" aria-label="Inquiry type">
                   <option value="">Select Inquiry Type</option>
                   <option>Course Enquiry</option>
                   <option>Demo Class</option>

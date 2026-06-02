@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
-import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons';
+import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons'
+import { CourseCardThumb } from '@/components/CourseCardThumb';
 
 export const dynamic = 'force-dynamic';
 
@@ -379,7 +379,7 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '14px' }}>
             <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <CategoryIcon style={{ width: '32px', height: '32px', color: '#5eead4' }} aria-hidden="true" />
+              <CategoryIcon size={32} color="#5eead4" aria-hidden="true" />
             </div>
             <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', margin: 0, lineHeight: 1.2 }}>
               {category.name} Training in Hyderabad
@@ -407,19 +407,11 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
               <div key={course.id} style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 3px 18px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}>
                 {/* Thumbnail / fallback */}
                 <div style={{ position: 'relative', height: '160px', flexShrink: 0 }}>
-                  {course.thumbnail ? (
-                    <Image
-                      src={course.thumbnail}
-                      alt={course.title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                      sizes="(max-width: 768px) 100vw, 360px"
-                    />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: accentColor }}>
-                      <i className="ti ti-book" style={{ fontSize: '48px', color: 'rgba(255,255,255,0.6)' }} aria-hidden="true" />
-                    </div>
-                  )}
+                  <CourseCardThumb
+                    thumbnail={course.thumbnail}
+                    title={course.title}
+                    accentColor={accentColor}
+                  />
                   {course.badge && (
                     <span style={{ position: 'absolute', top: '10px', left: '10px', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', zIndex: 1 }}>{course.badge}</span>
                   )}
