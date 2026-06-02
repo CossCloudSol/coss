@@ -275,7 +275,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
             {/* Top Courses */}
             <div className="footer-col">
-              <h5 className="footer-heading">Top Courses</h5>
+              <h4 className="footer-heading">Top Courses</h4>
               {footerCourses.map(c => (
                 <Link key={c.href} href={c.href} className="footer-link">› {c.label}</Link>
               ))}
@@ -283,7 +283,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
             {/* About Us */}
             <div className="footer-col">
-              <h5 className="footer-heading">Quick Links</h5>
+              <h4 className="footer-heading">Quick Links</h4>
               {[
                 { label: 'About Us', href: '/about-us/' },
                 { label: 'Why Us', href: '/why-us/' },
@@ -301,10 +301,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
             {/* Quick Enroll */}
             <div className="footer-col">
-              <h5 className="footer-heading">Quick Enroll</h5>
+              <h4 className="footer-heading">Quick Enroll</h4>
               <div className="footer-form">
-                <input type="text" placeholder="Your Full Name" className="footer-input" />
-                <input type="tel" placeholder="Mobile Number" className="footer-input" />
+                <input type="text" placeholder="Your Full Name" aria-label="Your full name" className="footer-input" />
+                <input type="tel" placeholder="Mobile Number" aria-label="Mobile number" className="footer-input" />
                 <select className="footer-select" aria-label="Inquiry type">
                   <option value="">Select Inquiry Type</option>
                   <option>Course Enquiry</option>

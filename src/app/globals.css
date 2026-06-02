@@ -507,6 +507,7 @@ img { max-width: 100%; height: auto; display: block; }
   background: var(--primary); color: #fff; padding: 13px 26px; border-radius: 6px;
   font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px;
   display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;
+  min-height: 44px;
 }
 .btn-primary:hover { background: var(--primary-dark); color: #fff; }
 .btn-outline-white {
@@ -1644,7 +1645,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   padding: 11px 16px;
   border-radius: 10px;
   transition: opacity 0.2s, transform 0.15s;
-  min-height: 40px;
+  min-height: 44px;
   text-decoration: none;
   width: 100%;
 }

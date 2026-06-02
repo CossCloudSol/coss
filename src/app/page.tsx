@@ -756,7 +756,7 @@ export default async function HomePage() {
                 style={i > 0 ? { borderLeft: '1px solid rgba(255,255,255,0.08)' } : undefined}
               >
                 <p className="text-2xl font-extrabold" style={{ color }}>{value}</p>
-                <p className="text-xs mt-0.5" style={{ color: '#64748b' }}>{label}</p>
+                <p className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>{label}</p>
               </div>
             ))}
           </div>
@@ -792,7 +792,7 @@ export default async function HomePage() {
 
           {/* ── Conversion CTA ── */}
           <div className="mt-12 text-center">
-            <p className="text-sm mb-5" style={{ color: '#64748b' }}>
+            <p className="text-sm mb-5" style={{ color: '#94a3b8' }}>
               Ready to land your name on this list?
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -812,7 +812,7 @@ export default async function HomePage() {
                 View Placement Stories →
               </Link>
             </div>
-            <p className="text-xs mt-4" style={{ color: '#475569' }}>
+            <p className="text-xs mt-4" style={{ color: '#94a3b8' }}>
               No fees · No commitment · Just one free class
             </p>
           </div>
@@ -934,7 +934,7 @@ export default async function HomePage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
                     {t.photoUrl !== undefined ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={t.photoUrl} alt={t.name} className="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" />
+                      <img src={t.photoUrl} alt={t.name} width={40} height={40} className="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" />
                     ) : (
                       <div className={`${t.avatarBg} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0`} aria-hidden="true">
                         {t.initials}
@@ -996,7 +996,7 @@ export default async function HomePage() {
                       <span className="blog-date-mon">{mon.toUpperCase()}</span>
                     </div>
                     <p className="blog-card-brand">Coss Cloud Solutions</p>
-                    <h3 className="blog-card-img-title">{post.title}</h3>
+                    <p className="blog-card-img-title">{post.title}</p>
                     <span className="blog-card-pill">{post.category}</span>
                   </div>
                   <div className="blog-card-body">
