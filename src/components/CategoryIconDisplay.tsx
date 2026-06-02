@@ -1,7 +1,42 @@
 'use client'
-import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons'
 
-export function CategoryIconDisplay({ slug, color }: { slug: string; color?: string }) {
-  const Icon = CATEGORY_ICONS[slug] ?? DEFAULT_ICON
-  return <Icon size={32} color={color || '#5eead4'} aria-hidden="true" />
+import {
+  BarChart2, Cloud, Settings, Code2, Database,
+  Shield, Building2, TestTube2, Palette, Users,
+  Briefcase, Rocket, BookOpen
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+
+const ICONS: Record<string, LucideIcon> = {
+  'data-analytics-bi':        BarChart2,
+  'cloud-computing':          Cloud,
+  'devops-multi-cloud':       Settings,
+  'programming-full-stack':   Code2,
+  'data-engineering':         Database,
+  'cyber-security':           Shield,
+  'erp-crm-enterprise-tools': Building2,
+  'software-testing-os':      TestTube2,
+  'digital-design':           Palette,
+  'professional-soft-skills': Users,
+  'human-resource':           Briefcase,
+  'quantum-computing':        Rocket,
+}
+
+export function CategoryIconDisplay({
+  slug,
+  color,
+  size = 32,
+}: {
+  slug: string
+  color?: string | null
+  size?: number
+}) {
+  const Icon: LucideIcon = ICONS[slug] ?? BookOpen
+  return (
+    <Icon
+      size={size}
+      color={color || '#5eead4'}
+      aria-hidden="true"
+    />
+  )
 }
