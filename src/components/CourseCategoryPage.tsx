@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import WpImg from '@/components/WpImg';
+import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
+import { CourseCardThumb } from '@/components/CourseCardThumb';
 import { PageBanner, EnrollSidebar, CourseSidebarNav, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import type { CourseCategoryData } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
@@ -24,9 +26,7 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
             {/* Intro */}
             <div style={{ marginBottom: '36px' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(232,64,28,0.08)', padding: '5px 14px', borderRadius: '20px', marginBottom: '14px' }}>
-                {imgs?.icon && (
-                  <WpImg src={imgs.icon} alt={data.name + ' course icon'} style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
-                )}
+                <CategoryIconDisplay slug={breadcrumbSlug} size={22} color="#e8401c" />
                 <span style={{ color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
               </div>
               <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>
@@ -60,8 +60,13 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '18px' }} className="course-list-grid">
                   {imgs.subcourses.map(sub => (
                     <Link key={sub.href} href={sub.href} style={{ textDecoration: 'none', background: 'var(--bg-card)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', display: 'block' }}>
-                      <div style={{ height: '165px', overflow: 'hidden', background: 'linear-gradient(135deg,#1a1a2e,#0f3460)' }}>
-                        <WpImg src={sub.image} alt={sub.alt} style={{ width: '100%', height: '165px', objectFit: 'cover' }} />
+                      <div style={{ position: 'relative', height: '165px', overflow: 'hidden', background: 'linear-gradient(135deg,#1a1a2e,#0f3460)' }}>
+                        <CourseCardThumb
+                          thumbnail={sub.image}
+                          title={sub.name}
+                          categoryName={data.name}
+                          categorySlug={breadcrumbSlug}
+                        />
                       </div>
                       <div style={{ padding: '14px 16px' }}>
                         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>{sub.name}</h4>
