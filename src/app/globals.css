@@ -83,7 +83,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
@@ -94,7 +94,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 600;
   line-height: 1.3;
   color: var(--text);
@@ -148,7 +148,7 @@ img { max-width: 100%; height: auto; display: block; }
 .topbar-pay {
   background: var(--primary); color: #fff !important;
   padding: 3px 12px; border-radius: 4px;
-  font-size: 12px; font-weight: 700; font-family: 'Raleway', sans-serif;
+  font-size: 12px; font-weight: 700; font-family: var(--font-raleway, 'Raleway'), sans-serif;
   letter-spacing: 0.3px; white-space: nowrap;
 }
 
@@ -213,7 +213,7 @@ img { max-width: 100%; height: auto; display: block; }
   background: rgba(228,117,56,0.25); color: #ffb07a;
   border: 1px solid rgba(228,117,56,0.45);
   border-radius: 20px; padding: 2px 10px;
-  font-size: 11px; font-weight: 700; font-family: 'Raleway', sans-serif;
+  font-size: 11px; font-weight: 700; font-family: var(--font-raleway, 'Raleway'), sans-serif;
   white-space: nowrap;
 }
 
@@ -227,10 +227,10 @@ img { max-width: 100%; height: auto; display: block; }
   background: var(--primary); color: #fff;
   width: 42px; height: 42px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 20px; flex-shrink: 0;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 800; font-size: 20px; flex-shrink: 0;
 }
 .logo-text { display: flex; flex-direction: column; }
-.logo-name { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 17px; color: var(--text); line-height: 1; }
+.logo-name { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 800; font-size: 17px; color: var(--text); line-height: 1; }
 .logo-sub { font-size: 11px; color: var(--text-muted); line-height: 1.3; }
 
 /* ── Desktop Nav ── */
@@ -238,7 +238,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 .nav-item {
   position: relative;
-  color: var(--nav-text); font-family: 'Raleway', sans-serif; font-weight: 600;
+  color: var(--nav-text); font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600;
   font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
   padding: 8px 8px; display: inline-flex; align-items: center; gap: 3px;
   transition: color 0.2s; white-space: nowrap;
@@ -267,7 +267,7 @@ img { max-width: 100%; height: auto; display: block; }
 .nav-demo {
   display: inline-flex; align-items: center; gap: 5px;
   color: var(--secondary) !important;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 11.5px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 11.5px;
   padding: 5px 10px; border-radius: 6px;
   border: 2px solid var(--secondary);
   white-space: nowrap;
@@ -284,7 +284,7 @@ img { max-width: 100%; height: auto; display: block; }
 .nav-enroll {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--primary); color: #fff !important;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 11.5px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 11.5px;
   padding: 5px 10px; border-radius: 6px;
   white-space: nowrap;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
@@ -314,7 +314,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .nav-dropdown-header {
   padding: 8px 16px 6px;
-  font-family: 'Raleway', sans-serif; font-size: 10px; font-weight: 700;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.8px;
   color: var(--text-light); border-bottom: 1px solid var(--border);
   margin-bottom: 4px;
@@ -322,7 +322,7 @@ img { max-width: 100%; height: auto; display: block; }
 .dropdown-item {
   padding: 9px 16px; font-size: 13px; color: var(--text); display: block;
   transition: background 0.15s, color 0.15s, padding-left 0.15s;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .dropdown-item:hover {
   background: var(--primary-light); color: var(--primary);
@@ -335,6 +335,7 @@ img { max-width: 100%; height: auto; display: block; }
   align-items: center; justify-content: center;
   background: none; border: none;
   color: var(--text); cursor: pointer; padding: 7px; border-radius: 6px;
+  min-height: 44px; min-width: 44px;
   transition: background 0.2s;
 }
 .hamburger:hover { background: var(--surface); }
@@ -346,7 +347,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .mobile-phone-btn {
   display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 8px;
+  min-width: 44px; min-height: 44px; border-radius: 8px;
   background: var(--surface); color: var(--secondary);
   border: 1px solid var(--border);
   transition: background 0.2s;
@@ -356,7 +357,7 @@ img { max-width: 100%; height: auto; display: block; }
 .mobile-enroll-btn {
   display: inline-flex; align-items: center; gap: 5px;
   background: var(--primary); color: #fff !important;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 12px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 12px;
   padding: 8px 14px; border-radius: 7px;
   white-space: nowrap;
 }
@@ -375,7 +376,7 @@ img { max-width: 100%; height: auto; display: block; }
   padding: 11px 16px;
   background: rgba(228,117,56,0.18);
   border-bottom: 1px solid rgba(255,255,255,0.1);
-  color: #ffb07a; font-family: 'Raleway', sans-serif;
+  color: #ffb07a; font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700; font-size: 14px;
   text-decoration: none;
   transition: background 0.2s;
@@ -386,7 +387,7 @@ img { max-width: 100%; height: auto; display: block; }
 .mobile-nav-item {
   display: flex; align-items: center; justify-content: space-between;
   width: 100%; background: none; border: none; text-align: left;
-  color: rgba(255,255,255,0.88); font-family: 'Raleway', sans-serif;
+  color: rgba(255,255,255,0.88); font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 500; font-size: 14px;
   padding: 13px 16px; min-height: 50px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -418,7 +419,7 @@ img { max-width: 100%; height: auto; display: block; }
   display: flex; align-items: center; justify-content: center;
   width: 100%; background: transparent; color: #fff !important;
   border: 2px solid rgba(255,255,255,0.7);
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px;
   text-align: center; padding: 13px 20px; border-radius: 8px;
   transition: background 0.2s, border-color 0.2s;
 }
@@ -428,7 +429,7 @@ img { max-width: 100%; height: auto; display: block; }
 .mobile-nav-enroll {
   display: flex; align-items: center; justify-content: center;
   width: 100%; background: var(--primary); color: #fff !important;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px;
   text-align: center; padding: 13px 20px; border-radius: 8px;
   transition: background 0.2s;
   box-shadow: 0 3px 10px rgba(228,117,56,0.35);
@@ -493,7 +494,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .hero-badge {
   display: inline-block; background: rgba(228,117,56,0.2); color: #ffb07a;
-  font-size: 12px; font-weight: 600; font-family: 'Raleway', sans-serif;
+  font-size: 12px; font-weight: 600; font-family: var(--font-raleway, 'Raleway'), sans-serif;
   text-transform: uppercase; letter-spacing: 1px; padding: 5px 14px;
   border-radius: 20px; margin-bottom: 16px; border: 1px solid rgba(228,117,56,0.35);
 }
@@ -504,19 +505,19 @@ img { max-width: 100%; height: auto; display: block; }
 
 .btn-primary {
   background: var(--primary); color: #fff; padding: 13px 26px; border-radius: 6px;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px;
   display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;
 }
 .btn-primary:hover { background: var(--primary-dark); color: #fff; }
 .btn-outline-white {
   background: transparent; color: #fff; padding: 12px 25px; border-radius: 6px;
-  font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 14px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; font-size: 14px;
   border: 2px solid rgba(255,255,255,0.55); display: inline-flex; align-items: center; gap: 6px;
 }
 .btn-outline-white:hover { background: rgba(255,255,255,0.1); color: #fff; }
 .btn-outline-dark {
   background: rgba(15,15,20,0.55); color: #fff; padding: 12px 25px; border-radius: 6px;
-  font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 14px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; font-size: 14px;
   border: 2px solid rgba(255,255,255,0.3); display: inline-flex; align-items: center; gap: 8px;
   transition: background 0.2s, border-color 0.2s;
 }
@@ -532,12 +533,12 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .hero-stat-icon { color: var(--primary); margin: 0 auto 6px; display: block; }
 .hero-stat-number {
-  font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 22px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 800; font-size: 22px;
   color: var(--primary); line-height: 1.1; margin-bottom: 3px;
 }
 .hero-stat-label {
   font-size: 11px; color: rgba(255,255,255,0.8);
-  font-family: 'Roboto', sans-serif; line-height: 1.3;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif; line-height: 1.3;
 }
 
 /* Enroll card */
@@ -547,13 +548,13 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid rgba(79,209,197,0.22);
   box-shadow: 0 8px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04) inset;
 }
-.enroll-card h3 { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 4px; color: #fff; }
+.enroll-card h3 { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 4px; color: #fff; }
 .enroll-card p { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 18px; }
 .form-input {
   width: 100%; padding: 11px 13px; border-radius: 6px;
   border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.1);
   color: #fff; font-size: 14px; margin-bottom: 11px; outline: none;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .form-input::placeholder { color: rgba(255,255,255,0.45); }
 .form-input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(228,117,56,0.2); }
@@ -567,7 +568,7 @@ img { max-width: 100%; height: auto; display: block; }
 ══════════════════════════════════════════════════ */
 .stats-bar { background: var(--primary); padding: 28px 0; }
 .stats-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: grid; grid-template-columns: repeat(4,1fr); text-align: center; gap: 16px; }
-.stat-number { font-family: 'Raleway', sans-serif; font-size: 32px; font-weight: 800; color: #fff; line-height: 1; }
+.stat-number { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 32px; font-weight: 800; color: #fff; line-height: 1; }
 .stat-label { font-size: 13px; color: rgba(255,255,255,0.88); margin-top: 4px; }
 
 /* ══════════════════════════════════════════════════
@@ -581,11 +582,11 @@ img { max-width: 100%; height: auto; display: block; }
 .section-header { text-align: center; margin-bottom: 44px; }
 .section-tag {
   display: inline-block; background: var(--primary-light); color: var(--primary);
-  font-size: 12px; font-weight: 600; font-family: 'Raleway', sans-serif;
+  font-size: 12px; font-weight: 600; font-family: var(--font-raleway, 'Raleway'), sans-serif;
   text-transform: uppercase; letter-spacing: 1px; padding: 4px 14px;
   border-radius: 20px; margin-bottom: 10px;
 }
-.section-title { font-family: 'Raleway', sans-serif; font-size: 30px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.section-title { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 30px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
 .section-subtitle { color: var(--text-muted); font-size: 15px; max-width: 580px; margin: 0 auto; }
 
 /* ── Course grid ── */
@@ -603,14 +604,14 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 32px; overflow: hidden;
 }
 .course-card-body { padding: 14px; }
-.course-card-body h4 { font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 5px; }
-.course-card-more { color: var(--primary); font-size: 12px; font-weight: 600; font-family: 'Raleway', sans-serif; }
+.course-card-body h4 { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 5px; }
+.course-card-more { color: var(--primary); font-size: 12px; font-weight: 600; font-family: var(--font-raleway, 'Raleway'), sans-serif; }
 
 /* ── Why Us grid ── */
 .why-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
 .why-card { padding: 26px 20px; border-radius: 12px; border: 1px solid var(--border-card); background: var(--bg-card); box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 14px; }
 .why-icon { width: 56px; height: 56px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-.why-card h4 { font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 6px; }
+.why-card h4 { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 6px; }
 .why-card p { color: var(--text-muted); font-size: 13px; line-height: 1.6; }
 
 /* ── Two-col layout ── */
@@ -624,7 +625,7 @@ img { max-width: 100%; height: auto; display: block; }
 .company-chip {
   background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 8px;
   text-align: center; color: rgba(255,255,255,0.8); font-size: 12px;
-  font-family: 'Raleway', sans-serif; font-weight: 500;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 500;
   border: 1px solid rgba(255,255,255,0.15);
   display: flex; align-items: center; justify-content: center;
   min-height: 48px;
@@ -636,42 +637,42 @@ img { max-width: 100%; height: auto; display: block; }
 .stars { color: #f5a623; font-size: 13px; margin-bottom: 8px; }
 .testimonial-card p { font-size: 13px; color: var(--text-muted); line-height: 1.7; font-style: italic; margin-bottom: 14px; }
 .testimonial-author { display: flex; align-items: center; gap: 10px; }
-.author-avatar { width: 34px; height: 34px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 13px; flex-shrink: 0; }
-.author-name { font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 13px; color: var(--text); }
+.author-avatar { width: 34px; height: 34px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.author-name { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; font-size: 13px; color: var(--text); }
 
 /* ── Blog grid ── */
 .blog-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 22px; }
 .blog-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-card); text-decoration: none; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
 .blog-card:hover { box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.12)); transform: translateY(-2px); }
 .blog-card-img { position: relative; height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 16px 16px; text-align: center; overflow: hidden; }
-.blog-date-badge { position: absolute; top: 12px; left: 12px; background: var(--primary); color: #fff; text-align: center; padding: 5px 9px; border-radius: 6px; font-family: 'Raleway', sans-serif; }
+.blog-date-badge { position: absolute; top: 12px; left: 12px; background: var(--primary); color: #fff; text-align: center; padding: 5px 9px; border-radius: 6px; font-family: var(--font-raleway, 'Raleway'), sans-serif; }
 .blog-date-day { display: block; font-size: 18px; font-weight: 700; line-height: 1; }
 .blog-date-mon { font-size: 10px; text-transform: uppercase; }
 .blog-card-brand { color: rgba(255,255,255,0.65); font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 8px; }
-.blog-card-img-title { color: #fff; font-family: 'Raleway', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.blog-card-img-title { color: #fff; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .blog-card-pill { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); border-radius: 20px; padding: 3px 12px; font-size: 11px; font-weight: 500; border: 1px solid rgba(255,255,255,0.25); white-space: nowrap; }
 .blog-card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.blog-card-body h3 { font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 13px; color: var(--text); line-height: 1.45; margin-bottom: 2px; flex: 1; }
+.blog-card-body h3 { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; font-size: 13px; color: var(--text); line-height: 1.45; margin-bottom: 2px; flex: 1; }
 .blog-card-body h3 a { color: var(--text); }
 .blog-card-body h3 a:hover { color: var(--primary); }
-.blog-read-more { color: var(--primary); font-size: 12px; font-family: 'Raleway', sans-serif; font-weight: 600; }
+.blog-read-more { color: var(--primary); font-size: 12px; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; }
 
 /* ── About / two-col ── */
 .about-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: start; }
 .about-why-box { background: var(--bg-alt); border-radius: 14px; padding: 26px; border: 1px solid var(--border); }
 .about-why-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
 .about-why-check { color: var(--primary); font-weight: 700; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-.about-why-label { font-family: 'Raleway', sans-serif; font-size: 13.5px; font-weight: 600; color: var(--text); }
+.about-why-label { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 13.5px; font-weight: 600; color: var(--text); }
 .about-why-desc { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
 
 /* ── CTA ── */
 .cta-section { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); padding: 58px 0; text-align: center; color: #fff; }
-.cta-section h2 { font-family: 'Raleway', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 12px; color: #fff; }
+.cta-section h2 { font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 12px; color: #fff; }
 .cta-section p { font-size: 16px; opacity: 0.9; margin-bottom: 26px; color: rgba(255,255,255,0.9); }
 .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-.btn-white { background: #fff; color: var(--primary); padding: 12px 28px; border-radius: 6px; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px; }
+.btn-white { background: #fff; color: var(--primary); padding: 12px 28px; border-radius: 6px; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px; }
 .btn-white:hover { background: rgba(255,255,255,0.9); color: var(--primary); }
-.btn-white-outline { background: transparent; color: #fff; padding: 11px 27px; border-radius: 6px; font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 14px; border: 2px solid rgba(255,255,255,0.7); }
+.btn-white-outline { background: transparent; color: #fff; padding: 11px 27px; border-radius: 6px; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; font-size: 14px; border: 2px solid rgba(255,255,255,0.7); }
 .btn-white-outline:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
 /* ── Center btn ── */
@@ -687,16 +688,22 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-contact p { font-size: 13px; line-height: 1.9; color: var(--footer-text); }
 .footer-contact a { color: var(--footer-text); }
 .footer-contact strong { color: var(--footer-heading); }
-.footer-heading { color: var(--footer-heading); font-family: 'Raleway', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: inline-block; }
+.footer-heading { color: var(--footer-heading); font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: inline-block; }
 .footer-link { color: var(--footer-text); font-size: 13px; display: block; margin-bottom: 8px; transition: color 0.2s, padding-left 0.2s; }
 .footer-link:hover { color: var(--primary); padding-left: 3px; }
 .footer-form { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 18px; }
-.footer-input { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.07); color: var(--footer-heading); font-size: 13px; margin-bottom: 10px; outline: none; font-family: 'Roboto', sans-serif; }
+.footer-input { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.07); color: var(--footer-heading); font-size: 13px; margin-bottom: 10px; outline: none; font-family: var(--font-roboto, 'Roboto'), sans-serif; }
 .footer-input::placeholder { color: rgba(255,255,255,0.35); }
 .footer-input option { color: #1a1a1a; background: #fff; }
 .footer-select { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.07); color: var(--footer-text); font-size: 13px; margin-bottom: 10px; outline: none; }
-.footer-enroll-btn { display: block; text-align: center; background: var(--primary); color: #fff; padding: 11px; border-radius: 6px; font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px; }
+.footer-enroll-btn { display: block; text-align: center; background: var(--primary); color: #fff; padding: 11px; border-radius: 6px; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px; }
 .footer-enroll-btn:hover { background: var(--primary-dark); color: #fff; }
+.footer-social-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px; min-height: 44px; border-radius: 8px;
+  transition: opacity 0.2s;
+}
+.footer-social-icon:hover { opacity: 0.85; }
 .footer-bottom { background: var(--footer-bottom); padding: 14px 20px; text-align: center; font-size: 12px; color: var(--footer-text); }
 
 /* ══════════════════════════════════════════════════
@@ -729,7 +736,7 @@ img { max-width: 100%; height: auto; display: block; }
   max-width: 900px; margin: 0 auto;
 }
 .page-banner-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: clamp(24px, 5vw, 38px);
   font-weight: 800;
   color: #fff;
@@ -784,7 +791,7 @@ img { max-width: 100%; height: auto; display: block; }
   50% { opacity:0.65; transform:scale(1.35); }
 }
 .hero-banner-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: clamp(28px, 5.5vw, 52px);
   font-weight: 900;
   color: #fff;
@@ -821,7 +828,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .hero-banner-stat strong {
   display: block;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: clamp(18px, 3vw, 26px);
   font-weight: 800;
   color: #38bdf8;
@@ -857,7 +864,7 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Prose / Blog content */
 .prose-content { color: var(--text-muted); }
-.prose-content h1,.prose-content h2,.prose-content h3,.prose-content h4 { font-family: 'Raleway', sans-serif; color: var(--text); margin: 1.4em 0 0.7em; }
+.prose-content h1,.prose-content h2,.prose-content h3,.prose-content h4 { font-family: var(--font-raleway, 'Raleway'), sans-serif; color: var(--text); margin: 1.4em 0 0.7em; }
 .prose-content h1 { font-size: clamp(22px,4vw,32px); }
 .prose-content h2 { font-size: clamp(18px,3vw,24px); }
 .prose-content h3 { font-size: clamp(16px,2.5vw,20px); }
@@ -870,7 +877,7 @@ img { max-width: 100%; height: auto; display: block; }
 .prose-content hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
 .prose-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.2em; }
 .prose-content th,.prose-content td { border: 1px solid var(--border); padding: 10px 14px; font-size: 14px; }
-.prose-content th { background: var(--secondary); color: #fff; font-family: 'Raleway', sans-serif; font-weight: 600; }
+.prose-content th { background: var(--secondary); color: #fff; font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 600; }
 .prose-content blockquote { border-left: 4px solid var(--primary); padding: 12px 18px; background: var(--primary-light); margin: 1.2em 0; border-radius: 0 8px 8px 0; color: var(--text-muted); }
 .prose-content code { background: var(--surface); color: var(--primary); padding: 2px 7px; border-radius: 4px; font-size: 0.88em; }
 .prose-content pre { background: var(--secondary); color: #e2e8f0; padding: 18px; border-radius: 10px; overflow-x: auto; margin-bottom: 1.2em; }
@@ -1032,7 +1039,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .enroll-breadcrumb a { color: rgba(255,255,255,0.55); transition: color 0.15s; }
 .enroll-breadcrumb a:hover { color: rgba(255,255,255,0.9); }
 .enroll-hero-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: clamp(28px, 5vw, 46px);
   font-weight: 800;
   line-height: 1.15;
@@ -1068,7 +1075,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   color: rgba(255,255,255,0.9);
 }
 .enroll-trust-pill strong {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 800;
   font-size: 15px;
   color: #fff;
@@ -1090,14 +1097,14 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   display: inline-block;
   background: var(--primary-light);
   color: var(--primary);
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1px;
   padding: 4px 14px; border-radius: 20px;
   margin-bottom: 14px;
 }
 .enroll-form-heading {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: clamp(22px, 3vw, 30px);
   font-weight: 800;
   color: var(--text);
@@ -1132,7 +1139,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   width: 32px; height: 32px; border-radius: 50%;
   background: var(--secondary);
   color: #fff;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 12px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   border: 2px solid var(--bg-card);
@@ -1159,7 +1166,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   gap: 5px;
   font-size: 12px;
   color: var(--text-muted);
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .enroll-assurance-item svg { color: #16a34a; flex-shrink: 0; }
 
@@ -1175,7 +1182,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   box-shadow: var(--shadow-sm);
 }
 .enroll-why-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 17px; font-weight: 700;
   color: var(--text);
   margin-bottom: 18px;
@@ -1205,7 +1212,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   flex-shrink: 0;
 }
 .enroll-why-card-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700; font-size: 13.5px;
   color: var(--text);
   margin-bottom: 2px;
@@ -1225,7 +1232,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 .enroll-branches-title {
   display: flex; align-items: center; gap: 8px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 15px; font-weight: 700;
   color: #fff;
   margin-bottom: 16px;
@@ -1243,7 +1250,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 .enroll-branch-card:hover { background: rgba(255,255,255,0.11); }
 .enroll-branch-name {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700; font-size: 13px;
   color: var(--primary);
   margin-bottom: 4px;
@@ -1286,7 +1293,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .ef-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
 .ef-field:last-of-type { margin-bottom: 0; }
 .ef-label {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 12.5px; font-weight: 700;
   color: var(--text);
 }
@@ -1300,7 +1307,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   background: var(--bg-alt);
   color: var(--text);
   font-size: 14px;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   appearance: auto;
@@ -1341,7 +1348,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   padding: 8px 14px;
   border-radius: 8px;
   border: 1.5px solid var(--border);
-  font-size: 13px; font-family: 'Roboto', sans-serif;
+  font-size: 13px; font-family: var(--font-roboto, 'Roboto'), sans-serif;
   color: var(--text);
   transition: border-color 0.15s, background 0.15s;
   flex: 1; min-width: 100px; justify-content: center;
@@ -1362,7 +1369,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .ef-error {
   font-size: 11.5px;
   color: #dc2626;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
   margin-top: 2px;
 }
 
@@ -1375,7 +1382,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border: none;
   border-radius: 10px;
   padding: 15px 20px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 800;
   font-size: 15px;
   cursor: pointer;
@@ -1431,7 +1438,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   margin: 0 auto 18px;
 }
 .ef-success-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 22px; font-weight: 800;
   color: var(--text);
   margin-bottom: 10px;
@@ -1451,7 +1458,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .ef-another-btn {
   background: var(--primary); color: #fff;
   padding: 12px 24px; border-radius: 8px;
-  font-family: 'Raleway', sans-serif; font-weight: 700; font-size: 14px;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif; font-weight: 700; font-size: 14px;
   border: none; cursor: pointer;
   transition: background 0.2s;
 }
@@ -1494,7 +1501,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   margin-bottom: 28px;
   font-size: 13px;
   color: rgba(255,255,255,0.82);
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .hero-trust-item {
   display: inline-flex;
@@ -1582,7 +1589,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   flex: 1;
 }
 .course-card-v2-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 15px;
   color: var(--text);
@@ -1611,7 +1618,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   font-size: 11px;
   padding: 3px 9px;
   border-radius: 20px;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .course-card-v2-tags {
   display: flex;
@@ -1625,7 +1632,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border-radius: 20px;
   border: 1px solid;
   font-weight: 500;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .course-card-v2-cta {
   display: block;
@@ -1633,7 +1640,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   color: #fff;
   font-size: 13px;
   font-weight: 700;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   padding: 11px 16px;
   border-radius: 10px;
   transition: opacity 0.2s, transform 0.15s;
@@ -1683,7 +1690,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   color: var(--primary);
 }
 .why-card-v2-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: clamp(13px, 1.4vw, 15px);
   color: var(--text);
@@ -1745,7 +1752,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   color: var(--primary);
   font-size: 11px;
   font-weight: 600;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   padding: 3px 10px;
   border-radius: 20px;
   margin-top: auto;
@@ -1761,7 +1768,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   pointer-events: none;
 }
 .cta-eyebrow {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -1770,7 +1777,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   margin-bottom: 10px;
 }
 .cta-headline {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: clamp(24px, 4vw, 38px);
   font-weight: 800;
   color: #fff;
@@ -1867,7 +1874,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 800;
   font-size: 18px;
   color: #fff;
@@ -1875,7 +1882,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 .wa-panel-info { flex: 1; min-width: 0; }
 .wa-panel-name {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 15px;
   color: #fff;
@@ -1947,7 +1954,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   font-weight: 700;
   color: #075E54;
   margin-bottom: 5px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
 }
 .dark .wa-bubble-agent { color: #4ade80; }
 
@@ -1963,7 +1970,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border: none;
   border-radius: 10px;
   padding: 13px 16px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
@@ -1988,7 +1995,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 
 .wa-form-label {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 12px;
   font-weight: 600;
   color: var(--text);          /* theme-aware — was #374151 with dark override */
@@ -2000,7 +2007,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border: 1.5px solid var(--border);   /* theme-aware border */
   border-radius: 8px;
   font-size: 13px;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
   color: var(--text);                  /* theme-aware text */
   background: var(--bg-card);          /* theme-aware bg */
   outline: none;
@@ -2015,7 +2022,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .wa-field-error {
   font-size: 11px;
   color: #ef4444;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
   margin-top: 1px;
 }
 
@@ -2031,7 +2038,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   align-items: center;
   gap: 5px;
   font-size: 12px;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
   color: var(--text);           /* theme-aware — was #374151 */
   cursor: pointer;
   padding: 5px 10px;
@@ -2061,7 +2068,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border: none;
   border-radius: 10px;
   padding: 12px 16px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
@@ -2083,7 +2090,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   padding: 8px 0 2px;
   text-align: center;
   font-size: 12px;
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--font-roboto, 'Roboto'), sans-serif;
   color: var(--text-muted);     /* theme-aware — was #6b7280 with dark override */
   cursor: pointer;
   text-decoration: underline;
@@ -2113,7 +2120,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   margin-bottom: 12px;
 }
 .wa-success-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 15px;
   color: var(--text);           /* theme-aware — was #111827 with dark override */
@@ -2196,7 +2203,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
 /* ── Heading ── */
 .wcu-heading {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: clamp(24px, 3vw, 36px);
   color: var(--text);
@@ -2240,7 +2247,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   flex-shrink: 0;
 }
 .wcu-stat-number {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 20px;
   color: var(--text);
@@ -2291,7 +2298,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 .wcu-feat-svg { width: 100%; max-width: 180px; }
 .wcu-feat-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 20px;
   color: #fff;
@@ -2310,7 +2317,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   color: #fff;
   padding: 10px 18px;
   border-radius: 8px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 600;
   font-size: 13px;
   transition: background 0.2s;
@@ -2358,7 +2365,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   flex-shrink: 0;
 }
 .wcu-small-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 14px;
   color: var(--text);
@@ -2405,7 +2412,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   flex-shrink: 0;
 }
 .wcu-banner-title {
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 17px;
   color: #fff;
@@ -2427,7 +2434,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   color: #fff;
   padding: 11px 22px;
   border-radius: 8px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 700;
   font-size: 13px;
   white-space: nowrap;
@@ -2443,7 +2450,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border: 2px solid rgba(255,255,255,0.55);
   padding: 9px 20px;
   border-radius: 8px;
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-weight: 600;
   font-size: 13px;
   white-space: nowrap;
@@ -2484,7 +2491,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   justify-content: center;
   gap: 12px;
   padding: 9px 48px 9px 16px; /* right padding leaves room for the × button */
-  font-family: 'Raleway', sans-serif;
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
   min-height: 40px;
 }
 
@@ -2528,14 +2535,14 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
 .ann-bar__close {
   position: absolute;
-  right: 12px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: transparent;
   border: none;

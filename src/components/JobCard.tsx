@@ -85,7 +85,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 truncate">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-0.5 truncate">
             {job.company} · {job.location}
           </p>
         </div>
@@ -109,7 +109,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
           {job.skills.slice(0, 6).map((skill) => (
             <span
               key={skill}
-              className="text-xs px-2 py-0.5 rounded bg-gray-50 dark:bg-gray-700/60 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-400"
+              className="text-xs px-2 py-0.5 rounded bg-gray-50 dark:bg-gray-700/60 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300"
             >
               {skill}
             </span>
@@ -123,7 +123,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
           {job.salary ? (
             <span className="text-sm font-semibold text-teal-600 dark:text-teal-400">{job.salary}</span>
           ) : (
-            <span className="text-xs text-gray-400">Salary not disclosed</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">Salary not disclosed</span>
           )}
         </div>
         <a

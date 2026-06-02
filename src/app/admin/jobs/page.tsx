@@ -205,14 +205,14 @@ export default function AdminJobsPage() {
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/admin/jobs/${job.id}/edit`}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                             title="Edit"
                           >
                             <Pencil className="w-3.5 h-3.5" />
                           </Link>
                           <button
                             onClick={() => deleteJob(job.id, job.title)}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                             title="Delete"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

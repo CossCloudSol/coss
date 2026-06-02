@@ -207,6 +207,7 @@ export default function SiteHeader() {
         className={`mobile-nav${mobileOpen ? ' mobile-nav--open' : ''}`}
         aria-hidden={!mobileOpen}
         aria-label="Mobile navigation"
+        inert={!mobileOpen || undefined}
       >
         {/* Phone strip inside mobile menu */}
         <a href="tel:+918885166007" className="mobile-phone-strip">

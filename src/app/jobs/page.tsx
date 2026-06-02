@@ -86,7 +86,7 @@ export default function JobsPage() {
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className="px-4 py-2 rounded-full text-sm font-medium transition-all border"
+              className="px-4 py-2 rounded-full text-sm font-medium transition-all border min-h-[44px]"
               style={
                 activeFilter === f
                   ? { background: '#e47538', borderColor: '#e47538', color: '#fff' }

@@ -33,7 +33,7 @@ const SEAT_COLOR_MAP: Record<string, string> = {
 const STATUS_BADGE_COLOR: Record<string, string> = {
   blue:  'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
   green: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
-  gray:  'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400',
+  gray:  'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-200',
   red:   'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300',
 }
 
@@ -76,7 +76,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
             {statusBadge.label}
           </span>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{batch.course.category}</p>
+        <p className="text-xs text-gray-600 dark:text-gray-300">{batch.course.category}</p>
       </div>
 
       {/* Meta grid */}
@@ -84,7 +84,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
         <div className="flex items-start gap-2">
           <Calendar className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Start Date</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Start Date</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">{formattedDate}</p>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
         <div className="flex items-start gap-2">
           <Clock className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Schedule</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Schedule</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">{batch.schedule}</p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
             <MapPin className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
           )}
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Venue</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Venue</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">
               {batch.mode === 'Online' ? 'Online via Zoom' : (batch.centre ?? 'COSS Centre')}
             </p>
@@ -116,7 +116,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
             <span className="text-teal-500 text-sm font-bold">M</span>
           </div>
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Mode</p>
+            <p className="text-xs text-gray-600 dark:text-gray-300">Mode</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">{batch.mode}</p>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
       {batch.mode !== 'Online' && (
         <div className="px-5 pb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-gray-500 dark:text-gray-400">Seat availability</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">Seat availability</span>
             <span className={`text-xs font-bold ${SEAT_COLOR_MAP[seatStatus.color] ?? SEAT_COLOR_MAP.gray}`}>
               {seatStatus.label}
             </span>

@@ -63,7 +63,7 @@ export default function BatchesPage() {
               <button
                 key={f}
                 onClick={() => setModeFilter(f)}
-                className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
+                className="px-4 py-2 rounded-full text-sm font-medium border transition-all min-h-[44px]"
                 style={
                   modeFilter === f
                     ? { background: '#0f766e', borderColor: '#0f766e', color: '#fff' }
@@ -80,7 +80,7 @@ export default function BatchesPage() {
               <button
                 key={c}
                 onClick={() => setCentreFilter(c)}
-                className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
+                className="px-4 py-2 rounded-full text-sm font-medium border transition-all min-h-[44px]"
                 style={
                   centreFilter === c
                     ? { background: '#e47538', borderColor: '#e47538', color: '#fff' }

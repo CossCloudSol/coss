@@ -180,7 +180,7 @@ export default function AdminBatchesPage() {
                       <td className="px-4 py-3">
                         <button
                           onClick={() => toggleFeatured(batch.id, batch.featured)}
-                          className={`transition-colors ${batch.featured ? 'text-amber-500' : 'text-gray-300 dark:text-gray-600 hover:text-amber-400'}`}
+                          className={`transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center ${batch.featured ? 'text-amber-500' : 'text-gray-300 dark:text-gray-600 hover:text-amber-400'}`}
                         >
                           <Star className="w-4 h-4" fill={batch.featured ? 'currentColor' : 'none'} />
                         </button>
@@ -188,15 +188,15 @@ export default function AdminBatchesPage() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
                           <Link href={`/admin/batches/${batch.id}/edit`}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors" title="Edit">
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" title="Edit">
                             <Pencil className="w-3.5 h-3.5" />
                           </Link>
                           <button onClick={() => cloneBatch(batch.id)}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors" title="Clone">
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" title="Clone">
                             <Copy className="w-3.5 h-3.5" />
                           </button>
                           <button onClick={() => deleteBatch(batch.id, batch.batchName)}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors" title="Delete">
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" title="Delete">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
