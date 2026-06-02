@@ -1,11 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
+import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,6 +41,7 @@ interface CategoryDetail {
   name: string;
   slug: string;
   description: string | null;
+  color: string | null;
   seoTitle: string | null;
   seoDesc: string | null;
   courses: CourseDetail[];
@@ -361,19 +364,27 @@ function EnquirySidebar({ price, originalPrice }: { price: number | null; origin
 // ─── Category Landing View ─────────────────────────────────────────────────────
 
 function CategoryLandingView({ category }: { category: CategoryDetail }) {
+  const CategoryIcon = CATEGORY_ICONS[category.slug] ?? DEFAULT_ICON;
+  const accentColor = category.color ?? '#0f766e';
+
   return (
     <>
       <ResponsivePageStyles />
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '48px 20px 40px', color: '#fff' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '12px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <Link href="/courses" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Courses</Link>
             <span style={{ color: 'rgba(255,255,255,0.4)', margin: '0 8px' }}>›</span>
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>{category.name}</span>
           </div>
-          <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>
-            {category.name} Training in Hyderabad
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '14px' }}>
+            <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <CategoryIcon style={{ width: '32px', height: '32px', color: '#5eead4' }} aria-hidden="true" />
+            </div>
+            <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', margin: 0, lineHeight: 1.2 }}>
+              {category.name} Training in Hyderabad
+            </h1>
+          </div>
           {category.description && (
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '16px' }}>
               {category.description}
@@ -394,17 +405,34 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
             {category.courses.map((course) => (
               <div key={course.id} style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 3px 18px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}>
-                <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '20px 20px 16px' }}>
-                  {course.badge && (
-                    <span style={{ display: 'inline-block', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', marginBottom: '8px' }}>{course.badge}</span>
+                {/* Thumbnail / fallback */}
+                <div style={{ position: 'relative', height: '160px', flexShrink: 0 }}>
+                  {course.thumbnail ? (
+                    <Image
+                      src={course.thumbnail}
+                      alt={course.title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, 360px"
+                    />
+                  ) : (
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: accentColor }}>
+                      <i className="ti ti-book" style={{ fontSize: '48px', color: 'rgba(255,255,255,0.6)' }} aria-hidden="true" />
+                    </div>
                   )}
-                  <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: '#fff', marginBottom: '8px', lineHeight: 1.3 }}>{course.title}</h3>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    <span style={{ background: 'rgba(255,255,255,0.1)', color: '#ddd', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>⏱ {course.duration}</span>
-                    <span style={{ background: 'rgba(255,255,255,0.1)', color: '#ddd', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>📈 {course.level}</span>
-                  </div>
+                  {course.badge && (
+                    <span style={{ position: 'absolute', top: '10px', left: '10px', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', zIndex: 1 }}>{course.badge}</span>
+                  )}
                 </div>
-                <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {/* Card body */}
+                <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <div>
+                    <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '8px', lineHeight: 1.3 }}>{course.title}</h3>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>⏱ {course.duration}</span>
+                      <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>📈 {course.level}</span>
+                    </div>
+                  </div>
                   <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.65', flex: 1 }}>{course.excerpt}</p>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     {course.price != null && (
