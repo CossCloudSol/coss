@@ -6,7 +6,7 @@ import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
-import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons'
+import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
 import { CourseCardThumb } from '@/components/CourseCardThumb';
 
 export const dynamic = 'force-dynamic';
@@ -364,7 +364,6 @@ function EnquirySidebar({ price, originalPrice }: { price: number | null; origin
 // ─── Category Landing View ─────────────────────────────────────────────────────
 
 function CategoryLandingView({ category }: { category: CategoryDetail }) {
-  const CategoryIcon = CATEGORY_ICONS[category.slug] ?? DEFAULT_ICON;
   const accentColor = category.color ?? '#0f766e';
 
   return (
@@ -379,7 +378,7 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '14px' }}>
             <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <CategoryIcon size={32} color="#5eead4" aria-hidden="true" />
+              <CategoryIconDisplay slug={category.slug} color={category.color ?? undefined} />
             </div>
             <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', margin: 0, lineHeight: 1.2 }}>
               {category.name} Training in Hyderabad
