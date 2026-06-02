@@ -129,6 +129,7 @@ export default function HeroEnrollForm(): JSX.Element {
       <input
         type="text"
         placeholder="Full Name"
+        aria-label="Full Name"
         className="form-input"
         autoComplete="name"
         disabled={isSubmitting}
@@ -143,6 +144,7 @@ export default function HeroEnrollForm(): JSX.Element {
       <input
         type="tel"
         placeholder="Mobile Number"
+        aria-label="Mobile Number"
         className="form-input"
         autoComplete="tel"
         inputMode="tel"
@@ -158,6 +160,7 @@ export default function HeroEnrollForm(): JSX.Element {
 
       <select
         className="form-input"
+        aria-label="Inquiry type"
         style={{ color: 'rgba(255,255,255,0.5)' }}
         defaultValue=""
         disabled={isSubmitting}

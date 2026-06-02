@@ -75,8 +75,8 @@ export default function ContactForm() {
         <input type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} style={inputStyle} />
       </div>
       <div style={{ marginBottom: '14px' }}>
-        <label style={labelStyle}>Subject</label>
-        <select value={subject} onChange={e => setSubject(e.target.value)} style={inputStyle}>
+        <label htmlFor="contact-subject" style={labelStyle}>Subject</label>
+        <select id="contact-subject" value={subject} onChange={e => setSubject(e.target.value)} style={inputStyle}>
           <option value="">Select Subject</option>
           <option>Course Enquiry</option>
           <option>Demo Class Request</option>

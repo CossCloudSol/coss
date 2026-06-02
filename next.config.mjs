@@ -14,6 +14,7 @@ const nextConfig = {
         hostname: 'res.cloudinary.com',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
   },
 
   async headers() {
@@ -42,10 +43,10 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ''} https://www.googletagmanager.com https://www.google-analytics.com`,
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
-              "connect-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net https://fonts.googleapis.com https://fonts.gstatic.com",
-              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://www.google-analytics.com https://stats.g.doubleclick.net",
+              "font-src 'self' data:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

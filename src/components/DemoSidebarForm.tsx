@@ -252,6 +252,7 @@ export default function DemoSidebarForm(): JSX.Element {
 
       <select
         style={selectStyle}
+        aria-label="Select a course"
         defaultValue=""
         disabled={isSubmitting}
         {...register('course')}
