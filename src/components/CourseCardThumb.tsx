@@ -1,36 +1,84 @@
 'use client'
-import Image from 'next/image'
-import { useState } from 'react'
 
-const DEAD_DOMAIN = 'nextjs.cosscloudsol.com'
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
+import { generateCourseThumbnailDataUri } from '@/lib/generate-thumbnail'
+
+const DEAD_DOMAINS = [
+  'nextjs.cosscloudsol.com',
+  'localhost',
+]
 
 interface Props {
-  thumbnail: string | null
+  thumbnail?: string | null
   title: string
-  accentColor: string
+  categoryName?: string
+  categorySlug?: string | null
+  categoryColor?: string | null
+  tools?: string[]
+  mode?: string | null
 }
 
-export function CourseCardThumb({ thumbnail, title, accentColor }: Props) {
+export function CourseCardThumb({
+  thumbnail,
+  title,
+  categoryName = '',
+  categorySlug,
+  categoryColor,
+  tools = [],
+  mode,
+}: Props) {
   const [errored, setErrored] = useState(false)
+  const [svgUri, setSvgUri] = useState<string>('')
 
-  const isDeadUrl = thumbnail?.includes(DEAD_DOMAIN)
+  const isDeadUrl = thumbnail
+    ? DEAD_DOMAINS.some(d => thumbnail.includes(d))
+    : false
+
   const showFallback = !thumbnail || errored || isDeadUrl
 
+  useEffect(() => {
+    if (showFallback) {
+      const uri = generateCourseThumbnailDataUri(
+        { title, categoryName, categoryColor, tools, mode },
+        categorySlug
+      )
+      setSvgUri(uri)
+    }
+  }, [showFallback, title, categoryName, categorySlug, categoryColor, tools, mode])
+
   if (showFallback) {
+    if (!svgUri) {
+      return (
+        <div style={{
+          width: '100%',
+          height: '100%',
+          minHeight: '180px',
+          background: categoryColor || '#0F6E56',
+        }} />
+      )
+    }
     return (
-      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: accentColor }}>
-        <i className="ti ti-book" style={{ fontSize: '48px', color: 'rgba(255,255,255,0.6)' }} aria-hidden="true" />
-      </div>
+      <img
+        src={svgUri}
+        alt={title}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+        }}
+      />
     )
   }
 
   return (
     <Image
-      src={thumbnail}
+      src={thumbnail!}
       alt={title}
       fill
       style={{ objectFit: 'cover' }}
-      sizes="(max-width: 768px) 100vw, 360px"
+      sizes="(max-width: 768px) 100vw, 400px"
       onError={() => setErrored(true)}
     />
   )

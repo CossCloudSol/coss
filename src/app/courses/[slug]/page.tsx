@@ -364,8 +364,6 @@ function EnquirySidebar({ price, originalPrice }: { price: number | null; origin
 // ─── Category Landing View ─────────────────────────────────────────────────────
 
 function CategoryLandingView({ category }: { category: CategoryDetail }) {
-  const accentColor = category.color ?? '#0f766e';
-
   return (
     <>
       <ResponsivePageStyles />
@@ -405,11 +403,15 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
             {category.courses.map((course) => (
               <div key={course.id} style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 3px 18px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}>
                 {/* Thumbnail / fallback */}
-                <div style={{ position: 'relative', height: '160px', flexShrink: 0 }}>
+                <div style={{ position: 'relative', height: '180px', overflow: 'hidden', borderRadius: '8px 8px 0 0', flexShrink: 0 }}>
                   <CourseCardThumb
                     thumbnail={course.thumbnail}
                     title={course.title}
-                    accentColor={accentColor}
+                    categoryName={category.name}
+                    categorySlug={category.slug ?? null}
+                    categoryColor={category.color}
+                    tools={Array.isArray(course.tools) ? course.tools as string[] : []}
+                    mode={course.mode}
                   />
                   {course.badge && (
                     <span style={{ position: 'absolute', top: '10px', left: '10px', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', zIndex: 1 }}>{course.badge}</span>
