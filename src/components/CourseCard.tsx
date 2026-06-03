@@ -88,20 +88,15 @@ export default function CourseCard({
           style={{ background: accentGradients[accentVariant] }}
         />
 
-        {/* Top row: badge left, category label right */}
-        <div className="flex items-start justify-between gap-2 mb-[10px]">
+        {/* Top row: badge only */}
+        <div className="mb-[10px]">
           <span
-            className="inline-flex items-center gap-[5px] px-[11px] py-[4px] rounded-full text-[11px] font-semibold tracking-[0.3px] text-white"
+            className="inline-flex items-center gap-[5px] whitespace-nowrap px-[11px] py-[4px] rounded-full text-[11px] font-semibold tracking-[0.3px] text-white"
             style={{ background: badgeBg[badgeVariant] }}
           >
             <span className="inline-block w-[6px] h-[6px] rounded-full bg-white/70" />
             {badge}
           </span>
-          {categoryLabel && (
-            <span className="text-[10px] font-semibold uppercase tracking-[1px] text-white/50 text-right leading-tight pt-[3px]">
-              {categoryLabel}
-            </span>
-          )}
         </div>
 
         {/* Title */}
