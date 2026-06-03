@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import WpImg from '@/components/WpImg';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
-import { CourseCardThumb } from '@/components/CourseCardThumb';
 import { PageBanner, EnrollSidebar, CourseSidebarNav, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import type { CourseCategoryData } from '@/lib/courseData';
+import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
+import CourseGrid from '@/components/CourseGrid';
 
 export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: CourseCategoryData; breadcrumbSlug: string }) {
   const imgs = wpImages[breadcrumbSlug];
@@ -51,60 +52,55 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
               ))}
             </div>
 
-            {/* Sub-courses with REAL WP images */}
-            {imgs?.subcourses?.length > 0 && (
-              <div style={{ marginBottom: '40px' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '2px solid var(--border)' }}>
-                  📚 Courses We Offer
-                </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '18px' }} className="course-list-grid">
-                  {imgs.subcourses.map(sub => (
-                    <Link key={sub.href} href={sub.href} style={{ textDecoration: 'none', background: 'var(--bg-card)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', display: 'block' }}>
-                      <div style={{ position: 'relative', height: '165px', overflow: 'hidden', background: 'linear-gradient(135deg,#1a1a2e,#0f3460)' }}>
-                        <CourseCardThumb
-                          thumbnail={sub.image}
-                          title={sub.name}
-                          categoryName={data.name}
-                          categorySlug={breadcrumbSlug}
-                        />
-                      </div>
-                      <div style={{ padding: '14px 16px' }}>
-                        <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>{sub.name}</h4>
-                        <span style={{ color: '#e8401c', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>View Course →</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Course details */}
-            <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '2px solid var(--border)' }}>
-              📋 Course Details
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '40px' }}>
-              {data.courses.map((course, i) => (
-                <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)', borderRadius: '12px', padding: '20px 22px', boxShadow: 'var(--shadow-sm)', borderLeft: '4px solid var(--primary)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                    <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>{course.name}</h4>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      <span style={{ background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>⏱ {course.duration}</span>
-                      <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>📈 {course.level}</span>
+            {/* Upgraded course cards */}
+            {(() => {
+              const cards = courseCardDataMap[breadcrumbSlug];
+              if (cards && cards.length > 0) {
+                return (
+                  <section className="py-12 px-0 bg-[#F0F2F5] rounded-2xl mb-10">
+                    <div className="max-w-7xl mx-auto mb-10 text-center">
+                      <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+                        Courses We Offer
+                      </h2>
+                      <p className="mt-2 text-slate-500 text-sm">
+                        Choose the right programme for your goals
+                      </p>
                     </div>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '12px' }}>
-                    {course.highlights.map(h => (
-                      <span key={h} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: 'var(--text-muted)' }}>
-                        <span style={{ color: '#e8401c', fontWeight: 700 }}>✓</span> {h}
-                      </span>
+                    <CourseGrid courses={cards} />
+                  </section>
+                );
+              }
+              return (
+                <>
+                  <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '2px solid var(--border)' }}>
+                    📋 Course Details
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '40px' }}>
+                    {data.courses.map((course, i) => (
+                      <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)', borderRadius: '12px', padding: '20px 22px', boxShadow: 'var(--shadow-sm)', borderLeft: '4px solid var(--primary)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                          <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>{course.name}</h4>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            <span style={{ background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>⏱ {course.duration}</span>
+                            <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>📈 {course.level}</span>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '12px' }}>
+                          {course.highlights.map(h => (
+                            <span key={h} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: 'var(--text-muted)' }}>
+                              <span style={{ color: '#e8401c', fontWeight: 700 }}>✓</span> {h}
+                            </span>
+                          ))}
+                        </div>
+                        <Link href="/enroll-now-with-coss/" style={{ display: 'inline-flex', background: '#e47538', color: '#fff', padding: '8px 18px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '12px' }}>
+                          Enroll Now →
+                        </Link>
+                      </div>
                     ))}
                   </div>
-                  <Link href="/enroll-now-with-coss/" style={{ display: 'inline-flex', background: '#e47538', color: '#fff', padding: '8px 18px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '12px' }}>
-                    Enroll Now →
-                  </Link>
-                </div>
-              ))}
-            </div>
+                </>
+              );
+            })()}
 
             {/* Why Learn */}
             <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#0f3460)', borderRadius: '14px', padding: '28px', marginBottom: '36px', color: '#fff' }}>

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Cards</title>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Bricolage+Grotesque:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  background: #F0F2F5;
+  min-height: 100vh;
+  padding: 40px 24px;
+}
+
+/* ── Page header ── */
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.page-header h1 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #0D1B2A;
+  letter-spacing: -0.5px;
+}
+.page-header p {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #64748B;
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .grid { grid-template-columns: 1fr; } }
+
+/* ── Card ── */
+.card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  border: 1px solid rgba(0,0,0,.07);
+  display: flex;
+  flex-direction: column;
+  transition: transform .22s ease, box-shadow .22s ease;
+  animation: fadeUp .5s ease both;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(0,0,0,.13);
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.card:nth-child(1) { animation-delay: .05s; }
+.card:nth-child(2) { animation-delay: .10s; }
+.card:nth-child(3) { animation-delay: .15s; }
+.card:nth-child(4) { animation-delay: .20s; }
+.card:nth-child(5) { animation-delay: .25s; }
+.card:nth-child(6) { animation-delay: .30s; }
+
+/* ── Card Header ── */
+.card-header {
+  position: relative;
+  padding: 22px 20px 18px;
+  background: linear-gradient(145deg, #0D1B2A 0%, #1B3A5C 100%);
+  overflow: hidden;
+  min-height: 155px;
+}
+
+/* Subtle geometric decoration */
+.card-header::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  pointer-events: none;
+}
+.card-header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; left: 50%;
+  width: 200px; height: 60px;
+  background: rgba(255,255,255,.025);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Accent strip on left */
+.card-header .accent-line {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  margin-bottom: 10px;
+}
+.badge-orange { background: #FF6B2B; color: #fff; }
+.badge-teal   { background: #0BA5A0; color: #fff; }
+.badge-violet { background: #7C3AED; color: #fff; }
+.badge-rose   { background: #E11D48; color: #fff; }
+.badge-amber  { background: #D97706; color: #fff; }
+.badge-green  { background: #059669; color: #fff; }
+
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.7);
+  display: inline-block;
+}
+
+/* Title */
+.card-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+  margin-bottom: 14px;
+  letter-spacing: -.2px;
+}
+
+/* Meta chips */
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.85);
+  border-radius: 50px;
+  padding: 4px 11px;
+  font-size: 11px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+.chip svg {
+  width: 12px; height: 12px;
+  opacity: .8;
+  flex-shrink: 0;
+}
+
+/* ── Card Body ── */
+.card-body {
+  padding: 18px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Rating row */
+.rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.stars {
+  color: #F59E0B;
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+.rating-num {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1E293B;
+}
+.rating-count {
+  font-size: 12px;
+  color: #94A3B8;
+}
+.learner-pill {
+  margin-left: auto;
+  background: #F0F9FF;
+  color: #0369A1;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 50px;
+  border: 1px solid #BAE6FD;
+}
+
+/* Description */
+.card-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #475569;
+  flex: 1;
+}
+
+/* Highlights */
+.highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #374151;
+  font-weight: 500;
+}
+.highlight-item svg {
+  width: 14px; height: 14px;
+  color: #10B981;
+  flex-shrink: 0;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: #F1F5F9;
+}
+
+/* Footer */
+.card-footer {
+  padding: 14px 20px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.price-block {}
+.price-original {
+  font-size: 11px;
+  color: #94A3B8;
+  text-decoration: line-through;
+  margin-bottom: 1px;
+}
+.price-main {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0D1B2A;
+  line-height: 1;
+}
+.price-emi {
+  font-size: 10px;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FF6B2B;
+  color: #fff;
+  padding: 11px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background .18s, transform .18s;
+  white-space: nowrap;
+  letter-spacing: .1px;
+}
+.cta-btn:hover {
+  background: #e85a1e;
+  transform: scale(1.03);
+}
+.cta-btn svg {
+  width: 14px; height: 14px;
+  transition: transform .18s;
+}
+.cta-btn:hover svg {
+  transform: translateX(3px);
+}
+
+/* Urgency strip */
+.urgency {
+  background: #FFF7ED;
+  border-top: 1px solid #FED7AA;
+  padding: 7px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #C2410C;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.urgency svg { width:12px; height:12px; flex-shrink:0; }
+
+/* Accent line colors per category */
+.accent-hr     { background: linear-gradient(180deg,#FF6B2B,#FF9A6B); }
+.accent-cloud  { background: linear-gradient(180deg,#0BA5A0,#34D399); }
+.accent-medical{ background: linear-gradient(180deg,#7C3AED,#A78BFA); }
+.accent-devops { background: linear-gradient(180deg,#E11D48,#FB7185); }
+.accent-sap    { background: linear-gradient(180deg,#0369A1,#38BDF8); }
+.accent-oracle { background: linear-gradient(180deg,#D97706,#FCD34D); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Explore Our Courses</h1>
+  <p>Industry-focused training designed for freshers, graduates &amp; working professionals in Hyderabad</p>
+</div>
+
+<div class="grid">
+
+  <!-- Card 1: HR Recruitment -->
+  <div class="card">
+    <div class="card-header">
+      <div class="accent-line accent-hr"></div>
+      <div class="badge badge-orange"><span class="badge-dot"></span> Newly Added</div>
+      <div class="card-title">HR – Recruitment</div>
+      <div class="meta-row">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          3 Months
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Classroom
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 20V10M12 20V4M18 20v-6"/></svg>
+          Beginner – Advanced
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-num">4.8</span>
+        <span class="rating-count">(320 reviews)</span>
+        <span class="learner-pill">1,200+ Enrolled</span>
+      </div>
+      <p class="card-desc">Launch your HR career with industry-focused recruitment training. Covers sourcing, interviewing, onboarding, and HR tools — built for freshers &amp; career switchers.</p>
+      <div class="highlights">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Live projects + mock interviews
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Placement assistance included
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-footer">
+      <div class="price-block">
+        <div class="price-original">₹35,000</div>
+        <div class="price-main">₹25,000</div>
+        <div class="price-emi">EMI from ₹2,100/mo</div>
+      </div>
+      <a href="#" class="cta-btn">
+        View Details
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="urgency">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Only 8 seats left in current batch
+    </div>
+  </div>
+
+  <!-- Card 2: AWS Cloud -->
+  <div class="card">
+    <div class="card-header">
+      <div class="accent-line accent-cloud"></div>
+      <div class="badge badge-teal"><span class="badge-dot"></span> Most Popular</div>
+      <div class="card-title">AWS Cloud Practitioner Certification</div>
+      <div class="meta-row">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          2 Months
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Classroom
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 20V10M12 20V4M18 20v-6"/></svg>
+          Beginner
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-num">4.9</span>
+        <span class="rating-count">(890 reviews)</span>
+        <span class="learner-pill">3,400+ Enrolled</span>
+      </div>
+      <p class="card-desc">Master AWS fundamentals and earn your Certified Cloud Practitioner badge. Hands-on labs, expert trainers, and 100% exam support — all in Hyderabad.</p>
+      <div class="highlights">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          100% exam pass guarantee
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Official AWS practice labs
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-footer">
+      <div class="price-block">
+        <div class="price-original">₹25,000</div>
+        <div class="price-main">₹18,000</div>
+        <div class="price-emi">EMI from ₹1,500/mo</div>
+      </div>
+      <a href="#" class="cta-btn">
+        View Details
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="urgency">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Next batch starts June 10 — 5 seats left
+    </div>
+  </div>
+
+  <!-- Card 3: Medical Coding -->
+  <div class="card">
+    <div class="card-header">
+      <div class="accent-line accent-medical"></div>
+      <div class="badge badge-violet"><span class="badge-dot"></span> High Demand</div>
+      <div class="card-title">Medical Coding Training in Hyderabad</div>
+      <div class="meta-row">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          2.5 Months
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Classroom
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 20V10M12 20V4M18 20v-6"/></svg>
+          Beginner
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-num">4.7</span>
+        <span class="rating-count">(510 reviews)</span>
+        <span class="learner-pill">2,100+ Enrolled</span>
+      </div>
+      <p class="card-desc">Covers ICD-10, CPT, HCPCS, and CPC/CCS exam prep. Get job-ready for a stable healthcare career with live coding practice and expert mentorship.</p>
+      <div class="highlights">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          CPC/CCS exam prep included
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Live real-world coding practice
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-footer">
+      <div class="price-block">
+        <div class="price-original">₹22,000</div>
+        <div class="price-main">₹16,000</div>
+        <div class="price-emi">EMI from ₹1,350/mo</div>
+      </div>
+      <a href="#" class="cta-btn">
+        View Details
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="urgency">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Enrollments closing soon
+    </div>
+  </div>
+
+  <!-- Card 4: Docker & Kubernetes -->
+  <div class="card">
+    <div class="card-header">
+      <div class="accent-line accent-devops"></div>
+      <div class="badge badge-rose"><span class="badge-dot"></span> High Demand</div>
+      <div class="card-title">Docker and Kubernetes Training</div>
+      <div class="meta-row">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          2 Months
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Classroom
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 20V10M12 20V4M18 20v-6"/></svg>
+          Beginner – Advanced
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-num">4.9</span>
+        <span class="rating-count">(740 reviews)</span>
+        <span class="learner-pill">2,800+ Enrolled</span>
+      </div>
+      <p class="card-desc">Build, ship and orchestrate containers from scratch. Hands-on labs, CKA exam prep, and placement support — the complete DevOps foundation course.</p>
+      <div class="highlights">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          CKA exam prep &amp; practice labs
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Real-world deployment projects
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-footer">
+      <div class="price-block">
+        <div class="price-original">₹24,000</div>
+        <div class="price-main">₹18,000</div>
+        <div class="price-emi">EMI from ₹1,500/mo</div>
+      </div>
+      <a href="#" class="cta-btn">
+        View Details
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="urgency">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Only 6 seats left in current batch
+    </div>
+  </div>
+
+  <!-- Card 5: SAP FICO -->
+  <div class="card">
+    <div class="card-header">
+      <div class="accent-line accent-sap"></div>
+      <div class="badge badge-amber"><span class="badge-dot"></span> Updated 2026</div>
+      <div class="card-title">SAP S/4HANA Finance (FICO)</div>
+      <div class="meta-row">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          3 Months
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Classroom
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 20V10M12 20V4M18 20v-6"/></svg>
+          Beginner – Advanced
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-num">4.9</span>
+        <span class="rating-count">(2,100 reviews)</span>
+        <span class="learner-pill">8,500+ Enrolled</span>
+      </div>
+      <p class="card-desc">Complete SAP FI/CO consultant training from GL to closing. Master accounts payable, receivable, cost centre accounting, and SAP S/4HANA workflows.</p>
+      <div class="highlights">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          SAP certified trainer — live system access
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          ₹12–₹35 LPA average salary
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-footer">
+      <div class="price-block">
+        <div class="price-original">₹38,000</div>
+        <div class="price-main">₹28,000</div>
+        <div class="price-emi">EMI from ₹2,350/mo</div>
+      </div>
+      <a href="#" class="cta-btn">
+        View Details
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="urgency">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Only 6 seats left in current batch
+    </div>
+  </div>
+
+  <!-- Card 6: Oracle HCM -->
+  <div class="card">
+    <div class="card-header">
+      <div class="accent-line accent-oracle"></div>
+      <div class="badge badge-green"><span class="badge-dot"></span> Most Popular</div>
+      <div class="card-title">Oracle Fusion Cloud HCM</div>
+      <div class="meta-row">
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          3 Months
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Classroom
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M6 20V10M12 20V4M18 20v-6"/></svg>
+          Beginner – Advanced
+        </span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <span class="rating-num">4.9</span>
+        <span class="rating-count">(1,350 reviews)</span>
+        <span class="learner-pill">5,000+ Enrolled</span>
+      </div>
+      <p class="card-desc">Become an Oracle HCM consultant — master Global HR, Payroll, Talent Management, and Workforce Compensation on Oracle Fusion Cloud.</p>
+      <div class="highlights">
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Live Oracle cloud tenant access
+        </div>
+        <div class="highlight-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          ₹8–₹25 LPA average salary
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="card-footer">
+      <div class="price-block">
+        <div class="price-original">₹32,000</div>
+        <div class="price-main">₹24,000</div>
+        <div class="price-emi">EMI from ₹2,000/mo</div>
+      </div>
+      <a href="#" class="cta-btn">
+        View Details
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="urgency">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Only 12 seats left in current batch
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

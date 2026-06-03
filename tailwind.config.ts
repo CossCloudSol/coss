@@ -20,6 +20,7 @@ const config: Config = {
         heading: ['var(--font-raleway)', 'Raleway', 'sans-serif'],
         body: ['var(--font-roboto)', 'Roboto', 'sans-serif'],
         button: ['var(--font-raleway)', 'Raleway', 'sans-serif'],
+        display: ['Clash Display', 'sans-serif'],
       },
     },
   },
