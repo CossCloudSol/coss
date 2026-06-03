@@ -1,19 +1,6 @@
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .animate-fade-up {
-    animation: fadeUp 0.5s ease both;
-  }
-}
 
 /* ══════════════════════════════════════════════════
    CSS CUSTOM PROPERTIES — LIGHT & DARK MODE
