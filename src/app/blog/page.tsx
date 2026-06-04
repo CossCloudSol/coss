@@ -170,7 +170,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           { value: '8+',    label: 'TOPIC CATEGORIES' },
           { value: 'Weekly',label: 'NEW ARTICLES' },
           { value: 'Free',  label: 'ALL RESOURCES' },
-          { value: '36+',   label: 'COURSES COVERED' },
+          { value: '30+',   label: 'COURSES COVERED' },
         ]}
         ctaText="New articles published weekly · Bookmark your favourites"
         breadcrumb={[{ label: 'Blog', href: '/blog/' }]}
