@@ -449,9 +449,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/cloud-computing',
     courseDataKey: 'cloud-computing',
-    title: 'Best Cloud Computing Training Institute in Hyderabad',
+    title: 'Cloud Computing Training in Hyderabad',
     metaDescription:
-      'Join the best cloud computing training in Hyderabad. AWS, Azure, Google Cloud, expert trainers, hands-on labs, placement support and certification. Enroll now!',
+      'AWS, Azure & Google Cloud training in Hyderabad. Hands-on labs, certification prep & placement support at Coss Cloud Solutions.',
     keywords:
       'cloud computing training in Hyderabad, cloud computing course Hyderabad, AWS Azure GCP training, cloud certification Hyderabad',
     category: 'Cloud Computing',
@@ -460,9 +460,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/cyber-security',
     courseDataKey: 'cyber-security-networking',
-    title: 'Best Cyber Security and Networking Training Institute in Hyderabad',
+    title: 'Cyber Security Training in Hyderabad',
     metaDescription:
-      'Join the best cyber security and networking training in Hyderabad. Ethical hacking, CCNA, SOC, expert trainers, placement support and certification. Enroll now!',
+      'Ethical Hacking, Cyber Security & Networking courses in Hyderabad. CEH exam prep & placement at Coss Cloud Solutions.',
     keywords:
       'cyber security training in Hyderabad, networking course Hyderabad, ethical hacking training, CCNA certification Hyderabad',
     category: 'Cyber Security & Networking',
@@ -471,9 +471,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/data-engineering',
     courseDataKey: 'data-engineering',
-    title: 'Best Data Engineering Training Institute in Hyderabad',
+    title: 'Data Engineering Training in Hyderabad',
     metaDescription:
-      'Join the best data engineering training in Hyderabad. Azure Data Engineer, Spark, Hadoop, ETL, expert trainers, placement support and certification. Enroll now!',
+      'Data Engineering with Spark, Kafka, Airflow & cloud pipelines in Hyderabad. Job-ready training at Coss Cloud Solutions.',
     keywords:
       'data engineering training in Hyderabad, data pipeline course Hyderabad, Azure data engineer training, big data engineering certification',
     category: 'Data Engineering',
@@ -482,9 +482,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/devops-multi-cloud',
     courseDataKey: 'devops-multi-cloud',
-    title: 'Best DevOps and Multi-Cloud Training Institute in Hyderabad',
+    title: 'DevOps & Multi-Cloud Training in Hyderabad',
     metaDescription:
-      'Join the best DevOps and multi-cloud training in Hyderabad. CI/CD, Docker, Kubernetes, Terraform, expert trainers, placement support and certification. Enroll now!',
+      'Master CI/CD, Docker, Kubernetes & multi-cloud DevOps in Hyderabad. Industry trainers, live projects at Coss Cloud Solutions.',
     keywords:
       'DevOps training in Hyderabad, multi-cloud course Hyderabad, Docker Kubernetes training, CI/CD certification Hyderabad',
     category: 'DevOps & Multi-Cloud',
@@ -493,9 +493,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/digital-design',
     courseDataKey: 'digital-design',
-    title: 'Best Digital Marketing and Design Training Institute in Hyderabad',
+    title: 'Digital Marketing & Design Training in Hyderabad',
     metaDescription:
-      'Join the best digital marketing and design training in Hyderabad. SEO, UI/UX, graphic design, expert trainers, placement support and certification. Enroll now!',
+      'Digital Marketing, UI/UX & Design courses in Hyderabad. Practical, placement-focused at Coss Cloud Solutions.',
     keywords:
       'digital marketing training in Hyderabad, design course Hyderabad, UI UX training, graphic design certification Hyderabad',
     category: 'Digital & Design',
@@ -504,9 +504,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/erp-crm-enterprise-tools',
     courseDataKey: 'erp-crm-enterprise-tools',
-    title: 'Best ERP, CRM and Enterprise Tools Training Institute in Hyderabad',
+    title: 'SAP & ERP Training in Hyderabad',
     metaDescription:
-      'Join the best ERP, CRM and enterprise tools training in Hyderabad. SAP, Salesforce, Oracle Fusion HCM, expert trainers, placement support. Enroll now!',
+      'SAP FICO, Oracle HCM & Salesforce training in Hyderabad. Consultant-level ERP courses at Coss Cloud Solutions.',
     keywords:
       'ERP training in Hyderabad, SAP course Hyderabad, Salesforce CRM training, Oracle Fusion certification Hyderabad',
     category: 'ERP, CRM & Enterprise Tools',
@@ -515,9 +515,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/professional-soft-skills',
     courseDataKey: 'professional-soft-skills',
-    title: 'Best Professional and Soft Skills Training Institute in Hyderabad',
+    title: 'Professional Skills Training in Hyderabad',
     metaDescription:
-      'Join the best professional and soft skills training in Hyderabad. MS Office, spoken English, communication skills, expert trainers, placement support. Enroll now!',
+      'Communication, leadership & soft skills courses in Hyderabad for IT professionals. Enroll at Coss Cloud Solutions.',
     keywords:
       'soft skills training in Hyderabad, MS Office course Hyderabad, spoken English training, communication skills certification Hyderabad',
     category: 'Professional & Soft Skills',
@@ -526,9 +526,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/programming-full-stack',
     courseDataKey: 'programming-full-stack-development',
-    title: 'Best Programming and Full Stack Development Training Institute in Hyderabad',
+    title: 'Full Stack Development Training in Hyderabad',
     metaDescription:
-      'Join the best programming and full stack development training in Hyderabad. Java, Python, React, Node.js, expert trainers, placement support. Enroll now!',
+      'Learn Full Stack, Java, Python & web development in Hyderabad. Build real projects with expert guidance at Coss Cloud Solutions.',
     keywords:
       'programming training in Hyderabad, full stack development course Hyderabad, Java Python training, web development certification Hyderabad',
     category: 'Programming & Full Stack',
@@ -537,9 +537,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/data-analytics-bi',
     courseDataKey: 'data-analytics-bi',
-    title: 'Best Data, Analytics and BI Training Institute in Hyderabad',
+    title: 'Data Analytics & BI Training in Hyderabad',
     metaDescription:
-      'Join the best data analytics and BI training in Hyderabad. Data Science, Machine Learning, Power BI, expert trainers, placement support and certification. Enroll now!',
+      'Join Data Analytics & Business Intelligence training in Hyderabad at Coss Cloud Solutions. Learn Power BI, Tableau, SQL, Python & ML with expert trainers, live projects, and 100% placement support.',
     keywords:
       'data analytics training in Hyderabad, BI training Hyderabad, Power BI course, data science certification Hyderabad',
     category: 'Data, Analytics & BI',
@@ -548,9 +548,9 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
   {
     slug: 'courses/software-testing-os',
     courseDataKey: 'software-testing-os',
-    title: 'Best Software Testing and OS Training Institute in Hyderabad',
+    title: 'Software Testing Training in Hyderabad',
     metaDescription:
-      'Join the best software testing and OS training in Hyderabad. Manual testing, Selenium, Linux, expert trainers, placement support and certification. Enroll now!',
+      'Manual & Automation Testing, Selenium & QA courses in Hyderabad. Job-ready training at Coss Cloud Solutions.',
     keywords:
       'software testing training in Hyderabad, QA course Hyderabad, Selenium automation training, Linux OS certification Hyderabad',
     category: 'Software Testing & OS',

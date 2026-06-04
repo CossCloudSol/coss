@@ -61,6 +61,13 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Redirect bare domain to www (canonical domain consolidation)
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'cosscloudsol.com' }],
+        destination: 'https://www.cosscloudsol.com/:path*',
+        permanent: true,
+      },
       // 301 permanent redirects for SEO-friendly URL consolidation
       { source: '/data-analytics-bi',         destination: '/courses/data-analytics-bi',    permanent: true },
       { source: '/data-analytics-bi/',        destination: '/courses/data-analytics-bi/',   permanent: true },

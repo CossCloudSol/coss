@@ -42,16 +42,15 @@ const SITE_URL =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'AI, Cloud, DevOps & Programming Training in Hyderabad | Coss Cloud Solutions',
+    default: 'Coss Cloud Solutions — IT Training Institute in Hyderabad',
     template: '%s | Coss Cloud Solutions',
   },
   description:
-    'Best software training institute in Hyderabad. Courses in AI, Cloud Computing, DevOps, Data Science, Cyber Security & more. 100% placement assistance.',
-  keywords:
-    'IT training Hyderabad, software training institute Hyderabad, AI training, Cloud Computing training, DevOps training, Data Science training, Cyber Security training',
-  authors: [{ name: 'COSS Cloud Solutions', url: SITE_URL }],
-  creator: 'COSS Cloud Solutions',
-  publisher: 'COSS Cloud Solutions',
+    'Best IT training institute in Hyderabad with expert trainers, hands-on labs, and 100% placement support. Courses in Data Science, AWS, DevOps, SAP, Full Stack & more.',
+  keywords: ['IT training Hyderabad', 'software training Hyderabad', 'data science course Hyderabad', 'AWS training Hyderabad', 'DevOps training Hyderabad', 'Coss Cloud Solutions'],
+  authors: [{ name: 'Coss Cloud Solutions' }],
+  creator: 'Coss Cloud Solutions',
+  publisher: 'Coss Cloud Solutions',
   icons: {
     icon: [
       { url: '/logo.png', type: 'image/png' },
@@ -60,15 +59,18 @@ export const metadata: Metadata = {
     shortcut: '/logo.png',
   },
   openGraph: {
-    siteName: 'COSS Cloud Solutions',
-    locale: 'en_IN',
     type: 'website',
+    locale: 'en_IN',
+    url: SITE_URL,
+    siteName: 'Coss Cloud Solutions',
+    title: 'Coss Cloud Solutions — IT Training Institute in Hyderabad',
+    description: 'Best IT training institute in Hyderabad. Expert trainers, hands-on labs, placement support. Join 5,000+ students.',
     images: [
       {
-        url: '/logo.png',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'COSS Cloud Solutions — IT Training Institute in Hyderabad',
+        alt: 'Coss Cloud Solutions — IT Training in Hyderabad',
       },
     ],
   },
@@ -76,9 +78,10 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@DsnrCoss',
     creator: '@DsnrCoss',
-    images: [{ url: '/logo.png', alt: 'COSS Cloud Solutions — IT Training Institute in Hyderabad' }],
+    title: 'Coss Cloud Solutions — IT Training Institute in Hyderabad',
+    description: 'Best IT training institute in Hyderabad. Expert trainers, hands-on labs, placement support.',
+    images: ['/og-image.jpg'],
   },
-  // Ensures the full site can be indexed and Google can follow all links
   robots: {
     index: true,
     follow: true,
@@ -90,7 +93,6 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-  // Geo targeting for Hyderabad / India searches
   other: {
     'geo.region': 'IN-TG',
     'geo.placename': 'Hyderabad',
@@ -218,8 +220,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <FooterLogo />
               <p className="footer-desc">Leading IT training institute in Hyderabad. Expert trainers, practical labs, 100% placement support.</p>
               <div className="footer-contact">
-                <p>📍 <strong>Dilsukhnagar:</strong> Flat 109, C.B Eastern Homes, Srinagar Colony, Hyderabad – 500060</p>
-                <p>📍 <strong>Ameerpet:</strong> #502, Sree Swathi Ankur Building, Ameerpet, Hyderabad – 500038</p>
+                <p>📍 <strong>Dilsukhnagar:</strong> Flat 109, CB Eastern Homes, Kamala Nagar, Dilsukhnagar, Hyderabad – 500060</p>
+                <p>📍 <strong>Ameerpet:</strong> #502, Sree Swathi Ankur Building, Besides Aditya Trade Center, Ameerpet, Hyderabad – 500038</p>
                 <p>📞 <a href="tel:+918885166007">+91 88851 66007 – 77807 27374</a></p>
                 <p>✉ <a href="mailto:info@cosscloudsol.com">info@cosscloudsol.com</a></p>
 

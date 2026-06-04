@@ -37,13 +37,13 @@ export function buildGlobalSchemas(): object[] {
       image: { '@id': `${SITE_URL}/#logo` },
       description:
         'COSS Cloud Solutions is a leading IT training institute in Hyderabad offering expert-led courses in AI, Cloud Computing, DevOps, Data Science, Cyber Security, ERP and more with 100% placement assistance at Dilsukhnagar and Ameerpet centres.',
-      foundingDate: '2018',
+      foundingDate: '2010',
       email: 'info@cosscloudsol.com',
       telephone: '+918885166007',
       address: [
         {
           '@type': 'PostalAddress',
-          streetAddress: 'Flat 109, C.B Eastern Homes, Srinagar Colony',
+          streetAddress: 'Flat 109, CB Eastern Homes, Kamala Nagar',
           addressLocality: 'Dilsukhnagar, Hyderabad',
           addressRegion: 'Telangana',
           postalCode: '500060',
@@ -51,7 +51,7 @@ export function buildGlobalSchemas(): object[] {
         },
         {
           '@type': 'PostalAddress',
-          streetAddress: '#502, Sree Swathi Ankur Building',
+          streetAddress: '#502, Sree Swathi Ankur Building, Besides Aditya Trade Center',
           addressLocality: 'Ameerpet, Hyderabad',
           addressRegion: 'Telangana',
           postalCode: '500038',
