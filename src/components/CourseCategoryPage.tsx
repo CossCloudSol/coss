@@ -8,6 +8,34 @@ import { wpImages } from '@/lib/wpImages';
 import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
 
+const COMPANY_ALT_MAP: Record<string, string> = {
+  google: 'Google',
+  ibm: 'IBM',
+  oracle: 'Oracle',
+  hcl: 'HCL Technologies',
+  wipro: 'Wipro',
+  tcs: 'TCS',
+  tech_mahindra: 'Tech Mahindra',
+  infosys: 'Infosys',
+  accenture: 'Accenture',
+  cognizant: 'Cognizant',
+  capgemini: 'Capgemini',
+  adp: 'ADP',
+  airtel: 'Airtel',
+  hsbc: 'HSBC',
+  genpact: 'Genpact',
+  ericsson: 'Ericsson',
+  bank_of_america: 'Bank of America',
+  wells_fargo: 'Wells Fargo',
+  sonata: 'Sonata Software',
+  synopsys: 'Synopsys',
+};
+
+function getCompanyAlt(url: string): string {
+  const filename = url.split('/').pop()?.replace(/\.[^.]+$/, '') ?? '';
+  return COMPANY_ALT_MAP[filename] ?? filename.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 const BADGE_MAP: Record<string, string> = {
   'popular': 'Popular',
   'most popular': 'Popular',
@@ -199,7 +227,7 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
                   {imgs.companyLogos.map((logo, i) => (
                     <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 16px', boxShadow: 'var(--shadow-sm)', minWidth: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <WpImg src={logo} alt="Hiring company" style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain' }} />
+                      <WpImg src={logo} alt={getCompanyAlt(logo)} style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain' }} />
                     </div>
                   ))}
                 </div>

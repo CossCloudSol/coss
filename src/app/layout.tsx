@@ -180,7 +180,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="COSS Cloud Solutions" />
+        <meta name="apple-mobile-web-app-title" content="Coss Cloud Solutions" />
 
         {/* Fonts are served by next/font from /_next/static — no external requests */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />

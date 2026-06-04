@@ -18,15 +18,15 @@ import { CATEGORY_PAGES } from '@/lib/all-pages-registry';
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
-const SITE_NAME = 'COSS Cloud Solutions';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
+const SITE_NAME = 'Coss Cloud Solutions';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 export function buildCategoryPageMetadata(slug: string): Metadata {
   const page = CATEGORY_PAGES.find((p) => p.slug === slug);
 
   if (!page) {
     return {
-      title: `${SITE_NAME} — IT Training in Hyderabad`,
+      title: 'IT Training in Hyderabad',
       description:
         'Best IT Training Institute in Hyderabad with 100% placement support.',
     };
@@ -35,7 +35,7 @@ export function buildCategoryPageMetadata(slug: string): Metadata {
   const canonicalUrl = `${SITE_URL}/${slug}`;
 
   return {
-    title: `${page.title} | ${SITE_NAME}`,
+    title: page.title,
     description: page.metaDescription,
     keywords: page.keywords,
     alternates: {
@@ -53,7 +53,7 @@ export function buildCategoryPageMetadata(slug: string): Metadata {
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: `${page.title} — COSS Cloud Solutions`,
+          alt: `${page.title} — Coss Cloud Solutions`,
         },
       ],
     },

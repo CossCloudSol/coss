@@ -3,7 +3,7 @@ import type { SeoSettings } from '@prisma/client';
 import { prisma } from './db';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
-const DEFAULT_SITE_TITLE = 'COSS Cloud Solutions';
+const DEFAULT_SITE_TITLE = 'Coss Cloud Solutions';
 
 export interface PageSeoBundle {
   seo: import('@prisma/client').PageSeo | null;
@@ -75,7 +75,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
       ? `${seo.metaTitle}${siteSuffix}`
       : siteName;
     const description =
-      seo?.metaDescription ?? 'COSS Cloud Solutions — IT Training in Hyderabad';
+      seo?.metaDescription ?? 'Coss Cloud Solutions — IT Training in Hyderabad';
 
     const ogTitle = seo?.ogTitle ?? seo?.metaTitle ?? siteName;
     const ogDescription = seo?.ogDescription ?? description;
@@ -113,7 +113,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
   } catch (error) {
     console.warn(`[SEO] buildPageMetadata failed for "${slug}":`, error);
     return {
-      title: 'COSS Cloud Solutions - IT Training in Hyderabad',
+      title: 'Coss Cloud Solutions — IT Training in Hyderabad',
       description:
         'Best IT Training Institute in Hyderabad with 100% placement support.',
     };

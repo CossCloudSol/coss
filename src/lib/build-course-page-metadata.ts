@@ -20,8 +20,8 @@ import { COURSE_PAGES } from '@/lib/all-pages-registry';
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
-const SITE_NAME = 'COSS Cloud Solutions';
-const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`;
+const SITE_NAME = 'Coss Cloud Solutions';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 /**
  * Returns a complete Next.js Metadata object for the given course page slug.
@@ -34,7 +34,7 @@ export function buildCoursePageMetadata(slug: string): Metadata {
   if (!page) {
     // Fallback — should not happen if slug matches the registry
     return {
-      title: `${SITE_NAME} — IT Training in Hyderabad`,
+      title: 'IT Training in Hyderabad',
       description:
         'Best IT Training Institute in Hyderabad with 100% placement support.',
     };
@@ -45,7 +45,7 @@ export function buildCoursePageMetadata(slug: string): Metadata {
   const ogDescription = page.metaDescription;
 
   return {
-    title: `${page.title} | ${SITE_NAME}`,
+    title: page.title,
     description: page.metaDescription,
     keywords: page.keywords,
 
@@ -67,7 +67,7 @@ export function buildCoursePageMetadata(slug: string): Metadata {
           url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: `${ogTitle} — COSS Cloud Solutions`,
+          alt: `${ogTitle} — Coss Cloud Solutions`,
         },
       ],
     },
