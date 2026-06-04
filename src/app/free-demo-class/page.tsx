@@ -198,18 +198,23 @@ export default function FreeDemoClassPage() {
             </div>
 
             {/* RIGHT — Form card */}
-            <div className="bg-white/[0.06] border border-white/[0.12] rounded-2xl p-8">
-              <h2 className="font-heading text-xl font-bold text-white mb-1">
+            <div
+              className="border border-white/25 rounded-2xl p-6 backdrop-blur-sm"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)' }}
+            >
+              <h2 className="font-heading text-lg font-bold text-white mb-1">
                 Reserve Your Free Demo Slot
               </h2>
-              <p className="text-slate-400 text-sm mb-6">
+              <p className="text-white/70 text-xs mb-4">
                 Fill the form — counsellor calls within 2 hours to schedule.
               </p>
 
-              <EnrollFullForm />
+              <div className="ef-glass-ctx">
+                <EnrollFullForm />
+              </div>
 
               {/* Social proof */}
-              <div className="flex items-center gap-3 mt-4">
+              <div className="flex items-center gap-3 mt-3">
                 <div className="flex -space-x-2">
                   <div className="w-7 h-7 rounded-full bg-[#FF6B2B] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">R</div>
                   <div className="w-7 h-7 rounded-full bg-[#0BA5A0] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">S</div>

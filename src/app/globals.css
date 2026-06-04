@@ -1487,6 +1487,59 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .enroll-hero-title { font-size: 24px; }
 }
 
+/* ─── Glass-hero context overrides (free-demo-class hero) ─── */
+.ef-glass-ctx .ef-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.ef-glass-ctx .ef-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+.ef-glass-ctx .ef-optional { color: rgba(255, 255, 255, 0.45); }
+.ef-glass-ctx .ef-required { color: #fb923c; }
+.ef-glass-ctx .ef-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 14px;
+  transition: border-color 0.2s, background 0.2s;
+  appearance: none;
+}
+.ef-glass-ctx .ef-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+.ef-glass-ctx .ef-input:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: none;
+}
+.ef-glass-ctx .ef-input option { color: #1e293b; background: #f8fafc; }
+.ef-glass-ctx .ef-select { appearance: none; }
+.ef-glass-ctx .ef-row-2 { gap: 12px; margin-bottom: 12px; }
+.ef-glass-ctx .ef-field { margin-bottom: 12px; }
+.ef-glass-ctx .ef-textarea { min-height: 56px; }
+.ef-glass-ctx .ef-phone-prefix {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+}
+.ef-glass-ctx .ef-branch-option {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.06);
+}
+.ef-glass-ctx .ef-submit-btn { padding: 12px 20px; min-height: 44px; }
+.ef-glass-ctx .ef-disclaimer { color: rgba(255, 255, 255, 0.45); }
+.ef-glass-ctx .ef-error { color: #fca5a5; }
+.ef-glass-ctx .ef-submit-error { color: #fca5a5; }
+.ef-glass-ctx .ef-success-title { color: #fff; }
+.ef-glass-ctx .ef-success-msg { color: rgba(255,255,255,0.75); }
+.ef-glass-ctx .ef-success-msg strong { color: #fff; }
+
 /* ══════════════════════════════════════════════════
    PHASE 3 REDESIGN — NEW COMPONENT STYLES
    All values use CSS custom properties for light/dark
