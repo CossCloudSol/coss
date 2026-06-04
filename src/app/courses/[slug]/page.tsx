@@ -7,9 +7,65 @@ import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
-import { CourseCardThumb } from '@/components/CourseCardThumb';
+import CourseGrid from '@/components/CourseGrid';
+import type { CourseCardProps } from '@/components/CourseCard';
 
 export const dynamic = 'force-dynamic';
+
+const BADGE_MAP: Record<string, string> = {
+  'popular': 'Popular',
+  'most popular': 'Popular',
+  'high demand': 'High Demand',
+  'trending': 'Trending',
+  'new': 'New',
+  'newly added': 'New',
+  'bestseller': 'Bestseller',
+  'best seller': 'Bestseller',
+  'updated 2026': 'Updated',
+  'hot': 'Trending',
+}
+
+const BADGE_VARIANT_MAP: Record<string, CourseCardProps['badgeVariant']> = {
+  'popular': 'orange',
+  'most popular': 'orange',
+  'high demand': 'rose',
+  'trending': 'teal',
+  'new': 'green',
+  'newly added': 'green',
+  'bestseller': 'amber',
+  'best seller': 'amber',
+  'updated 2026': 'amber',
+  'hot': 'teal',
+}
+
+const ACCENT_MAP: Record<string, CourseCardProps['accentVariant']> = {
+  'human-resource': 'hr',
+  'hr': 'hr',
+  'cloud-computing': 'cloud',
+  'cloud': 'cloud',
+  'medical-coding': 'medical',
+  'medical': 'medical',
+  'devops': 'devops',
+  'devops-multi-cloud': 'devops',
+  'sap': 'sap',
+  'erp-crm-enterprise-tools': 'sap',
+  'oracle': 'oracle',
+  'data-analytics-bi': 'data',
+  'data-engineering': 'data',
+  'data': 'data',
+  'cyber-security': 'security',
+  'security': 'security',
+  'programming-full-stack': 'fullstack',
+  'full-stack': 'fullstack',
+  'fullstack': 'fullstack',
+  'digital-marketing': 'digital',
+  'digital-design': 'digital',
+  'digital': 'digital',
+  'professional-soft-skills': 'softskills',
+  'soft-skills': 'softskills',
+  'quantum-computing': 'quantum',
+  'quantum': 'quantum',
+}
 
 interface SyllabusItem { week?: string; topic?: string; details?: string; module?: string; topics?: string[] }
 
@@ -393,57 +449,46 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 20px' }}>
-        {category.courses.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-            <p style={{ fontSize: '16px' }}>No courses in this category yet. Check back soon.</p>
-          </div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
-            {category.courses.map((course) => (
-              <div key={course.id} style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 3px 18px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', display: 'flex', flexDirection: 'column' }}>
-                {/* Thumbnail / fallback */}
-                <div style={{ position: 'relative', height: '180px', overflow: 'hidden', borderRadius: '8px 8px 0 0', flexShrink: 0 }}>
-                  <CourseCardThumb
-                    thumbnail={course.thumbnail}
-                    title={course.title}
-                    categoryName={category.name}
-                    categorySlug={category.slug ?? null}
-                    categoryColor={category.color}
-                    tools={Array.isArray(course.tools) ? course.tools as string[] : []}
-                    mode={course.mode}
-                  />
-                  {course.badge && (
-                    <span style={{ position: 'absolute', top: '10px', left: '10px', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '2px 10px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', zIndex: 1 }}>{course.badge}</span>
-                  )}
-                </div>
-                {/* Card body */}
-                <div style={{ padding: '16px 20px', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <div>
-                    <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '8px', lineHeight: 1.3 }}>{course.title}</h3>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>⏱ {course.duration}</span>
-                      <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px' }}>📈 {course.level}</span>
-                    </div>
-                  </div>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.65', flex: 1 }}>{course.excerpt}</p>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {course.price != null && (
-                      <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)' }}>₹{course.price.toLocaleString()}</span>
-                    )}
-                    <Link
-                      href={getCourseUrl(course)}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#e47538', color: '#fff', padding: '8px 18px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', marginLeft: 'auto', textDecoration: 'none' }}
-                    >
-                      View Details →
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <section className="py-12 px-4 bg-[#F0F2F5]">
+        <div className="max-w-7xl mx-auto mb-10 text-center">
+          <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+            Courses We Offer
+          </h2>
+          <p className="mt-2 text-slate-500 text-sm">
+            Choose the right programme for your goals
+          </p>
+        </div>
+        <div className="max-w-7xl mx-auto">
+          <CourseGrid
+            courses={(category.courses ?? []).map((course: any, i: number) => {
+              const badgeKey = String(course.badge ?? course.tag ?? '').toLowerCase()
+              return {
+                title: course.title ?? '',
+                badge: BADGE_MAP[badgeKey] ?? 'Popular',
+                badgeVariant: BADGE_VARIANT_MAP[badgeKey] ?? 'orange',
+                accentVariant: ACCENT_MAP[category.slug] ?? 'hr',
+                duration: course.duration ?? course.months ?? '',
+                mode: course.mode ?? course.delivery ?? 'Classroom',
+                level: course.level ?? course.difficulty ?? 'Beginner',
+                rating: course.rating ?? 4.8,
+                reviewCount: String(course.reviews ?? course.reviewCount ?? '120+'),
+                enrolledCount: String(course.enrolled ?? course.enrolledCount ?? '500+'),
+                description: course.description ?? course.excerpt ?? '',
+                highlights: [
+                  course.highlight1 ?? course.highlights?.[0] ?? 'Industry-relevant curriculum',
+                  course.highlight2 ?? course.highlights?.[1] ?? 'Placement support included',
+                ] as [string, string],
+                originalPrice: String(course.originalPrice ?? course.mrp ?? ''),
+                discountedPrice: String(course.price ?? course.fee ?? course.discountedPrice ?? ''),
+                emi: course.emi ?? 'Easy EMI available',
+                urgency: course.urgency ?? course.seats ?? 'New batch starting soon · Limited seats',
+                href: course.href ?? course.slug ?? '#',
+                animationIndex: i,
+              }
+            })}
+          />
+        </div>
+      </section>
     </>
   );
 }
