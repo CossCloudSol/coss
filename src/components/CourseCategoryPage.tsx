@@ -6,6 +6,62 @@ import type { CourseCategoryData } from '@/lib/courseData';
 import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
 import CourseGrid from '@/components/CourseGrid';
+import type { CourseCardProps } from '@/components/CourseCard';
+
+const BADGE_MAP: Record<string, string> = {
+  'popular': 'Popular',
+  'most popular': 'Popular',
+  'high demand': 'High Demand',
+  'trending': 'Trending',
+  'new': 'New',
+  'newly added': 'New',
+  'bestseller': 'Bestseller',
+  'best seller': 'Bestseller',
+  'updated 2026': 'Updated',
+  'hot': 'Trending',
+}
+
+const BADGE_VARIANT_MAP: Record<string, CourseCardProps['badgeVariant']> = {
+  'popular': 'orange',
+  'most popular': 'orange',
+  'high demand': 'rose',
+  'trending': 'teal',
+  'new': 'green',
+  'newly added': 'green',
+  'bestseller': 'amber',
+  'best seller': 'amber',
+  'updated 2026': 'amber',
+  'hot': 'teal',
+}
+
+const ACCENT_MAP: Record<string, CourseCardProps['accentVariant']> = {
+  'human-resource': 'hr',
+  'hr': 'hr',
+  'cloud-computing': 'cloud',
+  'cloud': 'cloud',
+  'medical-coding': 'medical',
+  'medical': 'medical',
+  'devops': 'devops',
+  'devops-multi-cloud': 'devops',
+  'sap': 'sap',
+  'erp-crm-enterprise-tools': 'sap',
+  'oracle': 'oracle',
+  'data-analytics-bi': 'data',
+  'data-engineering': 'data',
+  'data': 'data',
+  'cyber-security': 'security',
+  'security': 'security',
+  'programming-full-stack': 'fullstack',
+  'full-stack': 'fullstack',
+  'fullstack': 'fullstack',
+  'digital-marketing': 'digital',
+  'digital-design': 'digital',
+  'digital': 'digital',
+  'professional-soft-skills': 'softskills',
+  'soft-skills': 'softskills',
+  'quantum-computing': 'quantum',
+  'quantum': 'quantum',
+}
 
 export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: CourseCategoryData; breadcrumbSlug: string }) {
   const imgs = wpImages[breadcrumbSlug];
@@ -71,34 +127,46 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
                 );
               }
               return (
-                <>
-                  <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '2px solid var(--border)' }}>
-                    📋 Course Details
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '40px' }}>
-                    {data.courses.map((course, i) => (
-                      <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)', borderRadius: '12px', padding: '20px 22px', boxShadow: 'var(--shadow-sm)', borderLeft: '4px solid var(--primary)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
-                          <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)' }}>{course.name}</h4>
-                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                            <span style={{ background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>⏱ {course.duration}</span>
-                            <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>📈 {course.level}</span>
-                          </div>
-                        </div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginBottom: '12px' }}>
-                          {course.highlights.map(h => (
-                            <span key={h} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: 'var(--text-muted)' }}>
-                              <span style={{ color: '#e8401c', fontWeight: 700 }}>✓</span> {h}
-                            </span>
-                          ))}
-                        </div>
-                        <Link href="/enroll-now-with-coss/" style={{ display: 'inline-flex', background: '#e47538', color: '#fff', padding: '8px 18px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '12px' }}>
-                          Enroll Now →
-                        </Link>
-                      </div>
-                    ))}
+                <section className="py-12 px-4 bg-[#F0F2F5]">
+                  <div className="max-w-7xl mx-auto mb-10 text-center">
+                    <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+                      Courses We Offer
+                    </h2>
+                    <p className="mt-2 text-slate-500 text-sm">
+                      Choose the right programme for your goals
+                    </p>
                   </div>
-                </>
+                  <div className="max-w-7xl mx-auto">
+                    <CourseGrid
+                      courses={(data.courses ?? []).map((course: any, i: number) => {
+                        const badgeKey = String(course.badge ?? course.tag ?? '').toLowerCase()
+                        return {
+                          title: course.title ?? '',
+                          badge: BADGE_MAP[badgeKey] ?? 'Popular',
+                          badgeVariant: BADGE_VARIANT_MAP[badgeKey] ?? 'orange',
+                          accentVariant: ACCENT_MAP[data.slug] ?? 'hr',
+                          duration: course.duration ?? course.months ?? '',
+                          mode: course.mode ?? course.delivery ?? 'Classroom',
+                          level: course.level ?? course.difficulty ?? 'Beginner',
+                          rating: course.rating ?? 4.8,
+                          reviewCount: String(course.reviews ?? course.reviewCount ?? '120+'),
+                          enrolledCount: String(course.enrolled ?? course.enrolledCount ?? '500+'),
+                          description: course.description ?? course.excerpt ?? '',
+                          highlights: [
+                            course.highlight1 ?? course.highlights?.[0] ?? 'Industry-relevant curriculum',
+                            course.highlight2 ?? course.highlights?.[1] ?? 'Placement support included',
+                          ] as [string, string],
+                          originalPrice: String(course.originalPrice ?? course.mrp ?? ''),
+                          discountedPrice: String(course.price ?? course.fee ?? course.discountedPrice ?? ''),
+                          emi: course.emi ?? 'Easy EMI available',
+                          urgency: course.urgency ?? course.seats ?? 'New batch starting soon · Limited seats',
+                          href: course.href ?? course.slug ?? '#',
+                          animationIndex: i,
+                        }
+                      })}
+                    />
+                  </div>
+                </section>
               );
             })()}
 
