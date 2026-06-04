@@ -2571,3 +2571,19 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
 
 /* Duplicate .ann-bar block removed — canonical definition kept above */
+
+/* ══════════════════════════════════════════════════
+   CONVERSION PAGE ANIMATIONS (enroll / free-demo)
+══════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up { animation: fadeUp 0.5s ease both; }
+}
+.live-dot-pulse { animation: pulse-dot 1.5s ease-in-out infinite; }

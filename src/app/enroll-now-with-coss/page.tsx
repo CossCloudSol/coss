@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ResponsivePageStyles } from '@/components/shared';
 import EnrollFullForm from '@/components/EnrollFullForm';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -8,202 +7,302 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('enroll-now-with-coss');
 }
 
-const whyEnroll = [
+const enrollFeatures = [
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-    ),
-    title: 'Free Demo Class',
-    desc: 'Attend a free session before you commit — experience our training quality firsthand.',
-    color: '#10b981',
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    ),
-    title: 'Expert Trainers',
-    desc: 'Certified industry professionals with 10+ years of hands-on real-world experience.',
-    color: '#6366f1',
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
-    ),
-    title: 'Hands-on Training',
-    desc: 'Practical labs, capstone projects, and real-world scenarios in every course.',
-    color: '#0ea5e9',
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-    ),
+    bg: '#FFF7ED',
+    color: '#FF6B2B',
     title: 'Industry Certifications',
-    desc: 'Globally recognized certificates from AWS, Microsoft, Google & more.',
-    color: '#f59e0b',
+    desc: 'AWS, Microsoft, Google — globally recognised credentials.',
+    svg: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+      </svg>
+    ),
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    bg: '#E6FFFA',
+    color: '#0BA5A0',
+    title: 'Hands-on Labs',
+    desc: 'Real tools from day one — no theory-only sessions.',
+    svg: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+      </svg>
     ),
-    title: 'Flexible Batches',
-    desc: 'Weekday, weekend, morning & evening batches — learn at your own pace.',
-    color: '#e47538',
   },
   {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6 6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 14h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 21"/></svg>
-    ),
+    bg: '#ECFDF5',
+    color: '#059669',
     title: '100% Placement Support',
-    desc: 'Resume building, mock interviews & dedicated job portal access until you\'re placed.',
-    color: '#005663',
+    desc: 'Resume, mock interviews, job portal access until placed.',
+    svg: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </svg>
+    ),
+  },
+  {
+    bg: '#EFF6FF',
+    color: '#2563EB',
+    title: 'Expert Trainers',
+    desc: 'Certified professionals with 10+ years industry experience.',
+    svg: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" />
+      </svg>
+    ),
+  },
+  {
+    bg: '#F3E8FF',
+    color: '#7C3AED',
+    title: 'Flexible Batches',
+    desc: 'Weekday, weekend, morning & evening — learn your way.',
+    svg: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
+  },
+  {
+    bg: '#FFFBEB',
+    color: '#D97706',
+    title: '2 Branches + Online',
+    desc: 'Dilsukhnagar, Ameerpet, and live online options.',
+    svg: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+      </svg>
+    ),
   },
 ];
 
-const stats = [
-  { number: '1200+', label: 'Students Placed' },
-  { number: '4.8★',  label: 'Google Rating' },
-  { number: '36+',   label: 'Courses Offered' },
-  { number: '8+',    label: 'Years of Excellence' },
+const enrollTestimonials = [
+  {
+    stars: 5,
+    text: '"Got placed at TCS in 3 months. The hands-on approach made all the difference."',
+    name: 'Rahul M.',
+    course: 'AWS DevOps Batch',
+  },
+  {
+    stars: 5,
+    text: '"Trainers are industry professionals — real projects from day one. Worth every rupee."',
+    name: 'Sneha P.',
+    course: 'Data Science Batch',
+  },
+  {
+    stars: 5,
+    text: '"The free demo alone was better than paid classes I tried elsewhere."',
+    name: 'Kiran T.',
+    course: 'Full Stack Power BI Batch',
+  },
 ];
 
 export default function EnrollPage() {
   return (
     <>
-      <ResponsivePageStyles />
-
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section className="enroll-hero">
-        {/* Decorative layers */}
-        <div className="enroll-hero-glow" aria-hidden="true" />
-        <div className="enroll-hero-dots" aria-hidden="true" />
-
-        <div className="enroll-hero-inner">
+      {/* ── HERO ── */}
+      <section id="top" className="bg-[#0D1B2A] py-16 px-4">
+        <div className="max-w-6xl mx-auto">
           {/* Breadcrumb */}
-          <nav className="enroll-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/">Home</Link>
-            <span aria-hidden="true"> › </span>
-            <span>Enroll Now</span>
+          <nav className="mb-8 text-xs text-white/50" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-white/80 transition-colors">Home</Link>
+            <span className="mx-2 text-white/30" aria-hidden="true">›</span>
+            <span className="text-white/80">Enroll Now</span>
           </nav>
 
-          <h1 className="enroll-hero-title">
-            Launch Your <span className="enroll-hero-accent">IT Career</span> in Hyderabad
-          </h1>
-          <p className="enroll-hero-sub">
-            Book a free demo — no commitment. Our expert counsellors will guide you to the right course and help you land your dream job.
-          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* Trust badges */}
-          <div className="enroll-trust-row">
-            {stats.map(s => (
-              <div key={s.label} className="enroll-trust-pill">
-                <strong>{s.number}</strong>
-                <span>{s.label}</span>
+            {/* LEFT — Headline + trust */}
+            <div>
+              <div className="inline-flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 live-dot-pulse inline-block"></span>
+                Admissions Open — June 2026 Batch
+              </div>
+
+              <h1 className="font-heading text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+                Start Your <span className="text-[#FF6B2B]">IT Career</span><br />
+                in Hyderabad
+              </h1>
+
+              <p className="text-slate-400 text-base leading-relaxed mb-8 max-w-md">
+                Expert trainers, hands-on labs, and 100% placement support.
+                Join 1,200+ students already placed at top companies.
+              </p>
+
+              {/* Trust stats row */}
+              <div className="flex flex-wrap gap-6 mb-8">
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400 text-lg">★</span>
+                  <div>
+                    <div className="text-white font-bold text-sm">4.8 / 5</div>
+                    <div className="text-slate-500 text-xs">Google Rating</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" style={{ color: '#FF6B2B' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  <div>
+                    <div className="text-white font-bold text-sm">1,200+</div>
+                    <div className="text-slate-500 text-xs">Students Placed</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" style={{ color: '#FF6B2B' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  <div>
+                    <div className="text-white font-bold text-sm">8+ Years</div>
+                    <div className="text-slate-500 text-xs">of Excellence</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 flex-shrink-0" style={{ color: '#FF6B2B' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                  </svg>
+                  <div>
+                    <div className="text-white font-bold text-sm">36+</div>
+                    <div className="text-slate-500 text-xs">Courses Offered</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Social proof avatars */}
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-[#FF6B2B] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">R</div>
+                  <div className="w-8 h-8 rounded-full bg-[#0BA5A0] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">S</div>
+                  <div className="w-8 h-8 rounded-full bg-[#4D7CFE] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">P</div>
+                  <div className="w-8 h-8 rounded-full bg-[#8B5CF6] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">K</div>
+                </div>
+                <p className="text-slate-400 text-sm">
+                  <span className="text-white font-semibold">1,200+ students</span> enrolled this year — join them!
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT — Form card */}
+            <div className="bg-white/[0.06] border border-white/[0.12] rounded-2xl p-8">
+              <h2 className="font-heading text-xl font-bold text-white mb-1">
+                Book Free Demo — Callback in 2 hrs
+              </h2>
+              <p className="text-slate-400 text-sm mb-6">
+                Fill the form and our counsellor will call within 2 hours.
+              </p>
+
+              <EnrollFullForm />
+
+              {/* Trust microcopy */}
+              <div className="flex items-center justify-center gap-4 mt-4 text-xs text-slate-500">
+                <span className="flex items-center gap-1">
+                  <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  100% Secure
+                </span>
+                <span className="flex items-center gap-1">
+                  <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  No Spam
+                </span>
+                <span className="flex items-center gap-1">
+                  <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  Reply in 2 hrs
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── FEATURES GRID ── */}
+      <section className="py-16 px-4 bg-[#F0F2F5]">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
+            Why 1,200+ Students Choose COSS
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {enrollFeatures.map((f) => (
+              <div key={f.title} className="bg-white rounded-2xl border border-black/[0.07] p-6 flex gap-4 items-start">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: f.bg, color: f.color }}
+                >
+                  {f.svg}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-[#0D1B2A] text-sm mb-1">{f.title}</h3>
+                  <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── MAIN CONTENT ──────────────────────────────────────────────────── */}
-      <section className="enroll-body">
-        <div className="enroll-body-inner">
-
-          {/* ── LEFT: Form ── */}
-          <div className="enroll-form-col">
-            <div className="enroll-form-label-tag">Start Your IT Career</div>
-            <h2 className="enroll-form-heading">Enroll or Book a Free Demo</h2>
-            <p className="enroll-form-sub">
-              Fill out the form and our counsellor will call you within <strong>2 hours</strong> to guide you toward the right course.
-            </p>
-
-            {/* Social proof strip above form */}
-            <div className="enroll-social-proof">
-              <div className="enroll-avatars">
-                {['R','S','P','A','K'].map(l => (
-                  <span key={l} className="enroll-avatar">{l}</span>
-                ))}
+      {/* ── TESTIMONIALS ── */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
+            What Our Students Say
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {enrollTestimonials.map((t) => (
+              <div key={t.name} className="bg-[#F8FAFC] rounded-2xl border border-black/[0.06] p-6">
+                <div className="text-amber-400 text-base mb-3">{'★'.repeat(t.stars)}</div>
+                <p className="text-slate-600 text-sm leading-relaxed mb-4 italic">{t.text}</p>
+                <div>
+                  <div className="font-semibold text-[#0D1B2A] text-sm">{t.name}</div>
+                  <div className="text-slate-400 text-xs">{t.course}</div>
+                </div>
               </div>
-              <span className="enroll-social-text">
-                <strong>1,200+ students</strong> enrolled this year — join them!
-              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── BRANCH LOCATIONS ── */}
+      <section className="py-16 px-4 bg-[#0D1B2A]">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-heading text-2xl font-bold text-white text-center mb-10 flex items-center justify-center gap-2">
+            <svg className="w-5 h-5 flex-shrink-0" style={{ color: '#FF6B2B' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
+            </svg>
+            Our Branch Locations
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-white/[0.06] border border-white/[0.12] rounded-2xl p-6">
+              <div className="font-semibold text-white mb-2">Dilsukhnagar Branch</div>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Flat 109, C.B Eastern Homes, Srinagar Colony, Opposite Chai Vaai Cafe, Dilsukhnagar, Hyderabad – 500060
+              </p>
             </div>
-
-            <EnrollFullForm />
-
-            {/* Assurance badges */}
-            <div className="enroll-assurance">
-              <span className="enroll-assurance-item">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                100% Secure & Private
-              </span>
-              <span className="enroll-assurance-item">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                No Spam, No Pressure
-              </span>
-              <span className="enroll-assurance-item">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Response within 2 hrs
-              </span>
+            <div className="bg-white/[0.06] border border-white/[0.12] rounded-2xl p-6">
+              <div className="font-semibold text-white mb-2">Ameerpet Branch</div>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                #502, Sree Swathi Ankur Building, Besides Aditya Trade Center, Ameerpet, Hyderabad – 500038
+              </p>
             </div>
           </div>
 
-          {/* ── RIGHT: Why + Contact ── */}
-          <div className="enroll-info-col">
-
-            {/* Why Enroll */}
-            <div className="enroll-why-box">
-              <h3 className="enroll-why-title">Why Choose COSS?</h3>
-              <div className="enroll-why-grid">
-                {whyEnroll.map(w => (
-                  <div key={w.title} className="enroll-why-card">
-                    <span className="enroll-why-icon" style={{ color: w.color, background: `${w.color}18` }}>
-                      {w.icon}
-                    </span>
-                    <div>
-                      <div className="enroll-why-card-title">{w.title}</div>
-                      <div className="enroll-why-card-desc">{w.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Branch Locations */}
-            <div className="enroll-branches">
-              <h4 className="enroll-branches-title">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Our Branch Locations
-              </h4>
-
-              <div className="enroll-branch-cards">
-                <div className="enroll-branch-card">
-                  <div className="enroll-branch-name">Dilsukhnagar Branch</div>
-                  <p className="enroll-branch-addr">
-                    Flat 109, C.B Eastern Homes, Srinagar Colony, Opposite Chai Vaai Cafe, Dilsukhnagar, Hyderabad – 500060
-                  </p>
-                </div>
-                <div className="enroll-branch-card">
-                  <div className="enroll-branch-name">Ameerpet Branch</div>
-                  <p className="enroll-branch-addr">
-                    #502, Sree Swathi Ankur Building, Besides Aditya Trade Center, Ameerpet, Hyderabad – 500038
-                  </p>
-                </div>
-              </div>
-
-              <div className="enroll-contact-row">
-                <a href="tel:+918885166007" className="enroll-contact-link">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.7 19.79 19.79 0 0 1 1.62 4.08 2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                  +91 88851 66007
-                </a>
-                <span className="enroll-contact-sep">•</span>
-                <a href="tel:+917780727374" className="enroll-contact-link">77807 27374</a>
-                <span className="enroll-contact-sep">•</span>
-                <a href="mailto:info@cosscloudsol.com" className="enroll-contact-link enroll-contact-email">
-                  info@cosscloudsol.com
-                </a>
-              </div>
-            </div>
-
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+            <a href="tel:+918885166007" className="flex items-center gap-2 font-semibold transition-colors" style={{ color: '#FF6B2B' }}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.7 19.79 19.79 0 0 1 1.62 4.08 2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              +91 88851 66007
+            </a>
+            <span className="text-white/30">•</span>
+            <a href="tel:+917780727374" className="font-semibold transition-colors" style={{ color: '#FF6B2B' }}>77807 27374</a>
+            <span className="text-white/30">•</span>
+            <a href="mailto:info@cosscloudsol.com" className="font-semibold transition-colors" style={{ color: '#FF6B2B' }}>info@cosscloudsol.com</a>
           </div>
         </div>
       </section>
