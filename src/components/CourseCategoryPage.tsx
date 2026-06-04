@@ -113,7 +113,7 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
               const cards = courseCardDataMap[breadcrumbSlug];
               if (cards && cards.length > 0) {
                 return (
-                  <section className="py-12 px-0 bg-[#F0F2F5] rounded-2xl mb-10">
+                  <section className="py-12 px-0 rounded-2xl mb-10">
                     <div className="max-w-7xl mx-auto mb-10 text-center">
                       <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
                         Courses We Offer
@@ -127,7 +127,7 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
                 );
               }
               return (
-                <section className="py-12 px-4 bg-[#F0F2F5]">
+                <section className="py-12 px-4">
                   <div className="max-w-7xl mx-auto mb-10 text-center">
                     <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
                       Courses We Offer
