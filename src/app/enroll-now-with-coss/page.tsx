@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import EnrollFullForm from '@/components/EnrollFullForm';
+import HeroEnrollForm from '@/components/HeroEnrollForm';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -183,38 +183,9 @@ export default function EnrollPage() {
               </div>
             </div>
 
-            {/* RIGHT — Form card */}
-            <div className="bg-white/[0.06] border border-white/[0.12] rounded-2xl p-8">
-              <h2 className="font-heading text-xl font-bold text-white mb-1">
-                Book Free Demo — Callback in 2 hrs
-              </h2>
-              <p className="text-slate-400 text-sm mb-6">
-                Fill the form and our counsellor will call within 2 hours.
-              </p>
-
-              <EnrollFullForm />
-
-              {/* Trust microcopy */}
-              <div className="flex items-center justify-center gap-4 mt-4 text-xs text-slate-500">
-                <span className="flex items-center gap-1">
-                  <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                  100% Secure
-                </span>
-                <span className="flex items-center gap-1">
-                  <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  No Spam
-                </span>
-                <span className="flex items-center gap-1">
-                  <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  Reply in 2 hrs
-                </span>
-              </div>
+            {/* RIGHT — Form card (homepage hero style) */}
+            <div>
+              <HeroEnrollForm />
             </div>
 
           </div>
