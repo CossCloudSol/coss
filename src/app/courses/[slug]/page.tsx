@@ -473,13 +473,27 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
                 rating: course.rating ?? 4.8,
                 reviewCount: String(course.reviews ?? course.reviewCount ?? '120+'),
                 enrolledCount: String(course.enrolled ?? course.enrolledCount ?? '500+'),
-                description: course.description ?? course.excerpt ?? '',
+                description: (() => {
+                    const raw = course.description ?? course.excerpt ?? ''
+                    const plain = raw.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
+                    return plain.length > 120 ? plain.slice(0, 120).trim() + '...' : plain
+                  })(),
                 highlights: [
                   course.highlight1 ?? course.highlights?.[0] ?? 'Industry-relevant curriculum',
                   course.highlight2 ?? course.highlights?.[1] ?? 'Placement support included',
                 ] as [string, string],
-                originalPrice: String(course.originalPrice ?? course.mrp ?? ''),
-                discountedPrice: String(course.price ?? course.fee ?? course.discountedPrice ?? ''),
+                originalPrice: (() => {
+                    const val = course.originalPrice ?? course.mrp ?? ''
+                    if (!val) return ''
+                    const num = parseInt(String(val).replace(/[^0-9]/g, ''))
+                    return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
+                  })(),
+                discountedPrice: (() => {
+                    const val = course.price ?? course.fee ?? course.discountedPrice ?? ''
+                    if (!val) return ''
+                    const num = parseInt(String(val).replace(/[^0-9]/g, ''))
+                    return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
+                  })(),
                 emi: course.emi ?? 'Easy EMI available',
                 urgency: course.urgency ?? course.seats ?? 'New batch starting soon · Limited seats',
                 href: course.href ?? course.slug ?? '#',
