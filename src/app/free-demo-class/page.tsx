@@ -69,7 +69,7 @@ const whatYouGet = [
   {
     bg: '#FFFBEB', color: '#D97706',
     title: 'Placement insights',
-    desc: 'See real JDs, salary ranges & companies COSS alumni work at.',
+    desc: 'See real JDs, salary ranges & companies Coss Cloud Solutions alumni work at.',
     svg: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />

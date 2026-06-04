@@ -196,7 +196,7 @@ export default function EnrollPage() {
       <section className="py-16 px-4 bg-[#F0F2F5]">
         <div className="max-w-6xl mx-auto">
           <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
-            Why 1,200+ Students Choose COSS
+            Why 1,200+ Students Choose Coss Cloud Solutions
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {enrollFeatures.map((f) => (

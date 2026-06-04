@@ -39,7 +39,7 @@ const coursesByCategory: Array<{ category: string; courses: string[] }> = (() =>
 function buildWhatsAppUrl(number: string, name: string, course: string): string {
   const digits = number.replace(/\D/g, '');
   const to = digits.length === 12 && digits.startsWith('91') ? digits : `91${digits}`;
-  const parts: string[] = ["Hi COSS! I'd like to know more about your courses."];
+  const parts: string[] = ["Hi Coss Cloud Solutions! I'd like to know more about your courses."];
   if (name.trim()) parts.push(`My name is ${name.trim()}.`);
   if (course) parts.push(`I'm interested in: ${course}.`);
   parts.push('Please get in touch.');
@@ -221,7 +221,7 @@ export default function WhatsAppWidget(): JSX.Element | null {
           ref={panelRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Chat with COSS on WhatsApp"
+          aria-label="Chat with Coss Cloud Solutions on WhatsApp"
           className="wa-panel"
           style={{ zIndex: 99999 }}
           onKeyDown={trapFocus}
@@ -230,7 +230,7 @@ export default function WhatsAppWidget(): JSX.Element | null {
           <div className="wa-panel-header">
             <div className="wa-panel-avatar" aria-hidden="true">C</div>
             <div className="wa-panel-info">
-              <div className="wa-panel-name">COSS</div>
+              <div className="wa-panel-name">Coss</div>
               <div className="wa-panel-subtitle">Cloud Solutions</div>
               <div className="wa-panel-online">
                 <span className="wa-online-dot" aria-hidden="true" />

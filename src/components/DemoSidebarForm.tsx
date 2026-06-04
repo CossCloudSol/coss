@@ -217,7 +217,7 @@ export default function DemoSidebarForm(): JSX.Element {
           marginBottom: '16px',
         }}
       >
-        Start your IT career with COSS
+        Start your IT career with Coss Cloud Solutions
       </p>
 
       <input

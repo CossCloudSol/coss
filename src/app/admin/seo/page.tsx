@@ -1081,7 +1081,7 @@ function ToolsTab({
         description="Add structured data for rich search results."
       >
         <p className="text-xs text-gray-500 mt-1">
-          Useful types for COSS:{' '}
+          Useful types for Coss Cloud Solutions:{' '}
           <span className="font-medium">
             EducationalOrganization, Course, Review, LocalBusiness, FAQPage
           </span>

@@ -6,7 +6,7 @@ import { getServerSession } from '@/lib/session';
 export const metadata: Metadata = {
   title: {
     default: 'Admin CRM',
-    template: '%s | COSS Admin',
+    template: '%s | Coss Cloud Solutions Admin',
   },
   robots: { index: false, follow: false },
 };

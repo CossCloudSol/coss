@@ -123,7 +123,7 @@ export default function HeroEnrollForm(): JSX.Element {
       noValidate
       aria-busy={isSubmitting}
     >
-      <h3>Enroll Now with COSS</h3>
+      <h3>Enroll Now with Coss Cloud Solutions</h3>
       <p>Start your IT career journey today</p>
 
       <input

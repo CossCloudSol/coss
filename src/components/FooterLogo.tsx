@@ -27,7 +27,7 @@ export default function FooterLogo() {
       <span style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
         <span className="logo-icon">C</span>
         <span className="logo-text">
-          <span className="logo-name" style={{ color: 'white' }}>COSS</span>
+          <span className="logo-name" style={{ color: 'white' }}>Coss</span>
           <span className="logo-sub">Cloud Solutions</span>
         </span>
       </span>

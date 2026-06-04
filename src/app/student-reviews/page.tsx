@@ -16,7 +16,7 @@ const reviews = [
   { name: 'Bekkari Laxmi', course: 'Full Stack Development', rating: 5, date: 'September 2024', review: 'Coss Cloud Solutions at Dilsukhnagar offers a comprehensive full stack development training program tailored for students who want to build strong careers in web development. From a student\'s perspective, the course is well-structured, covering both front-end and back-end technologies. Very happy with the quality of training!', initials: 'BL' },
   { name: 'Shiva Rani', course: 'Data Analytics', rating: 5, date: 'August 2024', review: 'Well experienced faculty, feasible lab timings, overall satisfied completely. The Data Analytics course covered everything I needed — from basics to advanced analytics. Thank you Coss Cloud Solutions for the excellent training!', initials: 'SR' },
   { name: 'King Queen', course: 'Cloud Computing', rating: 4, date: 'August 2024', review: 'Nice institute with good learning skills and lab facility. The cloud computing course was practical and the trainer was very knowledgeable. Good experience overall with supportive staff.', initials: 'KQ' },
-  { name: 'Rahul M.', course: 'Cyber Security', rating: 5, date: 'July 2024', review: 'The Ethical Hacking course at COSS was absolutely amazing! The trainer explained complex concepts in a very clear and practical way. Got hands-on experience with real tools like Kali Linux and Metasploit. Now working as a Security Analyst. Thank you COSS!', initials: 'RM' },
+  { name: 'Rahul M.', course: 'Cyber Security', rating: 5, date: 'July 2024', review: 'The Ethical Hacking course at Coss Cloud Solutions was absolutely amazing! The trainer explained complex concepts in a very clear and practical way. Got hands-on experience with real tools like Kali Linux and Metasploit. Now working as a Security Analyst. Thank you Coss Cloud Solutions!', initials: 'RM' },
   { name: 'Priya V.', course: 'Digital Marketing', rating: 5, date: 'July 2024', review: 'Great institute for digital marketing training! Learned SEO, Google Ads, Social Media Marketing and Google Analytics in depth. The practical approach helped me understand real campaigns. Now working at a digital agency!', initials: 'PV' },
   { name: 'Suresh K.', course: 'Python Full Stack', rating: 5, date: 'June 2024', review: 'Coss Cloud Solutions is one of the best institutes for Python training in Hyderabad. The trainer was excellent and patient with all doubts. The Django project we built was a great learning experience. Got placed in 3 weeks!', initials: 'SK' },
 ];
@@ -43,7 +43,7 @@ export default function StudentReviewsPage() {
         stats={[
           { value: '4.9/5',  label: 'OVERALL RATING' },
           { value: '1,200+', label: 'GOOGLE REVIEWS' },
-          { value: '98%',    label: 'RECOMMEND COSS' },
+          { value: '98%',    label: 'RECOMMEND COSS CLOUD SOLUTIONS' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },
         ]}
         ctaText="Join 5,000+ students who transformed their IT careers"
@@ -59,7 +59,7 @@ export default function StudentReviewsPage() {
             <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '6px' }}>Based on 1200+ reviews on Google</div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            {[{ n: '5000+', l: 'Students Trained' }, { n: '4.9/5', l: 'Average Rating' }, { n: '1200+', l: 'Google Reviews' }, { n: '98%', l: 'Recommend COSS' }].map(s => (
+            {[{ n: '5000+', l: 'Students Trained' }, { n: '4.9/5', l: 'Average Rating' }, { n: '1200+', l: 'Google Reviews' }, { n: '98%', l: 'Recommend Coss Cloud Solutions' }].map(s => (
               <div key={s.l} style={{ background: 'var(--primary)', color: '#fff', padding: '14px 22px', borderRadius: '12px', textAlign: 'center', minWidth: '130px' }}>
                 <div style={{ fontFamily: 'Poppins, sans-serif', fontSize: '22px', fontWeight: 800 }}>{s.n}</div>
                 <div style={{ fontSize: '12px', opacity: 0.88, marginTop: '2px' }}>{s.l}</div>

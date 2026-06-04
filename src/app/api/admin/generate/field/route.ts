@@ -14,7 +14,7 @@ const FIELD_PROMPTS: Record<string, string> = {
   highlights: 'Return ONLY valid JSON: {"value": ["highlight 1", "highlight 2", ...]}. 6-8 specific, concrete highlights.',
   syllabus: 'Return ONLY valid JSON: {"value": [{"module": "Module Name", "topics": ["topic1", "topic2", "topic3", "topic4"]}]}. 5-8 modules, 4-6 topics each.',
   tools: 'Return ONLY valid JSON: {"value": ["Tool1", "Tool2", ...]}. 6-10 specific tools with versions where relevant.',
-  seoTitle: 'Return ONLY valid JSON: {"value": "SEO Title under 60 chars | COSS"}.',
+  seoTitle: 'Return ONLY valid JSON: {"value": "SEO Title under 60 chars | Coss Cloud Solutions"}.',
   seoDesc: 'Return ONLY valid JSON: {"value": "Meta description under 155 chars with keyword + Hyderabad + benefit"}.',
   content: 'Return ONLY valid JSON: {"value": "full markdown blog post 850-1000 words"}. Use H2s as questions. Open with scenario, not definition.',
   tags: 'Return ONLY valid JSON: {"value": ["tag1", "tag2", "tag3", "tag4"]}. 4-6 relevant tags.',

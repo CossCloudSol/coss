@@ -102,7 +102,7 @@ export default function SiteHeader() {
           <span style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
             <span className="logo-icon">C</span>
             <span className="logo-text">
-              <span className="logo-name">COSS</span>
+              <span className="logo-name">Coss</span>
               <span className="logo-sub">Cloud Solutions</span>
             </span>
           </span>

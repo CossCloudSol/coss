@@ -160,7 +160,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const category = await getCategory(params.slug);
   if (category) {
     return {
-      title: category.seoTitle ?? `${category.name} Training in Hyderabad | COSS`,
+      title: category.seoTitle ?? `${category.name} Training in Hyderabad | Coss Cloud Solutions`,
       description: category.seoDesc ?? category.description ?? undefined,
     };
   }
@@ -399,7 +399,7 @@ function EnquirySidebar({ price, originalPrice }: { price: number | null; origin
         {originalPrice && price && (
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{originalPrice.toLocaleString()}</p>
         )}
-        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with COSS</p>
+        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
         <input type="text" placeholder="Full Name" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', marginBottom: '10px', outline: 'none', boxSizing: 'border-box' }} />
         <input type="tel" placeholder="Mobile Number" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', marginBottom: '14px', outline: 'none', boxSizing: 'border-box' }} />
         <Link href="/free-demo-class/" style={{ display: 'block', textAlign: 'center', background: '#e47538', color: '#fff', padding: '12px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none' }}>

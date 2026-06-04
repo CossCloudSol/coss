@@ -44,8 +44,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const job = await getJob(params.slug);
   if (!job) return { title: 'Job Not Found' };
   return {
-    title: `${job.title} at ${job.company} — Hyderabad | COSS`,
-    description: `${job.title} opening at ${job.company} in ${job.location}. ${job.experience} experience. Apply through COSS placement assistance.`,
+    title: `${job.title} at ${job.company} — Hyderabad | Coss Cloud Solutions`,
+    description: `${job.title} opening at ${job.company} in ${job.location}. ${job.experience} experience. Apply through Coss Cloud Solutions placement assistance.`,
   };
 }
 
@@ -150,7 +150,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
                 whiteSpace: 'nowrap',
               }}
             >
-              Apply via COSS
+              Apply via Coss Cloud Solutions
             </a>
           </div>
         </div>
@@ -198,7 +198,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
                 Ready to Apply?
               </h3>
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px', marginBottom: '20px', lineHeight: '1.6' }}>
-                Apply through COSS placement assistance. Our team will help you with resume review, interview prep, and direct referral.
+                Apply through Coss Cloud Solutions placement assistance. Our team will help you with resume review, interview prep, and direct referral.
               </p>
               <a
                 href={waUrl}

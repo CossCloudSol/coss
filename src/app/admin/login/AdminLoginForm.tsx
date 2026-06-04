@@ -42,7 +42,7 @@ export default function AdminLoginForm({ hasAdminEmail }: Props) {
     <div className="fixed inset-0 z-50 flex min-h-screen items-center justify-center bg-white px-4 py-12">
       <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-200">
         <h1 className="mb-2 text-center text-2xl font-bold tracking-tight text-teal-600">
-          COSS Admin
+          Coss Cloud Solutions Admin
         </h1>
         <p className="mb-6 text-center text-sm text-gray-500">
           Sign in to manage your site

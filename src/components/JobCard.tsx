@@ -133,7 +133,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
           style={{ background: '#e47538' }}
         >
-          Apply via COSS
+          Apply via Coss Cloud Solutions
         </a>
       </div>
 

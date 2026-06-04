@@ -36,11 +36,11 @@ export default function WhyUsPage() {
     <>
       <ResponsivePageStyles />
       <HeroBanner
-        badge="WHY 5,000+ STUDENTS CHOOSE COSS"
+        badge="WHY 5,000+ STUDENTS CHOOSE COSS CLOUD SOLUTIONS"
         titlePre="The "
         accentText="Smarter Choice"
         titleLine2="for IT Training in Hyderabad"
-        subtitle="Small batches, real-project training, certified trainers with 10+ years of experience & 100% placement support — see what sets COSS apart."
+        subtitle="Small batches, real-project training, certified trainers with 10+ years of experience & 100% placement support — see what sets Coss Cloud Solutions apart."
         stats={[
           { value: '5,000+', label: 'STUDENTS TRAINED' },
           { value: '15+',    label: 'YEARS EXPERIENCE' },
@@ -55,7 +55,7 @@ export default function WhyUsPage() {
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '44px' }}>
           <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>9 Strong Reasons</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)' }}>Why 5000+ Students Choose COSS</h2>
+          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)' }}>Why 5000+ Students Choose Coss Cloud Solutions</h2>
         </div>
         <div className="why-feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '22px' }}>
           {reasons.map((r, i) => (
@@ -82,13 +82,13 @@ export default function WhyUsPage() {
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '36px' }}>
             <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Comparison</div>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>COSS vs Other Institutes</h2>
+            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Coss Cloud Solutions vs Other Institutes</h2>
           </div>
           <div style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 3px 18px rgba(0,0,0,0.08)' }}>
             {/* Header */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#1a1a2e', color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               <div style={{ padding: '14px 20px' }}>Feature</div>
-              <div style={{ padding: '14px 20px', textAlign: 'center', background: '#e47538' }}>COSS</div>
+              <div style={{ padding: '14px 20px', textAlign: 'center', background: '#e47538' }}>Coss Cloud Solutions</div>
               <div style={{ padding: '14px 20px', textAlign: 'center' }}>Other Institutes</div>
             </div>
             {comparisons.map((c, i) => (

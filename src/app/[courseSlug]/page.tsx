@@ -278,7 +278,7 @@ export default function CourseSlugPage({
               guarantees from spec). */}
           <section>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Why Choose COSS for {course.shortTitle}?
+              Why Choose Coss Cloud Solutions for {course.shortTitle}?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {[
@@ -310,7 +310,7 @@ export default function CourseSlugPage({
           {/* Course Location — two centers */}
           <section>
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              COSS Training Centers in Hyderabad
+              Coss Cloud Solutions Training Centers in Hyderabad
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <LocationCard

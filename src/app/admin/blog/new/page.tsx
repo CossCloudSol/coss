@@ -36,7 +36,7 @@ export default function NewBlogPostPage() {
 
   const [form, setForm] = useState({
     title: '', slug: '', excerpt: '', category: '',
-    author: 'COSS Team', authorRole: 'Editorial Team',
+    author: 'Coss Cloud Solutions Team', authorRole: 'Editorial Team',
     readTime: '', thumbnail: '', status: 'draft', featured: false,
     seoTitle: '', seoDesc: '',
   });

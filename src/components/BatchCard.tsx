@@ -106,7 +106,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
           <div>
             <p className="text-xs text-gray-600 dark:text-gray-300">Venue</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">
-              {batch.mode === 'Online' ? 'Online via Zoom' : (batch.centre ?? 'COSS Centre')}
+              {batch.mode === 'Online' ? 'Online via Zoom' : (batch.centre ?? 'Coss Cloud Solutions Centre')}
             </p>
           </div>
         </div>

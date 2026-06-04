@@ -5,7 +5,7 @@ import { LeadsTable } from '@/components/admin/LeadsTable';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'All Leads — COSS Admin',
+  title: 'All Leads — Coss Cloud Solutions Admin',
   robots: { index: false, follow: false },
 };
 

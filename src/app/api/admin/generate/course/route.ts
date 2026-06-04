@@ -25,7 +25,7 @@ comprehensive, cutting-edge, industry-leading, world-class, robust, leverage, de
 
 SEO RULES:
 - Slug: 5-8 words, format: [topic]-[intent]-in-hyderabad or [topic]-training-institute-in-hyderabad
-- SEO title: under 60 chars, format: "[Topic] Training in Hyderabad | COSS"
+- SEO title: under 60 chars, format: "[Topic] Training in Hyderabad | Coss Cloud Solutions"
 - Meta desc: under 155 chars, must include: one number or data point, one action verb, "Hyderabad"
 - Use LSI keywords — related terms not just the main keyword repeated
 - Mention Hyderabad naturally maximum 3 times in the description body

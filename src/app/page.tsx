@@ -68,7 +68,7 @@ const testimonials: ReadonlyArray<Testimonial> = [
     initials: 'JS',
     role: 'Linux Administrator',
     stars: 5,
-    review: 'As someone with minimal Linux exposure, I was hesitant — but Coss made everything easy. Well-structured from fundamentals to advanced topics. Practical sessions really solidified my knowledge.',
+    review: 'As someone with minimal Linux exposure, I was hesitant — but Coss Cloud Solutions made everything easy. Well-structured from fundamentals to advanced topics. Practical sessions really solidified my knowledge.',
     course: 'Linux Administration',
     avatarBg: 'bg-gray-600',
   },
@@ -86,7 +86,7 @@ const testimonials: ReadonlyArray<Testimonial> = [
     initials: 'SR',
     role: 'Data Science Graduate',
     stars: 5,
-    review: 'Well experienced faculty, feasible lab timings, and overall completely satisfied. The course structure is clear and industry-relevant. Thank you Coss — you changed my career trajectory!',
+    review: 'Well experienced faculty, feasible lab timings, and overall completely satisfied. The course structure is clear and industry-relevant. Thank you Coss Cloud Solutions — you changed my career trajectory!',
     course: 'Data Science & AI',
     avatarBg: 'bg-purple-500',
   },
@@ -981,7 +981,7 @@ export default async function HomePage() {
             <div className="section-tag">Resources</div>
             <h2 className="section-title">Latest From Our Blog</h2>
             <p className="section-subtitle">
-              Expert insights, course guides, and career tips from the Coss team
+              Expert insights, course guides, and career tips from the Coss Cloud Solutions team
             </p>
           </div>
 

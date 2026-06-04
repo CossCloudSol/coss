@@ -322,7 +322,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           {/* ── Sidebar ───────────────────────────────────────────────── */}
           <div>
             <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '22px', color: '#fff', marginBottom: '20px' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', marginBottom: '10px', color: '#fff' }}>About COSS</h4>
+              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', marginBottom: '10px', color: '#fff' }}>About Coss Cloud Solutions</h4>
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
                 Leading IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad.
               </p>

@@ -18,7 +18,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
 
   const [form, setForm] = useState({
     title: '', slug: '', excerpt: '', category: '',
-    author: 'COSS Team', authorRole: 'Editorial Team',
+    author: 'Coss Cloud Solutions Team', authorRole: 'Editorial Team',
     readTime: '', thumbnail: '', status: 'draft', featured: false,
     seoTitle: '', seoDesc: '',
   });
@@ -39,7 +39,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
           slug: data.slug ?? '',
           excerpt: data.excerpt ?? '',
           category: data.category ?? '',
-          author: data.author ?? 'COSS Team',
+          author: data.author ?? 'Coss Cloud Solutions Team',
           authorRole: data.authorRole ?? 'Editorial Team',
           readTime: data.readTime ?? '',
           thumbnail: data.thumbnail ?? '',

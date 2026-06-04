@@ -203,7 +203,7 @@ export default function NewCategoryPage() {
                 value={form.seoTitle}
                 onChange={(e) => setForm((p) => ({ ...p, seoTitle: e.target.value }))}
                 className={inputCls}
-                placeholder="Data Analytics Courses in Hyderabad | COSS"
+                placeholder="Data Analytics Courses in Hyderabad | Coss Cloud Solutions"
               />
             </div>
             <div>
@@ -214,7 +214,7 @@ export default function NewCategoryPage() {
                 value={form.seoDesc}
                 onChange={(e) => setForm((p) => ({ ...p, seoDesc: e.target.value }))}
                 className={inputCls}
-                placeholder="Learn … at COSS Hyderabad. Hands-on training, placement support."
+                placeholder="Learn … at Coss Cloud Solutions Hyderabad. Hands-on training, placement support."
               />
             </div>
           </div>

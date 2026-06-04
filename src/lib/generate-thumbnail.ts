@@ -98,7 +98,7 @@ export function generateCourseThumbnailSvg(
   <text x="18" y="120" font-size="18" fill="#ffffff" font-weight="600" font-family="sans-serif, Arial">${title}</text>
   ${toolsLine ? `<text x="18" y="142" font-size="11" fill="${colors.label}" font-family="sans-serif, Arial">${toolsLine}</text>` : ''}
   <text x="18" y="168" font-size="10" fill="${colors.label}" font-family="sans-serif, Arial" opacity="0.8">Training in Hyderabad</text>
-  <text x="${W - 14}" y="${H - 10}" font-size="9" fill="${colors.text}" font-family="sans-serif, Arial" text-anchor="end">COSS</text>
+  <text x="${W - 14}" y="${H - 10}" font-size="9" fill="${colors.text}" font-family="sans-serif, Arial" text-anchor="end">COSS CLOUD SOLUTIONS</text>
   <rect x="0" y="${H - 4}" width="${W}" height="4" fill="${colors.accent}" opacity="0.6"/>
 </svg>`
 }

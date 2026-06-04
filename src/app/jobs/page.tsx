@@ -59,7 +59,7 @@ export default function JobsPage() {
             Job Openings
           </h1>
           <p className="text-base max-w-xl mx-auto mb-8" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            Partner companies hiring COSS-trained professionals in Hyderabad
+            Partner companies hiring Coss Cloud Solutions-trained professionals in Hyderabad
           </p>
 
           {/* Stats */}

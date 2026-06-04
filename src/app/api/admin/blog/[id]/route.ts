@@ -55,7 +55,7 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
         category: body.category as string,
         tags: Array.isArray(body.tags) ? (body.tags as string[]) : [],
         thumbnail: (body.thumbnail as string) || null,
-        author: (body.author as string) || 'COSS Team',
+        author: (body.author as string) || 'Coss Cloud Solutions Team',
         authorRole: (body.authorRole as string) || 'Editorial Team',
         readTime: (body.readTime as string) || null,
         status,
