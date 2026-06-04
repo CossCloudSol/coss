@@ -12,8 +12,10 @@ import {
   Home,
   LayoutGrid,
   Menu,
+  Moon,
   PenLine,
   Phone,
+  Sun,
   Users,
   X,
 } from 'lucide-react';
@@ -178,8 +180,12 @@ export default function SiteHeader() {
 
         {/* Mobile — compact Enroll Now */}
         <div className="mobile-header-actions">
-          <a href="tel:+918885166007" className="mobile-phone-btn" aria-label="Call us">
-            <Phone className="w-4 h-4" aria-hidden="true" />
+          <a
+            href="tel:+918885166007"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF6B2B] hover:bg-[#e85a1e] transition-colors"
+            aria-label="Call us"
+          >
+            <Phone className="w-4 h-4 text-white" aria-hidden="true" />
           </a>
           <Link
             href="/enroll-now-with-coss/"
@@ -189,6 +195,16 @@ export default function SiteHeader() {
             <PenLine className="w-3.5 h-3.5" aria-hidden="true" />
             Enroll Now
           </Link>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors"
+          >
+            {theme === 'dark'
+              ? <Sun className="w-4 h-4 text-white" aria-hidden="true" />
+              : <Moon className="w-4 h-4 text-[#0D1B2A]" aria-hidden="true" />
+            }
+          </button>
           <button
             className={`hamburger${mobileOpen ? ' hamburger--open' : ''}`}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
