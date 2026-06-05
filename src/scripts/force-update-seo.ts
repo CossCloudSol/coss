@@ -32,7 +32,7 @@ import { prisma } from '@/lib/db';
 // ── Exact replacement data for key pages ─────────────────────────────────────
 
 const HOME_UPDATE = {
-  metaTitle:       'Best IT Training Institute in Hyderabad | Coss Cloud Solutions',
+  metaTitle:       'Best IT Training Institute in Hyderabad',
   metaDescription: 'Coss Cloud Solutions: Top IT training in Hyderabad. Cloud, DevOps & 30+ courses. 5,000+ placed. 100% placement support. Centres in Dilsukhnagar & Ameerpet.',
   ogTitle:         'Best IT Training Institute in Hyderabad | Coss Cloud Solutions',
   ogDescription:   'Join 5,000+ students who launched IT careers at Coss Cloud Solutions. Cloud, DevOps, Data Science & 30+ courses with 100% placement assistance in Hyderabad.',
@@ -50,7 +50,7 @@ const ABOUT_UPDATE = {
 };
 
 const BLOG_UPDATE = {
-  metaTitle:       'IT Training Blog & Career Tips | Coss Cloud Solutions',
+  metaTitle:       'IT Training Blog & Career Tips',
   metaDescription: 'Read the latest IT articles, career tips, tech tutorials & training guides from Coss Cloud Solutions experts in Hyderabad.',
   ogTitle:         'IT Training Blog & Career Tips | Coss Cloud Solutions',
   ogDescription:   'Expert IT career tips, training guides and tech tutorials from Coss Cloud Solutions Hyderabad.',
@@ -60,6 +60,7 @@ const BLOG_UPDATE = {
 // ── Global text replacements (old → new) ─────────────────────────────────────
 
 const TEXT_REPLACEMENTS: Array<[RegExp, string]> = [
+  [/https?:\/\/(www\.)?nextskill\.cloud/gi, 'https://www.cosscloudsol.com'],
   [/NextSkill/gi,             'Coss Cloud Solutions'],
   [/nextskill\.cloud/gi,      'cosscloudsol.com'],
   [/Bengaluru/gi,             'Hyderabad'],
@@ -87,6 +88,22 @@ function needsReplacement(value: string | null): boolean {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+  // ── Step 0: Update SeoSettings (singleton) ──────────────────────────────────
+
+  console.log('\n── Step 0: Updating SeoSettings ──');
+
+  const seoSettings = await prisma.seoSettings.findFirst();
+  if (seoSettings) {
+    const settingsPatch: Record<string, string> = { siteTitle: 'Coss Cloud Solutions' };
+    if (seoSettings.twitterHandle?.toLowerCase().includes('nextskill')) {
+      settingsPatch.twitterHandle = '@cosscloudsol';
+    }
+    await prisma.seoSettings.update({ where: { id: seoSettings.id }, data: settingsPatch });
+    console.log('  SeoSettings updated: siteTitle = "Coss Cloud Solutions"');
+  } else {
+    console.log('  No SeoSettings row found — skipping');
+  }
+
   // ── Step 1: Force-update key pages ──────────────────────────────────────────
 
   console.log('\n── Step 1: Force-updating home / about / blog rows ──');
@@ -127,7 +144,8 @@ async function main() {
 
     // Check if any field in this row needs replacement
     const dirty = fields.some((f) => needsReplacement(row[f] as string | null));
-    if (!dirty) continue;
+    const metaTitleHasSuffix = !!row.metaTitle?.match(/ \| (NextSkill|Coss Cloud Solutions|COSS Cloud Solutions)$/i);
+    if (!dirty && !metaTitleHasSuffix) continue;
 
     // Build the update payload only with fields that changed
     const patch: Record<string, string | null> = {};
@@ -135,6 +153,17 @@ async function main() {
       const original = row[f] as string | null;
       const replaced = applyReplacements(original);
       if (replaced !== original) patch[f] = replaced;
+    }
+
+    // Strip brand suffix from metaTitle — code appends " | siteTitle" at render time
+    const currentMetaTitle = (patch['metaTitle'] as string | undefined) ?? row.metaTitle;
+    if (currentMetaTitle) {
+      const stripped = currentMetaTitle
+        .replace(/ \| Coss Cloud Solutions$/i, '')
+        .replace(/ \| NextSkill$/i, '')
+        .replace(/ \| COSS Cloud Solutions$/i, '')
+        .trim();
+      if (stripped !== currentMetaTitle) patch['metaTitle'] = stripped;
     }
 
     if (Object.keys(patch).length === 0) continue;
@@ -153,6 +182,9 @@ async function main() {
 
   console.log('\n── Step 3: Verification (reading back key rows) ──');
 
+  const settingsCheck = await prisma.seoSettings.findFirst({ select: { siteTitle: true } });
+  console.log(`  SeoSettings.siteTitle: ${settingsCheck?.siteTitle ?? '(not set)'}`);
+
   const verify = await prisma.pageSeo.findMany({
     where: { pageSlug: { in: ['home', 'about', 'about-us', 'blog'] } },
     select: { pageSlug: true, metaTitle: true, canonicalUrl: true },
@@ -164,12 +196,23 @@ async function main() {
     console.log(`    canonicalUrl: ${r.canonicalUrl}`);
   }
 
-  // Sanity check
+  // Sanity checks
+  if (settingsCheck?.siteTitle !== 'Coss Cloud Solutions') {
+    console.error('\n  ✗ ERROR: SeoSettings.siteTitle is not "Coss Cloud Solutions"!');
+    process.exit(1);
+  }
   const hasNextSkill = verify.some(
     (r) => r.metaTitle?.toLowerCase().includes('nextskill'),
   );
   if (hasNextSkill) {
     console.error('\n  ✗ ERROR: "NextSkill" still present in key rows!');
+    process.exit(1);
+  }
+  const hasBrandSuffix = verify.some(
+    (r) => r.metaTitle?.match(/ \| (Coss Cloud Solutions|COSS Cloud Solutions)$/i),
+  );
+  if (hasBrandSuffix) {
+    console.error('\n  ✗ ERROR: metaTitle still contains brand suffix in key rows!');
     process.exit(1);
   }
 

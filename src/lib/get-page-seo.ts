@@ -71,13 +71,19 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
     const siteName = settings?.siteTitle ?? DEFAULT_SITE_TITLE;
     const siteSuffix = ` | ${siteName}`;
 
-    const title = seo?.metaTitle
-      ? `${seo.metaTitle}${siteSuffix}`
-      : siteName;
+    const rawTitle = seo?.metaTitle ?? '';
+    const cleanTitle = rawTitle.endsWith(siteSuffix)
+      ? rawTitle.slice(0, -siteSuffix.length).trim()
+      : rawTitle.replace(/ \| NextSkill$/, '').replace(/ \| COSS Cloud Solutions$/, '').trim();
+    const title = cleanTitle ? `${cleanTitle}${siteSuffix}` : siteName;
     const description =
       seo?.metaDescription ?? 'Coss Cloud Solutions — IT Training in Hyderabad';
 
-    const ogTitle = seo?.ogTitle ?? seo?.metaTitle ?? siteName;
+    const rawOgTitle = seo?.ogTitle ?? seo?.metaTitle ?? '';
+    const cleanOgTitle = rawOgTitle.endsWith(siteSuffix)
+      ? rawOgTitle.slice(0, -siteSuffix.length).trim()
+      : rawOgTitle.replace(/ \| NextSkill$/, '').replace(/ \| COSS Cloud Solutions$/, '').trim();
+    const ogTitle = cleanOgTitle ? `${cleanOgTitle}${siteSuffix}` : siteName;
     const ogDescription = seo?.ogDescription ?? description;
     const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? null;
 
@@ -138,9 +144,17 @@ export async function buildPageMetadataWithFallback(
     const siteName = settings?.siteTitle ?? DEFAULT_SITE_TITLE;
     const siteSuffix = ` | ${siteName}`;
 
-    const title = `${seo.metaTitle}${siteSuffix}`;
+    const rawTitle = seo.metaTitle ?? '';
+    const cleanTitle = rawTitle.endsWith(siteSuffix)
+      ? rawTitle.slice(0, -siteSuffix.length).trim()
+      : rawTitle.replace(/ \| NextSkill$/, '').replace(/ \| COSS Cloud Solutions$/, '').trim();
+    const title = cleanTitle ? `${cleanTitle}${siteSuffix}` : siteName;
     const description = seo.metaDescription ?? (fallback.description as string | undefined) ?? '';
-    const ogTitle = seo.ogTitle ?? seo.metaTitle;
+    const rawOgTitle = seo.ogTitle ?? seo.metaTitle ?? '';
+    const cleanOgTitle = rawOgTitle.endsWith(siteSuffix)
+      ? rawOgTitle.slice(0, -siteSuffix.length).trim()
+      : rawOgTitle.replace(/ \| NextSkill$/, '').replace(/ \| COSS Cloud Solutions$/, '').trim();
+    const ogTitle = cleanOgTitle ? `${cleanOgTitle}${siteSuffix}` : siteName;
     const ogDescription = seo.ogDescription ?? description;
     const ogImage = seo.ogImage ?? settings?.defaultOgImage ?? null;
 
