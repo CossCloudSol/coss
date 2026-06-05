@@ -24,6 +24,7 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           // Prevents click-jacking — boosts security trust signals for Google
+          { key: 'Cache-Control', value: 'no-store, must-revalidate' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           // Stops MIME-type sniffing — another security trust signal
           { key: 'X-Content-Type-Options', value: 'nosniff' },
