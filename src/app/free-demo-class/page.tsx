@@ -3,6 +3,7 @@ import Link from 'next/link';
 import EnrollFullForm from '@/components/EnrollFullForm';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('free-demo-class');
 }

@@ -134,6 +134,7 @@ const HIRING_COMPANIES: ReadonlyArray<HiringCompany> = [
   { name: 'Wipro', logoUrl: siteImages.companies.wipro },
 ];
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('home');
 }

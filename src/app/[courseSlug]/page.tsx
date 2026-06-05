@@ -69,6 +69,7 @@ export function generateStaticParams(): Array<{ courseSlug: string }> {
   return COURSES.map((c) => ({ courseSlug: c.slug }));
 }
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata({
   params,
 }: {

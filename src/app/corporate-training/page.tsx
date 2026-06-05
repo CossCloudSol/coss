@@ -5,6 +5,7 @@ import CorporateForm from '@/components/CorporateForm';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('corporate-training');
 }

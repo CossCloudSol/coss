@@ -5,6 +5,7 @@ import CoursePageSeo from '@/components/CoursePageSeo';
 import CourseCategoryPage from '@/components/CourseCategoryPage';
 import { courseData } from '@/lib/courseData';
 
+export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadataWithFallback('courses/programming-full-stack', buildCategoryPageMetadata('courses/programming-full-stack'));
 }
