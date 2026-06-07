@@ -91,7 +91,7 @@ const ACCENT_MAP: Record<string, CourseCardProps['accentVariant']> = {
   'quantum': 'quantum',
 }
 
-export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: CourseCategoryData; breadcrumbSlug: string }) {
+export default function CourseCategoryPage({ data, breadcrumbSlug, dbCourses }: { data: CourseCategoryData; breadcrumbSlug: string; dbCourses?: CourseCardProps[] }) {
   const imgs = wpImages[breadcrumbSlug];
 
   return (
@@ -138,7 +138,7 @@ export default function CourseCategoryPage({ data, breadcrumbSlug }: { data: Cou
 
             {/* Upgraded course cards */}
             {(() => {
-              const cards = courseCardDataMap[breadcrumbSlug];
+              const cards = (dbCourses && dbCourses.length > 0) ? dbCourses : courseCardDataMap[breadcrumbSlug];
               if (cards && cards.length > 0) {
                 return (
                   <section className="py-12 px-0 rounded-2xl mb-10">

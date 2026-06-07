@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
+import { getHomepageSettings } from '@/lib/get-homepage-settings';
+import { getCourseUrl } from '@/lib/course-url';
 import {
   Award,
   BarChart2,
@@ -22,11 +24,66 @@ import {
   Wifi,
   type LucideIcon,
 } from 'lucide-react';
-import { formatBatchDate } from '@/lib/batch-utils';
-import { CATEGORY_ICONS, DEFAULT_ICON } from '@/lib/category-icons';
 import WpImg from '@/components/WpImg';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
 import { siteImages } from '@/lib/wpImages';
+
+function getCategoryAccent(slug: string): string {
+  const map: Record<string, string> = {
+    'cloud-computing':          'linear-gradient(90deg, #1e40af, #60a5fa)',
+    'devops-multi-cloud':       'linear-gradient(90deg, #0f766e, #2dd4bf)',
+    'data-analytics-bi':        'linear-gradient(90deg, #7c3aed, #a78bfa)',
+    'data-engineering':         'linear-gradient(90deg, #0369a1, #38bdf8)',
+    'programming-full-stack':   'linear-gradient(90deg, #b45309, #fbbf24)',
+    'cyber-security':           'linear-gradient(90deg, #065f46, #34d399)',
+    'erp-crm-enterprise-tools': 'linear-gradient(90deg, #9f1239, #fb7185)',
+    'software-testing-os':      'linear-gradient(90deg, #1d4ed8, #93c5fd)',
+    'digital-design':           'linear-gradient(90deg, #be185d, #f472b6)',
+    'professional-soft-skills': 'linear-gradient(90deg, #92400e, #fcd34d)',
+    'human-resource':           'linear-gradient(90deg, #7c3aed, #c4b5fd)',
+    'quantum-computing':        'linear-gradient(90deg, #0e7490, #67e8f9)',
+    'medical-coding':           'linear-gradient(90deg, #166534, #86efac)',
+  }
+  return map[slug] ?? 'linear-gradient(90deg, #f97316, #fb923c)'
+}
+
+function getCategoryIconBg(slug: string): string {
+  const map: Record<string, string> = {
+    'cloud-computing':          'rgba(96,165,250,0.15)',
+    'devops-multi-cloud':       'rgba(45,212,191,0.15)',
+    'data-analytics-bi':        'rgba(167,139,250,0.15)',
+    'data-engineering':         'rgba(56,189,248,0.15)',
+    'programming-full-stack':   'rgba(251,191,36,0.15)',
+    'cyber-security':           'rgba(52,211,153,0.15)',
+    'erp-crm-enterprise-tools': 'rgba(251,113,133,0.15)',
+    'software-testing-os':      'rgba(147,197,253,0.15)',
+    'digital-design':           'rgba(244,114,182,0.15)',
+    'professional-soft-skills': 'rgba(252,211,77,0.15)',
+    'human-resource':           'rgba(196,181,253,0.15)',
+    'quantum-computing':        'rgba(103,232,249,0.15)',
+    'medical-coding':           'rgba(134,239,172,0.15)',
+  }
+  return map[slug] ?? 'rgba(249,115,22,0.15)'
+}
+
+function getCategoryIcon(slug: string): string {
+  const map: Record<string, string> = {
+    'cloud-computing':          '☁️',
+    'devops-multi-cloud':       '⚙️',
+    'data-analytics-bi':        '📊',
+    'data-engineering':         '🔧',
+    'programming-full-stack':   '💻',
+    'cyber-security':           '🛡️',
+    'erp-crm-enterprise-tools': '🏢',
+    'software-testing-os':      '🧪',
+    'digital-design':           '🎨',
+    'professional-soft-skills': '🤝',
+    'human-resource':           '👥',
+    'quantum-computing':        '⚛️',
+    'medical-coding':           '🏥',
+  }
+  return map[slug] ?? '📚'
+}
 
 async function getCategories() {
   try {
@@ -192,11 +249,23 @@ async function getUpcomingBatches() {
 }
 
 export default async function HomePage() {
-  const [categories, featuredJobs, upcomingBatches] = await Promise.all([
+  const [categories, featuredJobs, upcomingBatches, hpSettings] = await Promise.all([
     getCategories(),
     getFeaturedJobs(),
     getUpcomingBatches(),
+    getHomepageSettings(),
   ]);
+
+  const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
+    ? await prisma.course.findMany({
+        where: { id: { in: hpSettings.featuredCourseIds }, status: 'published' },
+      }).then(courses =>
+        hpSettings.featuredCourseIds
+          .map(id => courses.find(c => c.id === id))
+          .filter((c): c is NonNullable<typeof c> => c != null)
+      )
+    : [];
+
   return (
     <>
       {/* ── Hero ── */}
@@ -260,45 +329,31 @@ export default async function HomePage() {
             <div className="hero-badge" role="text">#1 IT Training Institute in Hyderabad</div>
 
             <h1 className="hero-title">
-              Launch Your IT Career —{' '}
-              <span>Get Job-Ready in 90 Days</span>
+              {hpSettings.heroHeadline}
             </h1>
 
             <p className="hero-desc">
-              Join&nbsp;<strong style={{ color: '#ffb07a' }}>5,000+ students</strong> trained by
-              Microsoft &amp; AWS certified instructors. Practical labs, real projects, and direct
-              placement support with 22+ top IT hiring companies in Hyderabad.
+              {hpSettings.heroSubtext}
             </p>
 
             {/* Primary + Secondary CTAs — min 48px tap targets */}
             <div className="hero-btns">
-              <Link href="/free-demo-class/" className="btn-primary hero-cta-primary">
-                Book a Free Demo Class →
+              <Link href={hpSettings.heroCTAPrimaryUrl} className="btn-primary hero-cta-primary">
+                {hpSettings.heroCTAPrimaryText}
               </Link>
-              <a
-                href="https://wa.me/918885166007"
-                className="btn-outline-dark hero-cta-secondary"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Talk to a counselor on WhatsApp"
-              >
-                {/* WhatsApp icon — inline SVG, no extra package needed */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                  <path d="M12 0C5.373 0 0 5.373 0 12c0 2.118.554 4.11 1.522 5.836L0 24l6.335-1.499A11.947 11.947 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.816 9.816 0 01-5.003-1.365l-.36-.214-3.727.881.936-3.618-.235-.372A9.764 9.764 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182c5.431 0 9.818 4.388 9.818 9.818 0 5.431-4.387 9.818-9.818 9.818z" />
-                </svg>
-                Talk To Counselor
-              </a>
+              <Link href={hpSettings.heroCTASecondaryUrl} className="btn-outline-dark hero-cta-secondary">
+                {hpSettings.heroCTASecondaryText}
+              </Link>
             </div>
 
             {/* Stats row — 4-col desktop, 2×2 mobile */}
             <div className="hero-stats" aria-label="Quick stats">
               {([
-                { Icon: Users,    number: '5000+', label: 'Students Trained' },
-                { Icon: BookOpen, number: '30+',   label: 'Courses' },
-                { Icon: Award,    number: '100%',  label: 'Placement Support' },
-                { Icon: Calendar, number: '15+',   label: 'Years Experience' },
-              ] as const).map(({ Icon, number, label }) => (
+                { Icon: Users,    number: hpSettings.stat2Value, label: hpSettings.stat2Label },
+                { Icon: BookOpen, number: hpSettings.stat3Value, label: hpSettings.stat3Label },
+                { Icon: Award,    number: hpSettings.stat4Value, label: hpSettings.stat4Label },
+                { Icon: Calendar, number: hpSettings.stat1Value, label: hpSettings.stat1Label },
+              ]).map(({ Icon, number, label }) => (
                 <div key={label} className="hero-stat-item">
                   <Icon size={26} className="hero-stat-icon" aria-hidden="true" />
                   <div className="hero-stat-number">{number}</div>
@@ -315,58 +370,176 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Featured Courses ── */}
+      {hpSettings.showFeaturedCourses && featuredCourses.length > 0 && (
+        <section className="py-16 bg-gray-50 dark:bg-gray-950" aria-label="Featured courses">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-10">
+              <span className="text-orange-500 dark:text-orange-400 text-xs font-bold uppercase tracking-widest">
+                Featured Courses
+              </span>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
+                {hpSettings.featuredSectionTitle}
+              </h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
+              {hpSettings.featuredSectionSubtext && (
+                <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-2xl mx-auto">
+                  {hpSettings.featuredSectionSubtext}
+                </p>
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredCourses.slice(0, 8).map((course, index) => {
+                const isNew = new Date(course.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+                const isFirst = index === 0;
+                const badgeText = isFirst ? 'Most Popular' : isNew ? 'Newly Added' : null;
+                const courseUrl = getCourseUrl(course);
+                const formattedPrice = course.price != null
+                  ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(course.price)
+                  : null;
+
+                return (
+                  <div key={course.id} className="rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-transparent hover:border-l-orange-500">
+                    {/* Dark navy header */}
+                    <div className="bg-gradient-to-br from-[#0f1f3d] to-[#1a3460] p-5 flex flex-col gap-3 min-h-[140px]">
+                      {badgeText && (
+                        <span className="self-start bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
+                          {badgeText}
+                        </span>
+                      )}
+                      <h3 className="text-white font-semibold text-lg leading-snug line-clamp-2">
+                        {course.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {course.duration && (
+                          <span className="bg-white/10 text-white/90 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                            🕐 {course.duration}
+                          </span>
+                        )}
+                        {course.mode && (
+                          <span className="bg-white/10 text-white/90 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                            🏛 {course.mode}
+                          </span>
+                        )}
+                        {course.level && (
+                          <span className="bg-white/10 text-white/90 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                            📋 {course.level}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {/* White body */}
+                    <div className="bg-white dark:bg-gray-800 p-5 flex flex-col gap-4 flex-1 border-t border-gray-100 dark:border-gray-700">
+                      {course.description && (
+                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3">
+                          {course.description}
+                        </p>
+                      )}
+                      <div className="flex items-center justify-between mt-auto pt-2">
+                        {formattedPrice ? (
+                          <span className="text-gray-900 dark:text-white font-bold text-lg">{formattedPrice}</span>
+                        ) : (
+                          <span className="text-gray-400 text-sm">Price on request</span>
+                        )}
+                        <a
+                          href={courseUrl}
+                          className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
+                        >
+                          View Details →
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── Course Categories ── */}
-      <section className="section section-light" aria-label="Course categories">
-        <div className="section-inner">
-          <div className="section-header">
-            <div className="section-tag">30+ Courses Available</div>
-            <h2 className="section-title">Build Skills Employers Demand</h2>
-            <p className="section-subtitle">
+      <section
+        className="py-20 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e293b 100%)' }}
+        aria-label="Course categories"
+      >
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="text-orange-400 text-xs font-bold uppercase tracking-widest">30+ Courses Available</div>
+            <h2 className="text-3xl font-bold text-white mt-2">Build Skills Employers Demand</h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
+            <p className="text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
               Industry-focused training in Hyderabad — practical labs, expert trainers, real placement outcomes
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {categories.map((cat) => {
-              const c = cat.color ?? '#0e7490';
-              const Icon = CATEGORY_ICONS[cat.slug] ?? DEFAULT_ICON;
-              return (
-                <article key={cat.slug} className="course-card-v2">
-                  <div
-                    className="course-card-v2-banner"
-                    style={{ background: `linear-gradient(135deg, ${c}cc 0%, ${c} 100%)` }}
-                  >
-                    <div className="course-card-v2-icon" aria-hidden="true">
-                      <Icon className="w-7 h-7 text-white" />
-                    </div>
-                  </div>
+            {categories.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/courses/${cat.slug}/`}
+                className="group block rounded-xl overflow-hidden border border-white/10 hover:border-white/20 bg-[#1e293b] hover:bg-[#243447] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30"
+              >
+                {/* Coloured top accent bar */}
+                <div
+                  className="h-1 w-full"
+                  style={{ background: getCategoryAccent(cat.slug) }}
+                />
 
-                  <div className="course-card-v2-body">
-                    <h3 className="course-card-v2-title">{cat.name}</h3>
-                    <p className="course-card-v2-desc">{cat.description ?? ''}</p>
-
-                    <div className="course-card-v2-pills">
-                      <span className="course-pill">
-                        <BookOpen className="w-3 h-3" aria-hidden="true" />
-                        {cat._count.courses} Courses
-                      </span>
-                    </div>
-
-                    <Link
-                      href={`/courses/${cat.slug}/`}
-                      className="course-card-v2-cta"
-                      style={{ background: c }}
+                <div className="p-5">
+                  {/* Icon + title row */}
+                  <div className="flex items-start gap-3 mb-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      style={{ background: getCategoryIconBg(cat.slug) }}
                     >
-                      Explore Courses →
-                    </Link>
+                      {getCategoryIcon(cat.slug)}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-orange-300 transition-colors">
+                        {cat.name}
+                      </h3>
+                      <p className="text-slate-500 text-xs mt-0.5">
+                        {cat._count?.courses ?? 0} courses
+                      </p>
+                    </div>
                   </div>
-                </article>
-              );
-            })}
+
+                  {/* Description */}
+                  {cat.description && (
+                    <p
+                      className="text-slate-400 text-xs leading-relaxed mb-4"
+                      style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                    >
+                      {cat.description}
+                    </p>
+                  )}
+
+                  {/* CTA row */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-orange-400 text-xs font-semibold group-hover:text-orange-300 transition-colors">
+                      Explore Courses →
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
 
-          <div className="center-btn">
-            <Link href="/courses/" className="btn-primary" style={{ display: 'inline-flex' }}>
+          <div className="mt-12 text-center">
+            <Link
+              href="/courses/"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-orange-500/25"
+            >
               View All 30+ Courses
             </Link>
           </div>
@@ -591,18 +764,20 @@ export default async function HomePage() {
               Everything You Need to{' '}
               <span style={{ color: 'var(--primary)' }}>Succeed</span> in IT
             </h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
             <p className="section-subtitle">
               Expert instruction, hands-on labs, and end-to-end career support — all under one roof
             </p>
           </div>
 
           {/* ── Stats Bar ── */}
+          {hpSettings.showStats && (
           <div className="wcu-stats-bar">
             {[
-              { Icon: Users,     number: '5,000+', label: 'Students Trained'     },
-              { Icon: Briefcase, number: '200+',   label: 'Hiring Partners'      },
-              { Icon: Award,     number: '100%',   label: 'Placement Assistance' },
-              { Icon: Shield,    number: '15+',    label: 'Years Experience'     },
+              { Icon: Users,     number: hpSettings.stat2Value, label: hpSettings.stat2Label },
+              { Icon: Briefcase, number: hpSettings.stat4Value, label: hpSettings.stat4Label },
+              { Icon: Award,     number: hpSettings.stat3Value, label: hpSettings.stat3Label },
+              { Icon: Shield,    number: hpSettings.stat1Value, label: hpSettings.stat1Label },
             ].map(({ Icon, number, label }, i) => (
               <div key={label} className="wcu-stat-item">
                 {i > 0 && <div className="wcu-stat-divider" aria-hidden="true" />}
@@ -616,6 +791,7 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+          )}
 
           {/* ── Feature Cards ── */}
           <div className="wcu-cards-layout">
@@ -699,7 +875,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Explore Opportunities ── */}
-      <section
+      {hpSettings.showHiringPartners && <section
         className="py-20 px-4 md:px-8 relative overflow-hidden"
         style={{ background: 'linear-gradient(145deg, #0a1628 0%, #0d2237 55%, #091520 100%)' }}
         aria-label="Hiring partners"
@@ -735,6 +911,7 @@ export default async function HomePage() {
               Our Graduates Get Hired at{' '}
               <span style={{ color: '#2dd4bf' }}>Top Companies</span>
             </h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
             <p className="mt-3 text-sm max-w-lg mx-auto" style={{ color: '#94a3b8' }}>
               From resume prep to mock interviews — we connect you directly with recruiters.
               5,000+ alumni now work at companies like these.
@@ -819,7 +996,7 @@ export default async function HomePage() {
           </div>
 
         </div>
-      </section>
+      </section>}
 
       {/* ── Latest Jobs Widget ── */}
       {featuredJobs.length > 0 && (
@@ -828,6 +1005,7 @@ export default async function HomePage() {
             <div className="section-header">
               <div className="section-tag">Placement Board</div>
               <h2 className="section-title">Jobs Our Students Get Hired For</h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
               <p className="section-subtitle">Partner companies actively hiring in Hyderabad</p>
             </div>
             <div className="flex flex-col gap-3 max-w-3xl mx-auto">
@@ -872,6 +1050,7 @@ export default async function HomePage() {
             <div className="section-header">
               <div className="section-tag">Training Schedule</div>
               <h2 className="section-title">Batches Starting Soon</h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
               <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
@@ -879,7 +1058,6 @@ export default async function HomePage() {
                 const d = new Date(batch.startDate);
                 const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
                 const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
-                const dateStr = formatBatchDate(batch.startDate);
                 const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
                 return (
                   <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
@@ -914,7 +1092,7 @@ export default async function HomePage() {
       )}
 
       {/* ── Testimonials ── */}
-      <section className="section section-light" aria-label="Student testimonials">
+      {hpSettings.showTestimonials && <section className="section section-light" aria-label="Student testimonials">
         <div className="section-inner">
           <div className="section-header">
             <div className="section-tag">Student Reviews</div>
@@ -973,7 +1151,7 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ── Blog / Resources ── */}
       <section className="section section-white" aria-label="Latest blog posts">
@@ -981,6 +1159,7 @@ export default async function HomePage() {
           <div className="section-header">
             <div className="section-tag">Resources</div>
             <h2 className="section-title">Latest From Our Blog</h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
             <p className="section-subtitle">
               Expert insights, course guides, and career tips from the Coss Cloud Solutions team
             </p>

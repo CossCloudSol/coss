@@ -266,3 +266,45 @@ model LeadActivity {
   @@index([leadId])
   @@index([createdAt])
 }
+
+/// Singleton controlling all editable homepage content. id is always "main".
+model HomepageSettings {
+  id                     String   @id @default("main")
+
+  // Hero
+  heroHeadline           String   @default("Launch Your IT Career in Hyderabad")
+  heroSubtext            String   @default("Hands-on training at Dilsukhnagar & Ameerpet. Real projects, certified trainers, 100% placement support.")
+  heroCTAPrimaryText     String   @default("Enroll Now")
+  heroCTAPrimaryUrl      String   @default("/enroll-now-with-coss")
+  heroCTASecondaryText   String   @default("Free Demo Class")
+  heroCTASecondaryUrl    String   @default("/free-demo-class")
+
+  // Stats
+  stat1Value             String   @default("15+")
+  stat1Label             String   @default("Years Experience")
+  stat2Value             String   @default("5000+")
+  stat2Label             String   @default("Students Placed")
+  stat3Value             String   @default("30+")
+  stat3Label             String   @default("Courses")
+  stat4Value             String   @default("200+")
+  stat4Label             String   @default("Hiring Partners")
+
+  // Announcement bar (supplemental — primary bar managed via /admin/topbar)
+  announcementEnabled    Boolean  @default(true)
+  announcementText       String   @default("Next batch starts 1 Jul 2026 — Limited seats available!")
+  announcementUrl        String   @default("/enroll-now-with-coss")
+  announcementBgColor    String   @default("#f97316")
+
+  // Featured courses
+  featuredCourseIds      String[] @default([])
+  featuredSectionTitle   String   @default("Popular Courses")
+  featuredSectionSubtext String   @default("Industry-relevant curriculum built for the Hyderabad job market.")
+
+  // Section toggles
+  showFeaturedCourses    Boolean  @default(true)
+  showTestimonials       Boolean  @default(true)
+  showHiringPartners     Boolean  @default(true)
+  showStats              Boolean  @default(true)
+
+  updatedAt              DateTime @updatedAt
+}

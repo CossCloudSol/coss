@@ -16,6 +16,7 @@ const TITLE_MAP: ReadonlyArray<readonly [string, string]> = [
   ['/admin/seo', 'SEO Manager'],
   ['/admin/analytics', 'Analytics'],
   ['/admin/topbar', 'Topbar / Ann. Bar'],
+  ['/admin/homepage', 'Homepage Manager'],
   ['/admin/settings', 'Settings'],
   ['/admin', 'Overview'],
 ];

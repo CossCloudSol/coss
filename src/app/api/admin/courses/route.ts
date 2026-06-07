@@ -18,7 +18,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const status = (searchParams.get('status') ?? '').trim();
   const category = (searchParams.get('category') ?? '').trim();
   const page = Math.max(1, Number(searchParams.get('page') ?? '1'));
-  const limit = Math.min(100, Math.max(1, Number(searchParams.get('limit') ?? '25')));
+  const limit = Math.min(500, Math.max(1, Number(searchParams.get('limit') ?? '25')));
 
   const where: Prisma.CourseWhereInput = {};
   if (status) where.status = status;
@@ -43,6 +43,8 @@ export async function GET(req: NextRequest): Promise<Response> {
           title: true,
           slug: true,
           category: true,
+          categorySlug: true,
+          courseCategory: { select: { name: true } },
           duration: true,
           mode: true,
           level: true,
