@@ -78,7 +78,7 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
       {/* Brand */}
       <div className="px-5 pt-6 pb-5 border-b border-gray-200 dark:border-gray-700">
         <p className="text-xl font-bold leading-none text-teal-600 dark:text-teal-400">Coss Cloud Solutions</p>
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Admin CRM</p>
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">IMS (Institute Management System)</p>
       </div>
 
       {/* Navigation */}
