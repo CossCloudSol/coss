@@ -160,7 +160,7 @@ export default function HomepageManagerPage() {
     const current = settings.featuredCourseIds
     const next = current.includes(id)
       ? current.filter((c) => c !== id)
-      : current.length >= 6 ? current : [...current, id]
+      : current.length >= 8 ? current : [...current, id]
     update('featuredCourseIds', next)
   }
 
@@ -306,7 +306,7 @@ export default function HomepageManagerPage() {
         <div className="mt-2">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Pinned courses <span className="text-xs text-gray-400 font-normal">({settings.featuredCourseIds.length}/6 selected)</span>
+              Pinned courses <span className="text-xs text-gray-400 font-normal">({settings.featuredCourseIds.length}/8 selected)</span>
             </p>
             {settings.featuredCourseIds.length > 0 && (
               <button onClick={() => update('featuredCourseIds', [])} className="text-xs text-red-500 hover:text-red-700">Clear all</button>
@@ -337,7 +337,7 @@ export default function HomepageManagerPage() {
                 <p className="text-sm text-gray-400 text-center py-4">No courses found</p>
               ) : filteredCourses.map((course) => {
                 const selected = settings.featuredCourseIds.includes(course.id)
-                const disabled = !selected && settings.featuredCourseIds.length >= 6
+                const disabled = !selected && settings.featuredCourseIds.length >= 8
                 return (
                   <button key={course.id} onClick={() => !disabled && toggleFeaturedCourse(course.id)} disabled={disabled}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${selected ? 'bg-orange-50 dark:bg-orange-900/20' : disabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}>
@@ -353,8 +353,8 @@ export default function HomepageManagerPage() {
               })}
             </div>
           </div>
-          {settings.featuredCourseIds.length >= 6 && (
-            <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">Maximum 6 featured courses. Remove one to add another.</p>
+          {settings.featuredCourseIds.length >= 8 && (
+            <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">Maximum 8 featured courses. Remove one to add another.</p>
           )}
         </div>
       </SectionCard>

@@ -149,11 +149,11 @@ const testimonials: ReadonlyArray<Testimonial> = [
   },
 ];
 
-const blogs = [
-  { date: '25 Dec', title: 'SOC Analyst Course Training in Dilsukhnagar Hyderabad',         href: '/blog/soc-analyst-training-hyderabad',                          category: 'Cyber Security',    gradient: 'linear-gradient(135deg,#1a3a5c,#1e5799)' },
-  { date: '24 Dec', title: 'Cyber Security Course Training in Dilsukhnagar, Hyderabad',     href: '/blog/cyber-security-training-dilsukhnagar-hyderabad',          category: 'Cyber Security',    gradient: 'linear-gradient(135deg,#0a5260,#0d7a8e)' },
-  { date: '04 Dec', title: 'Digital Marketing Course Training in Dilsukhnagar – Hyderabad', href: '/blog/digital-marketing-course-training-dilsukhnagar-hyderabad', category: 'Digital Marketing', gradient: 'linear-gradient(135deg,#5c2a0a,#b0552a)' },
-  { date: '25 Nov', title: 'AWS DevOps Multi-Cloud Certification Course in Dilsukhnagar',   href: '/blog/aws-devops-multi-cloud-course-dilsukhnagar',              category: 'Cloud & DevOps',    gradient: 'linear-gradient(135deg,#1a4a2a,#2e7d32)' },
+const BLOG_GRADIENTS = [
+  'linear-gradient(135deg,#1a3a5c,#1e5799)',
+  'linear-gradient(135deg,#0a5260,#0d7a8e)',
+  'linear-gradient(135deg,#5c2a0a,#b0552a)',
+  'linear-gradient(135deg,#1a4a2a,#2e7d32)',
 ];
 
 /**
@@ -248,12 +248,31 @@ async function getUpcomingBatches() {
   } catch { return []; }
 }
 
+async function getBlogPosts() {
+  try {
+    return await prisma.blogPost.findMany({
+      where: { status: 'published' },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        createdAt: true,
+        category: true,
+      },
+    });
+  } catch { return []; }
+}
+
 export default async function HomePage() {
-  const [categories, featuredJobs, upcomingBatches, hpSettings] = await Promise.all([
+  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts] = await Promise.all([
     getCategories(),
     getFeaturedJobs(),
     getUpcomingBatches(),
     getHomepageSettings(),
+    getBlogPosts(),
   ]);
 
   const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
@@ -545,6 +564,54 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Upcoming Batches Widget ── */}
+      {upcomingBatches.length > 0 && (
+        <section className="section section-light" aria-label="Upcoming batches">
+          <div className="section-inner">
+            <div className="section-header">
+              <div className="section-tag">Training Schedule</div>
+              <h2 className="section-title">Batches Starting Soon</h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
+              <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+              {upcomingBatches.map((batch) => {
+                const d = new Date(batch.startDate);
+                const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
+                const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
+                const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
+                return (
+                  <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
+                    <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
+                      <span className="text-base font-extrabold leading-none">{day}</span>
+                      <span className="text-[10px] font-bold leading-none">{mon}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
+                      {batch.mode === 'Online' ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
+                          <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
+                        </span>
+                      ) : seatsOk ? (
+                        <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
+                          {batch.seatsAvailable} seats left
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="center-btn mt-6">
+              <Link href="/batches" className="btn-primary" style={{ display: 'inline-flex' }}>
+                View all upcoming batches →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Corporate Training (homepage section) ── */}
       <section className="py-16 px-4 md:px-8 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #061c26 0%, #083344 55%, #0a3d4f 100%)' }}>
@@ -1043,54 +1110,6 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── Upcoming Batches Widget ── */}
-      {upcomingBatches.length > 0 && (
-        <section className="section section-light" aria-label="Upcoming batches">
-          <div className="section-inner">
-            <div className="section-header">
-              <div className="section-tag">Training Schedule</div>
-              <h2 className="section-title">Batches Starting Soon</h2>
-              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-              <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
-              {upcomingBatches.map((batch) => {
-                const d = new Date(batch.startDate);
-                const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
-                const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
-                const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
-                return (
-                  <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
-                    <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
-                      <span className="text-base font-extrabold leading-none">{day}</span>
-                      <span className="text-[10px] font-bold leading-none">{mon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
-                      {batch.mode === 'Online' ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
-                          <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
-                        </span>
-                      ) : seatsOk ? (
-                        <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
-                          {batch.seatsAvailable} seats left
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="center-btn mt-6">
-              <Link href="/batches" className="btn-primary" style={{ display: 'inline-flex' }}>
-                View all upcoming batches →
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ── Testimonials ── */}
       {hpSettings.showTestimonials && <section className="section section-light" aria-label="Student testimonials">
         <div className="section-inner">
@@ -1165,19 +1184,22 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {blogs.map((post) => {
-              const [day, mon] = post.date.split(' ');
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {blogPosts.map((post, i) => {
+              const d = new Date(post.createdAt);
+              const day = d.getDate().toString().padStart(2, '0');
+              const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
+              const gradient = BLOG_GRADIENTS[i % BLOG_GRADIENTS.length];
               return (
-                <Link key={post.href} href={post.href} className="blog-card">
-                  <div className="blog-card-img" style={{ background: post.gradient }}>
-                    <div className="blog-date-badge" aria-label={post.date}>
+                <Link key={post.id} href={`/blog/${post.slug}`} className="blog-card">
+                  <div className="blog-card-img" style={{ background: gradient }}>
+                    <div className="blog-date-badge" aria-label={`${day} ${mon}`}>
                       <span className="blog-date-day">{day}</span>
-                      <span className="blog-date-mon">{mon.toUpperCase()}</span>
+                      <span className="blog-date-mon">{mon}</span>
                     </div>
                     <p className="blog-card-brand">Coss Cloud Solutions</p>
                     <p className="blog-card-img-title">{post.title}</p>
-                    <span className="blog-card-pill">{post.category}</span>
+                    {post.category && <span className="blog-card-pill">{post.category}</span>}
                   </div>
                   <div className="blog-card-body">
                     <h3>{post.title}</h3>
