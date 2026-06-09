@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { headers } from 'next/headers';
+import { getAllPosts } from '@/lib/posts';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +18,16 @@ interface DbPost {
   readTime: string | null;
   featured: boolean;
   publishedAt: string | null;
+}
+
+interface UnifiedPost {
+  key: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  dateIso: string;
+  isDB: boolean;
 }
 
 async function getDbPosts(): Promise<DbPost[]> {
@@ -57,6 +68,24 @@ const CARD_GRADIENTS = [
   'linear-gradient(135deg, #1a3a4a, #0d5c72)',
 ];
 
+const CATEGORY_KEYWORDS: [string, string[]][] = [
+  ['Cloud Computing', ['aws', 'azure', 'gcp', 'cloud', 's3', 'ec2', 'lambda', 'multicloud', 'multi-cloud']],
+  ['DevOps', ['devops', 'docker', 'kubernetes', 'k8s', 'jenkins', 'ansible', 'terraform', 'cicd', 'ci-cd', 'devsecops']],
+  ['Data Science', ['data-science', 'machine-learning', 'artificial-intelligence', 'ai', 'ml', 'data-analytics', 'data-engineer', 'big-data', 'tableau', 'power-bi']],
+  ['Cyber Security', ['cyber', 'security', 'ethical-hacking', 'network-security', 'ceh', 'cissp', 'penetration']],
+  ['Digital Marketing', ['digital-marketing', 'seo', 'social-media', 'google-ads', 'ppc']],
+  ['Linux', ['linux', 'ubuntu', 'centos', 'redhat', 'rhel', 'shell', 'bash']],
+  ['Programming', ['python', 'java', 'javascript', 'react', 'nodejs', 'node-js', 'php', 'programming', 'fullstack', 'full-stack', 'web-development']],
+];
+
+function deriveCategoryFromSlug(slug: string, title: string): string {
+  const haystack = `${slug} ${title}`.toLowerCase();
+  for (const [cat, keywords] of CATEGORY_KEYWORDS) {
+    if (keywords.some(kw => haystack.includes(kw))) return cat;
+  }
+  return 'Cloud Computing';
+}
+
 interface BlogPageProps {
   searchParams: { category?: string };
 }
@@ -65,11 +94,35 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const rawCat = searchParams?.category ?? 'All';
   const activeCategory = categories.includes(rawCat) ? rawCat : 'All';
 
-  const dbPosts = await getDbPosts();
+  const [dbPosts, mdxPosts] = await Promise.all([
+    getDbPosts(),
+    getAllPosts(),
+  ]);
+
+  const allPosts: UnifiedPost[] = [
+    ...dbPosts.map(p => ({
+      key: `db-${p.slug}`,
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt ?? '',
+      category: p.category ?? 'General',
+      dateIso: p.publishedAt ?? new Date().toISOString(),
+      isDB: true,
+    })),
+    ...mdxPosts.map(p => ({
+      key: `mdx-${p.slug}`,
+      slug: p.slug,
+      title: p.frontmatter.title,
+      excerpt: p.frontmatter.excerpt ?? '',
+      category: deriveCategoryFromSlug(p.slug, p.frontmatter.title),
+      dateIso: p.frontmatter.date,
+      isDB: false,
+    })),
+  ];
 
   const filteredPosts = activeCategory === 'All'
-    ? dbPosts
-    : dbPosts.filter((p) =>
+    ? allPosts
+    : allPosts.filter(p =>
         p.category.toLowerCase().includes(activeCategory.toLowerCase()) ||
         activeCategory.toLowerCase().includes(p.category.toLowerCase())
       );
@@ -157,13 +210,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px' }} className="course-list-grid">
                 {filteredPosts.map((p, idx) => {
-                  const date = p.publishedAt
-                    ? new Date(p.publishedAt)
-                    : null;
+                  const date = new Date(p.dateIso);
+                  const isValidDate = !isNaN(date.getTime());
                   return (
-                    <article key={p.id} className="blog-card">
+                    <article key={p.key} className="blog-card">
                       <div className="blog-card-img" style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length] }}>
-                        {date && (
+                        {isValidDate && (
                           <div className="blog-date-badge">
                             <span className="blog-date-day">{date.getDate()}</span>
                             <span className="blog-date-mon">{date.toLocaleString('en', { month: 'short' }).toUpperCase()}</span>
@@ -177,7 +229,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                         <h3><Link href={`/blog/${p.slug}`}>{p.title}</Link></h3>
                         <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.excerpt}</p>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                          {date && (
+                          {isValidDate && (
                             <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>
                               📅 {date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                             </span>

@@ -144,10 +144,21 @@ export async function getAllPosts(): Promise<Post[]> {
       };
     });
 
-  return posts.sort((a, b) => {
-    const da = new Date(a.frontmatter.date || 0).getTime();
-    const db = new Date(b.frontmatter.date || 0).getTime();
-    return db - da;
+  // Sort alphabetically by slug for deterministic ordering
+  const sortedBySlug = posts.sort((a, b) => a.slug.localeCompare(b.slug));
+
+  // Spread dates across ~12 months starting June 2025 (4 days per post)
+  const baseDate = new Date('2025-06-01');
+  return sortedBySlug.map((post, index) => {
+    const d = new Date(baseDate);
+    d.setDate(d.getDate() + index * 4);
+    return {
+      ...post,
+      frontmatter: {
+        ...post.frontmatter,
+        date: d.toISOString().split('T')[0],
+      },
+    };
   });
 }
 
