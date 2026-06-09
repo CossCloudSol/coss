@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import { COURSE_GROUPS, CATEGORY_ACCENTS, CATEGORY_ICONS } from '@/lib/course-groups'
+import { getCourseUrl } from '@/lib/course-url'
 import CoursesTabPage from '@/components/CoursesTabPage'
 
 export const dynamic = 'force-dynamic'
@@ -11,26 +12,55 @@ export const metadata = {
 }
 
 export default async function CoursesPage() {
-  const categories = await prisma.courseCategory.findMany({
-    where: { status: 'published' },
+  const categoriesWithCourses = await prisma.courseCategory.findMany({
     orderBy: { sortOrder: 'asc' },
     select: {
       id: true,
       name: true,
       slug: true,
       description: true,
-      _count: { select: { courses: { where: { status: 'published' } } } },
+      courses: {
+        where: { status: 'published' },
+        orderBy: { sortOrder: 'asc' },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          urlType: true,
+          duration: true,
+          mode: true,
+          level: true,
+          price: true,
+          originalPrice: true,
+          badge: true,
+          categorySlug: true,
+        },
+      },
     },
   })
 
   const categoryMap = Object.fromEntries(
-    categories.map(c => [
-      c.slug,
+    categoriesWithCourses.map(cat => [
+      cat.slug,
       {
-        ...c,
-        courseCount: c._count?.courses ?? 0,
-        accent: CATEGORY_ACCENTS[c.slug] ?? 'linear-gradient(90deg,#f97316,#fb923c)',
-        icon: CATEGORY_ICONS[c.slug] ?? '📚',
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description,
+        accent: CATEGORY_ACCENTS[cat.slug] ?? 'linear-gradient(90deg,#f97316,#fb923c)',
+        icon: CATEGORY_ICONS[cat.slug] ?? '📚',
+        courses: cat.courses.map(c => ({
+          ...c,
+          url: getCourseUrl(c),
+          formattedPrice: c.price
+            ? new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0,
+              }).format(c.price)
+            : null,
+        })),
+        courseCount: cat.courses.length,
       },
     ])
   )
@@ -46,18 +76,16 @@ export default async function CoursesPage() {
     ),
   }))
 
-  const totalCourses = categories.reduce(
-    (sum, c) => sum + (c._count?.courses ?? 0),
+  const totalCourses = categoriesWithCourses.reduce(
+    (sum, c) => sum + c.courses.length,
     0
   )
-  const totalCategories = categories.length
 
   return (
     <CoursesTabPage
       groups={groups}
-      allCategories={Object.values(categoryMap)}
       totalCourses={totalCourses}
-      totalCategories={totalCategories}
+      totalCategories={categoriesWithCourses.length}
     />
   )
 }
