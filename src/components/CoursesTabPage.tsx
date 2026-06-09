@@ -215,8 +215,8 @@ function GroupSection({ group }: { group: GroupData }) {
       <div
         className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl border"
         style={{
-          background: `linear-gradient(135deg, #0f172a 0%, ${group.color}22 100%)`,
-          borderColor: `${group.color}40`,
+          background: `linear-gradient(135deg, #0f172a 0%, #1e293b 60%, ${group.color}35 100%)`,
+          borderColor: `${group.color}60`,
         }}
       >
         <div
@@ -226,18 +226,18 @@ function GroupSection({ group }: { group: GroupData }) {
           {GROUP_EMOJI[group.id] ?? '📚'}
         </div>
         <div className="flex-1">
-          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h2 className="text-sm font-semibold text-white">
             {group.label}
           </h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-slate-400">
             {group.categories.length} categories · {group.totalCourses} courses
           </p>
         </div>
         <span
           className="text-[10px] font-semibold px-2.5 py-1 rounded-lg"
           style={{
-            background: `${group.color}20`,
-            color: group.color,
+            background: `${group.color}30`,
+            color: '#fff',
           }}
         >
           {group.categories.map(c => c.name.split(' ')[0]).join(' · ')}
