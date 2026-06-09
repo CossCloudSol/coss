@@ -98,8 +98,27 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     // Increment views (fire-and-forget)
     void prisma.blogPost.update({ where: { id: dbPost.id }, data: { views: { increment: 1 } } });
 
+    const dbDateIso = dbPost.publishedAt
+      ? new Date(dbPost.publishedAt).toISOString().split('T')[0]
+      : new Date(dbPost.createdAt).toISOString().split('T')[0];
+
     return (
       <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'BlogPosting',
+              headline: dbPost.title,
+              datePublished: dbDateIso,
+              dateModified: dbDateIso,
+              author: { '@type': 'Organization', name: 'COSS Cloud Solutions' },
+              publisher: { '@type': 'Organization', name: 'COSS Cloud Solutions', url: SITE_URL },
+              url: `${SITE_URL}/blog/${params.slug}/`,
+            }),
+          }}
+        />
         <ResponsivePageStyles />
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 20px 0' }}>
           <Link href="/blog" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
@@ -165,10 +184,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const post = await getPostBySlug(params.slug);
   if (!post) notFound();
 
+  // Use spread date from getAllPosts so the post page matches the blog grid
+  const allMdxPosts = await getAllPosts();
+  const mdxMeta = allMdxPosts.find(p => p.slug === params.slug);
+
   const cldImage = getBlogImageUrl(params.slug, 1200, 450);
 
   const titleStr   = tagToString(post.frontmatter.title) || params.slug;
-  const dateStr    = tagToString(post.frontmatter.date);
+  const dateStr    = mdxMeta?.frontmatter.dateFormatted ?? tagToString(post.frontmatter.date);
   const readingStr = tagToString(post.frontmatter.readingTime);
   const categories = Array.isArray(post.frontmatter.categories)
     ? post.frontmatter.categories
@@ -176,6 +199,21 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: titleStr,
+            datePublished: mdxMeta?.frontmatter.date ?? '',
+            dateModified: mdxMeta?.frontmatter.date ?? '',
+            author: { '@type': 'Organization', name: 'COSS Cloud Solutions' },
+            publisher: { '@type': 'Organization', name: 'COSS Cloud Solutions', url: SITE_URL },
+            url: `${SITE_URL}/blog/${params.slug}/`,
+          }),
+        }}
+      />
       <ResponsivePageStyles />
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 20px 0' }}>

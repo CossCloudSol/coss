@@ -2,51 +2,29 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
-import { headers } from 'next/headers';
 import { getAllPosts } from '@/lib/posts';
+import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-interface DbPost {
+type DBPost = {
   id: string;
   title: string;
   slug: string;
   excerpt: string;
   category: string;
-  thumbnail: string | null;
-  author: string;
-  readTime: string | null;
-  featured: boolean;
-  publishedAt: string | null;
-}
+  publishedAt: Date | null;
+  createdAt: Date;
+};
 
-interface UnifiedPost {
-  key: string;
+type MDXPost = {
   slug: string;
   title: string;
   excerpt: string;
   category: string;
-  dateIso: string;
-  isDB: boolean;
-}
-
-async function getDbPosts(): Promise<DbPost[]> {
-  const headerList = headers();
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
-  try {
-    const res = await fetch(`${proto}://${host}/api/blog?limit=50`, { cache: 'no-store' });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.posts ?? [];
-  } catch {
-    return [];
-  }
-}
-
-export async function generateMetadata(): Promise<Metadata> {
-  return buildPageMetadata('blog');
-}
+  date: string;
+  dateFormatted: string;
+};
 
 const categories = [
   'All',
@@ -86,46 +64,122 @@ function deriveCategoryFromSlug(slug: string, title: string): string {
   return 'Cloud Computing';
 }
 
-interface BlogPageProps {
-  searchParams: { category?: string };
+function matchesCategory(postCat: string, activeCategory: string): boolean {
+  return (
+    postCat.toLowerCase().includes(activeCategory.toLowerCase()) ||
+    activeCategory.toLowerCase().includes(postCat.toLowerCase())
+  );
 }
 
-export default async function BlogPage({ searchParams }: BlogPageProps) {
+const POSTS_PER_PAGE = 12;
+
+function BlogCard({
+  slug,
+  title,
+  excerpt,
+  category,
+  dateLabel,
+  badgeColor,
+  cardIndex,
+}: {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  dateLabel: string;
+  badgeColor: 'orange' | 'indigo';
+  cardIndex: number;
+}) {
+  return (
+    <article className="blog-card">
+      <div className="blog-card-img" style={{ background: CARD_GRADIENTS[cardIndex % CARD_GRADIENTS.length] }}>
+        <div
+          className="blog-date-badge"
+          style={{
+            background: badgeColor === 'orange'
+              ? 'rgba(249, 115, 22, 0.85)'
+              : 'rgba(99, 102, 241, 0.85)',
+          }}
+        >
+          {dateLabel}
+        </div>
+        <p className="blog-card-brand">COSS CLOUD SOLUTIONS</p>
+        <h3 className="blog-card-img-title">{category}</h3>
+        <span className="blog-card-pill">Training in Hyderabad</span>
+      </div>
+      <div className="blog-card-body">
+        <h3><Link href={`/blog/${slug}`}>{title}</Link></h3>
+        <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          {excerpt}
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+          <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>📅 {dateLabel}</span>
+          <Link href={`/blog/${slug}`} className="blog-read-more">Read More →</Link>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPageMetadata('blog');
+}
+
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams?: { page?: string; category?: string };
+}) {
   const rawCat = searchParams?.category ?? 'All';
   const activeCategory = categories.includes(rawCat) ? rawCat : 'All';
+  const currentPage = Number(searchParams?.page ?? 1);
 
-  const [dbPosts, mdxPosts] = await Promise.all([
-    getDbPosts(),
-    getAllPosts(),
-  ]);
+  const dbPostsRaw = await prisma.blogPost.findMany({
+    where: { status: 'published' },
+    orderBy: { publishedAt: 'desc' },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      excerpt: true,
+      category: true,
+      publishedAt: true,
+      createdAt: true,
+    },
+  });
 
-  const allPosts: UnifiedPost[] = [
-    ...dbPosts.map(p => ({
-      key: `db-${p.slug}`,
-      slug: p.slug,
-      title: p.title,
-      excerpt: p.excerpt ?? '',
-      category: p.category ?? 'General',
-      dateIso: p.publishedAt ?? new Date().toISOString(),
-      isDB: true,
-    })),
-    ...mdxPosts.map(p => ({
-      key: `mdx-${p.slug}`,
-      slug: p.slug,
-      title: p.frontmatter.title,
-      excerpt: p.frontmatter.excerpt ?? '',
-      category: deriveCategoryFromSlug(p.slug, p.frontmatter.title),
-      dateIso: p.frontmatter.date,
-      isDB: false,
-    })),
-  ];
+  const mdxPostsRaw = await getAllPosts();
 
-  const filteredPosts = activeCategory === 'All'
-    ? allPosts
-    : allPosts.filter(p =>
-        p.category.toLowerCase().includes(activeCategory.toLowerCase()) ||
-        activeCategory.toLowerCase().includes(p.category.toLowerCase())
-      );
+  const dbPosts: DBPost[] = dbPostsRaw.map(p => ({
+    ...p,
+    excerpt: p.excerpt ?? '',
+    category: p.category ?? 'General',
+  }));
+
+  const mdxPosts: MDXPost[] = mdxPostsRaw.map(p => ({
+    slug: p.slug,
+    title: p.frontmatter.title,
+    excerpt: p.frontmatter.excerpt ?? '',
+    category: deriveCategoryFromSlug(p.slug, p.frontmatter.title),
+    date: p.frontmatter.date,
+    dateFormatted: p.frontmatter.dateFormatted ?? p.frontmatter.date,
+  }));
+
+  const filteredDbPosts = activeCategory === 'All'
+    ? dbPosts
+    : dbPosts.filter(p => matchesCategory(p.category, activeCategory));
+
+  const filteredMdxPosts = activeCategory === 'All'
+    ? mdxPosts
+    : mdxPosts.filter(p => matchesCategory(p.category, activeCategory));
+
+  const mdxStart = (currentPage - 1) * POSTS_PER_PAGE;
+  const paginatedMdxPosts = filteredMdxPosts.slice(mdxStart, mdxStart + POSTS_PER_PAGE);
+  const totalMdxPages = Math.ceil(filteredMdxPosts.length / POSTS_PER_PAGE);
+
+  const bothEmpty = filteredDbPosts.length === 0 && filteredMdxPosts.length === 0;
+
+  const catParam = activeCategory !== 'All' ? `&category=${encodeURIComponent(activeCategory)}` : '';
 
   return (
     <>
@@ -149,7 +203,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 20px' }}>
 
-        {/* ── Category filter pills ─────────────────────────────────────── */}
+        {/* ── Category filter pills ── */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '40px', justifyContent: 'center' }}>
           {categories.map((c) => {
             const isActive = c === activeCategory;
@@ -179,27 +233,27 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           })}
         </div>
 
+        {activeCategory !== 'All' && (
+          <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: 'var(--text-muted)' }}>
+              Showing{' '}
+              <strong style={{ color: 'var(--text)' }}>{filteredDbPosts.length + filteredMdxPosts.length}</strong>{' '}
+              post{(filteredDbPosts.length + filteredMdxPosts.length) !== 1 ? 's' : ''} in
+            </span>
+            <span style={{ background: 'var(--primary)', color: '#fff', padding: '3px 12px', borderRadius: '12px', fontSize: '13px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>
+              {activeCategory}
+            </span>
+            <Link href="/blog" style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'underline' }}>
+              Clear filter
+            </Link>
+          </div>
+        )}
+
         <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '36px', alignItems: 'start' }}>
 
-          {/* ── Posts grid ──────────────────────────────────────────────── */}
+          {/* ── Posts area ── */}
           <div>
-            {activeCategory !== 'All' && (
-              <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: 'var(--text-muted)' }}>
-                  Showing{' '}
-                  <strong style={{ color: 'var(--text)' }}>{filteredPosts.length}</strong>{' '}
-                  post{filteredPosts.length !== 1 ? 's' : ''} in
-                </span>
-                <span style={{ background: 'var(--primary)', color: '#fff', padding: '3px 12px', borderRadius: '12px', fontSize: '13px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>
-                  {activeCategory}
-                </span>
-                <Link href="/blog" style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'underline' }}>
-                  Clear filter
-                </Link>
-              </div>
-            )}
-
-            {filteredPosts.length === 0 ? (
+            {bothEmpty ? (
               <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
                 <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>No Posts Found</h3>
                 <p style={{ marginBottom: '16px' }}>No articles in &ldquo;{activeCategory}&rdquo; yet. Check back soon!</p>
@@ -208,43 +262,114 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 </Link>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px' }} className="course-list-grid">
-                {filteredPosts.map((p, idx) => {
-                  const date = new Date(p.dateIso);
-                  const isValidDate = !isNaN(date.getTime());
-                  return (
-                    <article key={p.key} className="blog-card">
-                      <div className="blog-card-img" style={{ background: CARD_GRADIENTS[idx % CARD_GRADIENTS.length] }}>
-                        {isValidDate && (
-                          <div className="blog-date-badge">
-                            <span className="blog-date-day">{date.getDate()}</span>
-                            <span className="blog-date-mon">{date.toLocaleString('en', { month: 'short' }).toUpperCase()}</span>
-                          </div>
+              <>
+                {/* ── Section 1: Latest Articles (DB posts) ── */}
+                {filteredDbPosts.length > 0 && (
+                  <div className="mb-2">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500 flex-shrink-0" />
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          Latest articles
+                        </span>
+                        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400">
+                          {filteredDbPosts.length} posts · 2026
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-400">Posted by admin</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px', padding: '16px 0' }} className="course-list-grid">
+                      {filteredDbPosts.map((post, idx) => (
+                        <BlogCard
+                          key={post.slug}
+                          slug={post.slug}
+                          title={post.title}
+                          excerpt={post.excerpt}
+                          category={post.category}
+                          dateLabel={new Date(post.publishedAt ?? post.createdAt).toLocaleDateString('en-IN', {
+                            day: 'numeric', month: 'short', year: 'numeric',
+                          })}
+                          badgeColor="orange"
+                          cardIndex={idx}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Section 2: Previous Articles (MDX posts) ── */}
+                {filteredMdxPosts.length > 0 && (
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 border-t border-t-gray-100 dark:border-t-gray-800">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0" />
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          Previous articles
+                        </span>
+                        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400">
+                          {filteredMdxPosts.length} posts · 2023–2026
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-400">Legacy content archive</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px', padding: '16px 0' }} className="course-list-grid">
+                      {paginatedMdxPosts.map((post, idx) => (
+                        <BlogCard
+                          key={post.slug}
+                          slug={post.slug}
+                          title={post.title}
+                          excerpt={post.excerpt}
+                          category={post.category}
+                          dateLabel={post.dateFormatted}
+                          badgeColor="indigo"
+                          cardIndex={idx}
+                        />
+                      ))}
+                    </div>
+
+                    {totalMdxPages > 1 && (
+                      <div className="flex items-center justify-center gap-2 py-6 border-t border-gray-100 dark:border-gray-800">
+                        {currentPage > 1 && (
+                          <a
+                            href={`/blog?page=${currentPage - 1}${catParam}`}
+                            className="px-3 py-1.5 text-xs border border-gray-200 dark:border-gray-700 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          >
+                            ← Previous
+                          </a>
                         )}
-                        <p className="blog-card-brand">COSS CLOUD SOLUTIONS</p>
-                        <h3 className="blog-card-img-title">{p.category}</h3>
-                        <span className="blog-card-pill">Training in Hyderabad</span>
+                        {Array.from({ length: Math.min(totalMdxPages, 8) }, (_, i) => i + 1).map(p => (
+                          <a
+                            key={p}
+                            href={`/blog?page=${p}${catParam}`}
+                            className={`px-3 py-1.5 text-xs rounded-md ${
+                              p === currentPage
+                                ? 'bg-indigo-500 text-white'
+                                : 'border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                            }`}
+                          >
+                            {p}
+                          </a>
+                        ))}
+                        {totalMdxPages > 8 && (
+                          <span className="text-xs text-gray-400">…{totalMdxPages}</span>
+                        )}
+                        {currentPage < totalMdxPages && (
+                          <a
+                            href={`/blog?page=${currentPage + 1}${catParam}`}
+                            className="px-3 py-1.5 text-xs border border-gray-200 dark:border-gray-700 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          >
+                            Next →
+                          </a>
+                        )}
                       </div>
-                      <div className="blog-card-body">
-                        <h3><Link href={`/blog/${p.slug}`}>{p.title}</Link></h3>
-                        <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.excerpt}</p>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                          {isValidDate && (
-                            <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>
-                              📅 {date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
-                            </span>
-                          )}
-                          <Link href={`/blog/${p.slug}`} className="blog-read-more">Read More →</Link>
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
 
-          {/* ── Sidebar ───────────────────────────────────────────────── */}
+          {/* ── Sidebar ── */}
           <div>
             <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '22px', color: '#fff', marginBottom: '20px' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', marginBottom: '10px', color: '#fff' }}>About Coss Cloud Solutions</h4>

@@ -8,6 +8,7 @@ const postsDirectory = path.join(process.cwd(), 'content/posts');
 export interface PostFrontmatter {
   title: string;
   date: string;
+  dateFormatted?: string;
   excerpt?: string;
   author?: string;
   tags?: string[];
@@ -144,19 +145,28 @@ export async function getAllPosts(): Promise<Post[]> {
       };
     });
 
-  // Sort alphabetically by slug for deterministic ordering
-  const sortedBySlug = posts.sort((a, b) => a.slug.localeCompare(b.slug));
+  const sorted = posts.sort((a, b) => a.slug.localeCompare(b.slug));
+  const total = sorted.length;
+  if (total === 0) return [];
+  const startDate = new Date('2023-01-15');
+  const endDate = new Date('2026-03-15');
+  const totalDays = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
-  // Spread dates across ~12 months starting June 2025 (4 days per post)
-  const baseDate = new Date('2025-06-01');
-  return sortedBySlug.map((post, index) => {
-    const d = new Date(baseDate);
-    d.setDate(d.getDate() + index * 4);
+  return sorted.map((post, index) => {
+    const daysOffset = total > 1 ? Math.floor((index / (total - 1)) * totalDays) : 0;
+    const postDate = new Date(startDate);
+    postDate.setDate(postDate.getDate() + daysOffset);
+    const isoDate = postDate.toISOString().split('T')[0];
     return {
       ...post,
       frontmatter: {
         ...post.frontmatter,
-        date: d.toISOString().split('T')[0],
+        date: isoDate,
+        dateFormatted: postDate.toLocaleDateString('en-IN', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        }),
       },
     };
   });
