@@ -2640,3 +2640,12 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .animate-fade-up { animation: fadeUp 0.5s ease both; }
 }
 .live-dot-pulse { animation: pulse-dot 1.5s ease-in-out infinite; }
+
+/* ── Scrollbar hide utility ── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
