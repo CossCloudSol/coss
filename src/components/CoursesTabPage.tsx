@@ -18,6 +18,8 @@ type CourseItem = {
   price: number | null
   formattedPrice: string | null
   categorySlug: string | null
+  description: string | null
+  excerpt: string | null
 }
 
 type CategoryData = {
@@ -49,85 +51,65 @@ type Props = {
 
 // ── Card ─────────────────────────────────────────────────────────────────────
 
-function CourseCard({
-  course,
-  accent,
-  categoryName,
-}: {
-  course: CourseItem
-  accent: string
-  categoryName: string
-}) {
-  const badgeColors: Record<string, string> = {
-    'Most Popular': 'rgba(249,115,22,0.9)',
-    'High Demand':  'rgba(239,68,68,0.9)',
-    'Best Seller':  'rgba(234,179,8,0.85)',
-    'Trending':     'rgba(34,197,94,0.85)',
-    'Newly Added':  'rgba(255,255,255,0.25)',
-    'New':          'rgba(255,255,255,0.25)',
-  }
-  const badgeBg = course.badge ? (badgeColors[course.badge] ?? 'rgba(249,115,22,0.9)') : null
-
+function CourseCard({ course, categoryName }: { course: CourseItem; categoryName: string }) {
   return (
     <Link
       href={course.url}
-      className="group block rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700/50 bg-white dark:bg-gray-900 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+      className="group block rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700/50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col"
     >
-      {/* Gradient header */}
-      <div
-        className="h-[60px] flex flex-col justify-between p-3"
-        style={{ background: accent }}
-      >
-        {badgeBg && course.badge ? (
-          <span
-            className="self-start text-[9px] font-semibold px-2 py-0.5 rounded-full text-white"
-            style={{ background: badgeBg }}
-          >
+      {/* Dark navy header — same as homepage Popular Courses cards */}
+      <div className="bg-[#0f1f3d] p-4 flex flex-col gap-2.5 min-h-[130px]">
+        {/* Badge */}
+        {course.badge && (
+          <span className="self-start bg-orange-500 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
             {course.badge}
           </span>
-        ) : (
-          <span />
         )}
-        <span className="text-[8px] text-white/60 uppercase tracking-wider">
-          {categoryName}
-        </span>
-      </div>
-
-      {/* Card body */}
-      <div className="p-3">
+        {/* Title */}
         <h4
-          className="text-[11px] font-medium text-gray-900 dark:text-white leading-snug mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors"
+          className="text-white font-semibold text-sm leading-snug group-hover:text-orange-300 transition-colors"
           style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
         >
           {course.title}
         </h4>
-
-        {/* Chips */}
-        <div className="flex flex-wrap gap-1 mb-3">
+        {/* Meta chips */}
+        <div className="flex flex-wrap gap-1.5 mt-auto">
           {course.duration && (
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-              {course.duration}
+            <span className="bg-white/10 text-white/85 text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1">
+              🕐 {course.duration}
             </span>
           )}
           {course.mode && (
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-              {course.mode}
+            <span className="bg-white/10 text-white/85 text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1">
+              🏛 {course.mode}
             </span>
           )}
           {course.level && (
-            <span className="text-[8px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-              {course.level}
+            <span className="bg-white/10 text-white/85 text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1">
+              📋 {course.level}
             </span>
           )}
         </div>
+      </div>
 
+      {/* White body */}
+      <div className="bg-white dark:bg-gray-900 p-4 flex flex-col gap-3 flex-1">
+        {/* Description */}
+        {(course.description || course.excerpt) && (
+          <p
+            className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed"
+            style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+          >
+            {course.description || course.excerpt}
+          </p>
+        )}
         {/* Price + CTA */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
-          <span className="text-sm font-semibold text-gray-900 dark:text-white">
+        <div className="flex items-center justify-between mt-auto">
+          <span className="text-gray-900 dark:text-white font-bold text-base">
             {course.formattedPrice ?? 'Contact us'}
           </span>
-          <span className="text-[9px] font-semibold text-white bg-orange-500 px-2 py-1 rounded">
-            View Details
+          <span className="text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 px-4 py-1.5 rounded-lg transition-colors">
+            View Details →
           </span>
         </div>
       </div>
@@ -189,7 +171,6 @@ function CategorySection({ category }: { category: CategoryData }) {
             <CourseCard
               key={course.id}
               course={course}
-              accent={category.accent}
               categoryName={category.name}
             />
           ))}

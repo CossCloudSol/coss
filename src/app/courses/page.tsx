@@ -34,6 +34,8 @@ export default async function CoursesPage() {
           originalPrice: true,
           badge: true,
           categorySlug: true,
+          description: true,
+          excerpt: true,
         },
       },
     },
@@ -52,6 +54,8 @@ export default async function CoursesPage() {
         courses: cat.courses.map(c => ({
           ...c,
           url: getCourseUrl(c),
+          description: c.description ?? null,
+          excerpt: c.excerpt ?? null,
           formattedPrice: c.price
             ? new Intl.NumberFormat('en-IN', {
                 style: 'currency',
