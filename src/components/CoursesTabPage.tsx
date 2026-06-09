@@ -212,10 +212,16 @@ function GroupSection({ group }: { group: GroupData }) {
   return (
     <div className="mb-10">
       {/* Group heading bar */}
-      <div className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+      <div
+        className="flex items-center gap-3 mb-6 px-4 py-3 rounded-xl border"
+        style={{
+          background: `linear-gradient(135deg, #0f172a 0%, ${group.color}22 100%)`,
+          borderColor: `${group.color}40`,
+        }}
+      >
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-          style={{ background: group.iconBg, color: group.color }}
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+          style={{ background: `${group.color}25`, color: group.color }}
         >
           {GROUP_EMOJI[group.id] ?? '📚'}
         </div>
@@ -223,13 +229,16 @@ function GroupSection({ group }: { group: GroupData }) {
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
             {group.label}
           </h2>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {group.categories.length} categories · {group.totalCourses} courses
           </p>
         </div>
         <span
-          className="text-[10px] font-medium px-2 py-1 rounded-lg hidden sm:block"
-          style={{ background: `${group.color}15`, color: group.color }}
+          className="text-[10px] font-semibold px-2.5 py-1 rounded-lg"
+          style={{
+            background: `${group.color}20`,
+            color: group.color,
+          }}
         >
           {group.categories.map(c => c.name.split(' ')[0]).join(' · ')}
         </span>
@@ -314,14 +323,15 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
               className="flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors whitespace-nowrap border-b-[2.5px]"
               style={{
                 borderBottomColor: activeTab === 'all' ? TAB_COLORS.all : 'transparent',
-                color: activeTab === 'all' ? '#111827' : '#6b7280',
+                color: activeTab === 'all' ? '#111827' : '#1e293b',
               }}
             >
               <span
-                className="w-2 h-2 rounded-full flex-shrink-0 transition-transform"
+                className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-transform"
                 style={{
                   background: TAB_COLORS.all,
-                  transform: activeTab === 'all' ? 'scale(1.3)' : 'scale(1)',
+                  transform: activeTab === 'all' ? 'scale(1.4)' : 'scale(1)',
+                  filter: activeTab === 'all' ? `drop-shadow(0 0 4px ${TAB_COLORS.all})` : 'none',
                 }}
               />
               All courses
@@ -330,7 +340,7 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
                 style={
                   activeTab === 'all'
                     ? { background: '#fff3eb', color: '#c2410c' }
-                    : { background: '#f3f4f6', color: '#6b7280' }
+                    : { background: `${TAB_COLORS.all}18`, color: TAB_COLORS.all }
                 }
               >
                 {totalCategories}
@@ -345,14 +355,15 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
                 className="flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors whitespace-nowrap border-b-[2.5px]"
                 style={{
                   borderBottomColor: activeTab === group.id ? TAB_COLORS[group.id] : 'transparent',
-                  color: activeTab === group.id ? '#111827' : '#6b7280',
+                  color: activeTab === group.id ? '#111827' : '#1e293b',
                 }}
               >
                 <span
-                  className="w-2 h-2 rounded-full flex-shrink-0 transition-transform"
+                  className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-transform"
                   style={{
                     background: TAB_COLORS[group.id] ?? '#6b7280',
-                    transform: activeTab === group.id ? 'scale(1.3)' : 'scale(1)',
+                    transform: activeTab === group.id ? 'scale(1.4)' : 'scale(1)',
+                    filter: activeTab === group.id ? `drop-shadow(0 0 4px ${TAB_COLORS[group.id] ?? '#6b7280'})` : 'none',
                   }}
                 />
                 {group.label}
@@ -361,7 +372,7 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
                   style={
                     activeTab === group.id
                       ? { background: '#fff3eb', color: '#c2410c' }
-                      : { background: '#f3f4f6', color: '#6b7280' }
+                      : { background: `${TAB_COLORS[group.id]}18`, color: TAB_COLORS[group.id] }
                   }
                 >
                   {group.categories.length}
