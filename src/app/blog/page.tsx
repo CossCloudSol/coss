@@ -307,7 +307,7 @@ export default async function BlogPage({
                           Previous articles
                         </span>
                         <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400">
-                          {filteredMdxPosts.length} posts · 2023–2026
+                          {filteredMdxPosts.length} posts · 2026–2023
                         </span>
                       </div>
                       <span className="text-xs text-gray-400">Legacy content archive</span>

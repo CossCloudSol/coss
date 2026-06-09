@@ -169,7 +169,7 @@ export async function getAllPosts(): Promise<Post[]> {
         }),
       },
     };
-  });
+  }).reverse();
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
