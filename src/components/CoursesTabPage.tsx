@@ -262,6 +262,24 @@ const TAB_COLORS: Record<string, string> = {
   'design-career':'#be185d',
 }
 
+const TAB_ICONS: Record<string, string> = {
+  'all':           'ti-layout-grid',
+  'data-ai':       'ti-chart-bar',
+  'cloud-devops':  'ti-cloud',
+  'programming':   'ti-code',
+  'business':      'ti-building',
+  'design-career': 'ti-palette',
+}
+
+const TAB_ICON_COLORS: Record<string, string> = {
+  'all':           '#f97316',
+  'data-ai':       '#a78bfa',
+  'cloud-devops':  '#2dd4bf',
+  'programming':   '#93c5fd',
+  'business':      '#fb7185',
+  'design-career': '#f472b6',
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export default function CoursesTabPage({ groups, totalCourses, totalCategories }: Props) {
@@ -310,7 +328,7 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
       </div>
 
       {/* Tab bar */}
-      <div className="sticky top-0 z-20 bg-white dark:bg-gray-950 border-b-[1.5px] border-gray-200 dark:border-gray-800 shadow-sm">
+      <div className="sticky top-0 z-20 border-b border-white/10 shadow-lg" style={{ background: '#0f172a' }}>
         <div
           className="max-w-6xl mx-auto px-4 overflow-x-auto"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -322,62 +340,68 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
               onClick={() => setActiveTab('all')}
               className="flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors whitespace-nowrap border-b-[2.5px]"
               style={{
-                borderBottomColor: activeTab === 'all' ? TAB_COLORS.all : 'transparent',
-                color: activeTab === 'all' ? '#111827' : '#1e293b',
+                borderBottomColor: activeTab === 'all' ? '#f97316' : 'transparent',
+                color: activeTab === 'all' ? '#ffffff' : 'rgba(255,255,255,0.55)',
               }}
             >
-              <span
-                className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-transform"
-                style={{
-                  background: TAB_COLORS.all,
-                  transform: activeTab === 'all' ? 'scale(1.4)' : 'scale(1)',
-                  filter: activeTab === 'all' ? `drop-shadow(0 0 4px ${TAB_COLORS.all})` : 'none',
-                }}
+              <i
+                className="ti ti-layout-grid"
+                style={{ fontSize: 14, color: activeTab === 'all' ? '#f97316' : 'rgba(255,255,255,0.4)' }}
+                aria-hidden="true"
               />
               All courses
               <span
                 className="text-xs px-1.5 py-0.5 rounded-full transition-colors"
                 style={
                   activeTab === 'all'
-                    ? { background: '#fff3eb', color: '#c2410c' }
-                    : { background: `${TAB_COLORS.all}18`, color: TAB_COLORS.all }
+                    ? { background: 'rgba(249,115,22,0.25)', color: '#fdba74' }
+                    : { background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)' }
                 }
               >
                 {totalCategories}
               </span>
             </button>
 
-            {/* Group tabs */}
-            {groups.map(group => (
-              <button
-                key={group.id}
-                onClick={() => setActiveTab(group.id)}
-                className="flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors whitespace-nowrap border-b-[2.5px]"
-                style={{
-                  borderBottomColor: activeTab === group.id ? TAB_COLORS[group.id] : 'transparent',
-                  color: activeTab === group.id ? '#111827' : '#1e293b',
-                }}
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full flex-shrink-0 transition-transform"
+            {/* Divider */}
+            <div style={{ width: '0.5px', background: 'rgba(255,255,255,0.1)', margin: '10px 0', flexShrink: 0 }} />
+
+            {/* Group tabs with dividers between them */}
+            {groups.map((group, index) => (
+              <div key={group.id} style={{ display: 'flex', alignItems: 'stretch' }}>
+                <button
+                  onClick={() => setActiveTab(group.id)}
+                  className="flex items-center gap-2 px-5 py-3.5 text-sm font-medium transition-colors whitespace-nowrap border-b-[2.5px]"
                   style={{
-                    background: TAB_COLORS[group.id] ?? '#6b7280',
-                    transform: activeTab === group.id ? 'scale(1.4)' : 'scale(1)',
-                    filter: activeTab === group.id ? `drop-shadow(0 0 4px ${TAB_COLORS[group.id] ?? '#6b7280'})` : 'none',
+                    borderBottomColor: activeTab === group.id ? '#f97316' : 'transparent',
+                    color: activeTab === group.id ? '#ffffff' : 'rgba(255,255,255,0.55)',
                   }}
-                />
-                {group.label}
-                <span
-                  className="text-xs px-1.5 py-0.5 rounded-full transition-colors"
-                  style={
-                    activeTab === group.id
-                      ? { background: '#fff3eb', color: '#c2410c' }
-                      : { background: `${TAB_COLORS[group.id]}18`, color: TAB_COLORS[group.id] }
-                  }
                 >
-                  {group.categories.length}
-                </span>
-              </button>
+                  <i
+                    className={`ti ${TAB_ICONS[group.id] ?? 'ti-folder'}`}
+                    style={{
+                      fontSize: 14,
+                      color: activeTab === group.id
+                        ? TAB_ICON_COLORS[group.id]
+                        : 'rgba(255,255,255,0.4)',
+                    }}
+                    aria-hidden="true"
+                  />
+                  {group.label}
+                  <span
+                    className="text-xs px-1.5 py-0.5 rounded-full transition-colors"
+                    style={
+                      activeTab === group.id
+                        ? { background: 'rgba(249,115,22,0.25)', color: '#fdba74' }
+                        : { background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)' }
+                    }
+                  >
+                    {group.categories.length}
+                  </span>
+                </button>
+                {index < groups.length - 1 && (
+                  <div style={{ width: '0.5px', background: 'rgba(255,255,255,0.1)', margin: '10px 0', flexShrink: 0 }} />
+                )}
+              </div>
             ))}
           </div>
         </div>
