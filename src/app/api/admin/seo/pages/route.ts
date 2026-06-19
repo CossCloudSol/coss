@@ -1,10 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
-import { seedSeoPages, seedCoursePages, seedCategoryPages, seedBlogPosts, SEED_PAGE_SLUGS } from '@/lib/seo-seed';
-import { COURSES } from '@/data/courses-data';
-import { CATEGORY_PAGES } from '@/lib/all-pages-registry';
-import { getCourseUrl } from '@/lib/course-url';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -60,68 +56,27 @@ export async function GET(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  // Build the full expected slug list across all groups.
-  const courseSlugs = COURSES.map((c) => c.slug);
-  const categorySlugs = CATEGORY_PAGES.map((c) => c.slug);
-  const allExpected = [...SEED_PAGE_SLUGS, ...courseSlugs, ...categorySlugs];
-
-  const existing = await prisma.pageSeo.findMany({
-    where: { pageSlug: { in: allExpected } },
-    select: { pageSlug: true, metaTitle: true },
-  });
-  const existingSet = new Set(existing.map((r) => r.pageSlug));
-
-  // Re-seed when: a slug is missing OR an existing row has no metaTitle
-  const staticGap =
-    SEED_PAGE_SLUGS.some((s) => !existingSet.has(s)) ||
-    existing
-      .filter((r) => SEED_PAGE_SLUGS.includes(r.pageSlug))
-      .some((r) => !r.metaTitle || r.metaTitle.trim() === '');
-  const courseGap = courseSlugs.some((s) => !existingSet.has(s));
-  const categoryGap = categorySlugs.some((s) => !existingSet.has(s));
-
-  // Blog posts: seed if any course/category/static was just added (first-run proxy)
-  const totalCount = await prisma.pageSeo.count();
-  const blogGap = totalCount < allExpected.length + 50; // at least some blog rows expected
-
-  if (staticGap) await seedSeoPages();
-  if (courseGap) await seedCoursePages();
-  if (categoryGap) await seedCategoryPages();
-  if (blogGap) await seedBlogPosts();
-
-  // Sync published DB courses (admin-created, not in static COURSES array).
-  const dbCourses = await prisma.course.findMany({
-    where: { status: 'published' },
-    select: { title: true, slug: true, urlType: true, categorySlug: true, seoTitle: true, seoDesc: true },
-  });
-  for (const course of dbCourses) {
-    const pageSlug = getCourseUrl({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }).slice(1);
-    await prisma.pageSeo.upsert({
-      where: { pageSlug },
-      update: { pageTitle: course.title },
-      create: { pageSlug, pageTitle: course.title, metaTitle: course.seoTitle ?? null, metaDescription: course.seoDesc ?? null },
-    });
-  }
-
-  // Sync published DB blog posts (admin-created, not in filesystem content/posts).
-  const dbBlogs = await prisma.blogPost.findMany({
-    where: { status: 'published' },
-    select: { title: true, slug: true, seoTitle: true, seoDesc: true },
-  });
-  for (const blog of dbBlogs) {
-    const pageSlug = `blog/${blog.slug}`;
-    await prisma.pageSeo.upsert({
-      where: { pageSlug },
-      update: { pageTitle: blog.title },
-      create: { pageSlug, pageTitle: blog.title, metaTitle: blog.seoTitle ?? null, metaDescription: blog.seoDesc ?? null },
-    });
-  }
-
-  const rows = await prisma.pageSeo.findMany({
-    orderBy: { pageTitle: 'asc' },
+  const pages = await prisma.pageSeo.findMany({
+    orderBy: { pageSlug: 'asc' },
+    select: {
+      id: true,
+      pageSlug: true,
+      metaTitle: true,
+      metaDescription: true,
+      ogTitle: true,
+      ogDescription: true,
+      ogImage: true,
+      canonicalUrl: true,
+      noIndex: true,
+      noFollow: true,
+      focusKeyword: true,
+      keywords: true,
+      schemaMarkup: true,
+      updatedAt: true,
+    },
   });
 
-  return NextResponse.json({ pages: rows.map(serialize) });
+  return NextResponse.json({ pages });
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
