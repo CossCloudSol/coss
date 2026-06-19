@@ -157,7 +157,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     getAnnouncementBarConfig(),
   ]);
 
-  const globalSchemas = buildGlobalSchemas();
+  const globalSchemas = await buildGlobalSchemas();
 
   return (
     <html lang="en" suppressHydrationWarning className={`${raleway.variable} ${roboto.variable}`}>

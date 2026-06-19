@@ -11,15 +11,20 @@
  *   4. LocalBusiness — Ameerpet branch         → Local Pack / Maps
  */
 
+import { getAllBranchSettings } from '@/lib/get-branch-settings'
+
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
 const LOGO_URL = `${SITE_URL}/logo.png`;
 
-export function buildGlobalSchemas(): object[] {
+export async function buildGlobalSchemas(): Promise<object[]> {
+  const branches = await getAllBranchSettings()
+  const dilsukhnagar = branches.find(b => b.branchKey === 'dilsukhnagar') ?? branches[0]
+  const ameerpet     = branches.find(b => b.branchKey === 'ameerpet')     ?? branches[1]
+
   return [
     // ── 1. Organization + EducationalOrganization ────────────────────────────
-    // Tells Google who we are. The @id anchors all other schemas to this entity.
     {
       '@context': 'https://schema.org',
       '@type': ['Organization', 'EducationalOrganization'],
@@ -38,44 +43,42 @@ export function buildGlobalSchemas(): object[] {
       description:
         'Coss Cloud Solutions is a leading IT training institute in Hyderabad offering expert-led courses in AI, Cloud Computing, DevOps, Data Science, Cyber Security, ERP and more with 100% placement assistance at Dilsukhnagar and Ameerpet centres.',
       foundingDate: '2010',
-      email: 'info@cosscloudsol.com',
-      telephone: '+918885166007',
+      email: dilsukhnagar.email,
+      telephone: dilsukhnagar.phone.replace(/\s/g, ''),
       address: [
         {
           '@type': 'PostalAddress',
-          streetAddress: 'Flat 109, CB Eastern Homes, Kamala Nagar',
-          addressLocality: 'Dilsukhnagar, Hyderabad',
-          addressRegion: 'Telangana',
-          postalCode: '500060',
+          streetAddress: dilsukhnagar.addressLine1,
+          addressLocality: `${dilsukhnagar.addressLine2 ? dilsukhnagar.addressLine2 + ', ' : ''}${dilsukhnagar.city}`,
+          addressRegion: dilsukhnagar.state,
+          postalCode: dilsukhnagar.pincode,
           addressCountry: 'IN',
         },
         {
           '@type': 'PostalAddress',
-          streetAddress: '#502, Sree Swathi Ankur Building, Besides Aditya Trade Center',
-          addressLocality: 'Ameerpet, Hyderabad',
-          addressRegion: 'Telangana',
-          postalCode: '500038',
+          streetAddress: ameerpet.addressLine1 + (ameerpet.addressLine2 ? ', ' + ameerpet.addressLine2 : ''),
+          addressLocality: ameerpet.city,
+          addressRegion: ameerpet.state,
+          postalCode: ameerpet.pincode,
           addressCountry: 'IN',
         },
       ],
       contactPoint: [
         {
           '@type': 'ContactPoint',
-          telephone: '+91-8885166007',
+          telephone: dilsukhnagar.phone,
           contactType: 'customer service',
           areaServed: 'IN',
           availableLanguage: ['English', 'Hindi', 'Telugu'],
         },
         {
           '@type': 'ContactPoint',
-          telephone: '+91-7780727374',
+          telephone: ameerpet.phone,
           contactType: 'admissions',
           areaServed: 'IN',
           availableLanguage: ['English', 'Hindi', 'Telugu'],
         },
       ],
-      // sameAs links connect the org entity to its verified social profiles —
-      // critical for Google Knowledge Panel and AI engine entity resolution.
       sameAs: [
         'https://www.facebook.com/CossCloudSolutions/',
         'https://x.com/DsnrCoss',
@@ -86,7 +89,6 @@ export function buildGlobalSchemas(): object[] {
     },
 
     // ── 2. WebSite + SearchAction ────────────────────────────────────────────
-    // Enables Google Sitelinks Search Box directly in SERPs.
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
@@ -109,94 +111,87 @@ export function buildGlobalSchemas(): object[] {
     },
 
     // ── 3. LocalBusiness — Dilsukhnagar ──────────────────────────────────────
-    // Geo-coordinates power Google Maps rich results and "near me" searches.
-    {
+    ...(dilsukhnagar.schemaEnabled ? [{
       '@context': 'https://schema.org',
       '@type': ['LocalBusiness', 'EducationalOrganization'],
       '@id': `${SITE_URL}/#branch-dilsukhnagar`,
-      name: 'Coss Cloud Solutions — Dilsukhnagar',
+      name: dilsukhnagar.branchName,
       image: LOGO_URL,
       url: SITE_URL,
-      telephone: '+918885166007',
-      email: 'info@cosscloudsol.com',
+      telephone: dilsukhnagar.phone,
+      email: dilsukhnagar.email,
       priceRange: '₹₹',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Flat 109, C.B Eastern Homes, Srinagar Colony',
-        addressLocality: 'Dilsukhnagar',
-        addressRegion: 'Telangana',
-        postalCode: '500060',
+        streetAddress: dilsukhnagar.addressLine1 + (dilsukhnagar.addressLine2 ? ', ' + dilsukhnagar.addressLine2 : ''),
+        addressLocality: dilsukhnagar.city,
+        addressRegion: dilsukhnagar.state,
+        postalCode: dilsukhnagar.pincode,
         addressCountry: 'IN',
       },
       geo: {
         '@type': 'GeoCoordinates',
-        latitude: 17.3617,
-        longitude: 78.5262,
+        latitude: dilsukhnagar.latitude,
+        longitude: dilsukhnagar.longitude,
       },
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: [
-            'Monday', 'Tuesday', 'Wednesday',
-            'Thursday', 'Friday', 'Saturday',
-          ],
-          opens: '09:00',
-          closes: '19:00',
+      openingHoursSpecification: [{
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: dilsukhnagar.workingDays.split('-'),
+        opens: dilsukhnagar.workingHoursOpen,
+        closes: dilsukhnagar.workingHoursClose,
+      }],
+      ...(dilsukhnagar.reviewCount > 0 ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: dilsukhnagar.aggregateRating,
+          reviewCount: dilsukhnagar.reviewCount,
+          bestRating: '5',
+          worstRating: '1',
         },
-      ],
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.8',
-        reviewCount: '1250',
-        bestRating: '5',
-        worstRating: '1',
-      },
+      } : {}),
       parentOrganization: { '@id': `${SITE_URL}/#organization` },
-    },
+    }] : []),
 
     // ── 4. LocalBusiness — Ameerpet ──────────────────────────────────────────
-    {
+    ...(ameerpet.schemaEnabled ? [{
       '@context': 'https://schema.org',
       '@type': ['LocalBusiness', 'EducationalOrganization'],
       '@id': `${SITE_URL}/#branch-ameerpet`,
-      name: 'Coss Cloud Solutions — Ameerpet',
+      name: ameerpet.branchName,
       image: LOGO_URL,
       url: SITE_URL,
-      telephone: '+917780727374',
-      email: 'info@cosscloudsol.com',
+      telephone: ameerpet.phone,
+      email: ameerpet.email,
       priceRange: '₹₹',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: '#502, Sree Swathi Ankur Building',
-        addressLocality: 'Ameerpet',
-        addressRegion: 'Telangana',
-        postalCode: '500038',
+        streetAddress: ameerpet.addressLine1 + (ameerpet.addressLine2 ? ', ' + ameerpet.addressLine2 : ''),
+        addressLocality: ameerpet.city,
+        addressRegion: ameerpet.state,
+        postalCode: ameerpet.pincode,
         addressCountry: 'IN',
       },
       geo: {
         '@type': 'GeoCoordinates',
-        latitude: 17.4375,
-        longitude: 78.4482,
+        latitude: ameerpet.latitude,
+        longitude: ameerpet.longitude,
       },
-      openingHoursSpecification: [
-        {
-          '@type': 'OpeningHoursSpecification',
-          dayOfWeek: [
-            'Monday', 'Tuesday', 'Wednesday',
-            'Thursday', 'Friday', 'Saturday',
-          ],
-          opens: '09:00',
-          closes: '19:00',
+      openingHoursSpecification: [{
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ameerpet.workingDays.split('-'),
+        opens: ameerpet.workingHoursOpen,
+        closes: ameerpet.workingHoursClose,
+      }],
+      ...(ameerpet.reviewCount > 0 ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: ameerpet.aggregateRating,
+          reviewCount: ameerpet.reviewCount,
+          bestRating: '5',
+          worstRating: '1',
         },
-      ],
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.8',
-        reviewCount: '980',
-        bestRating: '5',
-        worstRating: '1',
-      },
+      } : {}),
       parentOrganization: { '@id': `${SITE_URL}/#organization` },
-    },
+    }] : []),
   ];
 }

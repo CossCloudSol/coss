@@ -308,3 +308,28 @@ model HomepageSettings {
 
   updatedAt              DateTime @updatedAt
 }
+
+model BranchSettings {
+  id              String   @id @default(cuid())
+  branchKey       String   @unique
+  branchName      String
+  addressLine1    String
+  addressLine2    String   @default("")
+  city            String   @default("Hyderabad")
+  state           String   @default("Telangana")
+  pincode         String
+  phone           String
+  email           String   @default("info@cosscloudsol.com")
+  latitude        Float
+  longitude       Float
+  workingHoursOpen  String @default("09:00")
+  workingHoursClose String @default("19:00")
+  workingDays     String   @default("Monday-Saturday")
+  mapEmbedUrl     String   @default("")
+  serviceAreas    String   @default("[]")
+  aggregateRating Float    @default(4.8)
+  reviewCount     Int      @default(0)
+  schemaEnabled   Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

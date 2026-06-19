@@ -143,33 +143,27 @@ export default function SeoAdminPage(): JSX.Element {
 /*  Tab 1 — Pages SEO                                                         */
 /* -------------------------------------------------------------------------- */
 
-type PageCategory = 'general' | 'courses' | 'blogs';
+type PageCategory = 'general' | 'landing' | 'courses' | 'blogs';
 
 const GENERAL_SLUGS = new Set([
-  'home',
-  'courses',
-  'about',
-  'why-us',
-  'contact',
-  'corporate-training',
-  'placements',
-  'certification',
-  'student-reviews',
-  'blog',
-  'enroll-now-with-coss',
-  'free-demo-class',
-  'privacy-policy',
-  'terms-conditions',
+  'home', 'courses', 'about', 'why-us', 'contact',
+  'corporate-training', 'placements', 'certification',
+  'student-reviews', 'blog', 'enroll-now-with-coss',
+  'free-demo-class', 'privacy-policy', 'terms-conditions',
+  'jobs', 'sitemap',
 ]);
 
-function classifyPage(slug: string): PageCategory {
-  if (slug.startsWith('blog/') || slug.startsWith('posts/')) return 'blogs';
+function classifyPage(slug: string): 'general' | 'landing' | 'courses' | 'blogs' {
   if (GENERAL_SLUGS.has(slug)) return 'general';
-  return 'courses';
+  if (slug.startsWith('blog/') || slug.startsWith('posts/')) return 'blogs';
+  if (slug.includes('/')) return 'courses';
+  // flat slug not in GENERAL_SLUGS = landing page
+  return 'landing';
 }
 
 const PAGE_CATEGORIES: ReadonlyArray<{ key: PageCategory; label: string; color: string }> = [
   { key: 'general', label: 'General', color: 'teal' },
+  { key: 'landing', label: 'Landing Pages', color: 'amber' },
   { key: 'courses', label: 'Courses', color: 'indigo' },
   { key: 'blogs', label: 'Blogs', color: 'violet' },
 ];
@@ -195,7 +189,7 @@ function PagesTab({
   );
 
   const counts = useMemo(() => {
-    const c: Record<PageCategory, number> = { general: 0, courses: 0, blogs: 0 };
+    const c: Record<PageCategory, number> = { general: 0, landing: 0, courses: 0, blogs: 0 };
     for (const p of pages) c[classifyPage(p.pageSlug)]++;
     return c;
   }, [pages]);
@@ -223,9 +217,11 @@ function PagesTab({
                 active
                   ? cat.key === 'general'
                     ? 'bg-teal-600 text-white ring-teal-600'
-                    : cat.key === 'courses'
-                      ? 'bg-indigo-600 text-white ring-indigo-600'
-                      : 'bg-violet-600 text-white ring-violet-600'
+                    : cat.key === 'landing'
+                      ? 'bg-amber-500 text-white ring-amber-500'
+                      : cat.key === 'courses'
+                        ? 'bg-indigo-600 text-white ring-indigo-600'
+                        : 'bg-violet-600 text-white ring-violet-600'
                   : 'bg-white text-gray-600 ring-gray-200 hover:bg-gray-50'
               }`}
             >
@@ -264,11 +260,13 @@ function PagesTab({
                       onClick={() => setSelectedSlug(page.pageSlug)}
                       className={`flex w-full items-center justify-between pl-3 pr-3 py-2 rounded-r-lg text-sm cursor-pointer transition ${
                         active
-                          ? pageCategory === 'courses'
-                            ? 'bg-indigo-50 border-l-2 border-indigo-600 text-indigo-700 font-medium'
-                            : pageCategory === 'blogs'
-                              ? 'bg-violet-50 border-l-2 border-violet-600 text-violet-700 font-medium'
-                              : 'bg-teal-50 border-l-2 border-teal-600 text-teal-700 font-medium'
+                          ? pageCategory === 'landing'
+                            ? 'bg-amber-50 border-l-2 border-amber-500 text-amber-700 font-medium'
+                            : pageCategory === 'courses'
+                              ? 'bg-indigo-50 border-l-2 border-indigo-600 text-indigo-700 font-medium'
+                              : pageCategory === 'blogs'
+                                ? 'bg-violet-50 border-l-2 border-violet-600 text-violet-700 font-medium'
+                                : 'bg-teal-50 border-l-2 border-teal-600 text-teal-700 font-medium'
                           : 'border-l-2 border-transparent hover:bg-gray-50 text-gray-700'
                       }`}
                     >
