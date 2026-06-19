@@ -270,7 +270,7 @@ function PagesTab({
                           : 'bg-transparent border-l-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                     >
-                      <span className="truncate text-gray-800 dark:text-gray-100">{page.pageTitle}</span>
+                      <span className="truncate min-w-0 flex-1 text-gray-800 dark:text-gray-100">{page.pageTitle}</span>
                       <span
                         className={`shrink-0 inline-block h-2 w-2 rounded-full ${
                           filled ? 'bg-emerald-500' : 'bg-gray-300'
