@@ -61,6 +61,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     select: {
       id: true,
       pageSlug: true,
+      pageTitle: true,
       metaTitle: true,
       metaDescription: true,
       ogTitle: true,
@@ -73,6 +74,7 @@ export async function GET(req: NextRequest): Promise<Response> {
       keywords: true,
       schemaMarkup: true,
       updatedAt: true,
+      createdAt: true,
     },
   });
 
