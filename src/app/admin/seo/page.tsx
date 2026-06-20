@@ -258,7 +258,7 @@ function PagesTab({
                     <button
                       type="button"
                       onClick={() => setSelectedSlug(page.pageSlug)}
-                      className={`flex w-full items-center justify-between pl-3 pr-3 py-2 rounded-r-lg text-sm cursor-pointer transition ${
+                      className={`flex w-full items-center justify-between text-left pl-3 pr-3 py-2 rounded-r-lg text-sm cursor-pointer transition ${
                         active
                           ? pageCategory === 'landing'
                             ? 'bg-amber-50 dark:bg-amber-900/30 border-l-2 border-amber-500 font-medium'
@@ -403,17 +403,17 @@ function PageEditor({
       <h2 className="text-lg font-semibold text-gray-900">{page.pageTitle}</h2>
 
       {/* Live Google preview */}
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <p className="text-xs uppercase text-gray-400 mb-2">Google Preview</p>
-        <p className="text-sm text-green-700">
+      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+        <p className="text-xs uppercase text-gray-400 dark:text-gray-500 mb-2">Google Preview</p>
+        <p className="text-sm text-green-700 dark:text-green-400">
           {SITE_HOST}/{page.pageSlug === 'home' ? '' : page.pageSlug}
         </p>
-        <p className="text-blue-600 text-lg hover:underline cursor-pointer truncate">
+        <p className="text-blue-700 dark:text-blue-400 text-lg hover:underline cursor-pointer truncate">
           {metaTitle.trim() === ''
             ? 'Page title will appear here'
             : metaTitle}
         </p>
-        <p className="text-sm text-gray-600 leading-snug">
+        <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug">
           {metaDescription.trim() === ''
             ? 'Meta description will appear here'
             : metaDescription}
