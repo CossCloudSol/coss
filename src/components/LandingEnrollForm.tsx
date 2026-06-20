@@ -71,7 +71,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   const isSubmitting = state.kind === 'submitting'
 
   return (
-    <div className="rounded-2xl bg-white shadow-2xl border-t-4 border-t-orange-500 p-6">
+    <div className="bg-white rounded-2xl p-6 shadow-[0_24px_64px_rgba(0,0,0,0.45)] border-t-4 border-orange-500">
       <h3 className="text-xl font-bold text-gray-900">
         Book Your <span className="text-blue-700">FREE</span> Demo Class
       </h3>
