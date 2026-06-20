@@ -21,14 +21,19 @@ export type LandingPageCourse = {
 
 export async function getLandingPageCourse(slug: string): Promise<LandingPageCourse | null> {
   try {
+    const variants = Array.from(new Set([
+      slug,
+      slug.replace(/-training-institute-in-hyderabad$/, '-training-in-hyderabad'),
+      slug.replace(/-training-institute-in-hyderabad$/, ''),
+      slug.replace(/-institute-in-hyderabad$/, '-in-hyderabad'),
+      slug.replace(/-institute-in-hyderabad$/, ''),
+      slug.replace(/-training-in-hyderabad$/, ''),
+      slug.replace(/-in-hyderabad$/, ''),
+    ]))
+
     const course = await prisma.course.findFirst({
       where: {
-        OR: [
-          { slug },
-          { slug: slug.replace(/-training-institute-in-hyderabad$/, '') },
-          { slug: slug.replace(/-training-in-hyderabad$/, '') },
-          { slug: slug.replace(/-institute-in-hyderabad$/, '') },
-        ],
+        slug: { in: variants },
       },
       select: {
         id: true,
