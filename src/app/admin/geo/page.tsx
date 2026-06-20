@@ -4,7 +4,11 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect, useCallback } from 'react'
 
-type BranchKey = 'dilsukhnagar' | 'ameerpet'
+type BranchData = {
+  id: string
+  branchKey: string
+  branchName: string
+}
 
 type FormState = {
   branchName: string
@@ -25,6 +29,14 @@ type FormState = {
   aggregateRating: string
   reviewCount: string
   schemaEnabled: boolean
+}
+
+type AddBranchForm = {
+  branchName: string
+  branchKey: string
+  addressLine1: string
+  pincode: string
+  phone: string
 }
 
 const EMPTY_FORM: FormState = {
@@ -48,9 +60,16 @@ const EMPTY_FORM: FormState = {
   schemaEnabled: true,
 }
 
-const BRANCH_LABELS: Record<BranchKey, string> = {
-  dilsukhnagar: 'Dilsukhnagar',
-  ameerpet: 'Ameerpet',
+const EMPTY_ADD_FORM: AddBranchForm = {
+  branchName: '',
+  branchKey: '',
+  addressLine1: '',
+  pincode: '',
+  phone: '',
+}
+
+function slugify(name: string): string {
+  return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
 function rowToForm(row: Record<string, unknown>): FormState {
@@ -118,20 +137,19 @@ function Field({ label, children }: FieldProps) {
 const inputCls = 'w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
 
 export default function GeoManagerPage() {
-  const [activeBranch, setActiveBranch] = useState<BranchKey>('dilsukhnagar')
-  const [forms, setForms] = useState<Record<BranchKey, FormState>>({
-    dilsukhnagar: { ...EMPTY_FORM },
-    ameerpet: { ...EMPTY_FORM },
-  })
-  const [areaInput, setAreaInput] = useState<Record<BranchKey, string>>({
-    dilsukhnagar: '',
-    ameerpet: '',
-  })
+  const [branches, setBranches] = useState<BranchData[]>([])
+  const [activeBranch, setActiveBranch] = useState<string>('')
+  const [forms, setForms] = useState<Record<string, FormState>>({})
+  const [areaInput, setAreaInput] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState('')
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [addForm, setAddForm] = useState<AddBranchForm>({ ...EMPTY_ADD_FORM })
+  const [addError, setAddError] = useState('')
+  const [adding, setAdding] = useState(false)
 
-  const loadBranch = useCallback(async (key: BranchKey) => {
+  const loadBranch = useCallback(async (key: string) => {
     try {
       const res = await fetch(`/api/admin/geo/${key}`)
       if (!res.ok) return
@@ -142,22 +160,49 @@ export default function GeoManagerPage() {
     }
   }, [])
 
-  useEffect(() => {
-    loadBranch('dilsukhnagar')
-    loadBranch('ameerpet')
-  }, [loadBranch])
+  const loadBranches = useCallback(async (): Promise<BranchData[]> => {
+    try {
+      const res = await fetch('/api/admin/geo/branches')
+      if (!res.ok) return []
+      const data = await res.json()
+      const list: BranchData[] = data.branches ?? []
+      setBranches(list)
+      setForms(prev => {
+        const next = { ...prev }
+        list.forEach(b => { if (!next[b.branchKey]) next[b.branchKey] = { ...EMPTY_FORM } })
+        return next
+      })
+      setAreaInput(prev => {
+        const next = { ...prev }
+        list.forEach(b => { if (next[b.branchKey] === undefined) next[b.branchKey] = '' })
+        return next
+      })
+      return list
+    } catch {
+      return []
+    }
+  }, [])
 
-  const form = forms[activeBranch]
+  useEffect(() => {
+    loadBranches().then(list => {
+      if (!list || list.length === 0) return
+      setActiveBranch(list[0].branchKey)
+      list.forEach(b => loadBranch(b.branchKey))
+    })
+  }, [loadBranches, loadBranch])
+
+  const form = forms[activeBranch] ?? { ...EMPTY_FORM }
+  const activeBranchName = branches.find(b => b.branchKey === activeBranch)?.branchName ?? activeBranch
 
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForms(prev => ({
       ...prev,
-      [activeBranch]: { ...prev[activeBranch], [key]: value },
+      [activeBranch]: { ...(prev[activeBranch] ?? EMPTY_FORM), [key]: value },
     }))
   }
 
   function addArea() {
-    const val = areaInput[activeBranch].trim()
+    const val = (areaInput[activeBranch] ?? '').trim()
     if (!val) return
     setField('serviceAreas', [...form.serviceAreas, val])
     setAreaInput(prev => ({ ...prev, [activeBranch]: '' }))
@@ -193,6 +238,46 @@ export default function GeoManagerPage() {
     }
   }
 
+  async function handleAddBranch() {
+    setAdding(true)
+    setAddError('')
+    try {
+      const res = await fetch('/api/admin/geo/branches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(addForm),
+      })
+      if (!res.ok) {
+        const e = await res.json()
+        throw new Error((e as { error?: string }).error ?? 'Create failed')
+      }
+      const created = await res.json() as { branchKey: string }
+      await loadBranches()
+      await loadBranch(created.branchKey)
+      setActiveBranch(created.branchKey)
+      setShowAddForm(false)
+      setAddForm({ ...EMPTY_ADD_FORM })
+    } catch (e) {
+      setAddError(e instanceof Error ? e.message : 'Create failed')
+    } finally {
+      setAdding(false)
+    }
+  }
+
+  async function handleDeleteBranch(key: string) {
+    const branch = branches.find(b => b.branchKey === key)
+    if (!branch) return
+    if (!confirm(`Delete "${branch.branchName}"? This cannot be undone.`)) return
+    try {
+      const res = await fetch(`/api/admin/geo/branches/${key}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error('Delete failed')
+      const list = await loadBranches()
+      if (list.length > 0) setActiveBranch(list[0].branchKey)
+    } catch {
+      setError('Delete failed — check console')
+    }
+  }
+
   const mapsHref =
     form.latitude && form.longitude
       ? `https://maps.google.com/?q=${form.latitude},${form.longitude}`
@@ -218,24 +303,121 @@ export default function GeoManagerPage() {
         </div>
       )}
 
-      {/* Branch tabs */}
-      <div className="flex gap-2">
-        {(Object.keys(BRANCH_LABELS) as BranchKey[]).map(key => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setActiveBranch(key)}
-            className={[
-              'px-4 py-2 rounded-md text-sm font-medium transition-colors',
-              activeBranch === key
-                ? 'bg-blue-600 text-white'
-                : 'border border-gray-200 text-gray-600 hover:bg-gray-50',
-            ].join(' ')}
-          >
-            {BRANCH_LABELS[key]}
-          </button>
+      {/* Branch tabs + Add branch button */}
+      <div className="flex flex-wrap gap-2 items-center">
+        {branches.map(b => (
+          <div key={b.branchKey} className="relative flex items-center">
+            <button
+              type="button"
+              onClick={() => setActiveBranch(b.branchKey)}
+              className={[
+                'pl-4 pr-8 py-2 rounded-md text-sm font-medium transition-colors',
+                activeBranch === b.branchKey
+                  ? 'bg-blue-600 text-white'
+                  : 'border border-gray-200 text-gray-600 hover:bg-gray-50',
+              ].join(' ')}
+            >
+              {b.branchName || b.branchKey}
+            </button>
+            {branches.length > 1 && (
+              <button
+                type="button"
+                onClick={() => handleDeleteBranch(b.branchKey)}
+                title={`Delete ${b.branchName || b.branchKey}`}
+                aria-label={`Delete ${b.branchName || b.branchKey}`}
+                className={[
+                  'absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center rounded text-xs font-bold leading-none transition-colors',
+                  activeBranch === b.branchKey
+                    ? 'text-white/70 hover:text-white hover:bg-blue-700'
+                    : 'text-gray-400 hover:text-red-600 hover:bg-red-50',
+                ].join(' ')}
+              >
+                ×
+              </button>
+            )}
+          </div>
         ))}
+        <button
+          type="button"
+          onClick={() => { setShowAddForm(v => !v); setAddError('') }}
+          className="px-3 py-2 rounded-md text-sm font-medium border border-dashed border-gray-300 text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
+        >
+          + Add branch
+        </button>
       </div>
+
+      {/* Add branch inline form */}
+      {showAddForm && (
+        <div className="border border-gray-200 rounded-lg px-5 py-5 space-y-4 bg-gray-50">
+          <h2 className="font-semibold text-gray-800 text-sm">New Branch</h2>
+          {addError && (
+            <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-800">
+              {addError}
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Branch Name">
+              <input
+                className={inputCls}
+                value={addForm.branchName}
+                onChange={e => {
+                  const name = e.target.value
+                  setAddForm(f => ({ ...f, branchName: name, branchKey: slugify(name) }))
+                }}
+                placeholder="e.g. Coss Cloud — HITEC City"
+              />
+            </Field>
+            <Field label="Branch Key (slug)">
+              <input
+                className={inputCls}
+                value={addForm.branchKey}
+                onChange={e => setAddForm(f => ({ ...f, branchKey: e.target.value }))}
+                placeholder="e.g. hitec-city"
+              />
+            </Field>
+          </div>
+          <Field label="Address Line 1">
+            <input
+              className={inputCls}
+              value={addForm.addressLine1}
+              onChange={e => setAddForm(f => ({ ...f, addressLine1: e.target.value }))}
+            />
+          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Pincode">
+              <input
+                className={inputCls}
+                value={addForm.pincode}
+                onChange={e => setAddForm(f => ({ ...f, pincode: e.target.value }))}
+              />
+            </Field>
+            <Field label="Phone">
+              <input
+                className={inputCls}
+                value={addForm.phone}
+                onChange={e => setAddForm(f => ({ ...f, phone: e.target.value }))}
+              />
+            </Field>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleAddBranch}
+              disabled={adding || !addForm.branchKey || !addForm.branchName}
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 disabled:opacity-60 transition-colors"
+            >
+              {adding ? 'Creating…' : 'Create branch'}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowAddForm(false); setAddForm({ ...EMPTY_ADD_FORM }); setAddError('') }}
+              className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Section 1 — Branch NAP */}
       <Section title="Branch NAP">
@@ -338,7 +520,7 @@ export default function GeoManagerPage() {
           <input
             className={`${inputCls} flex-1`}
             placeholder="Add a service area…"
-            value={areaInput[activeBranch]}
+            value={areaInput[activeBranch] ?? ''}
             onChange={e => setAreaInput(prev => ({ ...prev, [activeBranch]: e.target.value }))}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addArea())}
           />
@@ -432,10 +614,10 @@ export default function GeoManagerPage() {
         <button
           type="button"
           onClick={handleSave}
-          disabled={saving}
+          disabled={saving || !activeBranch}
           className="px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 disabled:opacity-60 transition-colors"
         >
-          {saving ? 'Saving…' : `Save ${BRANCH_LABELS[activeBranch]}`}
+          {saving ? 'Saving…' : `Save ${activeBranchName}`}
         </button>
       </div>
     </div>
