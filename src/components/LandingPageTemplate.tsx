@@ -181,8 +181,15 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
     },
   ]
 
+  const salaryIcons = [
+    <svg key="gear" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+    <svg key="cloud" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>,
+    <svg key="server" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>,
+    <svg key="branch" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>,
+  ]
+
   return (
-    <div className="pb-16 md:pb-14">
+    <div>
       {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
@@ -285,14 +292,14 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            {salaryRoles.map(role => (
-              <div key={role.role} className="relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 text-center overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:border-orange-300 transition-all duration-300">
+            {salaryRoles.map((role, idx) => (
+              <div key={role.role} className="relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-center overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:border-orange-300 transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-t-2xl" />
-                <div className="w-14 h-14 rounded-2xl bg-orange-50 dark:bg-orange-950/30 flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 transition-colors">
-                  <i className={`ti ${role.tiIcon} text-2xl text-orange-500`} />
+                <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 transition-colors">
+                  {salaryIcons[idx % 4]}
                 </div>
-                <div className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2">{role.role}</div>
-                <div className="inline-block bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 font-bold text-lg px-3 py-1 rounded-xl">{role.salary}</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2">{role.role}</div>
+                <div className="inline-block bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 font-bold text-base px-3 py-1 rounded-xl">{role.salary}</div>
                 <div className="text-xs text-slate-400 mt-2">{role.expNote}</div>
               </div>
             ))}
@@ -595,49 +602,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         </div>
       </section>
 
-      {/* ── SECTION 11: STICKY BAR ──────────────────────────────────────── */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d1b2e] border-t-[3px] border-orange-500 shadow-[0_-4px_20px_rgba(0,0,0,0.4)]">
-        {/* Desktop */}
-        <div className="hidden md:flex items-center justify-between px-8 py-3">
-          <div className="flex items-center gap-6">
-            <a href={`tel:${phone1.replace(/\s/g, '')}`} className="flex items-center gap-2 text-slate-200 text-sm font-semibold hover:text-orange-400 transition-colors">
-              <i className="ti ti-phone text-orange-400 text-base" />
-              {phone1}
-            </a>
-            <span className="text-slate-700">|</span>
-            <a href="https://wa.me/918885166007" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-200 text-sm font-semibold hover:text-green-400 transition-colors">
-              <i className="ti ti-brand-whatsapp text-green-400 text-base" />
-              Chat on WhatsApp
-            </a>
-          </div>
-          <div className="flex gap-3">
-            <a href="/free-demo-class" className="px-5 py-2.5 bg-transparent border border-slate-600 text-slate-200 text-sm font-semibold rounded-lg hover:border-slate-400 transition-colors">
-              Book Free Demo
-            </a>
-            <a href="/enroll-now-with-coss" className="px-5 py-2.5 bg-orange-500 text-white text-sm font-bold rounded-lg hover:bg-orange-600 transition-colors">
-              Reserve Your Seat →
-            </a>
-          </div>
-        </div>
-        {/* Mobile: 3 equal buttons */}
-        <div className="flex md:hidden">
-          <a href={`tel:${phone1.replace(/\s/g, '')}`}
-            className="flex-1 flex flex-col items-center justify-center gap-1 py-3 text-slate-200 hover:bg-white/5 transition-colors border-r border-slate-700">
-            <i className="ti ti-phone text-orange-400 text-xl" />
-            <span className="text-[10px] font-semibold">Call Now</span>
-          </a>
-          <a href="https://wa.me/918885166007" target="_blank" rel="noopener noreferrer"
-            className="flex-1 flex flex-col items-center justify-center gap-1 py-3 text-slate-200 hover:bg-white/5 transition-colors border-r border-slate-700">
-            <i className="ti ti-brand-whatsapp text-green-400 text-xl" />
-            <span className="text-[10px] font-semibold">WhatsApp</span>
-          </a>
-          <a href="/free-demo-class"
-            className="flex-1 flex flex-col items-center justify-center gap-1 py-3 bg-orange-500 text-white hover:bg-orange-600 transition-colors">
-            <i className="ti ti-calendar text-white text-xl" />
-            <span className="text-[10px] font-semibold">Book Demo</span>
-          </a>
-        </div>
-      </div>
     </div>
   )
 }

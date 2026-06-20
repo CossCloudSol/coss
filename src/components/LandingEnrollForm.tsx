@@ -44,7 +44,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   }
 
   const inputCls =
-    'w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60'
+    'w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60'
 
   if (state.kind === 'success') {
     return (
@@ -71,12 +71,12 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   const isSubmitting = state.kind === 'submitting'
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-[0_24px_64px_rgba(0,0,0,0.45)] border-t-4 border-orange-500">
+    <div className="bg-white rounded-2xl p-5 shadow-[0_24px_64px_rgba(0,0,0,0.45)] border-t-4 border-orange-500">
       <h3 className="text-xl font-bold text-gray-900">
-        Book Your <span className="text-blue-700">FREE</span> Demo Class
+        Book Your <span className="text-xl font-black text-blue-600">FREE</span> Demo
       </h3>
-      <p className="mt-0.5 text-sm text-gray-500">Limited seats — join the next batch now!</p>
-      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-green-50 border border-green-200 px-3 py-1 text-xs font-medium text-green-700">
+      <p className="mt-0.5 text-xs text-gray-500">Limited seats — join the next batch now!</p>
+      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-green-50 border border-green-200 px-2 py-1 text-[10px] font-medium text-green-700">
         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><polyline points="20 6 9 17 4 12" /></svg>
         Free career guidance + resume review
       </div>
@@ -157,7 +157,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 hover:from-orange-600 hover:to-orange-700 disabled:opacity-70 transition-all"
+          className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 py-2.5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 hover:from-orange-600 hover:to-orange-700 disabled:opacity-70 transition-all"
         >
           {isSubmitting ? 'Booking Your Seat…' : 'Reserve My Free Demo Seat →'}
         </button>
@@ -166,27 +166,32 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 text-sm font-semibold text-white hover:bg-[#20BD5C] transition-colors"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-2 text-sm font-semibold text-white hover:bg-[#20BD5C] transition-colors"
         >
           <WaIcon /> Chat on WhatsApp Now
         </a>
 
-        <p className="text-center text-xs text-gray-400">🛡 No spam · No obligation · 100% free</p>
+        <p className="text-center text-[10px] text-gray-400">🛡 No spam · No obligation · 100% free</p>
       </form>
 
-      <dl className="mt-4 grid grid-cols-2 gap-2 rounded-xl bg-slate-50 p-3">
-        {[
-          { label: 'Duration', value: duration || '3 months' },
-          { label: 'Next Batch', value: 'Starting Soon' },
-          { label: 'Mode', value: 'Online + Offline' },
-          { label: 'Level', value: level || 'All Levels' },
-        ].map(({ label, value }) => (
-          <div key={label} className="text-center">
-            <dt className="text-[10px] uppercase tracking-wide text-gray-400">{label}</dt>
-            <dd className="mt-0.5 text-xs font-semibold text-gray-800">{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="flex border-t border-slate-100 pt-3 mt-2">
+        <div className="flex-1 text-center border-r border-slate-200">
+          <div className="text-xs font-bold text-slate-800">{duration || '3 Months'}</div>
+          <div className="text-[10px] text-slate-400 uppercase tracking-wide">Duration</div>
+        </div>
+        <div className="flex-1 text-center border-r border-slate-200">
+          <div className="text-xs font-bold text-slate-800">Starting Soon</div>
+          <div className="text-[10px] text-slate-400 uppercase tracking-wide">Next Batch</div>
+        </div>
+        <div className="flex-1 text-center border-r border-slate-200">
+          <div className="text-xs font-bold text-slate-800">Online + Offline</div>
+          <div className="text-[10px] text-slate-400 uppercase tracking-wide">Mode</div>
+        </div>
+        <div className="flex-1 text-center">
+          <div className="text-xs font-bold text-slate-800">{level || 'All Levels'}</div>
+          <div className="text-[10px] text-slate-400 uppercase tracking-wide">Level</div>
+        </div>
+      </div>
     </div>
   )
 }
