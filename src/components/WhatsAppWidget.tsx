@@ -133,6 +133,17 @@ export default function WhatsAppWidget(): JSX.Element | null {
     }
   }, []);
 
+  /* Custom event from sticky bar — open panel immediately */
+  useEffect(() => {
+    const handler = () => {
+      setMounted(true);
+      setVisible(true);
+      setPanelOpen(true);
+    };
+    window.addEventListener('coss:open-whatsapp', handler);
+    return () => window.removeEventListener('coss:open-whatsapp', handler);
+  }, []);
+
   /* Move focus into panel on open */
   useEffect(() => {
     if (!panelOpen) return;
