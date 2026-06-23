@@ -195,14 +195,20 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
-      <section className="bg-[#080f1e] pt-10 pb-0">
+      <section className="pt-10 pb-0" style={{ background: 'linear-gradient(135deg, #012530 0%, #021e2b 60%, #011820 100%)' }}>
         <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 lg:gap-10 items-start">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/15 border border-orange-500/30 px-4 py-1.5 text-orange-400 text-xs font-bold uppercase tracking-wider mb-5">
+            <div className="inline-flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 text-orange-300 text-xs font-black px-4 py-2 rounded-full mb-5 uppercase tracking-[0.1em]">
               ★ Hyderabad&apos;s #1 {categoryName} Institute
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight mb-3">
-              {h1}
+            <h1 className="font-black text-white leading-[1.08] tracking-tight mb-4">
+              <span className="block text-4xl md:text-5xl lg:text-6xl">
+                {course.title}
+              </span>
+              <span className="block text-3xl md:text-4xl font-extrabold mt-1">
+                Training in{' '}
+                <span className="text-orange-400">Hyderabad</span>
+              </span>
             </h1>
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
@@ -213,8 +219,8 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                 ))}
               </div>
             )}
-            <p className="mt-5 text-slate-300 text-sm md:text-base leading-relaxed max-w-xl">{desc}</p>
-            <div className="mt-6 flex flex-wrap gap-2">
+            <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-6 max-w-xl font-medium">{desc}</p>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-8">
               {[
                 'Live instructor-led classes',
                 'Hands-on real-time projects',
@@ -223,26 +229,31 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                 `${course.duration || '3 months'} duration`,
                 'Lifetime LMS access',
               ].map(chip => (
-                <span key={chip} className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300">
-                  <CheckIcon /> {chip}
-                </span>
+                <div key={chip} className="flex items-center gap-2.5 text-sm font-semibold text-slate-200">
+                  <span className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                    </svg>
+                  </span>
+                  {chip}
+                </div>
               ))}
             </div>
-            <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 lg:grid-cols-4 gap-3">
               {[
                 { value: '5,000+', label: 'Students Trained' },
                 { value: '92%', label: 'Placement Rate' },
                 { value: '15+', label: 'Real Projects' },
                 { value: '15 Yrs', label: 'In Hyderabad' },
               ].map(s => (
-                <div key={s.label} className="rounded-xl bg-white/5 border border-white/10 p-4 text-center">
-                  <div className="text-xl font-extrabold text-orange-400">{s.value}</div>
-                  <div className="mt-0.5 text-xs text-slate-400">{s.label}</div>
+                <div key={s.label} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-3 py-3 text-center">
+                  <strong className="block text-2xl md:text-3xl font-black text-orange-400 leading-none">{s.value}</strong>
+                  <span className="text-xs text-slate-400 font-medium mt-1.5 block">{s.label}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="lg:sticky lg:top-20">
+          <div className="lg:sticky lg:top-20 self-start">
             <LandingEnrollForm courseTitle={course.title} duration={course.duration} level={course.level} phone1={phone1} />
           </div>
         </div>
