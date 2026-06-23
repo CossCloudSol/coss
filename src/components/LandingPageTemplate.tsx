@@ -610,22 +610,29 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 8: FAQ ──────────────────────────────────────────────── */}
-      <section className="bg-slate-50 dark:bg-slate-800 py-10 md:py-16 px-4 md:px-8">
+      <section className="py-10 md:py-16 px-4 md:px-8 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-6xl mx-auto">
           <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">FAQs</p>
           <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-10">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="max-w-3xl mx-auto flex flex-col gap-2">
             {faqItems.map((item, i) => (
-              <details key={i} className="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#005663] transition-colors">
-                <summary className="flex cursor-pointer select-none items-start justify-between gap-4 p-4 text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  <span>{item.q}</span>
-                  <svg className="mt-0.5 h-5 w-5 shrink-0 text-slate-400 group-open:rotate-45 group-open:text-[#005663] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12M6 12h12" />
-                  </svg>
+              <details key={i} open={i === 0} className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-all duration-200 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-sm">
+                <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none select-none">
+                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 leading-snug">
+                    {item.q}
+                  </span>
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center transition-transform duration-200 group-open:rotate-45">
+                    <svg className="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                    </svg>
+                  </span>
                 </summary>
-                <div className="border-t border-slate-100 px-4 pb-4 pt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {item.a}
+                <div className="px-5 pb-4 pt-0">
+                  <div className="h-px bg-slate-100 dark:bg-slate-700 mb-3" />
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {item.a}
+                  </p>
                 </div>
               </details>
             ))}
