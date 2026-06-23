@@ -333,3 +333,26 @@ model BranchSettings {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
+
+model SiteSettings {
+  id              String    @id @default(cuid())
+  ogImageUrl      String?
+  logoUrl         String?
+  logoLightUrl    String?
+  faviconUrl      String?
+  appleTouchUrl   String?
+  courseOgDefault String?
+  updatedAt       DateTime? @updatedAt
+  createdAt       DateTime  @default(now())
+}
+
+model MediaScanResult {
+  id            String   @id @default(cuid())
+  scannedAt     DateTime @default(now())
+  totalImages   Int      @default(0)
+  brokenCount   Int      @default(0)
+  slowCount     Int      @default(0)
+  redirectCount Int      @default(0)
+  results       Json     @default("[]")
+  createdAt     DateTime @default(now())
+}
