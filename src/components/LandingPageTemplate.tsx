@@ -269,28 +269,72 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 2: TRUST BAR ────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-slate-900 border-t-4 border-t-orange-500 py-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs uppercase tracking-widest text-slate-400 font-semibold mb-5">Our graduates work at</p>
-          <div className="flex gap-5 overflow-x-auto pb-1 scrollbar-hide flex-nowrap md:flex-wrap md:justify-center items-center">
-            {[
-              { name: 'TCS', color: 'text-red-600' },
-              { name: 'Infosys', color: 'text-blue-700' },
-              { name: 'Microsoft', color: 'text-sky-600' },
-              { name: 'Accenture', color: 'text-purple-700' },
-              { name: 'Wipro', color: 'text-red-500' },
-              { name: 'Cognizant', color: 'text-blue-600' },
-              { name: 'HCL', color: 'text-blue-900' },
-              { name: 'Capgemini', color: 'text-blue-700' },
-              { name: 'Tech Mahindra', color: 'text-teal-700' },
-            ].map(c => (
-              <span key={c.name} className={`text-sm font-bold opacity-60 hover:opacity-100 transition-opacity ${c.color}`}>
-                {c.name}
-              </span>
-            ))}
+      <div className="py-10 md:py-12 px-4 md:px-8 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+        <div className="max-w-[1200px] mx-auto">
+          <p className="text-center text-xs font-black text-slate-400 uppercase tracking-[0.12em] mb-8">
+            Our Graduates Work At
+          </p>
+          <div className="flex items-center justify-center flex-wrap gap-8 md:gap-12">
+
+            {/* Google */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
+              alt="Google" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* Microsoft */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
+              alt="Microsoft" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* Amazon */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
+              alt="Amazon" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* Infosys */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/9/95/Infosys_logo.svg"
+              alt="Infosys" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* TCS */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Tata_Consultancy_Services_Logo.svg"
+              alt="TCS" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* Accenture */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
+              alt="Accenture" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* Wipro */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Wipro_Primary_Logo_Color_RGB.svg"
+              alt="Wipro" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
+            {/* Cognizant */}
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Cognizant_logo.svg"
+              alt="Cognizant" height="28"
+              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+            />
+
           </div>
         </div>
-      </section>
+      </div>
 
       <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
 
