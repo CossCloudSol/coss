@@ -196,12 +196,12 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
       <section className="bg-[#080f1e] pt-10 pb-0">
-        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-[1fr_380px] gap-10 items-start">
+        <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 lg:gap-10 items-start">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/15 border border-orange-500/30 px-4 py-1.5 text-orange-400 text-xs font-bold uppercase tracking-wider mb-5">
               ★ Hyderabad&apos;s #1 {categoryName} Institute
             </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight mb-3">
               {h1}
             </h1>
             {tags.length > 0 && (
@@ -228,7 +228,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                 </span>
               ))}
             </div>
-            <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3">
               {[
                 { value: '5,000+', label: 'Students Trained' },
                 { value: '92%', label: 'Placement Rate' },
@@ -252,7 +252,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       <section className="bg-white dark:bg-slate-900 border-t-4 border-t-orange-500 py-8 px-4">
         <div className="max-w-6xl mx-auto">
           <p className="text-center text-xs uppercase tracking-widest text-slate-400 font-semibold mb-5">Our graduates work at</p>
-          <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-3">
+          <div className="flex gap-5 overflow-x-auto pb-1 scrollbar-hide flex-nowrap md:flex-wrap md:justify-center items-center">
             {[
               { name: 'TCS', color: 'text-red-600' },
               { name: 'Infosys', color: 'text-blue-700' },
@@ -272,15 +272,18 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         </div>
       </section>
 
+      <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
+
       {/* ── SECTION 3: SALARY ───────────────────────────────────────────── */}
-      <section className="bg-slate-50 dark:bg-slate-800 py-16 px-4">
+      <section className="bg-slate-50 dark:bg-slate-800 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">High demand · High paying careers</p>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
+            <p className="text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">High demand · High paying careers</p>
+            <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3" />
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
               {categoryName} Professionals Are in High Demand
             </h2>
-            <p className="mt-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+            <p className="mt-4 text-slate-600 dark:text-slate-400 text-base leading-relaxed">
               India&apos;s top companies are aggressively hiring certified {course.title} professionals.
               Skilled talent with hands-on experience commands salaries well above the industry average —
               making this one of the most rewarding career investments you can make in 2025.
@@ -293,13 +296,13 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           </div>
           <div className="grid grid-cols-2 gap-4">
             {salaryRoles.map((role, idx) => (
-              <div key={role.role} className="relative bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 text-center overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:border-orange-300 transition-all duration-300">
+              <div key={role.role} className="relative bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-5 text-center overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:border-orange-300 transition-all duration-300">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-t-2xl" />
-                <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 transition-colors">
+                <div className="w-14 h-14 rounded-xl bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 transition-colors">
                   {salaryIcons[idx % 4]}
                 </div>
-                <div className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2">{role.role}</div>
-                <div className="inline-block bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 font-bold text-base px-3 py-1 rounded-xl">{role.salary}</div>
+                <div className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2">{role.role}</div>
+                <div className="inline-block bg-green-50 dark:bg-green-950/30 border-2 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 font-black text-xl px-4 py-2 rounded-xl">{role.salary}</div>
                 <div className="text-xs text-slate-400 mt-2">{role.expNote}</div>
               </div>
             ))}
@@ -307,28 +310,56 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         </div>
       </section>
 
+      <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
+
       {/* ── SECTION 4: WHY COSS ─────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-slate-900 py-16 px-4">
+      <section className="bg-white dark:bg-slate-900 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-[#005663] mb-2">Why Choose Us</p>
-          <h2 className="text-center text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Why Choose Us</p>
+          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
             Why Choose Coss Cloud Solutions for {course.title}?
           </h2>
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Hyderabad&apos;s most trusted IT training institute since 2010</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
-              { icon: '👨‍🏫', title: 'Expert Trainers', body: 'Industry professionals with 10+ years of hands-on experience — not just academic instructors.' },
-              { icon: '🏗️', title: 'Hands-On Projects', body: 'Work on enterprise-level real projects you can showcase in interviews and on your resume.' },
-              { icon: '💼', title: '100% Placement', body: 'Resume review, mock interviews, LinkedIn optimization, and direct referrals to our partner companies.' },
-              { icon: '📅', title: 'Flexible Batches', body: 'Weekday and weekend batches at both Dilsukhnagar and Ameerpet. Switch between modes anytime.' },
-              { icon: '🎓', title: 'Lifetime LMS', body: 'All class recordings, notes, code repos, and updated resources — available forever at no extra cost.' },
-              { icon: '👥', title: 'Small Batches', body: 'Maximum 20 students per batch so every student gets personal attention and direct trainer access.' },
-            ].map(card => (
-              <div key={card.title} className="rounded-xl border border-slate-200 dark:border-slate-700 p-6 relative overflow-hidden hover:border-[#005663] transition-colors group">
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#005663] rounded-b-xl" />
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#f0fdfa] text-2xl">{card.icon}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {([
+              {
+                svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" /></svg>,
+                title: 'Expert Trainers',
+                body: 'Industry professionals with 10+ years of hands-on experience — not just academic instructors.',
+              },
+              {
+                svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>,
+                title: 'Hands-On Projects',
+                body: 'Work on enterprise-level real projects you can showcase in interviews and on your resume.',
+              },
+              {
+                svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" /></svg>,
+                title: '100% Placement',
+                body: 'Resume review, mock interviews, LinkedIn optimization, and direct referrals to our partner companies.',
+              },
+              {
+                svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" /></svg>,
+                title: 'Flexible Batches',
+                body: 'Weekday and weekend batches at both Dilsukhnagar and Ameerpet. Switch between modes anytime.',
+              },
+              {
+                svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0H3" /></svg>,
+                title: 'Lifetime LMS',
+                body: 'All class recordings, notes, code repos, and updated resources — available forever at no extra cost.',
+              },
+              {
+                svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>,
+                title: 'Small Batches',
+                body: 'Maximum 20 students per batch so every student gets personal attention and direct trainer access.',
+              },
+            ] as { svg: React.JSX.Element; title: string; body: string }[]).map(card => (
+              <div key={card.title} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center flex flex-col items-center transition-all hover:-translate-y-1 hover:shadow-lg hover:border-teal-300 dark:hover:border-teal-700">
+                <div className="w-14 h-14 rounded-2xl bg-teal-50 dark:bg-teal-950/40 flex items-center justify-center mb-4 flex-shrink-0">
+                  {card.svg}
+                </div>
                 <h3 className="font-bold text-slate-900 dark:text-white mb-2">{card.title}</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{card.body}</p>
+                <p className="text-base text-slate-600 dark:text-slate-400 leading-relaxed">{card.body}</p>
               </div>
             ))}
           </div>
@@ -336,8 +367,8 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 5: CURRICULUM + PROJECTS ───────────────────────────── */}
-      <section className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-16 px-4">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+      <section className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 py-10 md:py-16 px-4 md:px-8">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
           <div>
             <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-1">Course Curriculum</h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{curriculum.length} modules · hands-on labs included</p>
@@ -370,7 +401,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           <div>
             <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mb-1">Real-Time Industry Projects</h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">Portfolio-ready projects to showcase in interviews</p>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               {projectCards.map((proj, i) => (
                 <div key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors">
                   <div className="flex items-start gap-3">
@@ -389,13 +420,16 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         </div>
       </section>
 
+      <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
+
       {/* ── SECTION 6: BATCHES ──────────────────────────────────────────── */}
-      <section className="bg-slate-50 dark:bg-slate-800 py-16 px-4">
+      <section className="bg-slate-50 dark:bg-slate-800 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">Enroll Now</p>
-          <h2 className="text-center text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">Upcoming Batches</h2>
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Enroll Now</p>
+          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">Upcoming Batches</h2>
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Online &amp; classroom at Dilsukhnagar and Ameerpet</p>
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {[
               {
                 label: 'Weekday Batch',
@@ -428,7 +462,13 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                     <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center">
                       <i className="ti ti-calendar text-orange-400 text-lg" />
                     </div>
-                    <span className="text-white font-bold text-base">{batch.label}</span>
+                    <span className="text-white font-bold text-base flex items-center gap-2">
+                      {batch.urgency
+                        ? <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+                        : <span className="w-2 h-2 rounded-full bg-green-400" />
+                      }
+                      {batch.label}
+                    </span>
                   </div>
                   <span className="bg-orange-500/15 text-orange-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">{batch.days}</span>
                 </div>
@@ -458,19 +498,22 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         </div>
       </section>
 
+      <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
+
       {/* ── SECTION 7: TESTIMONIALS ─────────────────────────────────────── */}
-      <section className="bg-white dark:bg-slate-900 py-16 px-4">
+      <section className="bg-white dark:bg-slate-900 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">Student Success Stories</p>
-          <h2 className="text-center text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">What Our Students Say</h2>
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Student Success Stories</p>
+          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">What Our Students Say</h2>
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">1,200+ students placed at top companies from our Hyderabad centres</p>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {testimonials.map(t => (
-              <div key={t.name} className="rounded-2xl border border-slate-200 dark:border-slate-700 p-6 relative overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-orange-500 rounded-t-2xl" />
-                <div className="text-3xl text-orange-400 leading-none mb-2">&ldquo;</div>
+              <div key={t.name} className="bg-white dark:bg-slate-800 rounded-2xl p-6 border-2 border-slate-100 dark:border-slate-700 hover:border-orange-200 dark:hover:border-orange-800 transition-all hover:shadow-xl flex flex-col relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-orange-400 to-orange-600 rounded-l-2xl" />
+                <span className="text-5xl text-orange-400 leading-none mb-2 font-serif block">&ldquo;</span>
                 <div className="flex gap-0.5 mb-3">
-                  {[1,2,3,4,5].map(s => <span key={s} className="text-orange-400 text-xs">★</span>)}
+                  {[1,2,3,4,5].map(s => <span key={s} className="text-yellow-400 text-xl tracking-widest">★</span>)}
                 </div>
                 <p className="text-[13px] italic text-slate-700 dark:text-slate-300 leading-relaxed">{t.quote}</p>
                 <div className="mt-5 flex items-center gap-3">
@@ -489,11 +532,12 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 8: FAQ ──────────────────────────────────────────────── */}
-      <section className="bg-slate-50 dark:bg-slate-800 py-16 px-4">
+      <section className="bg-slate-50 dark:bg-slate-800 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">FAQs</p>
-          <h2 className="text-center text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-10">Frequently Asked Questions</h2>
-          <div className="grid md:grid-cols-2 gap-3">
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">FAQs</p>
+          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-10">Frequently Asked Questions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {faqItems.map((item, i) => (
               <details key={i} className="group bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-[#005663] transition-colors">
                 <summary className="flex cursor-pointer select-none items-start justify-between gap-4 p-4 text-sm font-semibold text-slate-800 dark:text-slate-100">
@@ -512,12 +556,13 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 9: LOCATIONS ────────────────────────────────────────── */}
-      <section className="bg-white dark:bg-slate-900 py-16 px-4">
+      <section className="bg-white dark:bg-slate-900 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-[#005663] mb-2">Find Us</p>
-          <h2 className="text-center text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-2">Our Training Centres in Hyderabad</h2>
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Find Us</p>
+          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">Our Training Centres in Hyderabad</h2>
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Two conveniently located centres for {course.title} training</p>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {locationData.map(({ branchObj, fallbackName, fallbackAddr1, fallbackAddr2, fallbackPhone }) => {
               const branchPhone = branchObj?.phone ?? fallbackPhone
               const branchName = branchObj?.branchName ?? fallbackName
@@ -578,20 +623,20 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 10: BOTTOM CTA ──────────────────────────────────────── */}
-      <section className="bg-[#080f1e] py-16 px-4">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-10 justify-between">
+      <section className="bg-[#080f1e] py-10 md:py-16 px-4 md:px-8">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
           <div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-white">
+            <h2 className="text-3xl font-extrabold text-white">
               Ready to Build Your <span className="text-orange-400">{categoryName} Career?</span>
             </h2>
             <p className="mt-2 text-slate-400 text-sm">Book your FREE demo class today — limited seats per batch!</p>
           </div>
-          <div className="flex flex-wrap gap-2 shrink-0">
+          <div className="flex flex-wrap gap-2 justify-center lg:justify-start shrink-0">
             {['100% practical', 'Placement support', 'Certification prep', 'Lifetime LMS'].map(p => (
               <span key={p} className="rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-xs text-slate-300">{p}</span>
             ))}
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+          <div className="flex gap-3 flex-wrap justify-center shrink-0">
             <a href={wa1} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-6 py-3 text-sm font-bold text-white hover:bg-orange-600 transition-colors">
               Book Free Demo Class
             </a>

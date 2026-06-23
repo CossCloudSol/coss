@@ -154,6 +154,14 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           </p>
         )}
 
+        <div className="flex items-center justify-between text-xs mb-2">
+          <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            12 people viewing this right now
+          </span>
+          <span className="text-orange-600 font-semibold">Only 4 seats left!</span>
+        </div>
+
         <button
           type="submit"
           disabled={isSubmitting}
