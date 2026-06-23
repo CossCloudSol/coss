@@ -407,8 +407,11 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                 title: 'Small Batches',
                 body: 'Maximum 20 students per batch so every student gets personal attention and direct trainer access.',
               },
-            ] as { svg: React.JSX.Element; title: string; body: string }[]).map(card => (
-              <div key={card.title} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center flex flex-col items-center transition-all hover:-translate-y-1 hover:shadow-lg hover:border-teal-300 dark:hover:border-teal-700">
+            ] as { svg: React.JSX.Element; title: string; body: string }[]).map((card, index) => (
+              <div key={card.title} className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center flex flex-col items-center transition-all hover:-translate-y-1 hover:shadow-lg hover:border-teal-300 dark:hover:border-teal-700">
+                <span className="absolute top-3 right-3 w-7 h-7 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-[11px] font-black text-orange-500">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
                 <div className="w-14 h-14 rounded-2xl bg-teal-50 dark:bg-teal-950/40 flex items-center justify-center mb-4 flex-shrink-0">
                   {card.svg}
                 </div>
@@ -417,6 +420,57 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── TOOLS STRIP ─────────────────────────────────────────────────── */}
+      <section className="py-10 md:py-12 px-4 md:px-8 bg-[#0d1b2e] border-y border-slate-700">
+        <div className="max-w-[1200px] mx-auto">
+
+          <div className="text-center mb-8">
+            <span className="text-xs font-black tracking-[0.12em] uppercase text-orange-500">
+              Industry-standard tools
+            </span>
+            <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+            <h3 className="text-xl md:text-2xl font-extrabold text-white">
+              Tools &amp; Technologies You Will Master
+            </h3>
+            <p className="text-sm text-slate-400 mt-2">
+              Used in real production environments at top companies
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+            {[
+              { name: 'Azure DevOps', abbr: 'Az',  color: '#0078d4', bg: '#003f6b' },
+              { name: 'Docker',       abbr: '🐳',  color: '#2496ed', bg: '#0a2d4a' },
+              { name: 'Kubernetes',   abbr: 'K8s', color: '#326ce5', bg: '#0d1f4a' },
+              { name: 'Terraform',    abbr: 'TF',  color: '#7b42bc', bg: '#2d1050' },
+              { name: 'Git & GitHub', abbr: 'Git', color: '#f05032', bg: '#4a1205' },
+              { name: 'ARM Templates',abbr: 'ARM', color: '#0078d4', bg: '#003f6b' },
+              { name: 'Azure AKS',   abbr: 'AKS', color: '#0078d4', bg: '#003f6b' },
+              { name: 'Azure Monitor',abbr: 'Mon', color: '#00b4d8', bg: '#003344' },
+              { name: 'Bicep',       abbr: 'Bic', color: '#a78bfa', bg: '#2e1a5e' },
+              { name: 'Jenkins',     abbr: 'Jen', color: '#f0d6b7', bg: '#4a2e00' },
+            ].map((tool) => (
+              <div
+                key={tool.name}
+                className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: tool.bg, borderColor: tool.color + '40' }}
+              >
+                <span
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0"
+                  style={{ background: tool.color + '25', color: tool.color }}
+                >
+                  {tool.abbr}
+                </span>
+                <span className="text-sm font-semibold text-slate-200 whitespace-nowrap">
+                  {tool.name}
+                </span>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
