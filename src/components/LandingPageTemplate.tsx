@@ -181,6 +181,8 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
     },
   ]
 
+  const titleWithoutTraining = course.title.replace(/\s*Training$/i, '').replace(/\s*Course$/i, '')
+
   const salaryIcons = [
     <svg key="gear" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
     <svg key="cloud" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>,
@@ -196,16 +198,16 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
       <section className="pt-10 pb-0" style={{ background: 'linear-gradient(135deg, #012530 0%, #021e2b 60%, #011820 100%)' }}>
-        <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 lg:gap-10 items-start">
+        <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start relative z-10">
           <div>
             <div className="inline-flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 text-orange-300 text-xs font-black px-4 py-2 rounded-full mb-5 uppercase tracking-[0.1em]">
               ★ Hyderabad&apos;s #1 {categoryName} Institute
             </div>
             <h1 className="font-black text-white leading-[1.08] tracking-tight mb-4">
-              <span className="block text-4xl md:text-5xl lg:text-6xl">
-                {course.title}
+              <span className="block text-5xl md:text-6xl lg:text-7xl">
+                {titleWithoutTraining}
               </span>
-              <span className="block text-3xl md:text-4xl font-extrabold mt-1">
+              <span className="block text-3xl md:text-4xl font-extrabold mt-2">
                 Training in{' '}
                 <span className="text-orange-400">Hyderabad</span>
               </span>
@@ -239,22 +241,29 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-3 lg:grid-cols-4 gap-3">
-              {[
-                { value: '5,000+', label: 'Students Trained' },
-                { value: '92%', label: 'Placement Rate' },
-                { value: '15+', label: 'Real Projects' },
-                { value: '15 Yrs', label: 'In Hyderabad' },
-              ].map(s => (
-                <div key={s.label} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-3 py-3 text-center">
-                  <strong className="block text-2xl md:text-3xl font-black text-orange-400 leading-none">{s.value}</strong>
-                  <span className="text-xs text-slate-400 font-medium mt-1.5 block">{s.label}</span>
-                </div>
-              ))}
-            </div>
           </div>
-          <div className="lg:sticky lg:top-20 self-start">
+          <div className="w-full lg:sticky lg:top-20 self-start">
             <LandingEnrollForm courseTitle={course.title} duration={course.duration} level={course.level} phone1={phone1} />
+          </div>
+        </div>
+        <div className="max-w-[1280px] mx-auto px-6 mt-8 pb-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">5,000+</strong>
+              <span className="text-xs text-slate-400 font-medium mt-2 block">Students Trained</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">92%</strong>
+              <span className="text-xs text-slate-400 font-medium mt-2 block">Placement Rate</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">15+</strong>
+              <span className="text-xs text-slate-400 font-medium mt-2 block">Real Projects</span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">15 Yrs</strong>
+              <span className="text-xs text-slate-400 font-medium mt-2 block">In Hyderabad</span>
+            </div>
           </div>
         </div>
       </section>
