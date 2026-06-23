@@ -269,68 +269,58 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       {/* ── SECTION 2: TRUST BAR ────────────────────────────────────────── */}
-      <div className="py-10 md:py-12 px-4 md:px-8 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+      <div className="py-10 md:py-14 px-4 md:px-8 bg-white dark:bg-[#0d1b2e] border-b border-slate-100 dark:border-slate-700">
         <div className="max-w-[1200px] mx-auto">
-          <p className="text-center text-xs font-black text-slate-400 uppercase tracking-[0.12em] mb-8">
+          <p className="text-center text-[11px] font-black text-slate-400 uppercase tracking-[0.14em] mb-8">
             Our Graduates Work At
           </p>
-          <div className="flex items-center justify-center flex-wrap gap-8 md:gap-12">
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
 
             {/* Google */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
-              alt="Google" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-black text-2xl md:text-3xl tracking-tight" style={{color:'#4285F4'}}>
+              G<span style={{color:'#EA4335'}}>o</span><span style={{color:'#FBBC05'}}>o</span><span style={{color:'#4285F4'}}>g</span><span style={{color:'#34A853'}}>l</span><span style={{color:'#EA4335'}}>e</span>
+            </span>
 
             {/* Microsoft */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg"
-              alt="Microsoft" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-semibold text-xl md:text-2xl text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+              <svg viewBox="0 0 21 21" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+              </svg>
+              Microsoft
+            </span>
 
             {/* Amazon */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-              alt="Amazon" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-black text-2xl md:text-3xl" style={{color:'#FF9900', fontFamily:'Arial Black, sans-serif', letterSpacing:'-1px'}}>
+              amazon
+            </span>
 
             {/* Infosys */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/9/95/Infosys_logo.svg"
-              alt="Infosys" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-bold text-xl md:text-2xl italic" style={{color:'#007CC3'}}>
+              Infosys
+            </span>
 
             {/* TCS */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Tata_Consultancy_Services_Logo.svg"
-              alt="TCS" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-black text-xl md:text-2xl" style={{color:'#c00'}}>
+              TCS
+            </span>
 
             {/* Accenture */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg"
-              alt="Accenture" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-bold text-xl md:text-2xl" style={{color:'#a100ff'}}>
+              accenture<span style={{color:'#a100ff'}}>&gt;</span>
+            </span>
 
             {/* Wipro */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Wipro_Primary_Logo_Color_RGB.svg"
-              alt="Wipro" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-bold text-xl md:text-2xl" style={{color:'#004880'}}>
+              wipro
+            </span>
 
             {/* Cognizant */}
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Cognizant_logo.svg"
-              alt="Cognizant" height="28"
-              className="h-6 md:h-7 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-            />
+            <span className="font-bold text-xl md:text-2xl" style={{color:'#0033a0'}}>
+              Cognizant
+            </span>
 
           </div>
         </div>
