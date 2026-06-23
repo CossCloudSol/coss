@@ -192,7 +192,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
   ]
 
   return (
-    <div className="pb-16 md:pb-0">
+    <div>
       {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
