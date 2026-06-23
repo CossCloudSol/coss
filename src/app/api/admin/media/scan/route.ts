@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/db'
-import { runImageScan } from '@/lib/media-scanner'
+import { runImageScan, runQuickScan } from '@/lib/media-scanner'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60 // seconds — Vercel Hobby plan max
 
 export async function GET(req: NextRequest) {
   const probe = NextResponse.next()
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await runImageScan()
+    const result = await runQuickScan()
     return NextResponse.json(result)
   } catch (err) {
     console.error('[media/scan POST]', err)

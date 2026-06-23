@@ -518,7 +518,7 @@ export default function MediaManagerPage() {
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-100">Image URL scanner</p>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Crawls all public pages and checks every image src for broken links. Runs automatically every night at midnight IST.
+                  Quick scan checks static + landing pages (~44 pages). Full scan runs automatically every night at midnight IST.
                 </p>
               </div>
               <button
