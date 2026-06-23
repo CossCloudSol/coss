@@ -88,6 +88,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
   const h1 = `${course.title} in Hyderabad`
   const categoryName = course.courseCategory?.name ?? course.category
+  const titleWithoutTraining = course.title.replace(/\s*Training$/i, '').replace(/\s*Course$/i, '')
   const desc = course.excerpt || course.description
   const tags = course.tools.slice(0, 5)
   const salaryRoles = getSalaryRoles(categoryName)
@@ -99,13 +100,13 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
   const faqItems = [
     { q: `Who can join the ${course.title} course?`, a: 'This course is open to graduates, working professionals, and career changers. Basic computer knowledge is sufficient for most batches.' },
-    { q: `Do you provide placement support after ${course.title} training?`, a: 'Yes. Coss Cloud Solutions provides 100% placement assistance including resume building, LinkedIn optimization, mock interviews, and job referrals to our partner companies in Hyderabad.' },
+    { q: `Do you provide placement support after ${titleWithoutTraining} training?`, a: 'Yes. Coss Cloud Solutions provides 100% placement assistance including resume building, LinkedIn optimization, mock interviews, and job referrals to our partner companies in Hyderabad.' },
     { q: `Is the ${course.title} course available online and offline in Hyderabad?`, a: 'Yes. We offer both classroom training at our Dilsukhnagar and Ameerpet centres, and live online training. Students can switch between modes as needed.' },
     { q: `What is the duration of the ${course.title} course?`, a: `The course duration is typically ${course.duration || '3 months'}, with weekday and weekend batch options available.` },
-    { q: `Will I get a certificate after completing ${course.title} training?`, a: 'Yes. You will receive a Coss Cloud Solutions course completion certificate. We also prepare you for relevant industry certification exams.' },
+    { q: `Will I get a certificate after completing ${titleWithoutTraining} training?`, a: 'Yes. You will receive a Coss Cloud Solutions course completion certificate. We also prepare you for relevant industry certification exams.' },
     { q: `What is the fee for the ${course.title} course?`, a: `We offer flexible payment options including EMI. Contact our counsellors at ${phone1} for the latest fee structure and available scholarships.` },
     { q: `Is there any prior experience needed for ${course.title}?`, a: 'No prior experience is required for most batches. Our curriculum is designed to take you from the fundamentals to advanced concepts with hands-on projects.' },
-    { q: `How many students are placed after ${course.title} training at Coss?`, a: 'We provide 100% placement support to all our graduates. Our students have secured employment at TCS, Infosys, Wipro, Accenture, HCL, and Cognizant.' },
+    { q: `How many students are placed after ${titleWithoutTraining} training at Coss?`, a: 'We provide 100% placement support to all our graduates. Our students have secured employment at TCS, Infosys, Wipro, Accenture, HCL, and Cognizant.' },
     { q: `Do you offer weekend batches for ${course.title} in Hyderabad?`, a: 'Yes. Weekend batches (Sat–Sun) are available at both Dilsukhnagar and Ameerpet, designed specifically for working professionals.' },
     { q: `Which companies hire ${course.title} professionals in Hyderabad?`, a: 'Top hiring companies include TCS, Infosys, Wipro, Accenture, Capgemini, Tech Mahindra, HCL, Amazon, Microsoft, and numerous MNCs and startups.' },
   ]
@@ -113,7 +114,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
   const courseSchema = {
     '@context': 'https://schema.org',
     '@type': 'Course',
-    name: `${course.title} Training in Hyderabad`,
+    name: `${titleWithoutTraining} Training in Hyderabad`,
     description: desc,
     provider: { '@type': 'Organization', name: 'Coss Cloud Solutions', sameAs: 'https://www.cosscloudsol.com' },
     hasCourseInstance: [
@@ -160,7 +161,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
   const testimonials = [
     { quote: `I joined Coss's ${course.title} batch in Dilsukhnagar after 4 years in BPO. Got placed at TCS within 2 months of completing the course. The trainers are real industry professionals, not just textbook teachers.`, name: 'Rohit K.', role: 'Engineer, TCS', initials: 'RK', batch: 'Dilsukhnagar', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Tata_Consultancy_Services_Logo.svg', companyName: 'TCS' },
-    { quote: `The ${course.title} training at Coss Ameerpet was exactly what I needed. Got 3 offers within 6 weeks of the placement drives. The practical projects made all the difference in interviews.`, name: 'Priya M.', role: 'Cloud Engineer, Accenture', initials: 'PM', batch: 'Ameerpet', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg', companyName: 'Accenture' },
+    { quote: `The ${titleWithoutTraining} training at Coss Ameerpet was exactly what I needed. Got 3 offers within 6 weeks of the placement drives. The practical projects made all the difference in interviews.`, name: 'Priya M.', role: 'Cloud Engineer, Accenture', initials: 'PM', batch: 'Ameerpet', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg', companyName: 'Accenture' },
     { quote: `I was skeptical about the placement promise but Coss delivered. 3 months after completing ${course.title}, I'm earning 2× my previous salary at Wipro. Best investment I've made in my career.`, name: 'Sai T.', role: 'Senior Engineer, Wipro', initials: 'ST', batch: 'Dilsukhnagar', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Wipro_Primary_Logo_Color_RGB.svg', companyName: 'Wipro' },
   ]
 
@@ -180,8 +181,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       fallbackPhone: phone2,
     },
   ]
-
-  const titleWithoutTraining = course.title.replace(/\s*Training$/i, '').replace(/\s*Course$/i, '')
 
   const salaryIcons = [
     <svg key="gear" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
@@ -338,7 +337,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               {categoryName} Professionals Are in High Demand
             </h2>
             <p className="mt-4 text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-              India&apos;s top companies are aggressively hiring certified {course.title} professionals.
+              India&apos;s top companies are aggressively hiring certified {titleWithoutTraining} professionals.
               Skilled talent with hands-on experience commands salaries well above the industry average —
               making this one of the most rewarding career investments you can make in 2025.
             </p>
@@ -372,7 +371,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Why Choose Us</p>
           <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
-            Why Choose Coss Cloud Solutions for {course.title}?
+            Why Choose Coss Cloud Solutions for {titleWithoutTraining}?
           </h2>
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Hyderabad&apos;s most trusted IT training institute since 2010</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -700,7 +699,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Find Us</p>
           <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-white mb-2">Our Training Centres in Hyderabad</h2>
-          <p className="text-sm text-slate-400 mt-2 text-center mb-10">Two conveniently located centres for {course.title} training</p>
+          <p className="text-sm text-slate-400 mt-2 text-center mb-10">Two conveniently located centres for {titleWithoutTraining} training</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {locationData.map(({ branchObj, fallbackName, fallbackAddr1, fallbackAddr2, fallbackPhone }) => {
               const branchPhone = branchObj?.phone ?? fallbackPhone
@@ -754,7 +753,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
             })}
           </div>
           <p className="text-sm text-slate-500 text-center max-w-3xl mx-auto mt-8 leading-relaxed">
-            Coss Cloud Solutions offers {course.title} training in Hyderabad across multiple locations including
+            Coss Cloud Solutions offers {titleWithoutTraining} training in Hyderabad across multiple locations including
             Dilsukhnagar, Ameerpet, and nearby areas including {serviceAreas.slice(0, 4).join(', ')}.
             Our certified trainers deliver both classroom and online training with 100% placement support.
           </p>
