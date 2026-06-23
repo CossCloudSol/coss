@@ -375,26 +375,28 @@ export default function WhatsAppWidget(): JSX.Element | null {
         </div>
       )}
 
-      {/* ── Floating Button ─────────────────────────── */}
-      <button
-        ref={floatBtnRef}
-        type="button"
-        className="wa-btn"
-        style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
-        onClick={() => setPanelOpen((prev) => !prev)}
-        aria-label="Chat with us on WhatsApp"
-        aria-expanded={panelOpen}
-        aria-haspopup="dialog"
-      >
-        {panelOpen ? (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ color: '#fff' }}>
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        ) : (
-          <WaIcon size={28} />
-        )}
-      </button>
+      {/* ── Floating Button — hidden on mobile, sticky bar handles it ── */}
+      <div className="hidden md:flex">
+        <button
+          ref={floatBtnRef}
+          type="button"
+          className="wa-btn"
+          style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
+          onClick={() => setPanelOpen((prev) => !prev)}
+          aria-label="Chat with us on WhatsApp"
+          aria-expanded={panelOpen}
+          aria-haspopup="dialog"
+        >
+          {panelOpen ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ color: '#fff' }}>
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          ) : (
+            <WaIcon size={28} />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
