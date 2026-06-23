@@ -26,6 +26,7 @@ import AnnouncementBar from '@/components/AnnouncementBar';
 import TopInfoBar from '@/components/TopInfoBar';
 import PublicChrome from '@/components/PublicChrome';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
+import MobileStickyBar from '@/components/MobileStickyBar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { prisma } from '@/lib/db';
 import {
@@ -196,7 +197,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
         ))}
       </head>
-      <body>
+      <body className="pb-16 md:pb-0">
         <ThemeProvider>
         <PublicChrome>
         {/* Announcement bar + teal info bar — scroll away naturally */}
@@ -333,6 +334,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Floating WhatsApp lead-capture widget — public routes only.
             PublicChrome short-circuits to null on /admin/*. */}
         <WhatsAppWidget />
+        <MobileStickyBar />
         </PublicChrome>
         </ThemeProvider>
       </body>
