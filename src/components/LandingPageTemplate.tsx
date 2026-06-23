@@ -105,7 +105,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
     { q: `Will I get a certificate after completing ${course.title} training?`, a: 'Yes. You will receive a Coss Cloud Solutions course completion certificate. We also prepare you for relevant industry certification exams.' },
     { q: `What is the fee for the ${course.title} course?`, a: `We offer flexible payment options including EMI. Contact our counsellors at ${phone1} for the latest fee structure and available scholarships.` },
     { q: `Is there any prior experience needed for ${course.title}?`, a: 'No prior experience is required for most batches. Our curriculum is designed to take you from the fundamentals to advanced concepts with hands-on projects.' },
-    { q: `How many students are placed after ${course.title} training at Coss?`, a: 'Over 92% of our graduates secure employment within 3 months of course completion. We have placed students at TCS, Infosys, Wipro, Accenture, HCL, and Cognizant.' },
+    { q: `How many students are placed after ${course.title} training at Coss?`, a: 'We provide 100% placement support to all our graduates. Our students have secured employment at TCS, Infosys, Wipro, Accenture, HCL, and Cognizant.' },
     { q: `Do you offer weekend batches for ${course.title} in Hyderabad?`, a: 'Yes. Weekend batches (Sat–Sun) are available at both Dilsukhnagar and Ameerpet, designed specifically for working professionals.' },
     { q: `Which companies hire ${course.title} professionals in Hyderabad?`, a: 'Top hiring companies include TCS, Infosys, Wipro, Accenture, Capgemini, Tech Mahindra, HCL, Amazon, Microsoft, and numerous MNCs and startups.' },
   ]
@@ -253,8 +253,8 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               <span className="text-xs text-slate-400 font-medium mt-2 block">Students Trained</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
-              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">92%</strong>
-              <span className="text-xs text-slate-400 font-medium mt-2 block">Placement Rate</span>
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">100%</strong>
+              <span className="text-xs text-slate-400 font-medium mt-2 block">Placement Support</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
               <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">15+</strong>
