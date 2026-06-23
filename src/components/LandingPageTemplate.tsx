@@ -1,3 +1,5 @@
+'use client'
+
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
