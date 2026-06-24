@@ -164,10 +164,8 @@ export async function runImageScan() {
   return scanResult
 }
 
-// Quick scan — static + landing pages only (for manual admin trigger)
-// Full scan runs via nightly cron
 export async function runQuickScan() {
-  const staticPages = [
+  const pages = [
     '/',
     '/about',
     '/contact',
@@ -178,44 +176,21 @@ export async function runQuickScan() {
     '/privacy-policy',
   ]
 
-  const landingSlugs = [
-    'python-training-hyderabad','data-science-training-hyderabad',
-    'machine-learning-training-hyderabad','ai-training-hyderabad',
-    'power-bi-training-hyderabad','tableau-training-hyderabad',
-    'aws-training-hyderabad','azure-training-hyderabad',
-    'gcp-training-hyderabad','devops-training-hyderabad',
-    'docker-training-hyderabad','kubernetes-training-hyderabad',
-    'java-training-hyderabad','react-training-hyderabad',
-    'angular-training-hyderabad','full-stack-training-hyderabad',
-    'node-js-training-hyderabad','sql-training-hyderabad',
-    'selenium-training-hyderabad','manual-testing-training-hyderabad',
-    'etl-training-hyderabad','pyspark-training-hyderabad',
-    'hadoop-training-hyderabad','sap-fico-training-hyderabad',
-    'salesforce-training-hyderabad','servicenow-training-hyderabad',
-    'workday-training-hyderabad','ui-ux-design-training-hyderabad',
-    'graphic-design-training-hyderabad','ethical-hacking-training-hyderabad',
-    'cybersecurity-training-hyderabad','hr-training-hyderabad',
-    'ms-office-training-hyderabad','soft-skills-training-hyderabad',
-    'spoken-english-training-hyderabad','tally-erp-training-hyderabad',
-  ]
-
-  const pages = [...staticPages, ...landingSlugs.map(s => `/${s}`)]
   const allItems: ScanItem[] = []
 
-  for (let i = 0; i < pages.length; i += 8) {
-    const batch = pages.slice(i, i + 8)
-    await Promise.all(
-      batch.map(async (page) => {
-        const fullUrl = `${SITE_URL}${page}`
-        const imageUrls = await extractImageUrls(fullUrl)
-        for (let j = 0; j < imageUrls.length; j += 10) {
-          const imgBatch = imageUrls.slice(j, j + 10)
-          const results = await Promise.all(imgBatch.map(url => checkImageUrl(url, page)))
-          allItems.push(...results)
-        }
-      })
-    )
-  }
+  await Promise.all(
+    pages.map(async (page) => {
+      const fullUrl = `${SITE_URL}${page}`
+      const imageUrls = await extractImageUrls(fullUrl)
+      for (let j = 0; j < imageUrls.length; j += 15) {
+        const batch = imageUrls.slice(j, j + 15)
+        const results = await Promise.all(
+          batch.map(url => checkImageUrl(url, page))
+        )
+        allItems.push(...results)
+      }
+    })
+  )
 
   const broken   = allItems.filter(i => i.status === 'broken')
   const slow     = allItems.filter(i => i.status === 'slow')
@@ -233,7 +208,6 @@ export async function runQuickScan() {
     },
   })
 
-  // Cleanup: keep only last 30 scans
   const old = await prisma.mediaScanResult.findMany({
     orderBy: { scannedAt: 'desc' },
     skip: 30,
