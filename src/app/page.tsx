@@ -156,40 +156,15 @@ const BLOG_GRADIENTS = [
   'linear-gradient(135deg,#1a4a2a,#2e7d32)',
 ];
 
-/**
- * 22 hiring partners surfaced in the Explore Opportunities section.
- * `logoUrl` is optional — entries without one render the company name as
- * styled text (the cell still keeps its slot in the grid).
- */
-interface HiringCompany {
-  name: string;
-  logoUrl?: string;
+async function getHiringPartners() {
+  try {
+    return await prisma.hiringPartner.findMany({
+      where: { isVisible: true },
+      orderBy: { sortOrder: 'asc' },
+      select: { id: true, name: true, logoUrl: true, altText: true },
+    });
+  } catch { return []; }
 }
-
-const HIRING_COMPANIES: ReadonlyArray<HiringCompany> = [
-  { name: 'Google', logoUrl: siteImages.companies.google },
-  { name: 'CA' },
-  { name: 'ADP', logoUrl: siteImages.companies.adp },
-  { name: 'Airtel', logoUrl: siteImages.companies.airtel },
-  { name: 'NetEnrich' },
-  { name: 'Innominds' },
-  { name: 'IBM', logoUrl: siteImages.companies.ibm },
-  { name: 'HSBC', logoUrl: siteImages.companies.hsbc },
-  { name: 'HCL', logoUrl: siteImages.companies.hcl },
-  { name: 'Genpact', logoUrl: siteImages.companies.genpact },
-  { name: 'Ericsson', logoUrl: siteImages.companies.ericsson },
-  { name: 'Bank of America', logoUrl: siteImages.companies.bankofamerica },
-  { name: 'AT&T' },
-  { name: 'Oracle', logoUrl: siteImages.companies.oracle },
-  { name: 'Pramati' },
-  { name: 'Qualcomm' },
-  { name: 'Sonata Software', logoUrl: siteImages.companies.sonata },
-  { name: 'Synopsys', logoUrl: siteImages.companies.synopsys },
-  { name: 'TCS', logoUrl: siteImages.companies.tcs },
-  { name: 'Tech Mahindra', logoUrl: siteImages.companies.techM },
-  { name: 'Wells Fargo', logoUrl: siteImages.companies.wellsfargo },
-  { name: 'Wipro', logoUrl: siteImages.companies.wipro },
-];
 
 export const dynamic = 'force-dynamic';
 export async function generateMetadata(): Promise<Metadata> {
@@ -267,12 +242,13 @@ async function getBlogPosts() {
 }
 
 export default async function HomePage() {
-  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts] = await Promise.all([
+  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners] = await Promise.all([
     getCategories(),
     getFeaturedJobs(),
     getUpcomingBatches(),
     getHomepageSettings(),
     getBlogPosts(),
+    getHiringPartners(),
   ]);
 
   const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
@@ -1008,17 +984,17 @@ export default async function HomePage() {
 
           {/* ── Logo grid — white cards on dark bg so original logo colours show ── */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {HIRING_COMPANIES.map((company) => (
+            {hiringPartners.map((partner) => (
               <div
-                key={company.name}
-                title={company.name}
+                key={partner.id}
+                title={partner.name}
                 className="flex items-center justify-center h-[76px] px-4 rounded-xl bg-white transition-all duration-200 hover:-translate-y-1 cursor-default"
                 style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.18)' }}
               >
-                {company.logoUrl !== undefined ? (
+                {partner.logoUrl ? (
                   <WpImg
-                    src={company.logoUrl}
-                    alt={company.name}
+                    src={partner.logoUrl}
+                    alt={partner.altText || partner.name}
                     style={{
                       maxHeight: '40px',
                       width: 'auto',
@@ -1028,7 +1004,7 @@ export default async function HomePage() {
                   />
                 ) : (
                   <span className="text-sm font-bold text-center text-gray-700">
-                    {company.name}
+                    {partner.name}
                   </span>
                 )}
               </div>

@@ -374,3 +374,15 @@ model Testimonial {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model HiringPartner {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String   @default("")
+  altText   String   @default("")
+  website   String   @default("")
+  isVisible Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
