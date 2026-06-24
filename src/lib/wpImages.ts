@@ -2,7 +2,7 @@
 // These are served directly from your WordPress media library.
 // Next.js fetches them as <img src> at runtime — browsers can load them fine.
 
-const WP = 'https://nextjs.cosscloudsol.com/wp-content/uploads';
+const WP = 'https://res.cloudinary.com/dfditihuw/image/upload/cosscloudsol/site-images/nextjs-cosscloudsol-com/wp-content/uploads';
 
 export interface SubCourse {
   name: string;
@@ -34,8 +34,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'SQL / MySQL / PostgreSQL',image: `${WP}/2025/08/SQL-MySQL-PostgreSQL-1-1.jpg`,         href: '/sql-mysql-postgresql-training-in-hyderabad/',               alt: 'SQL Training Hyderabad' },
     ],
     companyLogos: [
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/ibm.jpg`, `${WP}/2021/12/oracle.jpg`,
-      `${WP}/2021/12/hcl.jpg`,   `${WP}/2021/12/wipro.jpg`, `${WP}/2021/12/tcs.jpg`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`, `${WP}/2021/12/oracle-jpg.webp`,
+      `${WP}/2021/12/hcl-jpg.webp`,   `${WP}/2021/12/wipro-jpg.webp`, `${WP}/2021/12/tcs-jpg.webp`,
     ],
     extraImages: [`${WP}/2026/02/Data-Engineering-1.png`],
   },
@@ -50,8 +50,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'AWS DevOps',                    image: `${WP}/2024/11/AWS-DevOps-Training-in-Hyderabad.jpg`,          href: '/aws-devops-in-hyderabad/',                     alt: 'AWS DevOps Training' },
     ],
     companyLogos: [
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/ibm.jpg`,   `${WP}/2021/12/oracle.jpg`,
-      `${WP}/2021/12/hcl.jpg`,   `${WP}/2021/12/wipro.jpg`, `${WP}/2021/12/tcs.jpg`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`,   `${WP}/2021/12/oracle-jpg.webp`,
+      `${WP}/2021/12/hcl-jpg.webp`,   `${WP}/2021/12/wipro-jpg.webp`, `${WP}/2021/12/tcs-jpg.webp`,
     ],
     extraImages: [
       `${WP}/2025/01/Cloud-Computing-Institute.webp`,
@@ -71,8 +71,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'DevOps Training',         image: `${WP}/2024/11/DevOps-Training-Image-Banner.jpg`,       href: '/devops-training-in-hyderabad/',                          alt: 'DevOps Training Hyderabad' },
     ],
     companyLogos: [
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/ibm.jpg`, `${WP}/2021/12/hcl.jpg`,
-      `${WP}/2021/12/wipro.jpg`,  `${WP}/2021/12/tcs.jpg`, `${WP}/2021/12/tech_mahindra.jpg`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`, `${WP}/2021/12/hcl-jpg.webp`,
+      `${WP}/2021/12/wipro-jpg.webp`,  `${WP}/2021/12/tcs-jpg.webp`, `${WP}/2021/12/tech_mahindra-jpg.webp`,
     ],
     extraImages: [
       `${WP}/2025/01/Devops-Institute-scaled.jpg`,
@@ -91,8 +91,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'Programming',         image: `${WP}/2026/02/Programming.png`,                      href: '/full-stack-developer-training-in-hyderabad/',                      alt: 'Programming Courses' },
     ],
     companyLogos: [
-      `${WP}/2021/12/wipro.jpg`, `${WP}/2021/12/tcs.jpg`,  `${WP}/2021/12/ibm.jpg`,
-      `${WP}/2021/12/hcl.jpg`,   `${WP}/2021/12/google.jpg`, `${WP}/2021/12/oracle.jpg`,
+      `${WP}/2021/12/wipro-jpg.webp`, `${WP}/2021/12/tcs-jpg.webp`,  `${WP}/2021/12/ibm-jpg.webp`,
+      `${WP}/2021/12/hcl-jpg.webp`,   `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/oracle-jpg.webp`,
     ],
     extraImages: [`${WP}/2026/02/Live-Projects.png`],
   },
@@ -106,8 +106,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'Data Engineering',    image: `${WP}/2026/02/Data-Engineering-2.png`,                        href: '/data-engineering-training-institute-in-hyderabad/',                  alt: 'Data Engineering Training' },
     ],
     companyLogos: [
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/oracle.jpg`, `${WP}/2021/12/ibm.jpg`,
-      `${WP}/2021/12/wipro.jpg`,  `${WP}/2021/12/tcs.jpg`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/oracle-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`,
+      `${WP}/2021/12/wipro-jpg.webp`,  `${WP}/2021/12/tcs-jpg.webp`,
     ],
     extraImages: [`${WP}/2026/02/Saas.png`],
   },
@@ -120,8 +120,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'CCNA Networking', image: `${WP}/2026/02/CCNA-Networking.jpg`,                                          href: '/ccna-networking-training-in-hyderabad/',             alt: 'CCNA Networking Training' },
     ],
     companyLogos: [
-      `${WP}/2021/12/ibm.jpg`, `${WP}/2021/12/hcl.jpg`, `${WP}/2021/12/wipro.jpg`,
-      `${WP}/2021/12/tcs.jpg`, `${WP}/2021/12/google.jpg`,
+      `${WP}/2021/12/ibm-jpg.webp`, `${WP}/2021/12/hcl-jpg.webp`, `${WP}/2021/12/wipro-jpg.webp`,
+      `${WP}/2021/12/tcs-jpg.webp`, `${WP}/2021/12/google-jpg.webp`,
     ],
     extraImages: [`${WP}/2026/02/Cyber-Security-Networking.png`],
   },
@@ -136,8 +136,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'ERP & CRM Tools',       image: `${WP}/2026/02/ERP-CRM.png`,                                    href: '/erp-crm-training-institute-in-hyderabad/',                     alt: 'ERP CRM Training' },
     ],
     companyLogos: [
-      `${WP}/2021/12/oracle.jpg`, `${WP}/2021/12/google.jpg`, `${WP}/2021/12/ibm.jpg`,
-      `${WP}/2021/12/wipro.jpg`,  `${WP}/2021/12/tcs.jpg`,
+      `${WP}/2021/12/oracle-jpg.webp`, `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`,
+      `${WP}/2021/12/wipro-jpg.webp`,  `${WP}/2021/12/tcs-jpg.webp`,
     ],
     extraImages: [`${WP}/2026/02/Finance.png`, `${WP}/2026/02/Government.png`],
   },
@@ -151,8 +151,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'Red Hat Linux',        image: `${WP}/2025/08/BECOME-A-CERTIFIED-REDLINUX-ON-RED-HAT-ENTERPRISE-LINUX-1-800x800.jpg`, href: '/redhat-linux-certification-course-in-hyderabad/', alt: 'Red Hat Linux' },
     ],
     companyLogos: [
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/ibm.jpg`, `${WP}/2021/12/hcl.jpg`,
-      `${WP}/2021/12/wipro.jpg`,  `${WP}/2021/12/tcs.jpg`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`, `${WP}/2021/12/hcl-jpg.webp`,
+      `${WP}/2021/12/wipro-jpg.webp`,  `${WP}/2021/12/tcs-jpg.webp`,
     ],
     extraImages: [`${WP}/2024/03/Linux12.jpg`],
   },
@@ -166,8 +166,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'SEO Training',     image: `${WP}/2025/04/Best-Digital-Marketing-Institute-in-Hyderabad.png`,          href: '/digital-marketing-training-institute-in-dilsukhnagar-hyderabad/', alt: 'SEO Training' },
     ],
     companyLogos: [
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/ibm.jpg`, `${WP}/2021/12/hcl.jpg`,
-      `${WP}/2021/12/wipro.jpg`,  `${WP}/2021/12/tcs.jpg`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`, `${WP}/2021/12/hcl-jpg.webp`,
+      `${WP}/2021/12/wipro-jpg.webp`,  `${WP}/2021/12/tcs-jpg.webp`,
     ],
     extraImages: [`${WP}/2025/07/Digital-Marketing-Training-in-Dilsukhnagar.png`],
   },
@@ -182,8 +182,8 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'Tally ERP',            image: `${WP}/2025/04/Best-Tally-Institute-in-Dilsukhnagar-Hyderabad.jpg`,                  href: '/tally-classes-in-hyderabad/',                                  alt: 'Tally Training' },
     ],
     companyLogos: [
-      `${WP}/2021/12/wipro.jpg`,  `${WP}/2021/12/tcs.jpg`,    `${WP}/2021/12/hcl.jpg`,
-      `${WP}/2021/12/google.jpg`, `${WP}/2021/12/oracle.jpg`,
+      `${WP}/2021/12/wipro-jpg.webp`,  `${WP}/2021/12/tcs-jpg.webp`,    `${WP}/2021/12/hcl-jpg.webp`,
+      `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/oracle-jpg.webp`,
     ],
     extraImages: [`${WP}/2024/12/MS-Office-Course-Near-Me-in-Hyderabad-Coss-Cloud-Solutions.jpg`],
   },
@@ -214,22 +214,22 @@ export const siteImages = {
   liveProjects:     `${WP}/2026/02/Live-Projects.png`,
   // Hiring company logos (real ones from WP)
   companies: {
-    google:   `${WP}/2021/12/google.jpg`,
-    ibm:      `${WP}/2021/12/ibm.jpg`,
-    oracle:   `${WP}/2021/12/oracle.jpg`,
-    wipro:    `${WP}/2021/12/wipro.jpg`,
-    tcs:      `${WP}/2021/12/tcs.jpg`,
-    hcl:      `${WP}/2021/12/hcl.jpg`,
-    techM:    `${WP}/2021/12/tech_mahindra.jpg`,
-    airtel:   `${WP}/2021/12/airtel.jpg`,
-    genpact:  `${WP}/2021/12/genpact.jpg`,
-    synopsys: `${WP}/2021/12/synopsys.jpg`,
-    sonata:   `${WP}/2021/12/sonata.jpg`,
-    adp:      `${WP}/2021/12/adp.jpg`,
-    jpmorgan: `${WP}/2021/12/jpmorgan-chase-co-logo-200x80.jpg`,
-    wellsfargo:`${WP}/2021/12/wells_fargo.jpg`,
-    ericsson: `${WP}/2021/12/ericsson.jpg`,
-    hsbc:     `${WP}/2021/12/hsbc.jpg`,
-    bankofamerica:`${WP}/2021/12/bank_of_america.jpg`,
+    google:   `${WP}/2021/12/google-jpg.webp`,
+    ibm:      `${WP}/2021/12/ibm-jpg.webp`,
+    oracle:   `${WP}/2021/12/oracle-jpg.webp`,
+    wipro:    `${WP}/2021/12/wipro-jpg.webp`,
+    tcs:      `${WP}/2021/12/tcs-jpg.webp`,
+    hcl:      `${WP}/2021/12/hcl-jpg.webp`,
+    techM:    `${WP}/2021/12/tech_mahindra-jpg.webp`,
+    airtel:   `${WP}/2021/12/airtel-jpg.webp`,
+    genpact:  `${WP}/2021/12/genpact-jpg.webp`,
+    synopsys: `${WP}/2021/12/synopsys-jpg.webp`,
+    sonata:   `${WP}/2021/12/sonata-jpg.webp`,
+    adp:      `${WP}/2021/12/adp-jpg.webp`,
+    jpmorgan: `${WP}/2021/12/jpmorgan-chase-co-logo-200x80-jpg.webp`,
+    wellsfargo:`${WP}/2021/12/wells_fargo-jpg.webp`,
+    ericsson: `${WP}/2021/12/ericsson-jpg.webp`,
+    hsbc:     `${WP}/2021/12/hsbc-jpg.webp`,
+    bankofamerica:`${WP}/2021/12/bank_of_america-jpg.webp`,
   },
 };

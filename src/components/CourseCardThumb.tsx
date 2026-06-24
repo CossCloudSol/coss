@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 import { generateCourseThumbnailDataUri } from '@/lib/generate-thumbnail'
 
 const DEAD_DOMAINS = [
-  'nextjs.cosscloudsol.com',
   'localhost',
 ]
 
