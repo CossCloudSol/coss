@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import CountUp from '@/components/CountUp';
+import { prisma } from '@/lib/db';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -36,8 +37,6 @@ const placedRoles = [
   { role: 'Power BI Developer', company: 'KPMG / EY / PwC', package: '₹5–12 LPA' },
 ];
 
-const companies = ['Amazon', 'TCS', 'Infosys', 'Wipro', 'HCL', 'Tech Mahindra', 'Accenture', 'IBM', 'Capgemini', 'Cognizant', 'Deloitte', 'Microsoft', 'Google', 'Oracle', 'SAP', 'Salesforce', 'KPMG', 'EY', 'PwC', 'Freshworks'];
-
 const testimonials = [
   { name: 'Rahul K.', role: 'Cloud Engineer at Amazon', review: 'Coss Cloud Solutions completely transformed my career. Their AWS training and placement support helped me land a role at Amazon with a 12 LPA package!', initials: 'RK' },
   { name: 'Priya M.', role: 'DevOps Engineer at TCS', review: 'The mock interviews and resume building sessions were incredibly helpful. I cleared 5 rounds at TCS thanks to their preparation guidance.', initials: 'PM' },
@@ -45,7 +44,12 @@ const testimonials = [
   { name: 'Divya L.', role: 'Full Stack Developer at Wipro', review: 'The Java Full Stack training gave me both technical skills and interview confidence. Got placed within 2 weeks of completing the course!', initials: 'DL' },
 ];
 
-export default function PlacementsPage() {
+export default async function PlacementsPage() {
+  const hiringPartners = await prisma.hiringPartner.findMany({
+    where: { isVisible: true },
+    orderBy: { sortOrder: 'asc' },
+    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+  });
   return (
     <>
       <ResponsivePageStyles />
@@ -173,14 +177,17 @@ export default function PlacementsPage() {
           </div>
           {/* Company logos strip — same white-card treatment as homepage */}
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {companies.map(c => (
+            {hiringPartners.map(p => (
               <div
-                key={c}
-                title={c}
+                key={p.id}
+                title={p.name}
                 className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 flex items-center justify-center h-20 grayscale hover:grayscale-0 transition-all duration-300 text-gray-400 dark:text-gray-400 font-medium text-sm text-center"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                {c}
+                {p.logoUrl
+                  ? <img src={p.logoUrl} alt={p.altText || p.name} className="max-h-8 object-contain" />
+                  : p.name
+                }
               </div>
             ))}
           </div>

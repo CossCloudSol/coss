@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CorporateHeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import CorporateForm from '@/components/CorporateForm';
+import { prisma } from '@/lib/db';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -39,9 +40,12 @@ const process = [
   { step: '06', title: 'Certification', desc: 'Employees receive recognized certificates upon successful completion.' },
 ];
 
-const companies = ['TCS', 'Infosys', 'Wipro', 'HCL', 'Tech Mahindra', 'Accenture', 'IBM', 'Capgemini', 'Cognizant', 'Deloitte', 'Amazon', 'Microsoft'];
-
-export default function CorporateTrainingPage() {
+export default async function CorporateTrainingPage() {
+  const hiringPartners = await prisma.hiringPartner.findMany({
+    where: { isVisible: true },
+    orderBy: { sortOrder: 'asc' },
+    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+  });
   return (
     <>
       <ResponsivePageStyles />
@@ -155,8 +159,13 @@ export default function CorporateTrainingPage() {
           <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '24px', color: '#fff', marginBottom: '8px' }}>Our Alumni Work At</h3>
           <p style={{ color: '#aaa', fontSize: '14px', marginBottom: '28px' }}>Companies That Hire Our Trained Professionals</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
-            {companies.map(c => (
-              <span key={c} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: '#ddd', fontSize: '13px', padding: '10px 22px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{c}</span>
+            {hiringPartners.map(p => (
+              <div key={p.id} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '8px', padding: '10px 22px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {p.logoUrl
+                  ? <img src={p.logoUrl} alt={p.altText || p.name} style={{ maxHeight: '28px', objectFit: 'contain', filter: 'grayscale(1) brightness(2)', opacity: 0.8 }} />
+                  : <span style={{ color: '#ddd', fontSize: '13px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{p.name}</span>
+                }
+              </div>
             ))}
           </div>
         </div>

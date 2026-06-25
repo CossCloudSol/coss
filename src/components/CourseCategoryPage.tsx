@@ -7,6 +7,7 @@ import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
 import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
+import { prisma } from '@/lib/db';
 
 const COMPANY_ALT_MAP: Record<string, string> = {
   google: 'Google',
@@ -91,8 +92,14 @@ const ACCENT_MAP: Record<string, CourseCardProps['accentVariant']> = {
   'quantum': 'quantum',
 }
 
-export default function CourseCategoryPage({ data, breadcrumbSlug, dbCourses }: { data: CourseCategoryData; breadcrumbSlug: string; dbCourses?: CourseCardProps[] }) {
+export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCourses }: { data: CourseCategoryData; breadcrumbSlug: string; dbCourses?: CourseCardProps[] }) {
   const imgs = wpImages[breadcrumbSlug];
+
+  const hiringPartners = await prisma.hiringPartner.findMany({
+    where: { isVisible: true },
+    orderBy: { sortOrder: 'asc' },
+    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+  });
 
   return (
     <>
@@ -221,15 +228,25 @@ export default function CourseCategoryPage({ data, breadcrumbSlug, dbCourses }: 
             </div>
 
             {/* Real company logos */}
-            {imgs?.companyLogos?.length > 0 && (
+            {(imgs?.companyLogos?.length > 0 || hiringPartners.length > 0) && (
               <div style={{ marginBottom: '36px' }}>
                 <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>🏢 Companies That Hire Our Graduates</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-                  {imgs.companyLogos.map((logo, i) => (
-                    <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 16px', boxShadow: 'var(--shadow-sm)', minWidth: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <WpImg src={logo} alt={getCompanyAlt(logo)} style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain' }} />
-                    </div>
-                  ))}
+                  {imgs?.companyLogos?.length > 0
+                    ? imgs.companyLogos.map((logo, i) => (
+                        <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 16px', boxShadow: 'var(--shadow-sm)', minWidth: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <WpImg src={logo} alt={getCompanyAlt(logo)} style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain' }} />
+                        </div>
+                      ))
+                    : hiringPartners.map(p => (
+                        <div key={p.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 16px', boxShadow: 'var(--shadow-sm)', minWidth: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {p.logoUrl
+                            ? <img src={p.logoUrl} alt={p.altText || p.name} style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain', filter: 'grayscale(1)' }} />
+                            : <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '13px', color: 'var(--text-muted)', fontWeight: 500 }}>{p.name}</span>
+                          }
+                        </div>
+                      ))
+                  }
                 </div>
               </div>
             )}

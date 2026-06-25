@@ -1,8 +1,17 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
+
+interface HiringPartner {
+  id: string
+  name: string
+  logoUrl: string
+  altText: string
+  website: string
+}
 
 interface Props {
   course: LandingPageCourse
@@ -69,6 +78,15 @@ const WaIcon = ({ cls }: { cls?: string }) => (
 )
 
 export default function LandingPageTemplate({ course, branches, pageSlug: _pageSlug }: Props) {
+  const [hiringPartners, setHiringPartners] = useState<HiringPartner[]>([])
+
+  useEffect(() => {
+    fetch('/api/hiring-partners')
+      .then(r => r.json())
+      .then(setHiringPartners)
+      .catch(console.error)
+  }, [])
+
   type ModuleRaw = { module?: string; title?: string; topics?: string[] }
   const syllabusRaw = safeParseJson<ModuleRaw[]>(course.syllabus, [])
   const curriculum =
@@ -276,53 +294,14 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
             Our Graduates Work At
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
-
-            {/* Google */}
-            <span className="font-black text-2xl md:text-3xl tracking-tight" style={{color:'#4285F4'}}>
-              G<span style={{color:'#EA4335'}}>o</span><span style={{color:'#FBBC05'}}>o</span><span style={{color:'#4285F4'}}>g</span><span style={{color:'#34A853'}}>l</span><span style={{color:'#EA4335'}}>e</span>
-            </span>
-
-            {/* Microsoft */}
-            <span className="font-semibold text-xl md:text-2xl text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
-              <svg viewBox="0 0 21 21" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
-                <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
-                <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
-                <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
-              </svg>
-              Microsoft
-            </span>
-
-            {/* Amazon */}
-            <span className="font-black text-2xl md:text-3xl" style={{color:'#FF9900', fontFamily:'Arial Black, sans-serif', letterSpacing:'-1px'}}>
-              amazon
-            </span>
-
-            {/* Infosys */}
-            <span className="font-bold text-xl md:text-2xl italic" style={{color:'#007CC3'}}>
-              Infosys
-            </span>
-
-            {/* TCS */}
-            <span className="font-black text-xl md:text-2xl" style={{color:'#c00'}}>
-              TCS
-            </span>
-
-            {/* Accenture */}
-            <span className="font-bold text-xl md:text-2xl" style={{color:'#a100ff'}}>
-              accenture<span style={{color:'#a100ff'}}>&gt;</span>
-            </span>
-
-            {/* Wipro */}
-            <span className="font-bold text-xl md:text-2xl" style={{color:'#004880'}}>
-              wipro
-            </span>
-
-            {/* Cognizant */}
-            <span className="font-bold text-xl md:text-2xl" style={{color:'#0033a0'}}>
-              Cognizant
-            </span>
-
+            {hiringPartners.map(p => (
+              <div key={p.id}>
+                {p.logoUrl
+                  ? <img src={p.logoUrl} alt={p.altText || p.name} className="max-h-8 object-contain grayscale" />
+                  : <span className="font-bold text-xl md:text-2xl text-slate-500 dark:text-slate-300">{p.name}</span>
+                }
+              </div>
+            ))}
           </div>
         </div>
       </div>
