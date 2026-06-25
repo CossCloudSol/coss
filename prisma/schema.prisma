@@ -342,6 +342,21 @@ model SiteSettings {
   faviconUrl      String?
   appleTouchUrl   String?
   courseOgDefault String?
+  primaryPhone    String?
+  secondaryPhone  String?
+  email           String?
+  whatsappNumber  String?
+  websiteUrl      String?
+  facebookUrl     String?
+  instagramUrl    String?
+  linkedinUrl     String?
+  youtubeUrl      String?
+  twitterUrl      String?
+  orgName         String?
+  orgLegalName    String?
+  orgFoundedYear  String?
+  orgGstNumber    String?
+  googleMapsUrl   String?
   updatedAt       DateTime? @updatedAt
   createdAt       DateTime  @default(now())
 }

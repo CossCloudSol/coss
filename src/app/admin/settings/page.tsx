@@ -19,6 +19,313 @@ import {
   type Permission,
 } from '@/lib/permissions';
 
+// ─── Site Settings Types ─────────────────────────────────────────────────────
+
+interface Branch {
+  id: string
+  branchKey: string
+  branchName: string
+  addressLine1: string
+  addressLine2: string
+  city: string
+  state: string
+  pincode: string
+  phone: string
+  email: string
+  latitude: number
+  longitude: number
+  workingHoursOpen: string
+  workingHoursClose: string
+  workingDays: string
+}
+
+interface SiteSettingsData {
+  primaryPhone?: string
+  secondaryPhone?: string
+  email?: string
+  whatsappNumber?: string
+  websiteUrl?: string
+  facebookUrl?: string
+  instagramUrl?: string
+  linkedinUrl?: string
+  youtubeUrl?: string
+  twitterUrl?: string
+  orgName?: string
+  orgLegalName?: string
+  orgFoundedYear?: string
+  orgGstNumber?: string
+  googleMapsUrl?: string
+}
+
+const inp =
+  'w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500'
+
+function SiteSection({
+  icon,
+  title,
+  desc,
+  children,
+}: {
+  icon: string
+  title: string
+  desc: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="bg-gray-800 border border-white/10 rounded-xl p-6 space-y-4">
+      <div className="flex items-center gap-3 pb-2 border-b border-white/10">
+        <span className="text-2xl">{icon}</span>
+        <div>
+          <h2 className="text-base font-semibold text-white">{title}</h2>
+          <p className="text-xs text-gray-400">{desc}</p>
+        </div>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function SiteField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-gray-400 mb-1">{label}</label>
+      {children}
+    </div>
+  )
+}
+
+function SiteSettingsPanel() {
+  const [siteSettings, setSiteSettings] = useState<SiteSettingsData>({})
+  const [branches, setBranches] = useState<Branch[]>([])
+  const [activeTab, setActiveTab] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saveMsg, setSaveMsg] = useState('')
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/admin/settings').then((r) => r.json()),
+      fetch('/api/admin/geo/branches').then((r) => r.json()),
+    ]).then(([s, b]) => {
+      setSiteSettings(s ?? {})
+      setBranches(Array.isArray(b.branches) ? b.branches : [])
+      setLoading(false)
+    })
+  }, [])
+
+  function setSetting<K extends keyof SiteSettingsData>(key: K, value: string) {
+    setSiteSettings((prev) => ({ ...prev, [key]: value }))
+  }
+
+  function setBranchField<K extends keyof Branch>(idx: number, key: K, value: Branch[K]) {
+    setBranches((prev) => prev.map((b, i) => (i === idx ? { ...b, [key]: value } : b)))
+  }
+
+  async function saveAll() {
+    setSaving(true)
+    setSaveMsg('')
+    try {
+      await fetch('/api/admin/settings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(siteSettings),
+      })
+      for (const branch of branches) {
+        await fetch(`/api/admin/geo/${branch.branchKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(branch),
+        })
+      }
+      setSaveMsg('✓ All changes saved')
+      setTimeout(() => setSaveMsg(''), 3000)
+    } catch {
+      setSaveMsg('✗ Save failed — check console')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+        Loading site settings…
+      </div>
+    )
+  }
+
+  const activeBranch = branches[activeTab]
+  const branchTabLabel = (name: string) => {
+    const parts = name.split('—')
+    return parts.length > 1 ? parts[parts.length - 1].trim() : name
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header + Save */}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Site Settings</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Global contact details, branch hours, social links, and organisation info
+          </p>
+        </div>
+        <div className="flex items-center gap-3 shrink-0">
+          {saveMsg && (
+            <span className={`text-sm ${saveMsg.startsWith('✓') ? 'text-teal-600 dark:text-teal-400' : 'text-red-500'}`}>
+              {saveMsg}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={saveAll}
+            disabled={saving}
+            className="px-5 py-2 bg-teal-600 hover:bg-teal-500 disabled:opacity-60 text-white text-sm font-semibold rounded-lg transition-colors"
+          >
+            {saving ? 'Saving…' : 'Save all'}
+          </button>
+        </div>
+      </div>
+
+      {/* Section 1 — Global contact */}
+      <SiteSection icon="📞" title="Global Contact Details" desc="Phone numbers, email, and website">
+        <div className="grid grid-cols-2 gap-4">
+          <SiteField label="Primary Phone">
+            <input className={inp} value={siteSettings.primaryPhone ?? ''} onChange={(e) => setSetting('primaryPhone', e.target.value)} placeholder="+91 98765 43210" />
+          </SiteField>
+          <SiteField label="Secondary Phone">
+            <input className={inp} value={siteSettings.secondaryPhone ?? ''} onChange={(e) => setSetting('secondaryPhone', e.target.value)} placeholder="+91 98765 43211" />
+          </SiteField>
+          <SiteField label="Email">
+            <input className={inp} type="email" value={siteSettings.email ?? ''} onChange={(e) => setSetting('email', e.target.value)} placeholder="info@cosscloudsol.com" />
+          </SiteField>
+          <SiteField label="WhatsApp Number">
+            <input className={inp} value={siteSettings.whatsappNumber ?? ''} onChange={(e) => setSetting('whatsappNumber', e.target.value)} placeholder="+91 98765 43210" />
+          </SiteField>
+        </div>
+        <SiteField label="Website URL">
+          <input className={inp} value={siteSettings.websiteUrl ?? ''} onChange={(e) => setSetting('websiteUrl', e.target.value)} placeholder="https://cosscloudsol.com" />
+        </SiteField>
+      </SiteSection>
+
+      {/* Section 2 — Branch NAP + Working hours */}
+      <SiteSection icon="📍" title="Branch NAP & Working Hours" desc="Address, contact, and opening hours per branch">
+        {branches.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {branches.map((b, idx) => (
+              <button
+                key={b.branchKey}
+                type="button"
+                onClick={() => setActiveTab(idx)}
+                className={['px-4 py-1.5 rounded-lg text-sm font-medium transition-colors', activeTab === idx ? 'bg-teal-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'].join(' ')}
+              >
+                {branchTabLabel(b.branchName)}
+              </button>
+            ))}
+          </div>
+        )}
+        {activeBranch && (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              <SiteField label="Branch Name">
+                <input className={inp} value={activeBranch.branchName} onChange={(e) => setBranchField(activeTab, 'branchName', e.target.value)} />
+              </SiteField>
+              <SiteField label="Phone">
+                <input className={inp} value={activeBranch.phone} onChange={(e) => setBranchField(activeTab, 'phone', e.target.value)} />
+              </SiteField>
+            </div>
+            <SiteField label="Address Line 1">
+              <input className={inp} value={activeBranch.addressLine1} onChange={(e) => setBranchField(activeTab, 'addressLine1', e.target.value)} />
+            </SiteField>
+            <div className="grid grid-cols-3 gap-4">
+              <SiteField label="City">
+                <input className={inp} value={activeBranch.city} onChange={(e) => setBranchField(activeTab, 'city', e.target.value)} />
+              </SiteField>
+              <SiteField label="Address Line 2">
+                <input className={inp} value={activeBranch.addressLine2} onChange={(e) => setBranchField(activeTab, 'addressLine2', e.target.value)} />
+              </SiteField>
+              <SiteField label="Pincode">
+                <input className={inp} value={activeBranch.pincode} onChange={(e) => setBranchField(activeTab, 'pincode', e.target.value)} />
+              </SiteField>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <SiteField label="Latitude">
+                <input className={inp} type="number" step="0.000001" value={activeBranch.latitude} onChange={(e) => setBranchField(activeTab, 'latitude', parseFloat(e.target.value) || 0)} />
+              </SiteField>
+              <SiteField label="Longitude">
+                <input className={inp} type="number" step="0.000001" value={activeBranch.longitude} onChange={(e) => setBranchField(activeTab, 'longitude', parseFloat(e.target.value) || 0)} />
+              </SiteField>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <SiteField label="Opens">
+                <input className={inp} type="time" value={activeBranch.workingHoursOpen} onChange={(e) => setBranchField(activeTab, 'workingHoursOpen', e.target.value)} />
+              </SiteField>
+              <SiteField label="Closes">
+                <input className={inp} type="time" value={activeBranch.workingHoursClose} onChange={(e) => setBranchField(activeTab, 'workingHoursClose', e.target.value)} />
+              </SiteField>
+              <SiteField label="Working Days">
+                <input className={inp} value={activeBranch.workingDays} onChange={(e) => setBranchField(activeTab, 'workingDays', e.target.value)} placeholder="Mon-Sun" />
+              </SiteField>
+            </div>
+            {/* NAP preview */}
+            <div className="bg-gray-900 border border-white/10 rounded-lg p-4 text-xs text-gray-300 space-y-1">
+              <p className="font-semibold text-white text-sm">{activeBranch.branchName}</p>
+              <p>{[activeBranch.addressLine1, activeBranch.addressLine2, activeBranch.city, activeBranch.state, activeBranch.pincode].filter(Boolean).join(', ')}</p>
+              <p>📞 {activeBranch.phone}</p>
+              <p>🕐 {activeBranch.workingHoursOpen} – {activeBranch.workingHoursClose} &nbsp;|&nbsp; {activeBranch.workingDays}</p>
+            </div>
+          </>
+        )}
+      </SiteSection>
+
+      {/* Section 3 — Social media */}
+      <SiteSection icon="🔗" title="Social Media Links" desc="Public profiles and contact handles">
+        <div className="grid grid-cols-2 gap-4">
+          <SiteField label="Facebook">
+            <input className={inp} value={siteSettings.facebookUrl ?? ''} onChange={(e) => setSetting('facebookUrl', e.target.value)} placeholder="https://facebook.com/cosscloudsol" />
+          </SiteField>
+          <SiteField label="Instagram">
+            <input className={inp} value={siteSettings.instagramUrl ?? ''} onChange={(e) => setSetting('instagramUrl', e.target.value)} placeholder="https://instagram.com/cosscloudsol" />
+          </SiteField>
+          <SiteField label="LinkedIn">
+            <input className={inp} value={siteSettings.linkedinUrl ?? ''} onChange={(e) => setSetting('linkedinUrl', e.target.value)} placeholder="https://linkedin.com/company/cosscloudsol" />
+          </SiteField>
+          <SiteField label="YouTube">
+            <input className={inp} value={siteSettings.youtubeUrl ?? ''} onChange={(e) => setSetting('youtubeUrl', e.target.value)} placeholder="https://youtube.com/@cosscloudsol" />
+          </SiteField>
+          <SiteField label="Twitter / X">
+            <input className={inp} value={siteSettings.twitterUrl ?? ''} onChange={(e) => setSetting('twitterUrl', e.target.value)} placeholder="https://twitter.com/cosscloudsol" />
+          </SiteField>
+          <SiteField label="WhatsApp">
+            <input className={inp} value={siteSettings.whatsappNumber ?? ''} onChange={(e) => setSetting('whatsappNumber', e.target.value)} placeholder="+91 98765 43210" />
+          </SiteField>
+        </div>
+      </SiteSection>
+
+      {/* Section 4 — Organisation details */}
+      <SiteSection icon="🏢" title="Organisation Details" desc="Legal name, GST, founding year, and Google Maps">
+        <div className="grid grid-cols-2 gap-4">
+          <SiteField label="Organisation Name">
+            <input className={inp} value={siteSettings.orgName ?? ''} onChange={(e) => setSetting('orgName', e.target.value)} placeholder="Coss Cloud Solutions" />
+          </SiteField>
+          <SiteField label="Legal Name">
+            <input className={inp} value={siteSettings.orgLegalName ?? ''} onChange={(e) => setSetting('orgLegalName', e.target.value)} placeholder="Coss Cloud Solutions Pvt Ltd" />
+          </SiteField>
+          <SiteField label="Founded Year">
+            <input className={inp} value={siteSettings.orgFoundedYear ?? ''} onChange={(e) => setSetting('orgFoundedYear', e.target.value)} placeholder="2009" />
+          </SiteField>
+          <SiteField label="GST Number">
+            <input className={inp} value={siteSettings.orgGstNumber ?? ''} onChange={(e) => setSetting('orgGstNumber', e.target.value)} placeholder="36XXXXXXXXXXXZ" />
+          </SiteField>
+        </div>
+        <SiteField label="Google Maps URL">
+          <input className={inp} value={siteSettings.googleMapsUrl ?? ''} onChange={(e) => setSetting('googleMapsUrl', e.target.value)} placeholder="https://maps.google.com/?cid=..." />
+        </SiteField>
+      </SiteSection>
+    </div>
+  )
+}
+
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type AdminRole = 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
@@ -696,9 +1003,23 @@ export default function SettingsPage(): JSX.Element {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Manage team members, roles, and panel access permissions.
+            Site contact details, branch hours, social links, and team access permissions.
           </p>
         </div>
+      </div>
+
+      {/* ── Site Settings ─────────────────────────────────────────────────── */}
+      <SiteSettingsPanel />
+
+      {/* ── Team Management divider ──────────────────────────────────────── */}
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Shield className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Team Management</h2>
+        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Manage team members, roles, and panel access permissions.
+        </p>
       </div>
 
       {/* Role reference cards */}
