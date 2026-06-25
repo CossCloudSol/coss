@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  ArrowLeftRight,
   BarChart2,
   BookOpen,
   Briefcase,
@@ -45,6 +46,7 @@ const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '/admin/batches',       label: 'Batches',           icon: Calendar,        permissionKey: 'dashboard:view' },
   { href: '/admin/testimonials',    label: 'Testimonials',      icon: Star,            permissionKey: 'dashboard:view' },
   { href: '/admin/hiring-partners', label: 'Hiring Partners',   icon: Building,        permissionKey: 'dashboard:view' },
+  { href: '/admin/redirects',       label: 'Redirects',         icon: ArrowLeftRight,  permissionKey: 'dashboard:view' },
   { href: '/admin/homepage',        label: 'Homepage',          icon: Home,            permissionKey: 'dashboard:view' },
   { href: '/admin/whatsapp',  label: 'WhatsApp Log',      icon: MessageCircle,   permissionKey: 'whatsapp:view' },
   { href: '/admin/seo',       label: 'SEO Manager',       icon: Search,          permissionKey: 'seo:view' },
