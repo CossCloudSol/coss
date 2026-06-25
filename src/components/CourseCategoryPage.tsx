@@ -231,23 +231,82 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {(imgs?.companyLogos?.length > 0 || hiringPartners.length > 0) && (
               <div style={{ marginBottom: '36px' }}>
                 <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>🏢 Companies That Hire Our Graduates</h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-                  {imgs?.companyLogos?.length > 0
-                    ? imgs.companyLogos.map((logo, i) => (
-                        <div key={i} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 16px', boxShadow: 'var(--shadow-sm)', minWidth: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          <WpImg src={logo} alt={getCompanyAlt(logo)} style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain' }} />
+                {imgs?.companyLogos?.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    {imgs.companyLogos.map((logo, i, all) => {
+                      const total = all.length
+                      const isLastColMobile  = (i + 1) % 2 === 0
+                      const isLastColTablet  = (i + 1) % 3 === 0
+                      const isLastColDesktop = (i + 1) % 5 === 0
+                      const lastRowStartMobile  = total - (total % 2 || 2)
+                      const lastRowStartTablet  = total - (total % 3 || 3)
+                      const lastRowStartDesktop = total - (total % 5 || 5)
+                      const isLastRowMobile  = i >= lastRowStartMobile
+                      const isLastRowTablet  = i >= lastRowStartTablet
+                      const isLastRowDesktop = i >= lastRowStartDesktop
+                      return (
+                        <div
+                          key={i}
+                          className={[
+                            'flex items-center justify-center p-5 min-h-[80px] bg-white hover:bg-gray-50 transition-colors',
+                            'border-r border-b border-gray-200',
+                            isLastColMobile  ? 'border-r-0'    : '',
+                            isLastColTablet  ? 'sm:border-r-0' : 'sm:border-r',
+                            isLastColDesktop ? 'md:border-r-0' : 'md:border-r',
+                            isLastRowMobile  ? 'border-b-0'    : '',
+                            isLastRowTablet  ? 'sm:border-b-0' : 'sm:border-b',
+                            isLastRowDesktop ? 'md:border-b-0' : 'md:border-b',
+                          ].filter(Boolean).join(' ')}
+                        >
+                          <WpImg src={logo} alt={getCompanyAlt(logo)} style={{ maxHeight: '40px', maxWidth: '100%', objectFit: 'contain' }} />
                         </div>
-                      ))
-                    : hiringPartners.map(p => (
-                        <div key={p.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '10px 16px', boxShadow: 'var(--shadow-sm)', minWidth: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                          {p.logoUrl
-                            ? <img src={p.logoUrl} alt={p.altText || p.name} style={{ height: '32px', width: 'auto', maxWidth: '90px', objectFit: 'contain', filter: 'grayscale(1)' }} />
-                            : <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '13px', color: 'var(--text-muted)', fontWeight: 500 }}>{p.name}</span>
-                          }
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden bg-white">
+                    {hiringPartners.map((p, i, all) => {
+                      const total = all.length
+                      const isLastColMobile  = (i + 1) % 2 === 0
+                      const isLastColTablet  = (i + 1) % 3 === 0
+                      const isLastColDesktop = (i + 1) % 5 === 0
+                      const lastRowStartMobile  = total - (total % 2 || 2)
+                      const lastRowStartTablet  = total - (total % 3 || 3)
+                      const lastRowStartDesktop = total - (total % 5 || 5)
+                      const isLastRowMobile  = i >= lastRowStartMobile
+                      const isLastRowTablet  = i >= lastRowStartTablet
+                      const isLastRowDesktop = i >= lastRowStartDesktop
+                      return (
+                        <div
+                          key={p.id}
+                          className={[
+                            'flex items-center justify-center p-5 min-h-[80px] bg-white hover:bg-gray-50 transition-colors',
+                            'border-r border-b border-gray-200',
+                            isLastColMobile  ? 'border-r-0'    : '',
+                            isLastColTablet  ? 'sm:border-r-0' : 'sm:border-r',
+                            isLastColDesktop ? 'md:border-r-0' : 'md:border-r',
+                            isLastRowMobile  ? 'border-b-0'    : '',
+                            isLastRowTablet  ? 'sm:border-b-0' : 'sm:border-b',
+                            isLastRowDesktop ? 'md:border-b-0' : 'md:border-b',
+                          ].filter(Boolean).join(' ')}
+                        >
+                          {p.logoUrl ? (
+                            <img
+                              src={p.logoUrl}
+                              alt={p.altText || p.name}
+                              className="max-h-10 max-w-full object-contain"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className="text-xs font-medium text-gray-500 text-center leading-tight">
+                              {p.name}
+                            </span>
+                          )}
                         </div>
-                      ))
-                  }
-                </div>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
             )}
 

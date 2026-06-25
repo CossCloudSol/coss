@@ -175,21 +175,58 @@ export default async function PlacementsPage() {
               </div>
             ))}
           </div>
-          {/* Company logos strip — same white-card treatment as homepage */}
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {hiringPartners.map(p => (
-              <div
-                key={p.id}
-                title={p.name}
-                className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 flex items-center justify-center h-20 grayscale hover:grayscale-0 transition-all duration-300 text-gray-400 dark:text-gray-400 font-medium text-sm text-center"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                {p.logoUrl
-                  ? <img src={p.logoUrl} alt={p.altText || p.name} className="max-h-8 object-contain" />
-                  : p.name
-                }
-              </div>
-            ))}
+          <div className="text-center mb-8">
+            <p className="text-xs font-medium tracking-widest uppercase text-gray-400 mb-2">
+              Placement network
+            </p>
+            <h2 className="text-2xl font-semibold mb-2">
+              Our hiring partners
+            </h2>
+            <p className="text-sm text-gray-500">
+              500+ students placed across India&apos;s top companies
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden bg-white">
+            {hiringPartners.map((p, i, all) => {
+              const total = all.length
+              const isLastColMobile  = (i + 1) % 2 === 0
+              const isLastColTablet  = (i + 1) % 3 === 0
+              const isLastColDesktop = (i + 1) % 5 === 0
+              const lastRowStartMobile  = total - (total % 2 || 2)
+              const lastRowStartTablet  = total - (total % 3 || 3)
+              const lastRowStartDesktop = total - (total % 5 || 5)
+              const isLastRowMobile  = i >= lastRowStartMobile
+              const isLastRowTablet  = i >= lastRowStartTablet
+              const isLastRowDesktop = i >= lastRowStartDesktop
+              return (
+                <div
+                  key={p.id}
+                  className={[
+                    'flex items-center justify-center p-5 min-h-[80px] bg-white hover:bg-gray-50 transition-colors',
+                    'border-r border-b border-gray-200',
+                    isLastColMobile  ? 'border-r-0'    : '',
+                    isLastColTablet  ? 'sm:border-r-0' : 'sm:border-r',
+                    isLastColDesktop ? 'md:border-r-0' : 'md:border-r',
+                    isLastRowMobile  ? 'border-b-0'    : '',
+                    isLastRowTablet  ? 'sm:border-b-0' : 'sm:border-b',
+                    isLastRowDesktop ? 'md:border-b-0' : 'md:border-b',
+                  ].filter(Boolean).join(' ')}
+                >
+                  {p.logoUrl ? (
+                    <img
+                      src={p.logoUrl}
+                      alt={p.altText || p.name}
+                      className="max-h-10 max-w-full object-contain"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className="text-xs font-medium text-gray-500 text-center leading-tight">
+                      {p.name}
+                    </span>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
