@@ -59,11 +59,11 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
       'salesforce-crm-training-institute-in-hyderabad':         'salesforce-training-institute-in-hyderabad',
       'sql-training-institute-in-hyderabad':                    'sql-data-analytics-training-hyderabad',
 
-      // 4 missing — closest match until new courses seeded
-      'ms-office-training-institute-in-hyderabad':              'business-communication-training-in-hyderabad',
-      'soft-skills-training-institute-in-hyderabad':            'personality-development-training-in-hyderabad',
-      'spoken-english-training-institute-in-hyderabad':         'business-communication-english-training-in-hyderabad',
-      'tally-erp-training-institute-in-hyderabad':              'sap-fico-training-in-hyderabad',
+      // Real slugs — seeded 2026-06-25
+      'ms-office-training-institute-in-hyderabad':              'ms-office-advanced-excel',
+      'soft-skills-training-institute-in-hyderabad':            'soft-skills-personality-development',
+      'spoken-english-training-institute-in-hyderabad':         'spoken-english-communication',
+      'tally-erp-training-institute-in-hyderabad':              'tally-erp-prime-accounting',
     }
 
     // Check explicit map first
