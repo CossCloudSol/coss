@@ -285,6 +285,7 @@ export default function HiringPartnersPage() {
 
                 <div className="h-10 flex items-center justify-center mb-2">
                   {p.logoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={p.logoUrl}
                       alt={p.altText || p.name}

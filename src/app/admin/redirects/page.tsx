@@ -205,7 +205,7 @@ export default function RedirectsPage() {
       {/* Unsynced warning */}
       {hasUnsynced && (
         <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-3 text-sm text-amber-400 mb-5 flex items-center justify-between">
-          <span>⚠ You have undeployed changes — click "Sync & deploy" to make them live</span>
+          <span>⚠ You have undeployed changes — click &quot;Sync &amp; deploy&quot; to make them live</span>
           <button
             onClick={triggerDeploy}
             disabled={deploying}
