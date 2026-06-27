@@ -686,8 +686,7 @@ export default function ContentBlocksPage() {
     toastTimer.current = setTimeout(() => setToast(null), 2500)
   }, [])
 
-  // Fetch blocks when active page changes
-  useEffect(() => {
+  const fetchBlocks = useCallback(async () => {
     setLoading(true)
     const qs = activePage === 'global' ? '' : `?page=${activePage}`
     fetch(`/api/admin/content-blocks${qs}`)
@@ -700,6 +699,11 @@ export default function ContentBlocksPage() {
       .catch(() => showToast('Failed to load blocks'))
       .finally(() => setLoading(false))
   }, [activePage, showToast])
+
+  // Fetch blocks when active page changes
+  useEffect(() => {
+    fetchBlocks()
+  }, [fetchBlocks])
 
   const selectedBlock = blocks.find(b => b.id === selectedId) ?? null
 
@@ -761,17 +765,30 @@ export default function ContentBlocksPage() {
     }
   }
 
-  const handleDelete = async () => {
-    if (!selectedId) return
-    if (!confirm('Delete this block?')) return
-    try {
-      await fetch(`/api/admin/content-blocks/${selectedId}`, { method: 'DELETE' })
-      setBlocks(prev => prev.filter(b => b.id !== selectedId))
+  const handleDelete = async (blockId?: string) => {
+    const id = blockId ?? selectedId
+    if (!id) return
+    if (!confirm('Delete this block? This cannot be undone.')) return
+
+    // Optimistic UI — remove immediately, revert on failure
+    setBlocks(prev => prev.filter(b => b.id !== id))
+    if (selectedId === id) {
       setSelectedId(null)
       setEditForm({})
-      showToast('Block deleted')
+    }
+
+    try {
+      const res = await fetch(`/api/admin/content-blocks/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert(`Delete failed: ${data.error ?? res.status}`)
+        fetchBlocks()
+      } else {
+        showToast('Block deleted')
+      }
     } catch {
-      showToast('Failed to delete block')
+      showToast('Network error — block may not have been deleted')
+      fetchBlocks()
     }
   }
 
@@ -1011,6 +1028,16 @@ export default function ContentBlocksPage() {
                               ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>
                               : <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></>
                             }
+                          </svg>
+                        </button>
+                        {/* Delete */}
+                        <button
+                          onClick={e => { e.stopPropagation(); handleDelete(block.id) }}
+                          className="p-1 rounded text-gray-600 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          title="Delete block"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
                           </svg>
                         </button>
                         <span className="text-xs text-gray-600 ml-1">#{index + 1}</span>
