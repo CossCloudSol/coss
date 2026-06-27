@@ -68,6 +68,9 @@ model PageSeo {
   schemaMarkup    String?
   focusKeyword    String?
   keywords        String?
+  sitemapInclude  Boolean  @default(true)
+  sitemapPriority Float    @default(0.7)
+  changeFreq      String   @default("monthly")
   updatedAt       DateTime @updatedAt
   createdAt       DateTime @default(now())
 }

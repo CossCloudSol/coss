@@ -20,50 +20,117 @@ const BASE_URL =
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
+  // ── DB overrides ───────────────────────────────────────────────────────────
+  let pageSeoDB: Array<{
+    pageSlug: string
+    sitemapInclude: boolean
+    sitemapPriority: number
+    changeFreq: string
+  }> = []
+
+  try {
+    const { prisma } = await import('@/lib/db')
+    pageSeoDB = await prisma.pageSeo.findMany({
+      select: {
+        pageSlug: true,
+        sitemapInclude: true,
+        sitemapPriority: true,
+        changeFreq: true,
+      },
+    })
+  } catch {
+    // DB unavailable — use hardcoded defaults
+  }
+
+  function getDbOverride(slug: string) {
+    const normalized = slug === '' ? '/' : slug
+    return pageSeoDB.find(p => {
+      const d = p.pageSlug
+      return (
+        d === slug ||
+        d === normalized ||
+        d === `/${slug}` ||
+        `/${d}` === slug ||
+        d === `/${normalized}` ||
+        `/${d}` === normalized
+      )
+    })
+  }
+
+  function isExcluded(slug: string): boolean {
+    const override = getDbOverride(slug)
+    return override ? !override.sitemapInclude : false
+  }
+
   // 1 ── 36 SEO course pages (/big-data-training-institute-in-hyderabad etc.)
-  const seoPageEntries: MetadataRoute.Sitemap = COURSE_PAGES.map((page) => ({
-    url: `${BASE_URL}/${page.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: page.priority ?? 0.85,
-  }));
+  const seoPageEntries: MetadataRoute.Sitemap = COURSE_PAGES
+    .filter((page) => !isExcluded(page.slug))
+    .map((page) => {
+      const db = getDbOverride(page.slug)
+      return {
+        url: `${BASE_URL}/${page.slug}`,
+        lastModified: now,
+        changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
+        priority: db?.sitemapPriority ?? page.priority ?? 0.85,
+      }
+    })
 
   // 2 ── Category overview pages (/courses/cloud-computing, /data-analytics-bi etc.)
-  const categoryEntries: MetadataRoute.Sitemap = CATEGORY_PAGES.map((page) => ({
-    url: `${BASE_URL}/${page.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: page.priority ?? 0.85,
-  }));
+  const categoryEntries: MetadataRoute.Sitemap = CATEGORY_PAGES
+    .filter((page) => !isExcluded(page.slug))
+    .map((page) => {
+      const db = getDbOverride(page.slug)
+      return {
+        url: `${BASE_URL}/${page.slug}`,
+        lastModified: now,
+        changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
+        priority: db?.sitemapPriority ?? page.priority ?? 0.85,
+      }
+    })
 
   // 3 ── Dynamic [courseSlug] pages (/devops-training-institute-in-hyderabad etc.)
-  const dynamicCourseEntries: MetadataRoute.Sitemap = COURSES.map((course) => ({
-    url: `${BASE_URL}/${course.slug}`,
-    lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }));
+  const dynamicCourseEntries: MetadataRoute.Sitemap = COURSES
+    .filter((course) => !isExcluded(course.slug))
+    .map((course) => {
+      const db = getDbOverride(course.slug)
+      return {
+        url: `${BASE_URL}/${course.slug}`,
+        lastModified: now,
+        changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
+        priority: db?.sitemapPriority ?? 0.8,
+      }
+    })
 
   // 4 -- Static pages (home, courses, about, contact, etc.)
-  const staticEntries: MetadataRoute.Sitemap = STATIC_PAGES.map((page) => ({
-    url: `${BASE_URL}/${page.slug}`,
-    lastModified: now,
-    changeFrequency: page.changeFrequency,
-    priority: page.priority,
-  }));
+  const staticEntries: MetadataRoute.Sitemap = STATIC_PAGES
+    .filter((page) => !isExcluded(page.slug))
+    .map((page) => {
+      const db = getDbOverride(page.slug)
+      return {
+        url: `${BASE_URL}/${page.slug}`,
+        lastModified: now,
+        changeFrequency: (db?.changeFreq ?? page.changeFrequency) as MetadataRoute.Sitemap[0]['changeFrequency'],
+        priority: db?.sitemapPriority ?? page.priority,
+      }
+    })
 
   // 5 -- Blog posts (dynamic, from content/posts)
   let blogEntries: MetadataRoute.Sitemap = [];
   try {
     const posts = await getAllPosts();
-    blogEntries = posts.map((post) => ({
-      url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.frontmatter.date
-        ? new Date(post.frontmatter.date)
-        : now,
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }));
+    blogEntries = posts
+      .filter((post) => !isExcluded(`blog/${post.slug}`))
+      .map((post) => {
+        const db = getDbOverride(`blog/${post.slug}`)
+        return {
+          url: `${BASE_URL}/blog/${post.slug}`,
+          lastModified: post.frontmatter.date
+            ? new Date(post.frontmatter.date)
+            : now,
+          changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
+          priority: db?.sitemapPriority ?? 0.7,
+        }
+      })
   } catch {
     // getAllPosts failed (e.g. no content dir in CI) — skip blog entries
   }

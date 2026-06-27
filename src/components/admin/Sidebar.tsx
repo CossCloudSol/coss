@@ -11,6 +11,7 @@ import {
   Building2,
   Calendar,
   FolderOpen,
+  Globe,
   GraduationCap,
   Home,
   Image,
@@ -57,6 +58,7 @@ const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '/admin/topbar',    label: 'Topbar / Ann. Bar', icon: Megaphone,       permissionKey: 'topbar:view' },
   { href: '/admin/settings',       label: 'Settings',          icon: Settings,        permissionKey: 'settings:view' },
   { href: '/admin/content-blocks', label: 'Content Blocks',    icon: Layers,          permissionKey: 'dashboard:view' },
+  { href: '/admin/sitemap',        label: 'Sitemap',           icon: Globe,           permissionKey: 'seo:view' },
 ];
 
 type SidebarProps = {
