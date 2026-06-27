@@ -6,6 +6,7 @@ import {
   ArrowLeftRight,
   BarChart2,
   BookOpen,
+  Braces,
   Briefcase,
   Building,
   Building2,
@@ -59,6 +60,7 @@ const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '/admin/settings',       label: 'Settings',          icon: Settings,        permissionKey: 'settings:view' },
   { href: '/admin/content-blocks', label: 'Content Blocks',    icon: Layers,          permissionKey: 'dashboard:view' },
   { href: '/admin/sitemap',        label: 'Sitemap',           icon: Globe,           permissionKey: 'seo:view' },
+  { href: '/admin/schema',         label: 'Schema',            icon: Braces,          permissionKey: 'seo:view' },
 ];
 
 type SidebarProps = {

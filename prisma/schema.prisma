@@ -66,6 +66,8 @@ model PageSeo {
   noIndex         Boolean  @default(false)
   noFollow        Boolean  @default(false)
   schemaMarkup    String?
+  schemaEnabled   Boolean  @default(true)
+  schemaOverride  String?  @db.Text
   focusKeyword    String?
   keywords        String?
   sitemapInclude  Boolean  @default(true)
@@ -338,30 +340,38 @@ model BranchSettings {
 }
 
 model SiteSettings {
-  id              String    @id @default(cuid())
-  ogImageUrl      String?
-  logoUrl         String?
-  logoLightUrl    String?
-  faviconUrl      String?
-  appleTouchUrl   String?
-  courseOgDefault String?
-  primaryPhone    String?
-  secondaryPhone  String?
-  email           String?
-  whatsappNumber  String?
-  websiteUrl      String?
-  facebookUrl     String?
-  instagramUrl    String?
-  linkedinUrl     String?
-  youtubeUrl      String?
-  twitterUrl      String?
-  orgName         String?
-  orgLegalName    String?
-  orgFoundedYear  String?
-  orgGstNumber    String?
-  googleMapsUrl   String?
-  updatedAt       DateTime? @updatedAt
-  createdAt       DateTime  @default(now())
+  id                      String    @id @default(cuid())
+  ogImageUrl              String?
+  logoUrl                 String?
+  logoLightUrl            String?
+  faviconUrl              String?
+  appleTouchUrl           String?
+  courseOgDefault         String?
+  primaryPhone            String?
+  secondaryPhone          String?
+  email                   String?
+  whatsappNumber          String?
+  websiteUrl              String?
+  facebookUrl             String?
+  instagramUrl            String?
+  linkedinUrl             String?
+  youtubeUrl              String?
+  twitterUrl              String?
+  orgName                 String?
+  orgLegalName            String?
+  orgFoundedYear          String?
+  orgGstNumber            String?
+  googleMapsUrl           String?
+  schemaOrgOverride       String?   @db.Text
+  schemaWebSiteOverride   String?   @db.Text
+  schemaDilsOverride      String?   @db.Text
+  schemaAmeerpetOverride  String?   @db.Text
+  schemaOrgEnabled        Boolean   @default(true)
+  schemaWebSiteEnabled    Boolean   @default(true)
+  schemaDilsEnabled       Boolean   @default(true)
+  schemaAmeerpetEnabled   Boolean   @default(true)
+  updatedAt               DateTime? @updatedAt
+  createdAt               DateTime  @default(now())
 }
 
 model MediaScanResult {
