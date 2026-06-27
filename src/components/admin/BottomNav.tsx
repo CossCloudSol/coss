@@ -36,7 +36,8 @@ export default function BottomNav(): JSX.Element {
       {/* Bottom nav bar */}
       <nav
         aria-label="Mobile navigation"
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-[#d0d7de] bg-white dark:border-[#21262d] dark:bg-[#161b22]"
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-[#d0d7de] bg-white dark:border-[#21262d] dark:bg-[#161b22]"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex h-14">
           {NAV_GROUPS.map((group) => {
@@ -78,8 +79,6 @@ export default function BottomNav(): JSX.Element {
             );
           })}
         </div>
-        {/* iOS safe area */}
-        <div className="pb-[env(safe-area-inset-bottom)]" />
       </nav>
 
       {/* Slide-up drawer */}

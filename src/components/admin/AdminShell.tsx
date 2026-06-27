@@ -44,22 +44,22 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
   const title = titleForPath(pathname);
 
   return (
-    <div className="fixed inset-0 z-40 bg-gray-50 dark:bg-gray-900">
-      {/* Desktop sidebar — lg+ only */}
-      <div className="absolute inset-y-0 left-0 hidden w-[220px] lg:block">
+    <div className="h-screen flex bg-gray-50 dark:bg-gray-900">
+      {/* Desktop sidebar — lg+ only, flex sibling so no stacking context issues */}
+      <div className="hidden lg:flex w-[220px] flex-none flex-col">
         <Sidebar permissions={permissions} role={role} />
       </div>
 
       {/* Main column */}
-      <div className="flex h-full flex-col transition-all lg:ml-[220px]">
+      <div className="flex-1 flex flex-col min-w-0">
         <TopBar title={title} />
-        {/* pb-16 on mobile keeps content clear of the bottom nav bar */}
+        {/* pb-16 on mobile keeps content clear of the fixed bottom nav bar */}
         <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-3 pb-16 sm:p-4 sm:pb-16 md:p-6 md:pb-16 lg:p-6">
           {children}
         </div>
       </div>
 
-      {/* Mobile bottom nav + slide-up drawer (hidden on lg+) */}
+      {/* Mobile bottom nav — outside scroll container, fixed to viewport */}
       <BottomNav />
     </div>
   );
