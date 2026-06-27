@@ -14,6 +14,7 @@ import {
   GraduationCap,
   Home,
   Image,
+  Layers,
   LayoutDashboard,
   LogOut,
   MapPin,
@@ -54,7 +55,8 @@ const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '/admin/media',     label: 'Media Manager',     icon: Image,           permissionKey: 'seo:view' },
   { href: '/admin/analytics', label: 'Analytics',         icon: BarChart2,       permissionKey: 'analytics:view' },
   { href: '/admin/topbar',    label: 'Topbar / Ann. Bar', icon: Megaphone,       permissionKey: 'topbar:view' },
-  { href: '/admin/settings',  label: 'Settings',          icon: Settings,        permissionKey: 'settings:view' },
+  { href: '/admin/settings',       label: 'Settings',          icon: Settings,        permissionKey: 'settings:view' },
+  { href: '/admin/content-blocks', label: 'Content Blocks',    icon: Layers,          permissionKey: 'dashboard:view' },
 ];
 
 type SidebarProps = {
