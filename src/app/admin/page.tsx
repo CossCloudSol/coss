@@ -48,15 +48,15 @@ function StatCard({
   accent: AccentColor;
 }): JSX.Element {
   return (
-    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
+    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
       <div
-        className={`absolute left-0 top-0 h-1 w-full ${ACCENT_BAR[accent]}`}
+        className={`absolute left-0 top-0 h-[2.5px] w-full ${ACCENT_BAR[accent]}`}
         aria-hidden="true"
       />
-      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
         {label}
       </p>
-      <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+      <p className="text-2xl font-medium text-gray-900 dark:text-white">
         {value.toLocaleString()}
       </p>
     </div>
@@ -297,18 +297,14 @@ export default async function AdminOverviewPage(): Promise<JSX.Element> {
 
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
-      {/* Top row — 4 stat cards */}
-      <div className="col-span-12 sm:col-span-6 lg:col-span-3">
-        <StatCard label="Total Leads" value={stats.totals.leads} accent="blue" />
-      </div>
-      <div className="col-span-12 sm:col-span-6 lg:col-span-3">
-        <StatCard label="New Today" value={stats.totals.newToday} accent="green" />
-      </div>
-      <div className="col-span-12 sm:col-span-6 lg:col-span-3">
-        <StatCard label="Enrolled" value={stats.totals.enrolled} accent="teal" />
-      </div>
-      <div className="col-span-12 sm:col-span-6 lg:col-span-3">
-        <StatCard label="Corporate" value={stats.totals.corporate} accent="orange" />
+      {/* Top row — 4 stat cards, 2-column grid on all sizes */}
+      <div className="col-span-12">
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <StatCard label="Total Leads" value={stats.totals.leads} accent="blue" />
+          <StatCard label="New Today" value={stats.totals.newToday} accent="green" />
+          <StatCard label="Enrolled" value={stats.totals.enrolled} accent="teal" />
+          <StatCard label="Corporate" value={stats.totals.corporate} accent="orange" />
+        </div>
       </div>
 
       {/* Middle row — recent leads (60%) + branch breakdown (40%) */}

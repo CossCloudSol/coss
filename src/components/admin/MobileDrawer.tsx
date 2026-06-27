@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { usePathname, useRouter } from 'next/navigation';
 import { X, ChevronRight } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
@@ -21,29 +23,32 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
   const pathname = usePathname() ?? '';
   const { theme } = useTheme();
   const mode: 'dark' | 'light' = theme === 'dark' ? 'dark' : 'light';
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const groupColor = group?.color[mode];
   const GroupIcon = group?.icon;
 
-  return (
+  if (!mounted) return <></>;
+
+  return createPortal(
     <>
-      {/* Overlay */}
-      <div
-        aria-hidden="true"
-        onClick={onClose}
-        className={`fixed inset-0 z-30 transition-opacity duration-300 ${
-          isOpen
-            ? 'bg-black/35 opacity-100 dark:bg-black/55'
-            : 'pointer-events-none opacity-0'
-        }`}
-      />
+      {/* Overlay — only in DOM when drawer is open */}
+      {isOpen && (
+        <div
+          aria-hidden="true"
+          onClick={onClose}
+          className="fixed inset-0 z-30 bg-black/50"
+        />
+      )}
 
       {/* Drawer panel — always in DOM so CSS transition plays on close */}
       <div
         role={isOpen ? 'dialog' : undefined}
         aria-modal={isOpen ? true : undefined}
         aria-label={group ? `${group.label} navigation` : undefined}
-        className={`fixed bottom-14 left-0 right-0 z-40 rounded-t-[20px] border-t border-[#d0d7de] bg-white pb-2 transition-transform duration-300 ease-out dark:border-[#30363d] dark:bg-[#161b22] ${
+        className={`fixed bottom-14 left-0 right-0 z-40 min-h-[40vh] rounded-t-[20px] border-t border-[#d0d7de] bg-white pb-2 transition-transform duration-300 ease-out dark:border-[#30363d] dark:bg-[#161b22] ${
           isOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
@@ -84,7 +89,7 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
             <div className="mx-4 border-t border-[#d0d7de] dark:border-[#30363d]" />
 
             {/* Items */}
-            <ul className="max-h-[70vh] overflow-y-auto px-2 py-2">
+            <ul className="max-h-[55vh] overflow-y-auto px-2 py-2">
               {group.items.map((item) => {
                 const ItemIcon = item.icon;
                 const active = isItemActive(pathname, item.href);
@@ -132,6 +137,7 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
           </>
         )}
       </div>
-    </>
+    </>,
+    document.body
   );
 }
