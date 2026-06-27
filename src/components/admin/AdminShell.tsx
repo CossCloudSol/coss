@@ -1,14 +1,11 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect, useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import BottomNav from './BottomNav';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 
-/**
- * Map of pathname → page title shown in the TopBar. Longest-prefix wins so
- * nested routes inherit their parent's title unless explicitly overridden.
- */
 const TITLE_MAP: ReadonlyArray<readonly [string, string]> = [
   ['/admin/leads', 'All Leads'],
   ['/admin/corporate', 'Corporate'],
@@ -36,32 +33,9 @@ type AdminShellProps = {
   role?: 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
 };
 
-/**
- * Client wrapper for the admin layout.
- * Receives permissions and role from the server layout (which reads iron-session
- * without a client round-trip) and forwards them to the Sidebar for filtering.
- */
 export default function AdminShell({ children, permissions, role }: AdminShellProps): JSX.Element {
   const pathname = usePathname() ?? '';
-  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
-  // Auto-close the mobile drawer whenever the route changes.
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
-  // Disable body scroll while the mobile drawer is open.
-  useEffect(() => {
-    if (typeof document === 'undefined') return;
-    const { body } = document;
-    const previous = body.style.overflow;
-    body.style.overflow = mobileOpen ? 'hidden' : previous;
-    return () => {
-      body.style.overflow = previous;
-    };
-  }, [mobileOpen]);
-
-  // The login page renders its own full-screen card — skip the CRM chrome.
   const isLoginRoute = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
   if (isLoginRoute) {
     return <>{children}</>;
@@ -70,43 +44,23 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
   const title = titleForPath(pathname);
 
   return (
-    // fixed inset-0 visually covers the public site header/footer that are
-    // rendered by the root layout. The inner column scrolls independently.
     <div className="fixed inset-0 z-40 bg-gray-50 dark:bg-gray-900">
-      {/* Desktop sidebar — only at lg+ so tablets (768-1023px) use the
-          drawer instead of cramming a 220px rail into half the viewport. */}
+      {/* Desktop sidebar — lg+ only */}
       <div className="absolute inset-y-0 left-0 hidden w-[220px] lg:block">
         <Sidebar permissions={permissions} role={role} />
       </div>
 
-      {/* Mobile / tablet drawer + backdrop */}
-      <div
-        className={`absolute inset-0 z-50 lg:hidden ${mobileOpen ? '' : 'pointer-events-none'}`}
-        aria-hidden={!mobileOpen}
-      >
-        <div
-          onClick={() => setMobileOpen(false)}
-          className={`absolute inset-0 bg-black/40 transition-opacity duration-200 ${
-            mobileOpen ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-        <div
-          className={`absolute inset-y-0 left-0 w-[220px] transform transition-transform duration-200 ${
-            mobileOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-          role="dialog"
-          aria-label="Admin navigation"
-          aria-modal="true"
-        >
-          <Sidebar permissions={permissions} role={role} onNavigate={() => setMobileOpen(false)} />
+      {/* Main column */}
+      <div className="flex h-full flex-col transition-all lg:ml-[220px]">
+        <TopBar title={title} />
+        {/* pb-16 on mobile keeps content clear of the bottom nav bar */}
+        <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-3 pb-16 sm:p-4 sm:pb-16 md:p-6 md:pb-16 lg:p-6">
+          {children}
         </div>
       </div>
 
-      {/* Main column */}
-      <div className="flex h-full flex-col ml-0 lg:ml-[220px] transition-all">
-        <TopBar title={title} onToggleSidebar={() => setMobileOpen(true)} />
-        <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-3 sm:p-4 md:p-6">{children}</div>
-      </div>
+      {/* Mobile bottom nav + slide-up drawer (hidden on lg+) */}
+      <BottomNav />
     </div>
   );
 }
