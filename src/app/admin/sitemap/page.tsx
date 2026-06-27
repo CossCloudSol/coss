@@ -233,8 +233,80 @@ export default function SitemapManagerPage() {
             </div>
           </div>
 
-          {/* Table */}
-          <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          {/* Mobile cards (< lg) */}
+          <div className="block lg:hidden">
+            {loading ? (
+              <p className="py-8 text-center text-sm text-gray-400">Loading pages…</p>
+            ) : filteredPages.length === 0 ? (
+              <p className="py-8 text-center text-sm text-gray-400">No pages match the current filter.</p>
+            ) : (
+              filteredPages.map(page => {
+                const badge = GROUP_BADGE[page.group]
+                const isSavingThis = saving === page.slug
+                return (
+                  <div
+                    key={page.slug}
+                    className={[
+                      'bg-gray-800/50 rounded-xl border border-gray-700 p-3 mb-2 transition-opacity',
+                      !page.sitemapInclude ? 'opacity-50' : '',
+                    ].join(' ')}
+                  >
+                    {/* Row 1: slug + group badge */}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="font-mono text-sm text-gray-300 truncate flex-1">{page.name}</span>
+                      <span className={`shrink-0 inline-block px-2 py-0.5 rounded text-xs font-medium ${badge.cls}`}>
+                        {badge.label}
+                      </span>
+                      {isSavingThis && (
+                        <span className="shrink-0 inline-block h-3 w-3 animate-spin rounded-full border-2 border-teal-500 border-t-transparent" />
+                      )}
+                    </div>
+
+                    {/* Row 2: include toggle */}
+                    <div className="flex items-center justify-between mt-2">
+                      <span className="text-xs text-gray-400">Include in sitemap</span>
+                      <button
+                        role="switch"
+                        aria-checked={page.sitemapInclude}
+                        onClick={() => updatePage(page.slug, 'sitemapInclude', !page.sitemapInclude)}
+                        className={[
+                          'relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500',
+                          page.sitemapInclude ? 'bg-teal-600' : 'bg-gray-600',
+                        ].join(' ')}
+                      >
+                        <span
+                          className={[
+                            'inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform',
+                            page.sitemapInclude ? 'translate-x-4' : 'translate-x-0.5',
+                          ].join(' ')}
+                        />
+                      </button>
+                    </div>
+
+                    {/* Row 3: priority slider */}
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-xs text-gray-400 shrink-0">Priority</span>
+                      <input
+                        type="range"
+                        min="0.1"
+                        max="1.0"
+                        step="0.1"
+                        value={page.sitemapPriority}
+                        onChange={e => updatePage(page.slug, 'sitemapPriority', parseFloat(e.target.value))}
+                        className="flex-1 accent-teal-600"
+                      />
+                      <span className="text-xs text-gray-400 w-6 tabular-nums shrink-0">
+                        {page.sitemapPriority.toFixed(1)}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })
+            )}
+          </div>
+
+          {/* Desktop table (lg+) */}
+          <div className="hidden lg:block rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead className="bg-gray-50 dark:bg-gray-800">

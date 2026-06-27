@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { createPortal } from 'react-dom'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -677,8 +678,12 @@ export default function ContentBlocksPage() {
   const [draftChanges, setDraftChanges]       = useState(false)
   const [editForm, setEditForm]               = useState<Partial<ContentBlock>>({})
   const [toast, setToast]                     = useState<string | null>(null)
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
+  const [mounted, setMounted]                 = useState(false)
 
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => { setMounted(true) }, [])
 
   const showToast = useCallback((msg: string) => {
     setToast(msg)
@@ -875,9 +880,9 @@ export default function ContentBlocksPage() {
         </div>
       </header>
 
-      {/* ── Body ── */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* ── Left sidebar ── */}
+      {/* ── Desktop layout (lg+) ── */}
+      <div className="hidden lg:flex flex-1 overflow-hidden">
+        {/* Left sidebar */}
         <aside className="w-[220px] flex-shrink-0 border-r border-white/10 bg-gray-900 flex flex-col overflow-hidden">
           {/* Pages */}
           <div className="p-3 border-b border-white/10">
@@ -949,7 +954,7 @@ export default function ContentBlocksPage() {
           </div>
         </aside>
 
-        {/* ── Center canvas ── */}
+        {/* Center canvas */}
         <main className="flex-1 overflow-y-auto p-5 bg-gray-950">
           {/* Page header */}
           <div className="flex items-center justify-between mb-4">
@@ -1055,7 +1060,7 @@ export default function ContentBlocksPage() {
           )}
         </main>
 
-        {/* ── Right settings panel ── */}
+        {/* Right settings panel */}
         <aside className="w-[280px] flex-shrink-0 border-l border-white/10 bg-gray-900 flex flex-col overflow-hidden">
           {selectedBlock ? (
             <SettingsPanel
@@ -1081,6 +1086,145 @@ export default function ContentBlocksPage() {
             </div>
           )}
         </aside>
+      </div>
+
+      {/* ── Mobile layout (< lg) ── */}
+      <div className="flex lg:hidden flex-col flex-1 overflow-hidden">
+        {/* Page selector dropdown */}
+        <div className="p-3 border-b border-white/10 flex-shrink-0">
+          <select
+            value={activePage}
+            onChange={e => setActivePage(e.target.value)}
+            className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500/50 appearance-none"
+          >
+            {PAGES.map(p => (
+              <option key={p.id} value={p.id}>{p.emoji} {p.label}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Block list */}
+        <div className="flex-1 overflow-y-auto p-3">
+          {loading ? (
+            <div className="flex items-center justify-center py-16 text-gray-500 text-sm">Loading blocks...</div>
+          ) : blocks.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="w-12 h-12 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-2xl">📦</div>
+              <p className="text-gray-400 text-sm">No blocks on this page</p>
+              <p className="text-gray-600 text-xs mt-1">Tap a block type below to add one</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {blocks.map(block => {
+                const colorClass = BLOCK_TYPE_COLORS[block.blockType] ?? 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+                return (
+                  <div
+                    key={block.id}
+                    className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${
+                      selectedId === block.id
+                        ? 'border-teal-500/50 bg-gray-800'
+                        : 'border-white/8 bg-gray-900'
+                    } ${!block.isVisible ? 'opacity-50' : ''}`}
+                  >
+                    {/* Drag handle */}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600 flex-shrink-0">
+                      <line x1="8" y1="6" x2="16" y2="6" />
+                      <line x1="8" y1="12" x2="16" y2="12" />
+                      <line x1="8" y1="18" x2="16" y2="18" />
+                    </svg>
+
+                    {/* Block info */}
+                    <div className="flex-1 min-w-0">
+                      <span className={`inline-block text-xs px-1.5 py-0.5 rounded border font-medium ${colorClass}`}>
+                        {block.blockType}
+                      </span>
+                      <p className="text-xs text-gray-300 truncate mt-1">{block.title || '(untitled)'}</p>
+                    </div>
+
+                    {/* Controls */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {/* Toggle visibility */}
+                      <button
+                        onClick={() => handleToggleVisible(block)}
+                        className={`p-1.5 rounded transition-colors ${block.isVisible ? 'text-teal-400' : 'text-gray-600'}`}
+                        title={block.isVisible ? 'Hide block' : 'Show block'}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          {block.isVisible
+                            ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>
+                            : <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" /></>
+                          }
+                        </svg>
+                      </button>
+                      {/* Edit settings → opens bottom sheet */}
+                      <button
+                        onClick={() => { handleSelect(block.id); setMobileSheetOpen(true) }}
+                        className="px-2.5 py-1 text-xs text-teal-400 border border-teal-500/30 rounded-md hover:bg-teal-500/10 transition-colors whitespace-nowrap"
+                      >
+                        Edit settings
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Add block pill row */}
+        <div className="flex-shrink-0 border-t border-white/10 px-3 py-2.5">
+          <div className="flex gap-2 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
+            {BLOCK_TYPES.map(bt => (
+              <button
+                key={bt.type}
+                onClick={() => handleAddBlock(bt.type)}
+                className="flex-shrink-0 px-3 py-1.5 text-xs text-gray-300 border border-white/10 rounded-full hover:bg-gray-800 hover:text-white transition-colors whitespace-nowrap"
+              >
+                + {bt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom sheet portal */}
+        {mounted && mobileSheetOpen && selectedBlock && createPortal(
+          <>
+            {/* Overlay */}
+            <div
+              className="fixed inset-0 z-40 bg-black/50"
+              onClick={() => setMobileSheetOpen(false)}
+            />
+            {/* Sheet */}
+            <div className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-gray-900 flex flex-col" style={{ maxHeight: '85vh' }}>
+              {/* Sheet header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 flex-shrink-0">
+                <p className="text-sm font-medium text-white">Edit block</p>
+                <button
+                  onClick={() => setMobileSheetOpen(false)}
+                  className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-800 text-gray-400 hover:text-white transition-colors text-lg leading-none"
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              </div>
+              {/* Sheet content */}
+              <div className="flex-1 overflow-y-auto min-h-0">
+                <SettingsPanel
+                  block={selectedBlock}
+                  tab={activeTab}
+                  onTabChange={setActiveTab}
+                  editForm={editForm}
+                  onFormChange={handleFormChange}
+                  onSave={handleSave}
+                  saving={saving}
+                  allBlocks={blocks}
+                  onDelete={handleDelete}
+                />
+              </div>
+            </div>
+          </>,
+          document.body
+        )}
       </div>
     </div>
   )

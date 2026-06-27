@@ -281,7 +281,7 @@ export default function RedirectsPage() {
         )}
       </div>
 
-      {/* Rules table */}
+      {/* Rules list */}
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -293,53 +293,109 @@ export default function RedirectsPage() {
           No redirect rules yet. Add your first rule above.
         </div>
       ) : (
-        <div className="border border-white/10 rounded-xl overflow-hidden mb-5">
-          <div className="grid grid-cols-[2fr_2fr_80px_80px_80px_60px] px-4 py-2.5 bg-gray-800 border-b border-white/10">
-            {['Source', 'Destination', 'Type', 'Status', 'Test', 'Delete'].map(h => (
-              <span key={h} className="text-xs text-gray-500 uppercase tracking-wide">{h}</span>
+        <>
+          {/* Mobile cards — visible below lg */}
+          <div className="block lg:hidden space-y-2 mb-5">
+            {redirects.map(r => (
+              <div
+                key={r.id}
+                className="bg-gray-800/60 rounded-xl border border-gray-700 p-3"
+              >
+                <p className="font-mono text-sm font-medium text-red-400 truncate">{r.source}</p>
+                <p className="font-mono text-xs text-gray-400 truncate mt-1">
+                  <span className="text-gray-500 mr-1">→</span>{r.destination}
+                </p>
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  <span className={`text-xs px-2 py-0.5 rounded ${
+                    r.statusCode === 301
+                      ? 'bg-teal-500/10 text-teal-400'
+                      : 'bg-purple-500/10 text-purple-400'
+                  }`}>
+                    {r.statusCode}
+                  </span>
+                  <button
+                    onClick={() => toggleActive(r)}
+                    className={`text-xs px-2 py-0.5 rounded ${
+                      r.isActive
+                        ? 'bg-teal-500/10 text-teal-400'
+                        : 'bg-gray-700 text-gray-500'
+                    }`}
+                  >
+                    {r.isActive ? 'Active' : 'Inactive'}
+                  </button>
+                  <span className="text-xs px-2 py-0.5 rounded bg-gray-700/60 text-gray-400">
+                    {r.statusCode === 301 ? 'Permanent' : 'Temporary'}
+                  </span>
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <a
+                    href={`https://www.cosscloudsol.com${r.source}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 text-center text-xs py-1.5 border border-blue-500/20 rounded-lg text-blue-400 hover:bg-blue-500/10"
+                  >
+                    Test ↗
+                  </a>
+                  <button
+                    onClick={() => deleteRedirect(r.id, r.source)}
+                    className="flex-1 text-xs py-1.5 border border-red-500/20 rounded-lg text-red-400 hover:bg-red-500/10"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
-          {redirects.map(r => (
-            <div
-              key={r.id}
-              className="grid grid-cols-[2fr_2fr_80px_80px_80px_60px] px-4 py-3 border-b border-white/5 last:border-0 items-center hover:bg-gray-800/50"
-            >
-              <span className="font-mono text-xs text-red-400 truncate pr-2">{r.source}</span>
-              <span className="font-mono text-xs text-teal-400 truncate pr-2">{r.destination}</span>
-              <span className={`text-xs px-2 py-0.5 rounded w-fit ${
-                r.statusCode === 301
-                  ? 'bg-teal-500/10 text-teal-400'
-                  : 'bg-purple-500/10 text-purple-400'
-              }`}>
-                {r.statusCode}
-              </span>
-              <button
-                onClick={() => toggleActive(r)}
-                className={`text-xs px-2 py-0.5 rounded w-fit ${
-                  r.isActive
-                    ? 'bg-teal-500/10 text-teal-400'
-                    : 'bg-gray-700 text-gray-500'
-                }`}
-              >
-                {r.isActive ? 'Active' : 'Inactive'}
-              </button>
-              <a
-                href={`https://www.cosscloudsol.com${r.source}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-400 hover:underline"
-              >
-                Test ↗
-              </a>
-              <button
-                onClick={() => deleteRedirect(r.id, r.source)}
-                className="text-xs px-2 py-0.5 border border-red-500/20 rounded text-red-400 hover:bg-red-500/10"
-              >
-                Delete
-              </button>
+
+          {/* Desktop table — hidden below lg */}
+          <div className="hidden lg:block border border-white/10 rounded-xl overflow-hidden mb-5">
+            <div className="grid grid-cols-[2fr_2fr_80px_80px_80px_60px] px-4 py-2.5 bg-gray-800 border-b border-white/10">
+              {['Source', 'Destination', 'Type', 'Status', 'Test', 'Delete'].map(h => (
+                <span key={h} className="text-xs text-gray-500 uppercase tracking-wide">{h}</span>
+              ))}
             </div>
-          ))}
-        </div>
+            {redirects.map(r => (
+              <div
+                key={r.id}
+                className="grid grid-cols-[2fr_2fr_80px_80px_80px_60px] px-4 py-3 border-b border-white/5 last:border-0 items-center hover:bg-gray-800/50"
+              >
+                <span className="font-mono text-xs text-red-400 truncate pr-2">{r.source}</span>
+                <span className="font-mono text-xs text-teal-400 truncate pr-2">{r.destination}</span>
+                <span className={`text-xs px-2 py-0.5 rounded w-fit ${
+                  r.statusCode === 301
+                    ? 'bg-teal-500/10 text-teal-400'
+                    : 'bg-purple-500/10 text-purple-400'
+                }`}>
+                  {r.statusCode}
+                </span>
+                <button
+                  onClick={() => toggleActive(r)}
+                  className={`text-xs px-2 py-0.5 rounded w-fit ${
+                    r.isActive
+                      ? 'bg-teal-500/10 text-teal-400'
+                      : 'bg-gray-700 text-gray-500'
+                  }`}
+                >
+                  {r.isActive ? 'Active' : 'Inactive'}
+                </button>
+                <a
+                  href={`https://www.cosscloudsol.com${r.source}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-blue-400 hover:underline"
+                >
+                  Test ↗
+                </a>
+                <button
+                  onClick={() => deleteRedirect(r.id, r.source)}
+                  className="text-xs px-2 py-0.5 border border-red-500/20 rounded text-red-400 hover:bg-red-500/10"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* CSV Import */}
