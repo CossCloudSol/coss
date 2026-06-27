@@ -242,7 +242,7 @@ function BlockPreview({ block }: { block: ContentBlock }) {
   if (t === 'testimonials') return (
     <div className="bg-gray-700/50 rounded-lg p-3">
       <div className="flex text-yellow-400 text-xs mb-1">★★★★★</div>
-      <p className="text-xs text-gray-300 italic">"{block.body?.slice(0, 60) || 'Student testimonial quote goes here...'}"</p>
+      <p className="text-xs text-gray-300 italic">&quot;{block.body?.slice(0, 60) || 'Student testimonial quote goes here...'}&quot;</p>
       <p className="text-xs text-gray-500 mt-1">— {block.title || 'Student Name'}</p>
     </div>
   )
