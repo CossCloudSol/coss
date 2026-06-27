@@ -104,6 +104,17 @@ export default function SchemaPage() {
   const [validateError, setValidateError]   = useState('')
   const [expandedSchema, setExpandedSchema] = useState<number | null>(null)
 
+  const [setupDismissed, setSetupDismissed] = useState(true) // true until hydrated to avoid flash
+
+  useEffect(() => {
+    setSetupDismissed(localStorage.getItem('schema_setup_done') === '1')
+  }, [])
+
+  function dismissSetup() {
+    localStorage.setItem('schema_setup_done', '1')
+    setSetupDismissed(true)
+  }
+
   // Load global schemas on mount
   useEffect(() => {
     fetch('/api/admin/schema/global')
@@ -267,14 +278,26 @@ export default function SchemaPage() {
       </div>
 
       {/* Supabase SQL reminder */}
-      <div className="mb-6 bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
-        <p className="text-amber-400 text-xs font-semibold mb-1">FIRST TIME SETUP</p>
-        <p className="text-amber-200/80 text-xs">
-          Run the Phase 1 SQL in your Supabase SQL Editor to add schema columns to PageSeo and SiteSettings before using this page.
-        </p>
-        <details className="mt-2">
-          <summary className="text-amber-400 text-xs cursor-pointer hover:underline">Show SQL</summary>
-          <pre className="mt-2 text-xs text-green-300 bg-black/40 rounded p-3 overflow-x-auto whitespace-pre">{`ALTER TABLE "PageSeo"
+      {!setupDismissed && (
+        <div className="mb-6 bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-amber-400 text-xs font-semibold mb-1">FIRST TIME SETUP</p>
+              <p className="text-amber-200/80 text-xs">
+                Run the Phase 1 SQL in your Supabase SQL Editor to add schema columns to PageSeo and SiteSettings before using this page.
+              </p>
+            </div>
+            <button
+              onClick={dismissSetup}
+              className="shrink-0 text-amber-400/60 hover:text-amber-400 text-lg leading-none transition-colors"
+              aria-label="Dismiss setup banner"
+            >
+              ×
+            </button>
+          </div>
+          <details className="mt-2">
+            <summary className="text-amber-400 text-xs cursor-pointer hover:underline">Show SQL</summary>
+            <pre className="mt-2 text-xs text-green-300 bg-black/40 rounded p-3 overflow-x-auto whitespace-pre">{`ALTER TABLE "PageSeo"
   ADD COLUMN IF NOT EXISTS "schemaEnabled"  BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaOverride" TEXT;
 
@@ -287,8 +310,9 @@ ALTER TABLE "SiteSettings"
   ADD COLUMN IF NOT EXISTS "schemaWebSiteEnabled"      BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaDilsEnabled"         BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaAmeerpetEnabled"     BOOLEAN NOT NULL DEFAULT true;`}</pre>
-        </details>
-      </div>
+          </details>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 border-b border-white/10">
