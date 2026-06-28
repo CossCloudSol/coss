@@ -1089,7 +1089,7 @@ export default function ContentBlocksPage() {
       </div>
 
       {/* ── Mobile layout (< lg) ── */}
-      <div className="flex lg:hidden flex-col flex-1 overflow-hidden">
+      <div className="flex lg:hidden flex-col flex-1 overflow-hidden overflow-x-hidden">
         {/* Page selector dropdown */}
         <div className="p-3 border-b border-white/10 flex-shrink-0">
           <select
@@ -1173,7 +1173,8 @@ export default function ContentBlocksPage() {
 
         {/* Add block pill row */}
         <div className="flex-shrink-0 border-t border-white/10 px-3 py-2.5">
-          <div className="flex gap-2 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none' }}>
+          <style>{`.pill-scroll::-webkit-scrollbar{display:none}`}</style>
+          <div className="pill-scroll flex gap-2 overflow-x-auto pb-0.5" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {BLOCK_TYPES.map(bt => (
               <button
                 key={bt.type}
