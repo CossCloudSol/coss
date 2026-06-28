@@ -32,20 +32,20 @@ const STATUS_LABEL: Record<Status, string> = {
 };
 
 const STATUS_STYLES: Record<Status, { pill: string; dot: string }> = {
-  new: { pill: 'bg-blue-50 text-blue-700 ring-blue-200', dot: 'bg-blue-500' },
+  new: { pill: 'bg-[#dcfce7] text-[#15803d] ring-[#bbf7d0] dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700', dot: 'bg-emerald-500' },
   reviewing: {
-    pill: 'bg-amber-50 text-amber-700 ring-amber-200',
+    pill: 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-700',
     dot: 'bg-amber-500',
   },
   sent: {
-    pill: 'bg-purple-50 text-purple-700 ring-purple-200',
-    dot: 'bg-purple-500',
+    pill: 'bg-[#dbeafe] text-[#1d4ed8] ring-[#bfdbfe] dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-700',
+    dot: 'bg-blue-500',
   },
   won: {
-    pill: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-    dot: 'bg-emerald-500',
+    pill: 'bg-[#f3e8ff] text-[#7c3aed] ring-[#e9d5ff] dark:bg-purple-900/30 dark:text-purple-400 dark:ring-purple-700',
+    dot: 'bg-purple-500',
   },
-  lost: { pill: 'bg-red-50 text-red-700 ring-red-200', dot: 'bg-red-500' },
+  lost: { pill: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700', dot: 'bg-red-500' },
 };
 
 const SEARCH_DEBOUNCE_MS = 400;
@@ -318,7 +318,7 @@ export default function CorporateLeadsPage(): JSX.Element {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 bg-white">
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
             {loading ? (
               <SkeletonRows />
             ) : filteredLeads.length === 0 ? (

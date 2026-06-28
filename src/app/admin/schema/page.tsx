@@ -271,33 +271,33 @@ export default function SchemaPage() {
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Schema Markup Manager</h1>
-        <p className="text-gray-400 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-[#0f172a] dark:text-white">Schema Markup Manager</h1>
+        <p className="text-[#475569] dark:text-gray-400 text-sm mt-1">
           Control JSON-LD structured data across all site pages. Affects Google Knowledge Panel, Local Pack, Rich Results, and AI engine entity recognition.
         </p>
       </div>
 
       {/* Supabase SQL reminder */}
       {!setupDismissed && (
-        <div className="mb-6 bg-amber-900/20 border border-amber-500/30 rounded-lg p-4">
+        <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-500/30 rounded-lg p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <p className="text-amber-400 text-xs font-semibold mb-1">FIRST TIME SETUP</p>
-              <p className="text-amber-200/80 text-xs">
+              <p className="text-amber-700 dark:text-amber-400 text-xs font-semibold mb-1">FIRST TIME SETUP</p>
+              <p className="text-amber-700/80 dark:text-amber-200/80 text-xs">
                 Run the Phase 1 SQL in your Supabase SQL Editor to add schema columns to PageSeo and SiteSettings before using this page.
               </p>
             </div>
             <button
               onClick={dismissSetup}
-              className="shrink-0 text-amber-400/60 hover:text-amber-400 text-lg leading-none transition-colors"
+              className="shrink-0 text-amber-500/60 dark:text-amber-400/60 hover:text-amber-600 dark:hover:text-amber-400 text-lg leading-none transition-colors"
               aria-label="Dismiss setup banner"
             >
               ×
             </button>
           </div>
           <details className="mt-2">
-            <summary className="text-amber-400 text-xs cursor-pointer hover:underline">Show SQL</summary>
-            <pre className="mt-2 text-xs text-green-300 bg-black/40 rounded p-3 overflow-x-auto whitespace-pre">{`ALTER TABLE "PageSeo"
+            <summary className="text-amber-700 dark:text-amber-400 text-xs cursor-pointer hover:underline">Show SQL</summary>
+            <pre className="mt-2 text-xs text-green-700 dark:text-green-300 bg-amber-50/50 dark:bg-black/40 rounded p-3 overflow-x-auto whitespace-pre">{`ALTER TABLE "PageSeo"
   ADD COLUMN IF NOT EXISTS "schemaEnabled"  BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaOverride" TEXT;
 
@@ -315,7 +315,7 @@ ALTER TABLE "SiteSettings"
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 border-b border-white/10">
+      <div className="flex gap-1 mb-6 border-b border-[#e2e8f0] dark:border-white/10">
         {(['global', 'pages', 'validate'] as const).map(t => (
           <button
             key={t}
@@ -323,8 +323,8 @@ ALTER TABLE "SiteSettings"
             className={[
               'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
               tab === t
-                ? 'border-teal-500 text-teal-400'
-                : 'border-transparent text-gray-400 hover:text-white',
+                ? 'border-teal-500 text-teal-600 dark:text-teal-400'
+                : 'border-transparent text-[#475569] dark:text-gray-400 hover:text-[#0f172a] dark:hover:text-white',
             ].join(' ')}
           >
             {t === 'global' ? 'Global Schemas' : t === 'pages' ? 'Page Schemas' : 'Schema Validator'}
@@ -336,7 +336,7 @@ ALTER TABLE "SiteSettings"
       {tab === 'global' && (
         <div>
           {globalMsg && (
-            <div className="mb-4 px-4 py-2 bg-teal-900/30 border border-teal-500/30 rounded text-teal-300 text-sm">
+            <div className="mb-4 px-4 py-2 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded text-teal-700 dark:text-teal-300 text-sm">
               {globalMsg}
             </div>
           )}
@@ -351,23 +351,23 @@ ALTER TABLE "SiteSettings"
               const renderedSchema = rendered[idx]
 
               return (
-                <div key={schema.key} className="bg-white/5 border border-white/10 rounded-xl p-5">
+                <div key={schema.key} className="bg-white dark:bg-white/5 border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                       <span className="text-2xl">{schema.icon}</span>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="text-white font-semibold text-sm">{schema.label}</h3>
+                          <h3 className="text-[#0f172a] dark:text-white font-semibold text-sm">{schema.label}</h3>
                           {override && (
-                            <span className="px-2 py-0.5 rounded text-xs bg-purple-900/40 text-purple-300 border border-purple-500/30">
+                            <span className="px-2 py-0.5 rounded text-xs bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30">
                               Custom override
                             </span>
                           )}
                         </div>
-                        <p className="text-gray-400 text-xs mt-0.5">{schema.desc}</p>
+                        <p className="text-[#475569] dark:text-gray-400 text-xs mt-0.5">{schema.desc}</p>
                         <div className="flex gap-1.5 flex-wrap mt-2">
                           {schema.types.map(t => (
-                            <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-900/40 text-teal-300 border border-teal-500/30">
+                            <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">
                               {t}
                             </span>
                           ))}
@@ -377,7 +377,7 @@ ALTER TABLE "SiteSettings"
 
                     {/* Toggle */}
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className={`text-xs ${enabled ? 'text-teal-400' : 'text-gray-500'}`}>
+                      <span className={`text-xs ${enabled ? 'text-teal-600 dark:text-teal-400' : 'text-[#94a3b8] dark:text-gray-500'}`}>
                         {enabled ? 'Enabled' : 'Disabled'}
                       </span>
                       <button
@@ -385,7 +385,7 @@ ALTER TABLE "SiteSettings"
                         disabled={saving}
                         className={[
                           'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                          enabled ? 'bg-teal-600' : 'bg-gray-600',
+                          enabled ? 'bg-teal-600' : 'bg-gray-300 dark:bg-gray-600',
                           saving ? 'opacity-50 cursor-not-allowed' : '',
                         ].join(' ')}
                         aria-label={`Toggle ${schema.label}`}
@@ -402,13 +402,13 @@ ALTER TABLE "SiteSettings"
                   <div className="flex gap-2 mt-4 flex-wrap">
                     <button
                       onClick={() => setExpandedKey(isExpanded ? null : schema.key)}
-                      className="px-3 py-1.5 rounded-lg text-xs border border-white/10 text-gray-300 hover:bg-white/5 transition-colors"
+                      className="px-3 py-1.5 rounded-lg text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                     >
                       {isExpanded ? 'Hide JSON' : 'View rendered JSON'}
                     </button>
                     <button
                       onClick={() => isEditing ? setEditingKey(null) : startEdit(schema.overrideKey, override)}
-                      className="px-3 py-1.5 rounded-lg text-xs border border-white/10 text-gray-300 hover:bg-white/5 transition-colors"
+                      className="px-3 py-1.5 rounded-lg text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                     >
                       {isEditing ? 'Cancel edit' : 'Edit override'}
                     </button>
@@ -416,7 +416,7 @@ ALTER TABLE "SiteSettings"
                       <button
                         onClick={() => clearOverride(schema.overrideKey)}
                         disabled={saving}
-                        className="px-3 py-1.5 rounded-lg text-xs border border-red-500/30 text-red-400 hover:bg-red-900/20 transition-colors"
+                        className="px-3 py-1.5 rounded-lg text-xs border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                       >
                         Clear override
                       </button>
@@ -425,7 +425,7 @@ ALTER TABLE "SiteSettings"
                       href="https://search.google.com/test/rich-results?url=https://www.cosscloudsol.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 rounded-lg text-xs border border-blue-500/30 text-blue-400 hover:bg-blue-900/20 transition-colors"
+                      className="px-3 py-1.5 rounded-lg text-xs border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                     >
                       Test in Rich Results ↗
                     </a>
@@ -434,14 +434,14 @@ ALTER TABLE "SiteSettings"
                   {/* Rendered JSON view */}
                   {isExpanded && renderedSchema && (
                     <div className="mt-4">
-                      <p className="text-gray-400 text-xs mb-1">Currently rendered schema:</p>
-                      <pre className="bg-gray-900 text-green-300 text-xs p-3 rounded-lg border border-white/10 overflow-x-auto max-h-64 overflow-y-auto whitespace-pre">
+                      <p className="text-[#475569] dark:text-gray-400 text-xs mb-1">Currently rendered schema:</p>
+                      <pre className="bg-[#f8fafc] dark:bg-gray-900 text-green-700 dark:text-green-300 text-xs p-3 rounded-lg border border-[#e2e8f0] dark:border-white/10 overflow-x-auto max-h-64 overflow-y-auto whitespace-pre">
                         {JSON.stringify(renderedSchema, null, 2)}
                       </pre>
                     </div>
                   )}
                   {isExpanded && !renderedSchema && (
-                    <div className="mt-4 px-3 py-2 bg-gray-900/50 rounded-lg text-gray-500 text-xs">
+                    <div className="mt-4 px-3 py-2 bg-[#f8fafc] dark:bg-gray-900/50 rounded-lg text-[#94a3b8] dark:text-gray-500 text-xs">
                       Schema is disabled or not rendered.
                     </div>
                   )}
@@ -449,16 +449,16 @@ ALTER TABLE "SiteSettings"
                   {/* JSON override editor */}
                   {isEditing && (
                     <div className="mt-4">
-                      <p className="text-gray-400 text-xs mb-1">
+                      <p className="text-[#475569] dark:text-gray-400 text-xs mb-1">
                         Paste custom JSON-LD override (leave empty to use auto-generated):
                       </p>
                       <textarea
                         value={editJson}
                         onChange={e => setEditJson(e.target.value)}
-                        className="w-full font-mono text-xs bg-gray-900 text-green-400 p-3 rounded-lg border border-white/10 min-h-[200px] resize-y"
+                        className="w-full font-mono text-xs bg-[#f8fafc] dark:bg-gray-900 text-green-700 dark:text-green-400 p-3 rounded-lg border border-[#e2e8f0] dark:border-white/10 min-h-[200px] resize-y"
                         placeholder='{"@context": "https://schema.org", "@type": "Organization", ...}'
                       />
-                      {jsonError && <p className="text-red-400 text-xs mt-1">{jsonError}</p>}
+                      {jsonError && <p className="text-red-600 dark:text-red-400 text-xs mt-1">{jsonError}</p>}
                       <div className="flex gap-2 mt-2">
                         <button
                           onClick={() => saveOverride(schema.overrideKey)}
@@ -471,14 +471,14 @@ ALTER TABLE "SiteSettings"
                           <button
                             onClick={() => clearOverride(schema.overrideKey)}
                             disabled={saving}
-                            className="px-3 py-1.5 rounded-lg text-xs border border-red-500/30 text-red-400 hover:bg-red-900/20 transition-colors"
+                            className="px-3 py-1.5 rounded-lg text-xs border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                           >
                             Clear override
                           </button>
                         )}
                         <button
                           onClick={() => { setEditingKey(null); setJsonError('') }}
-                          className="px-3 py-1.5 rounded-lg text-xs border border-white/10 text-gray-400 hover:bg-white/5 transition-colors"
+                          className="px-3 py-1.5 rounded-lg text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-400 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                         >
                           Cancel
                         </button>
@@ -496,36 +496,36 @@ ALTER TABLE "SiteSettings"
       {tab === 'pages' && (
         <div>
           {pageMsg && (
-            <div className="mb-4 px-4 py-2 bg-teal-900/30 border border-teal-500/30 rounded text-teal-300 text-sm">
+            <div className="mb-4 px-4 py-2 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded text-teal-700 dark:text-teal-300 text-sm">
               {pageMsg}
             </div>
           )}
           {!pagesLoaded ? (
-            <div className="text-gray-400 text-sm py-8 text-center">Loading pages...</div>
+            <div className="text-[#475569] dark:text-gray-400 text-sm py-8 text-center">Loading pages...</div>
           ) : (
-            <div className="overflow-x-auto rounded-xl border border-white/10">
+            <div className="overflow-x-auto rounded-xl border border-[#e2e8f0] dark:border-white/10">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10 bg-white/5">
-                    <th className="text-left px-4 py-3 text-gray-400 font-medium">Page</th>
-                    <th className="text-left px-4 py-3 text-gray-400 font-medium">Schema types</th>
-                    <th className="text-center px-4 py-3 text-gray-400 font-medium">Enabled</th>
-                    <th className="text-center px-4 py-3 text-gray-400 font-medium">Override</th>
-                    <th className="text-right px-4 py-3 text-gray-400 font-medium">Actions</th>
+                  <tr className="border-b border-[#e2e8f0] dark:border-white/10 bg-[#f8fafc] dark:bg-white/5">
+                    <th className="text-left px-4 py-3 text-[#475569] dark:text-gray-400 font-medium">Page</th>
+                    <th className="text-left px-4 py-3 text-[#475569] dark:text-gray-400 font-medium">Schema types</th>
+                    <th className="text-center px-4 py-3 text-[#475569] dark:text-gray-400 font-medium">Enabled</th>
+                    <th className="text-center px-4 py-3 text-[#475569] dark:text-gray-400 font-medium">Override</th>
+                    <th className="text-right px-4 py-3 text-[#475569] dark:text-gray-400 font-medium">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-[#f1f5f9] dark:divide-white/5">
                   {pages.map(page => (
                     <>
-                      <tr key={page.slug} className="hover:bg-white/5 transition-colors">
+                      <tr key={page.slug} className="hover:bg-[#f8fafc] dark:hover:bg-white/5 transition-colors">
                         <td className="px-4 py-3">
-                          <p className="text-white font-medium">{page.name}</p>
-                          <p className="font-mono text-gray-500 text-xs mt-0.5">{page.slug}</p>
+                          <p className="text-[#0f172a] dark:text-white font-medium">{page.name}</p>
+                          <p className="font-mono text-[#94a3b8] dark:text-gray-500 text-xs mt-0.5">{page.slug}</p>
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex gap-1 flex-wrap">
                             {page.types.map(t => (
-                              <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-900/40 text-teal-300 border border-teal-500/30">
+                              <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">
                                 {t}
                               </span>
                             ))}
@@ -537,7 +537,7 @@ ALTER TABLE "SiteSettings"
                             disabled={pageSaving === page.slug}
                             className={[
                               'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                              page.schemaEnabled ? 'bg-teal-600' : 'bg-gray-600',
+                              page.schemaEnabled ? 'bg-teal-600' : 'bg-gray-300 dark:bg-gray-600',
                               pageSaving === page.slug ? 'opacity-50 cursor-not-allowed' : '',
                             ].join(' ')}
                           >
@@ -549,11 +549,11 @@ ALTER TABLE "SiteSettings"
                         </td>
                         <td className="px-4 py-3 text-center">
                           {page.schemaOverride ? (
-                            <span className="px-2 py-0.5 rounded text-xs bg-purple-900/40 text-purple-300 border border-purple-500/30">
+                            <span className="px-2 py-0.5 rounded text-xs bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-500/30">
                               Custom
                             </span>
                           ) : (
-                            <span className="px-2 py-0.5 rounded text-xs bg-gray-800 text-gray-500 border border-white/5">
+                            <span className="px-2 py-0.5 rounded text-xs bg-[#f1f5f9] dark:bg-gray-800 text-[#94a3b8] dark:text-gray-500 border border-[#e2e8f0] dark:border-white/5">
                               Auto
                             </span>
                           )}
@@ -562,13 +562,13 @@ ALTER TABLE "SiteSettings"
                           <div className="flex gap-1.5 justify-end flex-wrap">
                             <button
                               onClick={() => setViewingSlug(viewingSlug === page.slug ? null : page.slug)}
-                              className="px-2.5 py-1 rounded text-xs border border-white/10 text-gray-300 hover:bg-white/5 transition-colors"
+                              className="px-2.5 py-1 rounded text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                             >
                               {viewingSlug === page.slug ? 'Hide' : 'View JSON'}
                             </button>
                             <button
                               onClick={() => editingSlug === page.slug ? setEditingSlug(null) : startPageEdit(page.slug, page.schemaOverride)}
-                              className="px-2.5 py-1 rounded text-xs border border-white/10 text-gray-300 hover:bg-white/5 transition-colors"
+                              className="px-2.5 py-1 rounded text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                             >
                               {editingSlug === page.slug ? 'Cancel' : 'Edit override'}
                             </button>
@@ -576,7 +576,7 @@ ALTER TABLE "SiteSettings"
                               href={`https://search.google.com/test/rich-results?url=https://www.cosscloudsol.com${page.slug.startsWith('*') ? '' : page.slug}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-2.5 py-1 rounded text-xs border border-blue-500/30 text-blue-400 hover:bg-blue-900/20 transition-colors"
+                              className="px-2.5 py-1 rounded text-xs border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                             >
                               Test ↗
                             </a>
@@ -587,13 +587,13 @@ ALTER TABLE "SiteSettings"
                       {/* Inline: View JSON */}
                       {viewingSlug === page.slug && (
                         <tr key={`${page.slug}-view`}>
-                          <td colSpan={5} className="px-4 pb-4 bg-white/3">
+                          <td colSpan={5} className="px-4 pb-4 bg-[#f8fafc] dark:bg-white/3">
                             {page.schemaOverride ? (
-                              <pre className="bg-gray-900 text-green-300 text-xs p-3 rounded-lg border border-white/10 overflow-x-auto max-h-48 overflow-y-auto whitespace-pre">
+                              <pre className="bg-white dark:bg-gray-900 text-green-700 dark:text-green-300 text-xs p-3 rounded-lg border border-[#e2e8f0] dark:border-white/10 overflow-x-auto max-h-48 overflow-y-auto whitespace-pre">
                                 {JSON.stringify(JSON.parse(page.schemaOverride), null, 2)}
                               </pre>
                             ) : (
-                              <div className="px-3 py-2 bg-gray-900/50 rounded-lg text-gray-400 text-xs">
+                              <div className="px-3 py-2 bg-[#f1f5f9] dark:bg-gray-900/50 rounded-lg text-[#475569] dark:text-gray-400 text-xs">
                                 No override set — auto-generated schema is used based on page content.
                               </div>
                             )}
@@ -604,14 +604,14 @@ ALTER TABLE "SiteSettings"
                       {/* Inline: Edit override */}
                       {editingSlug === page.slug && (
                         <tr key={`${page.slug}-edit`}>
-                          <td colSpan={5} className="px-4 pb-4 bg-white/3">
+                          <td colSpan={5} className="px-4 pb-4 bg-[#f8fafc] dark:bg-white/3">
                             <textarea
                               value={editingOverride}
                               onChange={e => setEditingOverride(e.target.value)}
-                              className="w-full font-mono text-xs bg-gray-900 text-green-400 p-3 rounded-lg border border-white/10 min-h-[200px] resize-y"
+                              className="w-full font-mono text-xs bg-[#f8fafc] dark:bg-gray-900 text-green-700 dark:text-green-400 p-3 rounded-lg border border-[#e2e8f0] dark:border-white/10 min-h-[200px] resize-y"
                               placeholder='{"@context": "https://schema.org", "@type": "Course", ...}'
                             />
-                            {pageJsonError && <p className="text-red-400 text-xs mt-1">{pageJsonError}</p>}
+                            {pageJsonError && <p className="text-red-600 dark:text-red-400 text-xs mt-1">{pageJsonError}</p>}
                             <div className="flex gap-2 mt-2">
                               <button
                                 onClick={() => savePageOverride(page.slug)}
@@ -624,14 +624,14 @@ ALTER TABLE "SiteSettings"
                                 <button
                                   onClick={() => clearPageOverride(page.slug)}
                                   disabled={pageSaving === page.slug}
-                                  className="px-3 py-1.5 rounded-lg text-xs border border-red-500/30 text-red-400 hover:bg-red-900/20 transition-colors"
+                                  className="px-3 py-1.5 rounded-lg text-xs border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                 >
                                   Clear override
                                 </button>
                               )}
                               <button
                                 onClick={() => { setEditingSlug(null); setPageJsonError('') }}
-                                className="px-3 py-1.5 rounded-lg text-xs border border-white/10 text-gray-400 hover:bg-white/5 transition-colors"
+                                className="px-3 py-1.5 rounded-lg text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-400 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                               >
                                 Cancel
                               </button>
@@ -651,12 +651,12 @@ ALTER TABLE "SiteSettings"
       {/* ── TAB 3: SCHEMA VALIDATOR ───────────────────────────────────────── */}
       {tab === 'validate' && (
         <div className="space-y-6">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-            <h3 className="text-white font-semibold mb-3">Fetch & validate JSON-LD from a URL</h3>
+          <div className="bg-white dark:bg-white/5 border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5">
+            <h3 className="text-[#0f172a] dark:text-white font-semibold mb-3">Fetch & validate JSON-LD from a URL</h3>
             <div className="flex gap-2 flex-wrap">
               <select
                 onChange={e => setValidateUrl(e.target.value)}
-                className="bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-teal-500"
+                className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#475569] dark:text-gray-300 focus:outline-none focus:border-teal-500"
               >
                 {QUICK_URLS.map(u => (
                   <option key={u.value} value={u.value}>{u.label}</option>
@@ -667,7 +667,7 @@ ALTER TABLE "SiteSettings"
                 value={validateUrl}
                 onChange={e => setValidateUrl(e.target.value)}
                 placeholder="https://www.cosscloudsol.com/page"
-                className="flex-1 min-w-[280px] bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-teal-500"
+                className="flex-1 min-w-[280px] bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-white placeholder-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:border-teal-500"
               />
               <button
                 onClick={validateSchema}
@@ -680,7 +680,7 @@ ALTER TABLE "SiteSettings"
           </div>
 
           {validateError && (
-            <div className="px-4 py-3 bg-red-900/30 border border-red-500/30 rounded-lg text-red-300 text-sm">
+            <div className="px-4 py-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-500/30 rounded-lg text-red-700 dark:text-red-300 text-sm">
               {validateError}
             </div>
           )}
@@ -689,17 +689,17 @@ ALTER TABLE "SiteSettings"
             <div className="space-y-4">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <div>
-                  <p className="text-white font-semibold">
-                    Found <span className="text-teal-400">{validateResult.count}</span> schema{validateResult.count !== 1 ? 's' : ''} on this page
+                  <p className="text-[#0f172a] dark:text-white font-semibold">
+                    Found <span className="text-teal-600 dark:text-teal-400">{validateResult.count}</span> schema{validateResult.count !== 1 ? 's' : ''} on this page
                   </p>
-                  <p className="text-gray-400 text-xs mt-0.5 font-mono">{validateResult.url}</p>
+                  <p className="text-[#94a3b8] dark:text-gray-400 text-xs mt-0.5 font-mono">{validateResult.url}</p>
                 </div>
                 <div className="flex gap-2">
                   <a
                     href={validateResult.richResultsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg text-sm border border-blue-500/30 text-blue-400 hover:bg-blue-900/20 transition-colors"
+                    className="px-3 py-1.5 rounded-lg text-sm border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
                   >
                     Test in Rich Results ↗
                   </a>
@@ -707,7 +707,7 @@ ALTER TABLE "SiteSettings"
                     href={validateResult.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-lg text-sm border border-white/10 text-gray-300 hover:bg-white/5 transition-colors"
+                    className="px-3 py-1.5 rounded-lg text-sm border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
                   >
                     View page source ↗
                   </a>
@@ -715,7 +715,7 @@ ALTER TABLE "SiteSettings"
               </div>
 
               {validateResult.count === 0 && (
-                <div className="px-4 py-6 bg-amber-900/20 border border-amber-500/30 rounded-xl text-amber-300 text-sm text-center">
+                <div className="px-4 py-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-500/30 rounded-xl text-amber-700 dark:text-amber-300 text-sm text-center">
                   No JSON-LD schemas found on this page. The page may not be publicly accessible or has no structured data.
                 </div>
               )}
@@ -724,25 +724,25 @@ ALTER TABLE "SiteSettings"
                 const type = getSchemaType(schema)
                 const isOpen = expandedSchema === i
                 return (
-                  <div key={i} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+                  <div key={i} className="bg-white dark:bg-white/5 border border-[#e2e8f0] dark:border-white/10 rounded-xl overflow-hidden">
                     <button
                       onClick={() => setExpandedSchema(isOpen ? null : i)}
-                      className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-white/5 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[#f8fafc] dark:hover:bg-white/5 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-gray-400 text-xs font-mono">#{i + 1}</span>
+                        <span className="text-[#94a3b8] dark:text-gray-400 text-xs font-mono">#{i + 1}</span>
                         <div className="flex gap-1.5 flex-wrap">
                           {type.split(', ').map(t => (
-                            <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-900/40 text-teal-300 border border-teal-500/30">
+                            <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">
                               {t}
                             </span>
                           ))}
                         </div>
                       </div>
-                      <span className="text-gray-400 text-xs">{isOpen ? '▲ Hide' : '▼ Show'}</span>
+                      <span className="text-[#94a3b8] dark:text-gray-400 text-xs">{isOpen ? '▲ Hide' : '▼ Show'}</span>
                     </button>
                     {isOpen && (
-                      <pre className="bg-gray-900 text-green-300 text-xs p-4 overflow-x-auto max-h-96 overflow-y-auto whitespace-pre border-t border-white/10">
+                      <pre className="bg-[#f8fafc] dark:bg-gray-900 text-green-700 dark:text-green-300 text-xs p-4 overflow-x-auto max-h-96 overflow-y-auto whitespace-pre border-t border-[#e2e8f0] dark:border-white/10">
                         {JSON.stringify(schema, null, 2)}
                       </pre>
                     )}

@@ -64,10 +64,10 @@ function StatCard({
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  new: 'bg-blue-50 text-blue-700 ring-blue-200',
-  contacted: 'bg-amber-50 text-amber-700 ring-amber-200',
-  enrolled: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  lost: 'bg-red-50 text-red-700 ring-red-200',
+  new: 'bg-[#dcfce7] text-[#15803d] ring-[#bbf7d0] dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700',
+  contacted: 'bg-[#dbeafe] text-[#1d4ed8] ring-[#bfdbfe] dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-700',
+  enrolled: 'bg-[#f3e8ff] text-[#7c3aed] ring-[#e9d5ff] dark:bg-purple-900/30 dark:text-purple-400 dark:ring-purple-700',
+  lost: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700',
 };
 
 function statusClasses(status: string): string {

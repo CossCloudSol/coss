@@ -121,7 +121,7 @@ function ToastPortal({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: numbe
 function BarPreview({ config }: { config: BarConfig }) {
   if (!config.isEnabled) {
     return (
-      <div className="flex items-center justify-center h-12 rounded-lg border-2 border-dashed border-gray-300 text-sm text-gray-400 gap-2 select-none">
+      <div className="flex items-center justify-center h-12 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 text-sm text-gray-400 dark:text-gray-500 gap-2 select-none">
         <EyeOff className="w-4 h-4" />
         Bar is disabled — it will not appear on the site
       </div>
@@ -161,7 +161,7 @@ function BarPreview({ config }: { config: BarConfig }) {
 
 function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.ReactNode }) {
   return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1.5">
+    <label htmlFor={htmlFor} className="block text-sm font-medium text-[#475569] dark:text-gray-300 mb-1.5">
       {children}
     </label>
   );
@@ -296,10 +296,10 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                 <Megaphone className="w-5 h-5 text-teal-600" />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-gray-900 leading-tight">
+                <h1 className="text-lg font-semibold text-[#0f172a] dark:text-white leading-tight">
                   Topbar / Announcement Bar
                 </h1>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-xs text-[#94a3b8] dark:text-gray-400 mt-0.5">
                   Full-width sticky strip shown at the very top of every page
                 </p>
               </div>
@@ -326,24 +326,24 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
 
           {/* Live preview */}
           <section className="space-y-2">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <div className="flex items-center gap-1.5 text-xs font-semibold text-[#94a3b8] dark:text-gray-400 uppercase tracking-wide">
               <Eye className="w-3.5 h-3.5" />
               Live preview
             </div>
             <BarPreview config={config} />
-            <p className="text-xs text-gray-400 text-center">
+            <p className="text-xs text-[#94a3b8] dark:text-gray-500 text-center">
               Real-time preview — updates as you type
             </p>
           </section>
 
           {/* Settings card */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm divide-y divide-gray-100">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-[#e2e8f0] dark:border-white/10 shadow-sm divide-y divide-[#f1f5f9] dark:divide-white/5">
 
             {/* ① Enable / disable */}
             <div className="flex items-center justify-between px-5 py-4">
               <div>
-                <p className="text-sm font-medium text-gray-800">Enable announcement bar</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm font-medium text-[#0f172a] dark:text-gray-100">Enable announcement bar</p>
+                <p className="text-xs text-[#94a3b8] dark:text-gray-400 mt-0.5">
                   When off, the bar outputs no HTML — zero CLS, zero layout shift
                 </p>
               </div>
@@ -378,13 +378,13 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                 value={config.announcementText}
                 onChange={(e) => set('announcementText', e.target.value)}
                 placeholder="e.g. 🎓 New batch starting soon — Limited seats!"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                className="w-full rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
               />
               <div className="flex justify-between items-center mt-1">
-                <p className="text-xs text-gray-400">Emojis are supported ✨</p>
+                <p className="text-xs text-[#94a3b8] dark:text-gray-500">Emojis are supported ✨</p>
                 <p className={[
                   'text-xs tabular-nums',
-                  config.announcementText.length > 180 ? 'text-amber-500 font-medium' : 'text-gray-400',
+                  config.announcementText.length > 180 ? 'text-amber-500 font-medium' : 'text-[#94a3b8] dark:text-gray-500',
                 ].join(' ')}>
                   {config.announcementText.length}/200
                 </p>
@@ -401,9 +401,9 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                 value={config.ctaLabel}
                 onChange={(e) => set('ctaLabel', e.target.value)}
                 placeholder="e.g. Enroll Now"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                className="w-full rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
               />
-              <p className="text-xs text-gray-400 mt-1">Leave blank to hide the CTA button.</p>
+              <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-1">Leave blank to hide the CTA button.</p>
             </div>
 
             {/* ④ CTA URL */}
@@ -415,18 +415,18 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                 value={config.ctaUrl}
                 onChange={(e) => set('ctaUrl', e.target.value)}
                 placeholder="e.g. /enroll-now-with-coss/ or https://…"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                className="w-full rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
               />
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-1">
                 Relative path (e.g.{' '}
-                <code className="bg-gray-100 px-1 py-0.5 rounded text-gray-600">/courses/</code>
+                <code className="bg-[#f1f5f9] dark:bg-gray-700 px-1 py-0.5 rounded text-[#475569] dark:text-gray-300">/courses/</code>
                 ) or full URL for external links.
               </p>
             </div>
 
             {/* ⑤ Colour presets */}
             <div className="px-5 py-4">
-              <p className="text-sm font-medium text-gray-700 mb-2.5">Colour scheme presets</p>
+              <p className="text-sm font-medium text-[#475569] dark:text-gray-300 mb-2.5">Colour scheme presets</p>
               <div className="flex flex-wrap gap-2">
                 {PRESETS.map((p) => {
                   const active = config.backgroundColor === p.bg && config.textColor === p.text;
@@ -457,18 +457,18 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
 
             {/* ⑥ Custom colour pickers */}
             <div className="px-5 py-4">
-              <p className="text-sm font-medium text-gray-700 mb-3">Custom colours</p>
+              <p className="text-sm font-medium text-[#475569] dark:text-gray-300 mb-3">Custom colours</p>
               <div className="grid grid-cols-2 gap-5">
 
                 {/* Background colour */}
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1.5" htmlFor="bg-color">
+                  <label className="block text-xs text-[#94a3b8] dark:text-gray-400 mb-1.5" htmlFor="bg-color">
                     Background colour
                   </label>
                   <div className="flex items-center gap-2">
                     <label
                       htmlFor="bg-color"
-                      className="w-9 h-9 rounded-lg border border-gray-200 cursor-pointer shadow-sm hover:shadow-md transition-shadow shrink-0"
+                      className="w-9 h-9 rounded-lg border border-[#e2e8f0] dark:border-white/10 cursor-pointer shadow-sm hover:shadow-md transition-shadow shrink-0"
                       style={{ backgroundColor: config.backgroundColor }}
                       title="Click to pick background colour"
                     >
@@ -486,20 +486,20 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                       onChange={(e) => set('backgroundColor', e.target.value)}
                       maxLength={7}
                       spellCheck={false}
-                      className="flex-1 rounded-lg border border-gray-300 px-2.5 py-2 text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                      className="flex-1 rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-2.5 py-2 text-sm font-mono text-[#0f172a] dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
                     />
                   </div>
                 </div>
 
                 {/* Text colour */}
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1.5" htmlFor="text-color">
+                  <label className="block text-xs text-[#94a3b8] dark:text-gray-400 mb-1.5" htmlFor="text-color">
                     Text colour
                   </label>
                   <div className="flex items-center gap-2">
                     <label
                       htmlFor="text-color"
-                      className="w-9 h-9 rounded-lg border border-gray-200 cursor-pointer shadow-sm hover:shadow-md transition-shadow shrink-0"
+                      className="w-9 h-9 rounded-lg border border-[#e2e8f0] dark:border-white/10 cursor-pointer shadow-sm hover:shadow-md transition-shadow shrink-0"
                       style={{ backgroundColor: config.textColor }}
                       title="Click to pick text colour"
                     >
@@ -517,13 +517,13 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                       onChange={(e) => set('textColor', e.target.value)}
                       maxLength={7}
                       spellCheck={false}
-                      className="flex-1 rounded-lg border border-gray-300 px-2.5 py-2 text-sm font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                      className="flex-1 rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-2.5 py-2 text-sm font-mono text-[#0f172a] dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
                     />
                   </div>
                 </div>
               </div>
 
-              <p className="text-xs text-gray-400 mt-3">
+              <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-3">
                 💡 Aim for high contrast between background and text for accessibility (WCAG AA).
               </p>
             </div>
@@ -543,7 +543,7 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                   saving
                     ? 'bg-teal-400 text-white cursor-not-allowed'
                     : !isDirty
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200 shadow-none'
+                    ? 'bg-[#f1f5f9] dark:bg-gray-700 text-[#94a3b8] dark:text-gray-500 cursor-not-allowed border border-[#e2e8f0] dark:border-white/10 shadow-none'
                     : 'bg-teal-600 text-white hover:bg-teal-700 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2',
                 ].join(' ')}
               >
@@ -565,7 +565,7 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 border border-gray-200 bg-white hover:bg-gray-50 hover:text-gray-800 transition-all duration-150 active:scale-95"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium text-[#475569] dark:text-gray-300 border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-transparent hover:bg-[#f1f5f9] dark:hover:bg-gray-700 hover:text-[#0f172a] dark:hover:text-white transition-all duration-150 active:scale-95"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Discard
@@ -575,9 +575,9 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
 
             {/* Last-saved timestamp */}
             {saved.updatedAt && (
-              <p className="text-xs text-gray-400 hidden sm:block text-right">
+              <p className="text-xs text-[#94a3b8] dark:text-gray-500 hidden sm:block text-right">
                 Last saved:{' '}
-                <span className="font-medium text-gray-500">
+                <span className="font-medium text-[#475569] dark:text-gray-400">
                   {new Date(saved.updatedAt).toLocaleString('en-IN', {
                     dateStyle: 'medium',
                     timeStyle: 'short',

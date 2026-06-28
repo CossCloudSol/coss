@@ -58,7 +58,7 @@ interface SiteSettingsData {
 }
 
 const inp =
-  'w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500'
+  'w-full bg-white dark:bg-gray-700 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500'
 
 function SiteSection({
   icon,
@@ -72,12 +72,12 @@ function SiteSection({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-gray-800 border border-white/10 rounded-xl p-6 space-y-4">
-      <div className="flex items-center gap-3 pb-2 border-b border-white/10">
+    <div className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-xl p-6 space-y-4">
+      <div className="flex items-center gap-3 pb-2 border-b border-[#e2e8f0] dark:border-white/10">
         <span className="text-2xl">{icon}</span>
         <div>
-          <h2 className="text-base font-semibold text-white">{title}</h2>
-          <p className="text-xs text-gray-400">{desc}</p>
+          <h2 className="text-base font-semibold text-[#0f172a] dark:text-white">{title}</h2>
+          <p className="text-xs text-[#475569] dark:text-gray-400">{desc}</p>
         </div>
       </div>
       {children}
@@ -88,7 +88,7 @@ function SiteSection({
 function SiteField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-gray-400 mb-1">{label}</label>
+      <label className="block text-xs font-medium text-[#475569] dark:text-gray-400 mb-1">{label}</label>
       {children}
     </div>
   )
@@ -148,7 +148,7 @@ function SiteSettingsPanel() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+      <div className="flex items-center justify-center h-32 text-[#94a3b8] dark:text-gray-400 text-sm">
         Loading site settings…
       </div>
     )
@@ -217,7 +217,7 @@ function SiteSettingsPanel() {
                 key={b.branchKey}
                 type="button"
                 onClick={() => setActiveTab(idx)}
-                className={['px-4 py-1.5 rounded-lg text-sm font-medium transition-colors', activeTab === idx ? 'bg-teal-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'].join(' ')}
+                className={['px-4 py-1.5 rounded-lg text-sm font-medium transition-colors', activeTab === idx ? 'bg-teal-600 text-white' : 'bg-[#f1f5f9] dark:bg-gray-700 text-[#475569] dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'].join(' ')}
               >
                 {branchTabLabel(b.branchName)}
               </button>
@@ -268,8 +268,8 @@ function SiteSettingsPanel() {
               </SiteField>
             </div>
             {/* NAP preview */}
-            <div className="bg-gray-900 border border-white/10 rounded-lg p-4 text-xs text-gray-300 space-y-1">
-              <p className="font-semibold text-white text-sm">{activeBranch.branchName}</p>
+            <div className="bg-[#f8fafc] dark:bg-gray-900 border border-[#e2e8f0] dark:border-white/10 rounded-lg p-4 text-xs text-[#475569] dark:text-gray-300 space-y-1">
+              <p className="font-semibold text-[#0f172a] dark:text-white text-sm">{activeBranch.branchName}</p>
               <p>{[activeBranch.addressLine1, activeBranch.addressLine2, activeBranch.city, activeBranch.state, activeBranch.pincode].filter(Boolean).join(', ')}</p>
               <p>📞 {activeBranch.phone}</p>
               <p>🕐 {activeBranch.workingHoursOpen} – {activeBranch.workingHoursClose} &nbsp;|&nbsp; {activeBranch.workingDays}</p>

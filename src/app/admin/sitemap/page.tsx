@@ -36,9 +36,9 @@ const DEFAULT_RULES: RobotRule[] = [
 ]
 
 const GROUP_BADGE: Record<PageGroup, { label: string; cls: string }> = {
-  static:   { label: 'Static',   cls: 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' },
-  landing:  { label: 'Landing',  cls: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-400' },
-  category: { label: 'Category', cls: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400' },
+  static:   { label: 'Static',   cls: 'bg-[#dbeafe] text-[#1d4ed8] dark:bg-blue-900/40 dark:text-blue-400' },
+  landing:  { label: 'Landing',  cls: 'bg-[#fce7f3] text-[#be185d] dark:bg-pink-900/40 dark:text-pink-400' },
+  category: { label: 'Category', cls: 'bg-[#d1fae5] text-[#065f46] dark:bg-emerald-900/40 dark:text-emerald-400' },
   blog:     { label: 'Blog',     cls: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400' },
 }
 
@@ -247,13 +247,13 @@ export default function SitemapManagerPage() {
                   <div
                     key={page.slug}
                     className={[
-                      'bg-gray-800/50 rounded-xl border border-gray-700 p-3 mb-2 transition-opacity',
+                      'bg-white dark:bg-gray-800/50 rounded-xl border border-[#e2e8f0] dark:border-gray-700 p-3 mb-2 transition-opacity',
                       !page.sitemapInclude ? 'opacity-50' : '',
                     ].join(' ')}
                   >
                     {/* Row 1: slug + group badge */}
                     <div className="flex items-center gap-2 min-w-0">
-                      <span className="font-mono text-sm text-gray-300 truncate flex-1">{page.name}</span>
+                      <span className="font-mono text-sm text-[#0f172a] dark:text-gray-300 truncate flex-1">{page.name}</span>
                       <span className={`shrink-0 inline-block px-2 py-0.5 rounded text-xs font-medium ${badge.cls}`}>
                         {badge.label}
                       </span>
@@ -264,14 +264,14 @@ export default function SitemapManagerPage() {
 
                     {/* Row 2: include toggle */}
                     <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-gray-400">Include in sitemap</span>
+                      <span className="text-xs text-[#475569] dark:text-gray-400">Include in sitemap</span>
                       <button
                         role="switch"
                         aria-checked={page.sitemapInclude}
                         onClick={() => updatePage(page.slug, 'sitemapInclude', !page.sitemapInclude)}
                         className={[
                           'relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500',
-                          page.sitemapInclude ? 'bg-teal-600' : 'bg-gray-600',
+                          page.sitemapInclude ? 'bg-teal-600' : 'bg-gray-300 dark:bg-gray-600',
                         ].join(' ')}
                       >
                         <span
@@ -285,7 +285,7 @@ export default function SitemapManagerPage() {
 
                     {/* Row 3: priority slider */}
                     <div className="flex items-center gap-2 mt-2">
-                      <span className="text-xs text-gray-400 shrink-0">Priority</span>
+                      <span className="text-xs text-[#475569] dark:text-gray-400 shrink-0">Priority</span>
                       <input
                         type="range"
                         min="0.1"
@@ -295,7 +295,7 @@ export default function SitemapManagerPage() {
                         onChange={e => updatePage(page.slug, 'sitemapPriority', parseFloat(e.target.value))}
                         className="flex-1 accent-teal-600"
                       />
-                      <span className="text-xs text-gray-400 w-6 tabular-nums shrink-0">
+                      <span className="text-xs text-[#475569] dark:text-gray-400 w-6 tabular-nums shrink-0">
                         {page.sitemapPriority.toFixed(1)}
                       </span>
                     </div>

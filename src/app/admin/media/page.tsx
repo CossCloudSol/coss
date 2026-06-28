@@ -270,15 +270,15 @@ export default function MediaManagerPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-100">Media Manager</h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <h1 className="text-2xl font-semibold text-[#0f172a] dark:text-gray-100">Media Manager</h1>
+          <p className="text-sm text-[#475569] dark:text-gray-400 mt-1">
             Cloudinary assets · key site images · broken URL scanner
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 border-b border-white/10">
+      <div className="flex gap-1 mb-6 border-b border-[#e2e8f0] dark:border-white/10">
         {([
           { id: 'browser',   label: 'Asset browser' },
           { id: 'keyassets', label: 'Key assets' },
@@ -289,8 +289,8 @@ export default function MediaManagerPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-teal-400 text-teal-400'
-                : 'border-transparent text-gray-400 hover:text-gray-200'
+                ? 'border-teal-500 text-teal-600 dark:border-teal-400 dark:text-teal-400'
+                : 'border-transparent text-[#475569] dark:text-gray-400 hover:text-[#0f172a] dark:hover:text-gray-200'
             }`}
           >
             {tab.label}
@@ -309,19 +309,19 @@ export default function MediaManagerPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && fetchAssets(true)}
-              className="flex-1 bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500"
+              className="flex-1 bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500"
             />
             <select
               value={typeFilter}
               onChange={e => { setTypeFilter(e.target.value); setAssets([]); setCursor(null) }}
-              className="bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100"
+              className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100"
             >
               <option value="image">Images</option>
               <option value="raw">PDFs / files</option>
             </select>
             <button
               onClick={() => fetchAssets(true)}
-              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-sm text-gray-200 rounded-lg"
+              className="px-4 py-2 bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm text-[#475569] dark:text-gray-200 rounded-lg border border-[#e2e8f0] dark:border-white/10"
             >
               Search
             </button>
@@ -329,7 +329,7 @@ export default function MediaManagerPage() {
 
           {/* Grid */}
           {assets.length === 0 && !loadingAssets ? (
-            <div className="text-center py-16 text-gray-500 text-sm">
+            <div className="text-center py-16 text-[#94a3b8] dark:text-gray-500 text-sm">
               No assets found. Try a different search or filter.
             </div>
           ) : (
@@ -337,10 +337,10 @@ export default function MediaManagerPage() {
               {assets.map(asset => (
                 <div
                   key={asset.public_id}
-                  className="group relative border border-white/10 rounded-lg overflow-hidden bg-gray-800"
+                  className="group relative border border-[#e2e8f0] dark:border-white/10 rounded-lg overflow-hidden bg-white dark:bg-gray-800"
                 >
                   {/* Thumbnail */}
-                  <div className="aspect-square bg-gray-700 flex items-center justify-center overflow-hidden">
+                  <div className="aspect-square bg-[#f1f5f9] dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                     {asset.resource_type === 'image' ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -350,7 +350,7 @@ export default function MediaManagerPage() {
                         loading="lazy"
                       />
                     ) : (
-                      <span className="text-gray-400 text-xs text-center px-2 break-all">
+                      <span className="text-[#94a3b8] dark:text-gray-400 text-xs text-center px-2 break-all">
                         {asset.format.toUpperCase()}
                       </span>
                     )}
@@ -374,11 +374,11 @@ export default function MediaManagerPage() {
                   </div>
 
                   {/* Meta */}
-                  <div className="p-2 border-t border-white/10">
-                    <p className="text-xs text-gray-200 truncate" title={asset.public_id}>
+                  <div className="p-2 border-t border-[#e2e8f0] dark:border-white/10">
+                    <p className="text-xs text-[#0f172a] dark:text-gray-200 truncate" title={asset.public_id}>
                       {asset.public_id.split('/').pop()}
                     </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-0.5">
                       {asset.width && asset.height
                         ? `${asset.width}×${asset.height} · `
                         : ''}
@@ -391,7 +391,7 @@ export default function MediaManagerPage() {
               {/* Loading placeholders */}
               {loadingAssets &&
                 Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="aspect-square bg-gray-700 rounded-lg animate-pulse" />
+                  <div key={i} className="aspect-square bg-[#f1f5f9] dark:bg-gray-700 rounded-lg animate-pulse" />
                 ))}
             </div>
           )}
@@ -401,7 +401,7 @@ export default function MediaManagerPage() {
             <div className="text-center">
               <button
                 onClick={() => fetchAssets(false)}
-                className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-sm text-gray-200 rounded-lg"
+                className="px-6 py-2 bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm text-[#475569] dark:text-gray-200 rounded-lg border border-[#e2e8f0] dark:border-white/10"
               >
                 Load more
               </button>
@@ -419,17 +419,17 @@ export default function MediaManagerPage() {
             const isLoading  = loadingSlot === slot.key
 
             return (
-              <div key={slot.key} className="border border-white/10 rounded-xl p-5 bg-gray-800">
+              <div key={slot.key} className="border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 bg-white dark:bg-gray-800">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <p className="text-sm font-medium text-gray-100">{slot.label}</p>
-                    <p className="text-xs text-gray-500 mt-1">{slot.desc}</p>
+                    <p className="text-sm font-medium text-[#0f172a] dark:text-gray-100">{slot.label}</p>
+                    <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-1">{slot.desc}</p>
                   </div>
                   <span
                     className={`text-xs px-2 py-1 rounded-md whitespace-nowrap ml-3 ${
                       isSet
-                        ? 'bg-teal-500/10 text-teal-400'
-                        : 'bg-yellow-500/10 text-yellow-400'
+                        ? 'bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400'
+                        : 'bg-amber-50 dark:bg-yellow-500/10 text-amber-700 dark:text-yellow-400'
                     }`}
                   >
                     {isSet ? '✓ Set' : '⚠ Missing'}
@@ -437,7 +437,7 @@ export default function MediaManagerPage() {
                 </div>
 
                 {/* Preview */}
-                <div className="w-full h-24 bg-gray-700 rounded-lg flex items-center justify-center mb-3 overflow-hidden border border-white/5">
+                <div className="w-full h-24 bg-[#f1f5f9] dark:bg-gray-700 rounded-lg flex items-center justify-center mb-3 overflow-hidden border border-[#e2e8f0] dark:border-white/5">
                   {currentUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -446,7 +446,7 @@ export default function MediaManagerPage() {
                       className="max-w-full max-h-full object-contain"
                     />
                   ) : (
-                    <span className="text-gray-600 text-xs">{slot.recommended}</span>
+                    <span className="text-[#94a3b8] dark:text-gray-600 text-xs">{slot.recommended}</span>
                   )}
                 </div>
 
@@ -455,14 +455,14 @@ export default function MediaManagerPage() {
                   <button
                     onClick={() => fileInputRefs.current[slot.key]?.click()}
                     disabled={isLoading}
-                    className="flex-1 py-1.5 text-xs bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/20 rounded-lg disabled:opacity-50"
+                    className="flex-1 py-1.5 text-xs bg-teal-50 dark:bg-teal-500/10 hover:bg-teal-100 dark:hover:bg-teal-500/20 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-500/20 rounded-lg disabled:opacity-50"
                   >
                     {isLoading ? 'Uploading…' : isSet ? 'Replace' : 'Upload'}
                   </button>
                   {currentUrl && (
                     <button
                       onClick={() => copyUrl(currentUrl, slot.key)}
-                      className="px-3 py-1.5 text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg"
+                      className="px-3 py-1.5 text-xs bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-[#475569] dark:text-gray-300 rounded-lg border border-[#e2e8f0] dark:border-white/10"
                     >
                       {copiedId === slot.key ? 'Copied!' : 'Copy URL'}
                     </button>
@@ -472,7 +472,7 @@ export default function MediaManagerPage() {
                       href={currentUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1.5 text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg"
+                      className="px-3 py-1.5 text-xs bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-[#475569] dark:text-gray-300 rounded-lg border border-[#e2e8f0] dark:border-white/10"
                     >
                       Preview
                     </a>
@@ -494,7 +494,7 @@ export default function MediaManagerPage() {
 
                 {/* Last updated */}
                 {keyAssets.updatedAt && isSet && (
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-[#94a3b8] dark:text-gray-600 mt-2">
                     Last updated {fmtDate(keyAssets.updatedAt)}
                   </p>
                 )}
@@ -508,16 +508,16 @@ export default function MediaManagerPage() {
       {activeTab === 'scanner' && (
         <div>
           {/* Scanner control card */}
-          <div className="border border-white/10 rounded-xl p-5 bg-gray-800 mb-5">
+          <div className="border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 bg-white dark:bg-gray-800 mb-5">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-11 h-11 rounded-lg bg-gray-700 flex items-center justify-center text-gray-400 flex-shrink-0">
+              <div className="w-11 h-11 rounded-lg bg-[#f1f5f9] dark:bg-gray-700 flex items-center justify-center text-[#94a3b8] dark:text-gray-400 flex-shrink-0">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-100">Image URL scanner</p>
-                <p className="text-xs text-gray-500 mt-0.5">
+                <p className="text-sm font-medium text-[#0f172a] dark:text-gray-100">Image URL scanner</p>
+                <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-0.5">
                   Quick scan checks static + landing pages (~44 pages). Full scan runs automatically every night at midnight IST.
                 </p>
               </div>
@@ -540,26 +540,26 @@ export default function MediaManagerPage() {
 
             {scanResult ? (
               <>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-xs text-[#94a3b8] dark:text-gray-500 mb-4">
                   Last scan: {fmtDate(scanResult.scannedAt)} · {scanResult.totalImages} images checked
                 </p>
                 {/* Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {[
-                    { label: 'Working',      val: scanResult.totalImages - scanResult.brokenCount - scanResult.slowCount - scanResult.redirectCount, color: 'text-teal-400' },
-                    { label: 'Broken (404)', val: scanResult.brokenCount,   color: 'text-red-400' },
-                    { label: 'Slow (>2s)',   val: scanResult.slowCount,     color: 'text-yellow-400' },
-                    { label: 'Redirecting',  val: scanResult.redirectCount, color: 'text-gray-400' },
+                    { label: 'Working',      val: scanResult.totalImages - scanResult.brokenCount - scanResult.slowCount - scanResult.redirectCount, color: 'text-teal-600 dark:text-teal-400' },
+                    { label: 'Broken (404)', val: scanResult.brokenCount,   color: 'text-red-600 dark:text-red-400' },
+                    { label: 'Slow (>2s)',   val: scanResult.slowCount,     color: 'text-amber-600 dark:text-yellow-400' },
+                    { label: 'Redirecting',  val: scanResult.redirectCount, color: 'text-[#475569] dark:text-gray-400' },
                   ].map(s => (
-                    <div key={s.label} className="bg-gray-700 rounded-lg p-3">
+                    <div key={s.label} className="bg-[#f1f5f9] dark:bg-gray-700 rounded-lg p-3">
                       <p className={`text-xl font-semibold ${s.color}`}>{s.val}</p>
-                      <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+                      <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-1">{s.label}</p>
                     </div>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="text-xs text-gray-500">No scan results yet. Run the first scan above.</p>
+              <p className="text-xs text-[#94a3b8] dark:text-gray-500">No scan results yet. Run the first scan above.</p>
             )}
           </div>
 
@@ -574,8 +574,8 @@ export default function MediaManagerPage() {
                       onClick={() => setScanFilter(f)}
                       className={`px-3 py-1 text-xs rounded-md ${
                         scanFilter === f
-                          ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                          : 'bg-gray-700 text-gray-400 border border-white/10 hover:text-gray-200'
+                          ? 'bg-teal-50 dark:bg-teal-500/20 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-500/30'
+                          : 'bg-[#f1f5f9] dark:bg-gray-700 text-[#475569] dark:text-gray-400 border border-[#e2e8f0] dark:border-white/10 hover:text-[#0f172a] dark:hover:text-gray-200'
                       }`}
                     >
                       {f === 'all' ? 'All issues' : f.charAt(0).toUpperCase() + f.slice(1)}
@@ -584,40 +584,40 @@ export default function MediaManagerPage() {
                 </div>
                 <button
                   onClick={exportCsv}
-                  className="px-3 py-1.5 text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg border border-white/10 flex items-center gap-1.5"
+                  className="px-3 py-1.5 text-xs bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-[#475569] dark:text-gray-300 rounded-lg border border-[#e2e8f0] dark:border-white/10 flex items-center gap-1.5"
                 >
                   Export CSV
                 </button>
               </div>
 
-              <div className="border border-white/10 rounded-xl overflow-hidden">
-                <div className="grid grid-cols-[2fr_1fr_80px] px-4 py-2.5 bg-gray-800 border-b border-white/10">
-                  <span className="text-xs text-gray-500 uppercase tracking-wide">Broken URL</span>
-                  <span className="text-xs text-gray-500 uppercase tracking-wide">Found on page</span>
-                  <span className="text-xs text-gray-500 uppercase tracking-wide text-right">Status</span>
+              <div className="border border-[#e2e8f0] dark:border-white/10 rounded-xl overflow-hidden">
+                <div className="grid grid-cols-[2fr_1fr_80px] px-4 py-2.5 bg-[#f8fafc] dark:bg-gray-800 border-b border-[#e2e8f0] dark:border-white/10">
+                  <span className="text-xs text-[#94a3b8] dark:text-gray-500 uppercase tracking-wide">Broken URL</span>
+                  <span className="text-xs text-[#94a3b8] dark:text-gray-500 uppercase tracking-wide">Found on page</span>
+                  <span className="text-xs text-[#94a3b8] dark:text-gray-500 uppercase tracking-wide text-right">Status</span>
                 </div>
 
                 {filteredResults.length === 0 ? (
-                  <div className="px-4 py-6 text-sm text-gray-500 text-center bg-gray-900">
+                  <div className="px-4 py-6 text-sm text-[#94a3b8] dark:text-gray-500 text-center bg-white dark:bg-gray-900">
                     No {scanFilter} issues found.
                   </div>
                 ) : (
                   filteredResults.map((item, i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[2fr_1fr_80px] px-4 py-3 bg-gray-900 border-b border-white/5 last:border-0 items-center"
+                      className="grid grid-cols-[2fr_1fr_80px] px-4 py-3 bg-white dark:bg-gray-900 border-b border-[#f1f5f9] dark:border-white/5 last:border-0 items-center"
                     >
-                      <p className="text-xs text-red-400 truncate pr-4" title={item.url}>
+                      <p className="text-xs text-red-600 dark:text-red-400 truncate pr-4" title={item.url}>
                         {item.url.replace('https://www.cosscloudsol.com', '')}
                       </p>
-                      <p className="text-xs text-gray-500 truncate pr-4">{item.page}</p>
+                      <p className="text-xs text-[#94a3b8] dark:text-gray-500 truncate pr-4">{item.page}</p>
                       <span
                         className={`text-xs px-2 py-0.5 rounded text-right justify-self-end ${
                           item.status === 'broken'
-                            ? 'bg-red-500/10 text-red-400'
+                            ? 'bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400'
                             : item.status === 'slow'
-                              ? 'bg-yellow-500/10 text-yellow-400'
-                              : 'bg-gray-700 text-gray-400'
+                              ? 'bg-amber-50 dark:bg-yellow-500/10 text-amber-600 dark:text-yellow-400'
+                              : 'bg-[#f1f5f9] dark:bg-gray-700 text-[#475569] dark:text-gray-400'
                         }`}
                       >
                         {item.status === 'broken'

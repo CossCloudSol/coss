@@ -123,10 +123,10 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
   return (
     <aside
       aria-label="Admin navigation"
-      className="flex h-full w-[220px] flex-col border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+      className="flex h-full w-[220px] flex-col border-r border-[#e2e8f0] dark:border-[#21262d] bg-white dark:bg-[#161b22]"
     >
       {/* Brand */}
-      <div className="px-5 pt-6 pb-5 border-b border-gray-200 dark:border-gray-700">
+      <div className="px-5 pt-6 pb-5 border-b border-[#e2e8f0] dark:border-[#21262d]">
         <p className="text-xl font-bold leading-none text-teal-600 dark:text-teal-400">Coss Cloud Solutions</p>
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">IMS (Institute Management System)</p>
       </div>
@@ -179,7 +179,7 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
       </nav>
 
       {/* Logout */}
-      <div className="border-t border-gray-200 dark:border-gray-700 p-3">
+      <div className="border-t border-[#e2e8f0] dark:border-[#21262d] p-3">
         <a
           href="/api/admin/auth"
           className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-600 dark:text-gray-400 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white"

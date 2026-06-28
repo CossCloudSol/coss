@@ -44,7 +44,7 @@ export default function LeadsPage({
           useSearchParams(). Without it, Next warns during build. */}
       <Suspense
         fallback={
-          <div className="h-64 animate-pulse rounded-xl border border-gray-200 bg-white" />
+          <div className="h-64 animate-pulse rounded-xl border border-[#e2e8f0] dark:border-[#21262d] bg-white dark:bg-[#161b22]" />
         }
       >
         <LeadsTable />

@@ -106,16 +106,16 @@ type SectionProps = {
 function Section({ title, children, defaultOpen = true }: SectionProps) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="border border-[#e2e8f0] dark:border-gray-700 rounded-lg overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-3.5 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+        className="w-full flex items-center justify-between px-5 py-3.5 bg-[#f8fafc] dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors text-left"
       >
-        <span className="font-semibold text-gray-800 text-sm">{title}</span>
-        <span className="text-gray-400 text-lg leading-none">{open ? '▲' : '▼'}</span>
+        <span className="font-semibold text-[#0f172a] dark:text-gray-200 text-sm">{title}</span>
+        <span className="text-[#94a3b8] dark:text-gray-400 text-lg leading-none">{open ? '▲' : '▼'}</span>
       </button>
-      {open && <div className="px-5 py-5 space-y-4 bg-white">{children}</div>}
+      {open && <div className="px-5 py-5 space-y-4 bg-white dark:bg-gray-800">{children}</div>}
     </div>
   )
 }
@@ -128,13 +128,13 @@ type FieldProps = {
 function Field({ label, children }: FieldProps) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-[#475569] dark:text-gray-300 mb-1">{label}</label>
       {children}
     </div>
   )
 }
 
-const inputCls = 'w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+const inputCls = 'w-full border border-[#e2e8f0] dark:border-gray-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-700 text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
 
 export default function GeoManagerPage() {
   const [branches, setBranches] = useState<BranchData[]>([])
@@ -287,8 +287,8 @@ export default function GeoManagerPage() {
     <div className="max-w-3xl mx-auto py-8 px-4 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">GEO &amp; Local SEO Manager</h1>
-        <p className="mt-1 text-sm text-gray-500">Branch location data, coordinates, and LocalBusiness schema</p>
+        <h1 className="text-2xl font-bold text-[#0f172a] dark:text-white">GEO &amp; Local SEO Manager</h1>
+        <p className="mt-1 text-sm text-[#475569] dark:text-gray-400">Branch location data, coordinates, and LocalBusiness schema</p>
       </div>
 
       {/* Status banners */}
@@ -314,7 +314,7 @@ export default function GeoManagerPage() {
                 'pl-4 pr-8 py-2 rounded-md text-sm font-medium transition-colors',
                 activeBranch === b.branchKey
                   ? 'bg-blue-600 text-white'
-                  : 'border border-gray-200 text-gray-600 hover:bg-gray-50',
+                  : 'border border-[#e2e8f0] dark:border-gray-600 text-[#475569] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700',
               ].join(' ')}
             >
               {b.branchName || b.branchKey}
@@ -340,7 +340,7 @@ export default function GeoManagerPage() {
         <button
           type="button"
           onClick={() => { setShowAddForm(v => !v); setAddError('') }}
-          className="px-3 py-2 rounded-md text-sm font-medium border border-dashed border-gray-300 text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
+          className="px-3 py-2 rounded-md text-sm font-medium border border-dashed border-[#e2e8f0] dark:border-gray-600 text-[#475569] dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
         >
           + Add branch
         </button>
@@ -348,8 +348,8 @@ export default function GeoManagerPage() {
 
       {/* Add branch inline form */}
       {showAddForm && (
-        <div className="border border-gray-200 rounded-lg px-5 py-5 space-y-4 bg-gray-50">
-          <h2 className="font-semibold text-gray-800 text-sm">New Branch</h2>
+        <div className="border border-[#e2e8f0] dark:border-gray-700 rounded-lg px-5 py-5 space-y-4 bg-[#f8fafc] dark:bg-gray-800">
+          <h2 className="font-semibold text-[#0f172a] dark:text-gray-200 text-sm">New Branch</h2>
           {addError && (
             <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-800">
               {addError}
@@ -411,7 +411,7 @@ export default function GeoManagerPage() {
             <button
               type="button"
               onClick={() => { setShowAddForm(false); setAddForm({ ...EMPTY_ADD_FORM }); setAddError('') }}
-              className="px-4 py-2 border border-gray-300 text-gray-700 text-sm rounded-md hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 border border-[#e2e8f0] dark:border-gray-600 text-[#475569] dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
@@ -499,7 +499,7 @@ export default function GeoManagerPage() {
           {form.serviceAreas.map((area, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full border border-blue-200"
+              className="inline-flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-700"
             >
               {area}
               <button
@@ -513,7 +513,7 @@ export default function GeoManagerPage() {
             </span>
           ))}
           {form.serviceAreas.length === 0 && (
-            <span className="text-sm text-gray-400">No areas added yet</span>
+            <span className="text-sm text-[#94a3b8] dark:text-gray-500">No areas added yet</span>
           )}
         </div>
         <div className="flex gap-2">
@@ -527,7 +527,7 @@ export default function GeoManagerPage() {
           <button
             type="button"
             onClick={addArea}
-            className="px-4 py-2 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-700 transition-colors"
+            className="px-4 py-2 bg-[#0f172a] dark:bg-gray-700 text-white text-sm rounded-md hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
           >
             Add
           </button>

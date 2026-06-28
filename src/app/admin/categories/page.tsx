@@ -184,8 +184,8 @@ export default function CategoriesPage() {
                         onClick={() => void toggleStatus(cat)}
                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
                           cat.status === 'published'
-                            ? 'bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 hover:bg-teal-200'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200'
+                            ? 'bg-[#dcfce7] dark:bg-emerald-900/30 text-[#15803d] dark:text-emerald-400 hover:bg-emerald-100'
+                            : 'bg-[#f1f5f9] dark:bg-gray-700 text-[#94a3b8] dark:text-gray-400 hover:bg-gray-200'
                         }`}
                       >
                         {cat.status}

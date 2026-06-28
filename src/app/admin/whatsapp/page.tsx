@@ -22,16 +22,16 @@ const STATUS_LABEL: Record<Status, string> = {
 };
 
 const STATUS_STYLES: Record<Status, { pill: string; dot: string }> = {
-  new: { pill: 'bg-blue-50 text-blue-700 ring-blue-200', dot: 'bg-blue-500' },
+  new: { pill: 'bg-[#dcfce7] text-[#15803d] ring-[#bbf7d0] dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700', dot: 'bg-emerald-500' },
   contacted: {
-    pill: 'bg-amber-50 text-amber-700 ring-amber-200',
-    dot: 'bg-amber-500',
+    pill: 'bg-[#dbeafe] text-[#1d4ed8] ring-[#bfdbfe] dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-700',
+    dot: 'bg-blue-500',
   },
   enrolled: {
-    pill: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-    dot: 'bg-emerald-500',
+    pill: 'bg-[#f3e8ff] text-[#7c3aed] ring-[#e9d5ff] dark:bg-purple-900/30 dark:text-purple-400 dark:ring-purple-700',
+    dot: 'bg-purple-500',
   },
-  lost: { pill: 'bg-red-50 text-red-700 ring-red-200', dot: 'bg-red-500' },
+  lost: { pill: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700', dot: 'bg-red-500' },
 };
 
 const BRANCH_LABEL: Record<string, string> = {
@@ -330,12 +330,12 @@ function StatsSkeleton(): JSX.Element {
         {[0, 1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-24 animate-pulse rounded-xl border border-gray-200 bg-white"
+            className="h-24 animate-pulse rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800"
           />
         ))}
       </div>
-      <div className="h-64 animate-pulse rounded-xl border border-gray-200 bg-white" />
-      <div className="h-48 animate-pulse rounded-xl border border-gray-200 bg-white" />
+      <div className="h-64 animate-pulse rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800" />
+      <div className="h-48 animate-pulse rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800" />
     </div>
   );
 }

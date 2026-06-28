@@ -123,13 +123,15 @@ export default function HiringPartnersPage() {
   const hidden  = partners.filter(p => !p.isVisible).length
   const broken  = scanResults ? scanResults.filter(r => !r.ok).length : 0
 
+  const inp = 'w-full bg-white dark:bg-gray-700 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500'
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-100">Hiring partners</h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <h1 className="text-2xl font-semibold text-[#0f172a] dark:text-gray-100">Hiring partners</h1>
+          <p className="text-sm text-[#475569] dark:text-gray-400 mt-1">
             Company logos shown on homepage · course pages · placements page
           </p>
         </div>
@@ -137,7 +139,7 @@ export default function HiringPartnersPage() {
           <button
             onClick={runScan}
             disabled={scanning}
-            className="px-3 py-2 text-sm border border-white/10 rounded-lg bg-transparent text-gray-300 hover:bg-gray-700 disabled:opacity-50 flex items-center gap-2"
+            className="px-3 py-2 text-sm border border-[#e2e8f0] dark:border-white/10 rounded-lg bg-white dark:bg-transparent text-[#475569] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 flex items-center gap-2"
           >
             {scanning ? 'Scanning…' : 'Scan dead logos'}
           </button>
@@ -155,37 +157,37 @@ export default function HiringPartnersPage() {
       <div className="grid grid-cols-4 gap-3 mb-6">
         {[
           { label: 'Total',        val: partners.length,                       color: '' },
-          { label: 'Visible',      val: visible,                               color: 'text-teal-400' },
+          { label: 'Visible',      val: visible,                               color: 'text-teal-600 dark:text-teal-400' },
           { label: 'Hidden',       val: hidden,                                color: '' },
-          { label: 'Broken logos', val: scanResults ? broken : '—',            color: broken > 0 ? 'text-red-400' : 'text-teal-400' },
+          { label: 'Broken logos', val: scanResults ? broken : '—',            color: broken > 0 ? 'text-red-600 dark:text-red-400' : 'text-teal-600 dark:text-teal-400' },
         ].map(s => (
-          <div key={s.label} className="bg-gray-800 rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">{s.label}</p>
-            <p className={`text-xl font-semibold ${s.color}`}>{s.val}</p>
+          <div key={s.label} className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg p-3">
+            <p className="text-xs text-[#94a3b8] dark:text-gray-500 mb-1">{s.label}</p>
+            <p className={`text-xl font-semibold text-[#0f172a] dark:text-white ${s.color}`}>{s.val}</p>
           </div>
         ))}
       </div>
 
       {/* Add/Edit form */}
       {showForm && (
-        <div className="border border-white/10 rounded-xl p-5 bg-gray-800 mb-6">
-          <h2 className="text-sm font-medium text-gray-100 mb-4">
+        <div className="border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 bg-white dark:bg-gray-800 mb-6">
+          <h2 className="text-sm font-medium text-[#0f172a] dark:text-gray-100 mb-4">
             {editingId ? 'Edit partner' : 'Add hiring partner'}
           </h2>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Company name</label>
+              <label className="text-xs text-[#475569] dark:text-gray-400 block mb-1">Company name</label>
               <input
-                className="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100"
+                className={inp}
                 value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                 placeholder="e.g. Tata Consultancy Services"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Alt text (SEO)</label>
+              <label className="text-xs text-[#475569] dark:text-gray-400 block mb-1">Alt text (SEO)</label>
               <input
-                className="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100"
+                className={inp}
                 value={form.altText}
                 onChange={e => setForm(f => ({ ...f, altText: e.target.value }))}
                 placeholder="e.g. TCS — Coss hiring partner"
@@ -193,9 +195,9 @@ export default function HiringPartnersPage() {
             </div>
           </div>
           <div className="mb-3">
-            <label className="text-xs text-gray-400 block mb-1">Logo URL (Cloudinary)</label>
+            <label className="text-xs text-[#475569] dark:text-gray-400 block mb-1">Logo URL (Cloudinary)</label>
             <input
-              className="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100"
+              className={inp}
               value={form.logoUrl}
               onChange={e => setForm(f => ({ ...f, logoUrl: e.target.value }))}
               placeholder="https://res.cloudinary.com/dfditihuw/…"
@@ -203,26 +205,26 @@ export default function HiringPartnersPage() {
           </div>
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Website URL</label>
+              <label className="text-xs text-[#475569] dark:text-gray-400 block mb-1">Website URL</label>
               <input
-                className="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100"
+                className={inp}
                 value={form.website}
                 onChange={e => setForm(f => ({ ...f, website: e.target.value }))}
                 placeholder="https://www.tcs.com"
               />
             </div>
             <div>
-              <label className="text-xs text-gray-400 block mb-1">Sort order</label>
+              <label className="text-xs text-[#475569] dark:text-gray-400 block mb-1">Sort order</label>
               <input
                 type="number"
-                className="w-full bg-gray-700 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-100"
+                className={inp}
                 value={form.sortOrder}
                 onChange={e => setForm(f => ({ ...f, sortOrder: Number(e.target.value) }))}
               />
             </div>
           </div>
           <div className="flex items-center gap-3 mb-4">
-            <label className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-[#475569] dark:text-gray-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.isVisible}
@@ -233,7 +235,10 @@ export default function HiringPartnersPage() {
             </label>
           </div>
           <div className="flex gap-2 justify-end">
-            <button onClick={resetForm} className="px-4 py-2 text-sm border border-white/10 rounded-lg bg-transparent text-gray-300">
+            <button
+              onClick={resetForm}
+              className="px-4 py-2 text-sm border border-[#e2e8f0] dark:border-white/10 rounded-lg bg-white dark:bg-transparent text-[#475569] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
               Cancel
             </button>
             <button
@@ -249,7 +254,7 @@ export default function HiringPartnersPage() {
       )}
 
       {/* Instruction */}
-      <p className="text-xs text-gray-500 mb-3">
+      <p className="text-xs text-[#94a3b8] dark:text-gray-500 mb-3">
         Drag cards to reorder · click Edit to update logo URL or details
       </p>
 
@@ -257,7 +262,7 @@ export default function HiringPartnersPage() {
       {loading ? (
         <div className="grid grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-28 bg-gray-800 rounded-xl animate-pulse" />
+            <div key={i} className="h-28 bg-[#f1f5f9] dark:bg-gray-800 rounded-xl animate-pulse" />
           ))}
         </div>
       ) : (
@@ -273,12 +278,12 @@ export default function HiringPartnersPage() {
                 onDragEnter={() => handleDragEnter(index)}
                 onDragEnd={handleDragEnd}
                 onDragOver={e => e.preventDefault()}
-                className={`relative border rounded-xl p-3 bg-gray-800 cursor-grab transition-opacity ${
+                className={`relative border rounded-xl p-3 bg-white dark:bg-gray-800 cursor-grab transition-opacity ${
                   !p.isVisible ? 'opacity-40' : ''
-                } ${isBroken ? 'border-red-500/50' : 'border-white/10'}`}
+                } ${isBroken ? 'border-red-300 dark:border-red-500/50' : 'border-[#e2e8f0] dark:border-white/10'}`}
               >
                 {isBroken && (
-                  <span className="absolute top-2 right-2 text-xs px-1.5 py-0.5 bg-red-500/10 text-red-400 rounded">
+                  <span className="absolute top-2 right-2 text-xs px-1.5 py-0.5 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded">
                     404
                   </span>
                 )}
@@ -292,28 +297,28 @@ export default function HiringPartnersPage() {
                       className="max-h-8 max-w-full object-contain grayscale"
                     />
                   ) : (
-                    <span className="text-xs text-gray-500">{p.name}</span>
+                    <span className="text-xs text-[#94a3b8] dark:text-gray-500">{p.name}</span>
                   )}
                 </div>
 
-                <p className="text-xs text-gray-400 text-center truncate mb-2">{p.name}</p>
+                <p className="text-xs text-[#475569] dark:text-gray-400 text-center truncate mb-2">{p.name}</p>
 
                 <div className="flex gap-1 justify-center">
                   <button
                     onClick={() => toggleVisible(p)}
-                    className="px-2 py-1 text-xs border border-white/10 rounded bg-transparent text-gray-400 hover:text-gray-200"
+                    className="px-2 py-1 text-xs border border-[#e2e8f0] dark:border-white/10 rounded bg-transparent text-[#475569] dark:text-gray-400 hover:text-[#0f172a] dark:hover:text-gray-200"
                   >
                     {p.isVisible ? 'Hide' : 'Show'}
                   </button>
                   <button
                     onClick={() => startEdit(p)}
-                    className="px-2 py-1 text-xs border border-white/10 rounded bg-transparent text-gray-400 hover:text-gray-200"
+                    className="px-2 py-1 text-xs border border-sky-200 dark:border-white/10 rounded bg-transparent text-sky-600 dark:text-gray-400 hover:bg-sky-50 dark:hover:text-gray-200"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => deletePartner(p.id, p.name)}
-                    className="px-2 py-1 text-xs border border-red-500/20 rounded bg-transparent text-red-400 hover:bg-red-500/10"
+                    className="px-2 py-1 text-xs border border-red-200 dark:border-red-500/20 rounded bg-transparent text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
                   >
                     ✕
                   </button>
@@ -326,28 +331,30 @@ export default function HiringPartnersPage() {
 
       {/* Scan results */}
       {scanResults && (
-        <div className="border border-white/10 rounded-xl overflow-hidden mb-6">
-          <div className="flex items-center justify-between px-4 py-3 bg-gray-800 border-b border-white/10">
-            <span className="text-sm font-medium text-gray-100">Logo scan results</span>
-            <span className="text-xs text-gray-500">
+        <div className="border border-[#e2e8f0] dark:border-white/10 rounded-xl overflow-hidden mb-6">
+          <div className="flex items-center justify-between px-4 py-3 bg-[#f8fafc] dark:bg-gray-800 border-b border-[#e2e8f0] dark:border-white/10">
+            <span className="text-sm font-medium text-[#0f172a] dark:text-gray-100">Logo scan results</span>
+            <span className="text-xs text-[#94a3b8] dark:text-gray-500">
               {scanResults.filter(r => r.ok).length} ok · {broken} broken
             </span>
           </div>
           {scanResults.map(r => (
-            <div key={r.id} className="flex items-center gap-3 px-4 py-3 border-b border-white/5 last:border-0">
+            <div key={r.id} className="flex items-center gap-3 px-4 py-3 border-b border-[#f1f5f9] dark:border-white/5 last:border-0">
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-200">{r.name}</p>
-                <p className="text-xs text-gray-500 truncate">{r.logoUrl || '— no URL set'}</p>
+                <p className="text-sm font-medium text-[#0f172a] dark:text-gray-200">{r.name}</p>
+                <p className="text-xs text-[#94a3b8] dark:text-gray-500 truncate">{r.logoUrl || '— no URL set'}</p>
               </div>
               <span className={`text-xs px-2 py-1 rounded ${
-                r.ok ? 'bg-teal-500/10 text-teal-400' : 'bg-red-500/10 text-red-400'
+                r.ok
+                  ? 'bg-teal-50 dark:bg-teal-500/10 text-teal-700 dark:text-teal-400'
+                  : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400'
               }`}>
                 {r.ok ? `${r.status} OK` : r.status === 0 ? 'timeout' : `${r.status}`}
               </span>
               {!r.ok && (
                 <button
                   onClick={() => startEdit(partners.find(p => p.id === r.id)!)}
-                  className="text-xs px-2 py-1 border border-white/10 rounded text-gray-300 hover:bg-gray-700"
+                  className="text-xs px-2 py-1 border border-[#e2e8f0] dark:border-white/10 rounded text-[#475569] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                   Fix
                 </button>

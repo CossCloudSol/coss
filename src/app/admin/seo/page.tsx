@@ -89,8 +89,8 @@ export default function SeoAdminPage(): JSX.Element {
   return (
     <div className="space-y-4">
       <header>
-        <h1 className="text-xl font-semibold text-gray-900">SEO Manager</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">SEO Manager</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Per-page metadata, site-wide SEO settings, page-speed checks, and
           tools.
         </p>
@@ -113,7 +113,7 @@ export default function SeoAdminPage(): JSX.Element {
             className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset transition ${
               tab === t.key
                 ? 'bg-teal-600 text-white ring-teal-600'
-                : 'bg-white text-gray-600 ring-gray-200 hover:bg-gray-50'
+                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 ring-gray-200 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
             }`}
           >
             {t.label}
@@ -222,7 +222,7 @@ function PagesTab({
                       : cat.key === 'courses'
                         ? 'bg-indigo-600 text-white ring-indigo-600'
                         : 'bg-violet-600 text-white ring-violet-600'
-                  : 'bg-white text-gray-600 ring-gray-200 hover:bg-gray-50'
+                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 ring-gray-200 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >
               {cat.label}
@@ -288,7 +288,7 @@ function PagesTab({
         {/* Right: form */}
         <section className="flex-1 min-w-0">
           {selectedPage === null ? (
-            <div className="rounded-xl border border-dashed border-gray-200 bg-white p-12 text-center text-sm text-gray-500">
+            <div className="rounded-xl border border-dashed border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-12 text-center text-sm text-gray-500 dark:text-gray-400">
               Select a page from the left to edit its SEO.
             </div>
           ) : (
@@ -400,7 +400,7 @@ function PageEditor({
 
   return (
     <div className="space-y-5">
-      <h2 className="text-lg font-semibold text-gray-900">{page.pageTitle}</h2>
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{page.pageTitle}</h2>
 
       {/* Live Google preview */}
       <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
@@ -427,7 +427,7 @@ function PageEditor({
             type="text"
             value={metaTitle}
             onChange={(e) => setMetaTitle(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
           <Counter value={titleLen} max={60} />
         </Field>
@@ -437,7 +437,7 @@ function PageEditor({
             rows={3}
             value={metaDescription}
             onChange={(e) => setMetaDescription(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
           <Counter value={descLen} max={160} />
         </Field>
@@ -447,7 +447,7 @@ function PageEditor({
             type="text"
             value={focusKeyword}
             onChange={(e) => setFocusKeyword(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
 
@@ -457,7 +457,7 @@ function PageEditor({
             value={keywords}
             onChange={(e) => setKeywords(e.target.value)}
             placeholder="keyword1, keyword2, keyword3"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
       </section>
@@ -473,7 +473,7 @@ function PageEditor({
             type="text"
             value={ogTitle}
             onChange={(e) => setOgTitle(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
         <Field label="OG Description">
@@ -481,7 +481,7 @@ function PageEditor({
             rows={2}
             value={ogDescription}
             onChange={(e) => setOgDescription(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
         <Field label="OG Image URL">
@@ -490,7 +490,7 @@ function PageEditor({
             value={ogImage}
             onChange={(e) => setOgImage(e.target.value)}
             placeholder="https://…/og-image.jpg"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
         {ogImage.trim() !== '' ? (
@@ -515,7 +515,7 @@ function PageEditor({
             value={canonicalUrl}
             onChange={(e) => setCanonicalUrl(e.target.value)}
             placeholder={`https://www.${SITE_HOST}/${page.pageSlug}`}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
 
@@ -543,13 +543,13 @@ function PageEditor({
               setSchemaValidation(null);
             }}
             placeholder='{"@context": "https://schema.org", ...}'
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm font-mono text-gray-900 dark:text-gray-100"
           />
           <div className="mt-2 flex items-center gap-3">
             <button
               type="button"
               onClick={validateSchema}
-              className="text-xs rounded-lg border border-gray-300 bg-white px-3 py-1 hover:bg-gray-50"
+              className="text-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               Validate JSON
             </button>
@@ -659,7 +659,7 @@ function SettingsTab({
   const gaConnected = gaId.trim().startsWith('G-');
 
   return (
-    <div className="space-y-5 rounded-xl border border-gray-200 bg-white p-5">
+    <div className="space-y-5 rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
       <SettingsSection title="Google Analytics">
         <Field label="Google Analytics 4 ID">
           <input
@@ -667,9 +667,9 @@ function SettingsTab({
             value={gaId}
             onChange={(e) => setGaId(e.target.value)}
             placeholder="G-XXXXXXXXXX"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Get from: analytics.google.com → Admin → Data Streams → Measurement
             ID
           </p>
@@ -694,7 +694,7 @@ function SettingsTab({
             value={gscId}
             onChange={(e) => setGscId(e.target.value)}
             placeholder="paste content= value from HTML tag"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
           <p className="text-xs text-gray-500 mt-1">
             From Search Console → Settings → Ownership verification → HTML tag →
@@ -712,7 +712,7 @@ function SettingsTab({
             value={siteTitle}
             onChange={(e) => setSiteTitle(e.target.value)}
             placeholder="COSS Cloud Solutions"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
           <p className="text-xs text-gray-500 mt-1">
             Added to all page titles: <code>Courses | COSS Cloud Solutions</code>
@@ -724,7 +724,7 @@ function SettingsTab({
             value={twitter}
             onChange={(e) => setTwitter(e.target.value)}
             placeholder="@cosscloudsol"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
         </Field>
       </SettingsSection>
@@ -737,7 +737,7 @@ function SettingsTab({
             rows={8}
             value={robotsTxt}
             onChange={(e) => setRobotsTxt(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm font-mono text-gray-900 dark:text-gray-100"
           />
           <p className="text-xs text-gray-500 mt-1">
             This controls which pages search engines can crawl.
@@ -848,7 +848,7 @@ function SpeedTab(): JSX.Element {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900">Test Page Speed</h2>
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Test Page Speed</h2>
 
       <div className="flex flex-col md:flex-row gap-3">
         <input
@@ -856,7 +856,7 @@ function SpeedTab(): JSX.Element {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://www.cosscloudsol.com"
-          className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm"
+          className="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
         />
         <button
           type="button"
@@ -904,17 +904,17 @@ function SpeedTab(): JSX.Element {
             <ScoreCircle label="Desktop" score={result.desktop.score} />
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50">
-                <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500">
+          <div className="overflow-x-auto rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+              <thead className="bg-gray-50 dark:bg-gray-800/60">
+                <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
                   <th className="px-5 py-2.5">Metric</th>
                   <th className="px-5 py-2.5">Mobile</th>
                   <th className="px-5 py-2.5">Desktop</th>
                   <th className="px-5 py-2.5">Rating</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
                 {METRICS.map((m) => {
                   const mobileVal = result.mobile[m.key];
                   const desktopVal = result.desktop[m.key];
@@ -924,9 +924,9 @@ function SpeedTab(): JSX.Element {
                       : m.rate(desktopVal);
                   return (
                     <tr key={m.key}>
-                      <td className="px-5 py-3 text-gray-900">{m.label}</td>
-                      <td className="px-5 py-3 text-gray-700">{mobileVal}</td>
-                      <td className="px-5 py-3 text-gray-700">{desktopVal}</td>
+                      <td className="px-5 py-3 text-gray-900 dark:text-white">{m.label}</td>
+                      <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{mobileVal}</td>
+                      <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{desktopVal}</td>
                       <td className="px-5 py-3">{ratingPill(worst)}</td>
                     </tr>
                   );
@@ -1042,7 +1042,7 @@ function ToolsTab({
         title="Search Console"
         description="Monitor search performance and indexing."
       >
-        <ol className="text-xs text-gray-500 list-decimal list-inside space-y-0.5 mt-1">
+        <ol className="text-xs text-gray-500 dark:text-gray-400 list-decimal list-inside space-y-0.5 mt-1">
           <li>Add GSC verification code in Settings tab</li>
           <li>Submit sitemap URL</li>
           <li>Monitor coverage and performance</li>
@@ -1060,7 +1060,7 @@ function ToolsTab({
         title="Google Analytics 4"
         description="Track visitors, behavior and conversions."
       >
-        <ol className="text-xs text-gray-500 list-decimal list-inside space-y-0.5 mt-1">
+        <ol className="text-xs text-gray-500 dark:text-gray-400 list-decimal list-inside space-y-0.5 mt-1">
           <li>Create GA4 property at analytics.google.com</li>
           <li>Copy Measurement ID (G-XXXXXXXXXX)</li>
           <li>Add to Settings tab above</li>
@@ -1100,7 +1100,7 @@ function ToolsTab({
           {checklist.map((item) => (
             <li
               key={item.label}
-              className="flex items-center gap-2 text-sm text-gray-700"
+              className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
               {item.done ? (
                 <CheckCircle2
@@ -1134,9 +1134,9 @@ function ToolCard({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <p className="font-semibold text-gray-900">{title}</p>
-      <p className="text-xs text-gray-500 mt-0.5">{description}</p>
+    <div className="rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
+      <p className="font-semibold text-gray-900 dark:text-white">{title}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>
       <div className="mt-2">{children}</div>
     </div>
   );
@@ -1177,7 +1177,7 @@ function Field({
 }): JSX.Element {
   return (
     <label className="block">
-      <span className="block text-xs font-medium text-gray-600 mb-1">
+      <span className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
         {label}
       </span>
       {children}
@@ -1214,8 +1214,8 @@ function Toggle({
         className="mt-1"
       />
       <span>
-        <span className="block text-sm font-medium text-gray-800">{label}</span>
-        <span className="block text-xs text-gray-500">{helper}</span>
+        <span className="block text-sm font-medium text-gray-800 dark:text-gray-200">{label}</span>
+        <span className="block text-xs text-gray-500 dark:text-gray-400">{helper}</span>
       </span>
     </label>
   );
@@ -1233,20 +1233,20 @@ function Collapsible({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <section className="rounded-lg border border-gray-200 bg-white">
+    <section className="rounded-lg border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+        className="w-full flex items-center gap-2 px-4 py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
       >
         {open ? (
-          <ChevronDown className="h-4 w-4 text-gray-500" aria-hidden="true" />
+          <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
         ) : (
-          <ChevronRight className="h-4 w-4 text-gray-500" aria-hidden="true" />
+          <ChevronRight className="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" />
         )}
         {title}
       </button>
-      {open ? <div className="border-t border-gray-200 p-4 space-y-3">{children}</div> : null}
+      {open ? <div className="border-t border-[#e2e8f0] dark:border-gray-700 p-4 space-y-3">{children}</div> : null}
     </section>
   );
 }
@@ -1260,8 +1260,8 @@ function SettingsSection({
 }): JSX.Element {
   return (
     <div className="space-y-3">
-      <p className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
-        <Search className="h-4 w-4 text-gray-400" aria-hidden="true" />
+      <p className="flex items-center gap-1.5 text-sm font-semibold text-gray-900 dark:text-white">
+        <Search className="h-4 w-4 text-gray-400 dark:text-gray-500" aria-hidden="true" />
         {title}
       </p>
       {children}
@@ -1270,5 +1270,5 @@ function SettingsSection({
 }
 
 function Divider(): JSX.Element {
-  return <div className="border-t border-gray-100" />;
+  return <div className="border-t border-[#f1f5f9] dark:border-gray-700" />;
 }
