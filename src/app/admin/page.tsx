@@ -297,7 +297,7 @@ export default async function AdminOverviewPage(): Promise<JSX.Element> {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 md:gap-6 bg-[#e6f4f6] dark:bg-[#0d1117]">
+    <div className="grid grid-cols-12 gap-4 md:gap-6 bg-[#e6f4f6] dark:bg-[#0d1117] overflow-x-hidden">
       {/* Top row — 4 stat cards, 2-column grid on all sizes */}
       <div className="col-span-12">
         <div className="grid grid-cols-2 gap-3 mb-4">
