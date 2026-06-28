@@ -36,7 +36,7 @@ export default function BottomNav(): JSX.Element {
       {/* Bottom nav bar */}
       <nav
         aria-label="Mobile navigation"
-        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden border-t border-[#d0d7de] bg-white dark:border-[#21262d] dark:bg-[#161b22]"
+        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[#012e36] dark:bg-[#161b22] border-t border-[#024c57] dark:border-[#21262d]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex h-14">
@@ -55,22 +55,22 @@ export default function BottomNav(): JSX.Element {
                 {isActive && (
                   <span
                     aria-hidden="true"
-                    className="absolute top-1.5 h-1 w-1 rounded-full bg-[#0f6e56] dark:bg-[#1b8a6b]"
+                    className="absolute top-1.5 h-1 w-1 rounded-full bg-[#5ef0c8] dark:bg-[#1b8a6b]"
                   />
                 )}
                 <Icon
                   size={22}
                   className={
                     isActive
-                      ? 'text-[#0f6e56] dark:text-[#1b8a6b]'
-                      : 'text-[#8c8fa8] dark:text-[#8b949e]'
+                      ? 'text-[#5ef0c8] dark:text-[#1b8a6b]'
+                      : 'text-white/35 dark:text-[#8b949e]'
                   }
                 />
                 <span
                   className={`text-[9px] leading-none ${
                     isActive
-                      ? 'text-[#0f6e56] dark:text-[#1b8a6b]'
-                      : 'text-[#8c8fa8] dark:text-[#8b949e]'
+                      ? 'text-[#5ef0c8] dark:text-[#1b8a6b]'
+                      : 'text-white/35 dark:text-[#8b949e]'
                   }`}
                 >
                   {group.label}

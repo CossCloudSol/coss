@@ -39,7 +39,7 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
         <div
           aria-hidden="true"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-black/50"
+          className="fixed inset-0 z-30 bg-black/30 dark:bg-black/55"
         />
       )}
 
@@ -48,7 +48,7 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
         role={isOpen ? 'dialog' : undefined}
         aria-modal={isOpen ? true : undefined}
         aria-label={group ? `${group.label} navigation` : undefined}
-        className={`fixed bottom-14 left-0 right-0 z-40 min-h-[40vh] rounded-t-[20px] border-t border-[#d0d7de] bg-white pb-2 transition-transform duration-300 ease-out dark:border-[#30363d] dark:bg-[#161b22] ${
+        className={`fixed bottom-14 left-0 right-0 z-40 min-h-[40vh] rounded-t-[20px] border-t-2 border-[#024c57] bg-white pb-2 transition-transform duration-300 ease-out dark:border-t dark:border-[#30363d] dark:bg-[#161b22] ${
           isOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
@@ -56,7 +56,7 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
           <>
             {/* Drag handle */}
             <div className="flex justify-center pt-2.5">
-              <div className="h-[3px] w-8 rounded-full bg-[#d0d7de] dark:bg-[#30363d]" />
+              <div className="h-[3px] w-8 rounded-full bg-[#c9e8ed] dark:bg-[#30363d]" />
             </div>
 
             {/* Header */}
@@ -68,10 +68,10 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
                 <GroupIcon size={16} style={{ color: groupColor.icon }} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[15px] font-medium leading-tight text-gray-900 dark:text-white">
+                <p className="text-[15px] font-medium leading-tight text-[#0f172a] dark:text-white">
                   {group.label}
                 </p>
-                <p className="text-[10px] leading-tight text-gray-500 dark:text-[#8b949e]">
+                <p className="text-[10px] leading-tight text-[#475569] dark:text-[#8b949e]">
                   {group.items.length} {group.items.length === 1 ? 'section' : 'sections'}
                 </p>
               </div>
@@ -79,14 +79,14 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation drawer"
-                className="flex h-6 w-6 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 dark:text-[#8b949e] dark:hover:bg-[#1c2128]"
+                className="flex h-6 w-6 items-center justify-center rounded-md bg-[#e6f4f6] border border-[#c9e8ed] text-[#024c57] transition-colors hover:bg-[#d0eaee] dark:bg-transparent dark:border-0 dark:text-[#8b949e] dark:hover:bg-[#1c2128]"
               >
                 <X size={16} />
               </button>
             </div>
 
             {/* Divider */}
-            <div className="mx-4 border-t border-[#d0d7de] dark:border-[#30363d]" />
+            <div className="mx-4 border-t border-[#c9e8ed] dark:border-[#30363d]" />
 
             {/* Items */}
             <ul className="max-h-[55vh] overflow-y-auto px-2 py-2">
@@ -103,9 +103,11 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
                         onClose();
                       }}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors ${
-                        active ? '' : 'hover:bg-[#f6f8fa] dark:hover:bg-[#1c2128]'
+                        active
+                          ? 'bg-[#e6f4f6] border-l-2 border-[#024c57]'
+                          : 'hover:bg-[#e6f4f6] dark:hover:bg-[#1c2128]'
                       }`}
-                      style={active ? { backgroundColor: groupColor.bg } : undefined}
+                      style={active && mode === 'dark' ? { backgroundColor: groupColor.bg } : undefined}
                     >
                       <div
                         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px]"
@@ -115,19 +117,19 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
                       </div>
                       <div className="min-w-0 flex-1">
                         <p
-                          className="text-sm font-medium leading-tight text-gray-900 dark:text-white"
-                          style={active ? { color: groupColor.icon } : undefined}
+                          className={`text-sm font-medium leading-tight ${active ? 'text-[#024c57]' : 'text-[#0f172a] dark:text-white'}`}
+                          style={active && mode === 'dark' ? { color: groupColor.icon } : undefined}
                         >
                           {item.label}
                         </p>
-                        <p className="mt-0.5 text-xs leading-tight text-gray-500 dark:text-[#8b949e]">
+                        <p className={`mt-0.5 text-xs leading-tight ${active ? 'text-[#03798a] dark:text-[#8b949e]' : 'text-[#475569] dark:text-[#8b949e]'}`}>
                           {item.desc}
                         </p>
                       </div>
                       <ChevronRight
                         size={16}
-                        className={active ? '' : 'text-gray-400 dark:text-[#8b949e]'}
-                        style={active ? { color: groupColor.icon } : undefined}
+                        className={active ? 'text-[#03798a]' : 'text-gray-400 dark:text-[#8b949e]'}
+                        style={active && mode === 'dark' ? { color: groupColor.icon } : undefined}
                       />
                     </button>
                   </li>
