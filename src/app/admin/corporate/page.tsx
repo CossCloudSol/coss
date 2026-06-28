@@ -271,62 +271,70 @@ export default function CorporateLeadsPage(): JSX.Element {
       </div>
 
       {/* Table ------------------------------------------------------------ */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-800/60">
-            <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-              <th scope="col" className="w-10 px-4 py-2.5">
-                #
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Company
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Contact Person
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Phone + Email
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Domain
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Team Size
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Status
-              </th>
-              <th scope="col" className="px-4 py-2.5">
-                Date
-              </th>
-              <th scope="col" className="px-4 py-2.5 text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
-            {loading ? (
-              <SkeletonRows />
-            ) : filteredLeads.length === 0 ? (
-              <tr>
-                <td colSpan={9} className="px-4 py-14">
-                  <EmptyState />
-                </td>
+      {loading || filteredLeads.length > 0 ? (
+        <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+            <thead className="bg-gray-50 dark:bg-gray-800/60">
+              <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                <th scope="col" className="w-10 px-4 py-2.5">
+                  #
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Company
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Contact Person
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Phone + Email
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Domain
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Team Size
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Status
+                </th>
+                <th scope="col" className="px-4 py-2.5">
+                  Date
+                </th>
+                <th scope="col" className="px-4 py-2.5 text-right">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              filteredLeads.map((lead, i) => (
-                <CorporateRow
-                  key={lead.id}
-                  lead={lead}
-                  index={i + 1}
-                  onView={setModalLeadId}
-                  onDelete={deleteLead}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
+              {loading ? (
+                <SkeletonRows />
+              ) : (
+                filteredLeads.map((lead, i) => (
+                  <CorporateRow
+                    key={lead.id}
+                    lead={lead}
+                    index={i + 1}
+                    onView={setModalLeadId}
+                    onDelete={deleteLead}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="w-12 h-12 rounded-full bg-[#e6f4f6] dark:bg-[#21262d] flex items-center justify-center mb-3">
+            <i className="ti ti-building text-[#024c57] dark:text-[#8b949e] text-xl" />
+          </div>
+          <p className="text-[#024c57] dark:text-[#e6edf3] font-medium text-sm mb-1">
+            No proposals yet
+          </p>
+          <p className="text-[#475569] dark:text-[#8b949e] text-xs max-w-[220px]">
+            Submissions from the corporate training enquiry form will appear here.
+          </p>
+        </div>
+      )}
 
       {/* Yearly sparkline ------------------------------------------------- */}
       <MonthlySparkline leads={leads} />
