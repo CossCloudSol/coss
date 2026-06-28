@@ -29,34 +29,35 @@ async function getStats(): Promise<AdminStatsResponse> {
   return (await response.json()) as AdminStatsResponse;
 }
 
-type AccentColor = 'blue' | 'green' | 'teal' | 'orange';
+type CardVariant = 'leads' | 'newToday' | 'enrolled' | 'corporate';
 
-const ACCENT_BAR: Record<AccentColor, string> = {
-  blue: 'bg-blue-500',
-  green: 'bg-emerald-500',
-  teal: 'bg-teal-500',
-  orange: 'bg-orange-500',
+const CARD_CONFIG: Record<CardVariant, { lightBg: string; darkBar: string }> = {
+  leads:     { lightBg: 'bg-[#024c57]', darkBar: 'bg-blue-500' },
+  newToday:  { lightBg: 'bg-[#1d4ed8]', darkBar: 'bg-emerald-500' },
+  enrolled:  { lightBg: 'bg-[#d97706]', darkBar: 'bg-teal-500' },
+  corporate: { lightBg: 'bg-[#7c3aed]', darkBar: 'bg-orange-500' },
 };
 
 function StatCard({
   label,
   value,
-  accent,
+  variant,
 }: {
   label: string;
   value: number;
-  accent: AccentColor;
+  variant: CardVariant;
 }): JSX.Element {
+  const { lightBg, darkBar } = CARD_CONFIG[variant];
   return (
-    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
+    <div className={`relative overflow-hidden rounded-xl p-3 ${lightBg} dark:bg-[#161b22] dark:border dark:border-[#21262d]`}>
       <div
-        className={`absolute left-0 top-0 h-[2.5px] w-full ${ACCENT_BAR[accent]}`}
+        className={`hidden dark:block absolute left-0 top-0 h-[2.5px] w-full ${darkBar}`}
         aria-hidden="true"
       />
-      <p className="text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-1">
+      <p className="text-[10px] uppercase tracking-wide text-white/65 dark:text-[#8b949e] mb-1">
         {label}
       </p>
-      <p className="text-2xl font-medium text-gray-900 dark:text-white">
+      <p className="text-2xl font-medium text-white dark:text-[#e6edf3]">
         {value.toLocaleString()}
       </p>
     </div>
@@ -64,23 +65,23 @@ function StatCard({
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  new: 'bg-[#dcfce7] text-[#15803d] ring-[#bbf7d0] dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700',
-  contacted: 'bg-[#dbeafe] text-[#1d4ed8] ring-[#bfdbfe] dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-700',
-  enrolled: 'bg-[#f3e8ff] text-[#7c3aed] ring-[#e9d5ff] dark:bg-purple-900/30 dark:text-purple-400 dark:ring-purple-700',
-  lost: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700',
+  new: 'bg-[#5ef0c8] text-[#012e36] font-bold ring-[#5ef0c8] dark:bg-[#1f3a2d] dark:text-[#3fb950] dark:ring-emerald-700',
+  contacted: 'bg-[#dbeafe] text-[#1d4ed8] font-medium ring-[#bfdbfe] dark:bg-blue-900/30 dark:text-blue-400 dark:ring-blue-700',
+  enrolled: 'bg-[#f3e8ff] text-[#7c3aed] font-medium ring-[#e9d5ff] dark:bg-purple-900/30 dark:text-purple-400 dark:ring-purple-700',
+  lost: 'bg-red-50 text-red-700 font-medium ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700',
 };
 
 function statusClasses(status: string): string {
   return (
     STATUS_STYLES[status.toLowerCase()] ??
-    'bg-gray-50 text-gray-700 ring-gray-200'
+    'bg-gray-50 text-gray-700 font-medium ring-gray-200'
   );
 }
 
 function StatusBadge({ status }: { status: string }): JSX.Element {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ring-1 ring-inset ${statusClasses(status)}`}
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs capitalize ring-1 ring-inset ${statusClasses(status)}`}
     >
       {status}
     </span>
@@ -93,32 +94,32 @@ function RecentLeadsCard({
   leads: AdminStatsResponse['recentLeads'];
 }): JSX.Element {
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-      <header className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 px-5 py-4">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Recent Leads</h2>
-        <span className="text-xs text-gray-500 dark:text-gray-400">Last 5</span>
+    <section className="rounded-xl border border-[#c9e8ed] dark:border-[#21262d] bg-white dark:bg-[#161b22]">
+      <header className="flex items-center justify-between border-b border-[#c9e8ed] dark:border-[#21262d] px-5 py-4">
+        <h2 className="text-xs font-semibold text-[#024c57] dark:text-[#8b949e] uppercase tracking-wide">Recent Leads</h2>
+        <span className="text-xs text-[#475569] dark:text-[#8b949e]">Last 5</span>
       </header>
       {leads.length === 0 ? (
-        <p className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+        <p className="px-5 py-10 text-center text-sm text-[#475569] dark:text-[#8b949e]">
           No leads captured yet.
         </p>
       ) : (
         <>
           {/* Mobile card list — shown only on < md */}
-          <ul className="md:hidden divide-y divide-gray-100 dark:divide-gray-700">
+          <ul className="md:hidden divide-y divide-[#c9e8ed] dark:divide-[#21262d]">
             {leads.map((lead) => (
               <li key={lead.id} className="flex items-start justify-between gap-2 px-4 py-3">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="truncate text-sm font-medium text-[#0f172a] dark:text-[#e6edf3]">
                     {lead.name}
                   </p>
-                  <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400">
+                  <p className="mt-0.5 truncate text-xs text-[#475569] dark:text-[#8b949e]">
                     {lead.course ?? '—'} · <span className="capitalize">{lead.branch}</span>
                   </p>
                 </div>
                 <div className="shrink-0 text-right">
                   <StatusBadge status={lead.status} />
-                  <p className="mt-1 text-[11px] text-gray-400 dark:text-gray-500">
+                  <p className="mt-1 text-[11px] text-[#475569] dark:text-[#8b949e]">
                     {formatDistanceToNow(new Date(lead.createdAt), { addSuffix: true })}
                   </p>
                 </div>
@@ -128,9 +129,9 @@ function RecentLeadsCard({
 
           {/* Desktop table — hidden on < md */}
           <div className="hidden md:block overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-              <thead className="bg-gray-50 dark:bg-gray-800/60">
-                <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <table className="min-w-full divide-y divide-[#c9e8ed] dark:divide-[#21262d] text-sm">
+              <thead className="bg-[#e6f4f6] dark:bg-gray-800/60">
+                <tr className="text-left text-xs font-medium uppercase tracking-wide text-[#475569] dark:text-[#8b949e]">
                   <th scope="col" className="px-5 py-2.5">Name</th>
                   <th scope="col" className="px-5 py-2.5">Course</th>
                   <th scope="col" className="px-5 py-2.5">Branch</th>
@@ -138,22 +139,22 @@ function RecentLeadsCard({
                   <th scope="col" className="px-5 py-2.5">Time</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
+              <tbody className="divide-y divide-[#c9e8ed] dark:divide-[#21262d] bg-white dark:bg-[#161b22]">
                 {leads.map((lead) => (
                   <tr key={lead.id}>
-                    <td className="whitespace-nowrap px-5 py-3 font-medium text-gray-900 dark:text-white">
+                    <td className="whitespace-nowrap px-5 py-3 font-medium text-[#0f172a] dark:text-[#e6edf3]">
                       {lead.name}
                     </td>
-                    <td className="px-5 py-3 text-gray-600 dark:text-gray-300">
-                      {lead.course ?? <span className="text-gray-400 dark:text-gray-500">—</span>}
+                    <td className="px-5 py-3 text-[#475569] dark:text-[#8b949e]">
+                      {lead.course ?? <span className="text-[#475569] dark:text-[#8b949e]">—</span>}
                     </td>
-                    <td className="whitespace-nowrap px-5 py-3 capitalize text-gray-600 dark:text-gray-300">
+                    <td className="whitespace-nowrap px-5 py-3 capitalize text-[#475569] dark:text-[#8b949e]">
                       {lead.branch}
                     </td>
                     <td className="px-5 py-3">
                       <StatusBadge status={lead.status} />
                     </td>
-                    <td className="whitespace-nowrap px-5 py-3 text-gray-500 dark:text-gray-400">
+                    <td className="whitespace-nowrap px-5 py-3 text-[#475569] dark:text-[#8b949e]">
                       {formatDistanceToNow(new Date(lead.createdAt), {
                         addSuffix: true,
                       })}
@@ -296,14 +297,14 @@ export default async function AdminOverviewPage(): Promise<JSX.Element> {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 md:gap-6">
+    <div className="grid grid-cols-12 gap-4 md:gap-6 bg-[#e6f4f6] dark:bg-[#0d1117]">
       {/* Top row — 4 stat cards, 2-column grid on all sizes */}
       <div className="col-span-12">
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <StatCard label="Total Leads" value={stats.totals.leads} accent="blue" />
-          <StatCard label="New Today" value={stats.totals.newToday} accent="green" />
-          <StatCard label="Enrolled" value={stats.totals.enrolled} accent="teal" />
-          <StatCard label="Corporate" value={stats.totals.corporate} accent="orange" />
+          <StatCard label="Total Leads" value={stats.totals.leads} variant="leads" />
+          <StatCard label="New Today" value={stats.totals.newToday} variant="newToday" />
+          <StatCard label="Enrolled" value={stats.totals.enrolled} variant="enrolled" />
+          <StatCard label="Corporate" value={stats.totals.corporate} variant="corporate" />
         </div>
       </div>
 
