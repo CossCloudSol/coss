@@ -337,7 +337,7 @@ export default function TestimonialsAdminPage() {
   /* ─── Render ─────────────────────────────────────────────────────────────── */
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto overflow-x-hidden">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Testimonials Manager</h1>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
         Manage GMB reviews and manual testimonials shown across the site.
@@ -371,14 +371,14 @@ export default function TestimonialsAdminPage() {
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {[
-              { label: 'Total', value: total },
-              { label: 'Visible (this page)', value: visibleCount },
-              { label: 'Global (this page)', value: globalCount },
-              { label: 'Avg Rating (this page)', value: avgRating },
+              { label: 'Total', value: total, bg: 'bg-[#024c57]' },
+              { label: 'Visible (this page)', value: visibleCount, bg: 'bg-[#1d4ed8]' },
+              { label: 'Global (this page)', value: globalCount, bg: 'bg-[#03798a]' },
+              { label: 'Avg Rating (this page)', value: avgRating, bg: 'bg-[#7c3aed]' },
             ].map((s) => (
-              <div key={s.label} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">{s.value}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{s.label}</p>
+              <div key={s.label} className={`${s.bg} dark:bg-[#161b22] dark:border dark:border-[#21262d] rounded-xl p-4`}>
+                <p className="text-white/65 text-[10px] uppercase tracking-wide mb-1">{s.label}</p>
+                <p className="text-white text-2xl font-medium">{s.value}</p>
               </div>
             ))}
           </div>
@@ -395,7 +395,7 @@ export default function TestimonialsAdminPage() {
             <select
               value={scopeFilter}
               onChange={(e) => { setScopeFilter(e.target.value); setPage(1) }}
-              className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
+              className="rounded-lg border border-[#024c57] dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-[#024c57] dark:text-gray-100 focus:ring-2 focus:ring-[#024c57]/20"
             >
               <option value="all">All Scopes</option>
               <option value="global">Global</option>
@@ -404,7 +404,7 @@ export default function TestimonialsAdminPage() {
             <select
               value={visibleFilter}
               onChange={(e) => { setVisibleFilter(e.target.value); setPage(1) }}
-              className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
+              className="rounded-lg border border-[#024c57] dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm font-medium text-[#024c57] dark:text-gray-100 focus:ring-2 focus:ring-[#024c57]/20"
             >
               <option value="all">All Visibility</option>
               <option value="true">Visible</option>

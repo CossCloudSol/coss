@@ -126,7 +126,7 @@ export default function HiringPartnersPage() {
   const inp = 'w-full bg-white dark:bg-gray-700 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500'
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

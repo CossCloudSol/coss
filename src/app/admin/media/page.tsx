@@ -119,6 +119,7 @@ export default function MediaManagerPage() {
   const [keyAssets, setKeyAssets]       = useState<KeyAssets>({})
   const [loadingSlot, setLoadingSlot]   = useState<string | null>(null)
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({})
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   // ─ Scanner state ─
   const [scanResult, setScanResult]   = useState<ScanResult | null>(null)
@@ -224,6 +225,22 @@ export default function MediaManagerPage() {
     }
   }, [activeTab])
 
+  // ── Infinite scroll via IntersectionObserver ──────────────
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!sentinel || activeTab !== 'browser') return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingAssets) {
+          fetchAssets(false)
+        }
+      },
+      { rootMargin: '200px' }
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [hasMore, loadingAssets, fetchAssets, activeTab])
+
   // ── Run manual scan ────────────────────────────────────────
   const triggerScan = async () => {
     if (!confirm('This may take 2–5 minutes depending on site size. Continue?')) return
@@ -266,7 +283,7 @@ export default function MediaManagerPage() {
 
   // ─────────────────────────────────────────────────────────────
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -289,7 +306,7 @@ export default function MediaManagerPage() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-teal-500 text-teal-600 dark:border-teal-400 dark:text-teal-400'
+                ? 'border-[#024c57] text-[#024c57] dark:border-teal-400 dark:text-teal-400 bg-transparent'
                 : 'border-transparent text-[#475569] dark:text-gray-400 hover:text-[#0f172a] dark:hover:text-gray-200'
             }`}
           >
@@ -309,19 +326,19 @@ export default function MediaManagerPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && fetchAssets(true)}
-              className="flex-1 bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500"
+              className="flex-1 bg-white dark:bg-gray-800 border border-[#c9e8ed] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder:text-[#94a3b8] dark:placeholder-gray-500"
             />
             <select
               value={typeFilter}
               onChange={e => { setTypeFilter(e.target.value); setAssets([]); setCursor(null) }}
-              className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100"
+              className="bg-white dark:bg-gray-800 border border-[#c9e8ed] dark:border-white/10 rounded-lg px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100"
             >
               <option value="image">Images</option>
               <option value="raw">PDFs / files</option>
             </select>
             <button
               onClick={() => fetchAssets(true)}
-              className="px-4 py-2 bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm text-[#475569] dark:text-gray-200 rounded-lg border border-[#e2e8f0] dark:border-white/10"
+              className="px-4 py-2 bg-[#024c57] text-white text-sm rounded-lg hover:bg-[#03798a] transition-colors"
             >
               Search
             </button>
@@ -337,7 +354,7 @@ export default function MediaManagerPage() {
               {assets.map(asset => (
                 <div
                   key={asset.public_id}
-                  className="group relative border border-[#e2e8f0] dark:border-white/10 rounded-lg overflow-hidden bg-white dark:bg-gray-800"
+                  className="group relative border border-[#c9e8ed] dark:border-white/10 rounded-xl overflow-hidden bg-white dark:bg-gray-800"
                 >
                   {/* Thumbnail */}
                   <div className="aspect-square bg-[#f1f5f9] dark:bg-gray-700 flex items-center justify-center overflow-hidden">
@@ -360,14 +377,14 @@ export default function MediaManagerPage() {
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <button
                       onClick={() => copyUrl(asset.secure_url, asset.public_id)}
-                      className="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded border border-white/20"
+                      className="px-2 py-1 text-xs bg-[#024c57] hover:bg-[#03798a] text-white rounded transition-colors"
                     >
                       {copiedId === asset.public_id ? 'Copied!' : 'Copy URL'}
                     </button>
                     <button
                       onClick={() => handleDeleteAsset(asset.public_id)}
                       disabled={deletingId === asset.public_id}
-                      className="px-2 py-1 text-xs bg-red-500/20 hover:bg-red-500/40 text-red-300 rounded border border-red-400/30 disabled:opacity-50"
+                      className="px-2 py-1 text-xs bg-[#dc2626] hover:bg-red-700 text-white rounded disabled:opacity-50 transition-colors"
                     >
                       {deletingId === asset.public_id ? '…' : 'Delete'}
                     </button>
@@ -396,16 +413,15 @@ export default function MediaManagerPage() {
             </div>
           )}
 
-          {/* Load more */}
-          {hasMore && !loadingAssets && (
-            <div className="text-center">
-              <button
-                onClick={() => fetchAssets(false)}
-                className="px-6 py-2 bg-[#f1f5f9] dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-sm text-[#475569] dark:text-gray-200 rounded-lg border border-[#e2e8f0] dark:border-white/10"
-              >
-                Load more
-              </button>
+          {/* Infinite scroll sentinel */}
+          <div ref={sentinelRef} className="h-4" />
+          {loadingAssets && assets.length > 0 && (
+            <div className="flex justify-center py-4">
+              <div className="w-6 h-6 border-2 border-[#024c57] border-t-transparent rounded-full animate-spin" />
             </div>
+          )}
+          {!hasMore && assets.length > 0 && (
+            <p className="text-center text-xs text-[#94a3b8] dark:text-[#8b949e] py-3">All images loaded</p>
           )}
         </div>
       )}
@@ -419,7 +435,7 @@ export default function MediaManagerPage() {
             const isLoading  = loadingSlot === slot.key
 
             return (
-              <div key={slot.key} className="border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5 bg-white dark:bg-gray-800">
+              <div key={slot.key} className="bg-white dark:bg-gray-800 border border-[#c9e8ed] dark:border-white/10 rounded-xl p-3">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <p className="text-sm font-medium text-[#0f172a] dark:text-gray-100">{slot.label}</p>
@@ -455,7 +471,7 @@ export default function MediaManagerPage() {
                   <button
                     onClick={() => fileInputRefs.current[slot.key]?.click()}
                     disabled={isLoading}
-                    className="flex-1 py-1.5 text-xs bg-teal-50 dark:bg-teal-500/10 hover:bg-teal-100 dark:hover:bg-teal-500/20 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-500/20 rounded-lg disabled:opacity-50"
+                    className="flex-1 py-1.5 text-xs bg-[#e6f4f6] dark:bg-teal-500/10 text-[#024c57] dark:text-teal-400 border border-[#c9e8ed] dark:border-teal-500/20 rounded-lg hover:bg-[#c9e8ed] dark:hover:bg-teal-500/20 disabled:opacity-50 transition-colors"
                   >
                     {isLoading ? 'Uploading…' : isSet ? 'Replace' : 'Upload'}
                   </button>

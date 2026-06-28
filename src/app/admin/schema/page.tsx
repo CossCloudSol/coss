@@ -268,7 +268,7 @@ export default function SchemaPage() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto overflow-x-hidden">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-[#0f172a] dark:text-white">Schema Markup Manager</h1>
@@ -279,25 +279,38 @@ export default function SchemaPage() {
 
       {/* Supabase SQL reminder */}
       {!setupDismissed && (
-        <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-500/30 rounded-lg p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-amber-700 dark:text-amber-400 text-xs font-semibold mb-1">FIRST TIME SETUP</p>
-              <p className="text-amber-700/80 dark:text-amber-200/80 text-xs">
-                Run the Phase 1 SQL in your Supabase SQL Editor to add schema columns to PageSeo and SiteSettings before using this page.
-              </p>
+        <>
+          {/* Mobile: compact dismissible pill */}
+          <div className="block lg:hidden mb-4">
+            <div className="flex items-center justify-between gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-500/30 rounded-full px-3 py-1.5">
+              <span className="text-amber-700 dark:text-amber-400 text-xs font-medium">⚠ First time setup required — see SQL</span>
+              <button
+                onClick={dismissSetup}
+                className="text-amber-500/60 dark:text-amber-400/60 hover:text-amber-600 dark:hover:text-amber-400 text-base leading-none transition-colors font-bold"
+                aria-label="Dismiss setup banner"
+              >×</button>
             </div>
-            <button
-              onClick={dismissSetup}
-              className="shrink-0 text-amber-500/60 dark:text-amber-400/60 hover:text-amber-600 dark:hover:text-amber-400 text-lg leading-none transition-colors"
-              aria-label="Dismiss setup banner"
-            >
-              ×
-            </button>
           </div>
-          <details className="mt-2">
-            <summary className="text-amber-700 dark:text-amber-400 text-xs cursor-pointer hover:underline">Show SQL</summary>
-            <pre className="mt-2 text-xs text-green-700 dark:text-green-300 bg-amber-50/50 dark:bg-black/40 rounded p-3 overflow-x-auto whitespace-pre">{`ALTER TABLE "PageSeo"
+          {/* Desktop: full banner */}
+          <div className="hidden lg:block mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-500/30 rounded-lg p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-amber-700 dark:text-amber-400 text-xs font-semibold mb-1">FIRST TIME SETUP</p>
+                <p className="text-amber-700/80 dark:text-amber-200/80 text-xs">
+                  Run the Phase 1 SQL in your Supabase SQL Editor to add schema columns to PageSeo and SiteSettings before using this page.
+                </p>
+              </div>
+              <button
+                onClick={dismissSetup}
+                className="shrink-0 text-amber-500/60 dark:text-amber-400/60 hover:text-amber-600 dark:hover:text-amber-400 text-lg leading-none transition-colors"
+                aria-label="Dismiss setup banner"
+              >
+                ×
+              </button>
+            </div>
+            <details className="mt-2">
+              <summary className="text-amber-700 dark:text-amber-400 text-xs cursor-pointer hover:underline">Show SQL</summary>
+              <pre className="mt-2 text-xs text-green-700 dark:text-green-300 bg-amber-50/50 dark:bg-black/40 rounded p-3 overflow-x-auto whitespace-pre">{`ALTER TABLE "PageSeo"
   ADD COLUMN IF NOT EXISTS "schemaEnabled"  BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaOverride" TEXT;
 
@@ -310,8 +323,9 @@ ALTER TABLE "SiteSettings"
   ADD COLUMN IF NOT EXISTS "schemaWebSiteEnabled"      BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaDilsEnabled"         BOOLEAN NOT NULL DEFAULT true,
   ADD COLUMN IF NOT EXISTS "schemaAmeerpetEnabled"     BOOLEAN NOT NULL DEFAULT true;`}</pre>
-          </details>
-        </div>
+            </details>
+          </div>
+        </>
       )}
 
       {/* Tabs */}
@@ -323,7 +337,7 @@ ALTER TABLE "SiteSettings"
             className={[
               'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
               tab === t
-                ? 'border-teal-500 text-teal-600 dark:text-teal-400'
+                ? 'border-[#024c57] text-[#024c57] dark:border-teal-400 dark:text-teal-400'
                 : 'border-transparent text-[#475569] dark:text-gray-400 hover:text-[#0f172a] dark:hover:text-white',
             ].join(' ')}
           >
@@ -351,7 +365,7 @@ ALTER TABLE "SiteSettings"
               const renderedSchema = rendered[idx]
 
               return (
-                <div key={schema.key} className="bg-white dark:bg-white/5 border border-[#e2e8f0] dark:border-white/10 rounded-xl p-5">
+                <div key={schema.key} className="bg-white dark:bg-white/5 border border-[#c9e8ed] dark:border-white/10 rounded-xl p-5 mb-3">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
                       <span className="text-2xl">{schema.icon}</span>
@@ -367,7 +381,7 @@ ALTER TABLE "SiteSettings"
                         <p className="text-[#475569] dark:text-gray-400 text-xs mt-0.5">{schema.desc}</p>
                         <div className="flex gap-1.5 flex-wrap mt-2">
                           {schema.types.map(t => (
-                            <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">
+                            <span key={t} className="px-2 py-0.5 rounded-full text-xs bg-[#e6f4f6] dark:bg-teal-900/40 text-[#024c57] dark:text-teal-300 border border-[#c9e8ed] dark:border-teal-500/30 font-medium">
                               {t}
                             </span>
                           ))}
@@ -402,13 +416,13 @@ ALTER TABLE "SiteSettings"
                   <div className="flex gap-2 mt-4 flex-wrap">
                     <button
                       onClick={() => setExpandedKey(isExpanded ? null : schema.key)}
-                      className="px-3 py-1.5 rounded-lg text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
+                      className="bg-[#e6f4f6] dark:bg-transparent text-[#024c57] dark:text-gray-300 border border-[#c9e8ed] dark:border-white/10 rounded-lg px-3 py-1.5 text-xs hover:bg-[#c9e8ed] dark:hover:bg-white/5 transition-colors"
                     >
                       {isExpanded ? 'Hide JSON' : 'View rendered JSON'}
                     </button>
                     <button
                       onClick={() => isEditing ? setEditingKey(null) : startEdit(schema.overrideKey, override)}
-                      className="px-3 py-1.5 rounded-lg text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
+                      className="bg-[#024c57] dark:bg-gray-700 text-white rounded-lg px-3 py-1.5 text-xs font-medium hover:bg-[#03798a] dark:hover:bg-gray-600 transition-colors"
                     >
                       {isEditing ? 'Cancel edit' : 'Edit override'}
                     </button>
@@ -525,7 +539,7 @@ ALTER TABLE "SiteSettings"
                         <td className="px-4 py-3">
                           <div className="flex gap-1 flex-wrap">
                             {page.types.map(t => (
-                              <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">
+                              <span key={t} className="px-2 py-0.5 rounded-full text-xs bg-[#e6f4f6] dark:bg-teal-900/40 text-[#024c57] dark:text-teal-300 border border-[#c9e8ed] dark:border-teal-500/30 font-medium">
                                 {t}
                               </span>
                             ))}
@@ -562,13 +576,13 @@ ALTER TABLE "SiteSettings"
                           <div className="flex gap-1.5 justify-end flex-wrap">
                             <button
                               onClick={() => setViewingSlug(viewingSlug === page.slug ? null : page.slug)}
-                              className="px-2.5 py-1 rounded text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
+                              className="bg-[#e6f4f6] dark:bg-transparent text-[#024c57] dark:text-gray-300 border border-[#c9e8ed] dark:border-white/10 rounded-lg px-2.5 py-1 text-xs hover:bg-[#c9e8ed] dark:hover:bg-white/5 transition-colors"
                             >
                               {viewingSlug === page.slug ? 'Hide' : 'View JSON'}
                             </button>
                             <button
                               onClick={() => editingSlug === page.slug ? setEditingSlug(null) : startPageEdit(page.slug, page.schemaOverride)}
-                              className="px-2.5 py-1 rounded text-xs border border-[#e2e8f0] dark:border-white/10 text-[#475569] dark:text-gray-300 hover:bg-[#f1f5f9] dark:hover:bg-white/5 transition-colors"
+                              className="bg-[#024c57] dark:bg-gray-700 text-white rounded-lg px-2.5 py-1 text-xs font-medium hover:bg-[#03798a] dark:hover:bg-gray-600 transition-colors"
                             >
                               {editingSlug === page.slug ? 'Cancel' : 'Edit override'}
                             </button>
@@ -733,7 +747,7 @@ ALTER TABLE "SiteSettings"
                         <span className="text-[#94a3b8] dark:text-gray-400 text-xs font-mono">#{i + 1}</span>
                         <div className="flex gap-1.5 flex-wrap">
                           {type.split(', ').map(t => (
-                            <span key={t} className="px-2 py-0.5 rounded text-xs bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30">
+                            <span key={t} className="px-2 py-0.5 rounded-full text-xs bg-[#e6f4f6] dark:bg-teal-900/40 text-[#024c57] dark:text-teal-300 border border-[#c9e8ed] dark:border-teal-500/30 font-medium">
                               {t}
                             </span>
                           ))}

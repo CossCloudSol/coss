@@ -200,7 +200,7 @@ export default function CorporateLeadsPage(): JSX.Element {
 
   /* ----------------------------- Render --------------------------------- */
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 overflow-x-hidden">
       <header>
         <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Corporate Leads</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -209,24 +209,10 @@ export default function CorporateLeadsPage(): JSX.Element {
       </header>
 
       {/* Stats row -------------------------------------------------------- */}
-      <div className="grid grid-cols-12 gap-4 md:gap-6">
-        <div className="col-span-12 sm:col-span-4">
-          <StatCard label="Total Proposals" value={stats.total} accent="blue" />
-        </div>
-        <div className="col-span-12 sm:col-span-4">
-          <StatCard
-            label="This Month"
-            value={stats.thisMonth}
-            accent="green"
-          />
-        </div>
-        <div className="col-span-12 sm:col-span-4">
-          <StatCard
-            label="Pending Review"
-            value={stats.pendingReview}
-            accent="orange"
-          />
-        </div>
+      <div className="grid grid-cols-2 gap-3 mb-1">
+        <StatCard label="Total Proposals" value={stats.total} accent="blue" />
+        <StatCard label="This Month" value={stats.thisMonth} accent="green" />
+        <StatCard label="Pending Review" value={stats.pendingReview} accent="orange" />
       </div>
 
       {/* Error banner ---------------------------------------------------- */}
@@ -364,10 +350,10 @@ export default function CorporateLeadsPage(): JSX.Element {
 
 type AccentColor = 'blue' | 'green' | 'orange';
 
-const ACCENT_BAR: Record<AccentColor, string> = {
-  blue: 'bg-blue-500',
-  green: 'bg-emerald-500',
-  orange: 'bg-orange-500',
+const ACCENT_SOLID: Record<AccentColor, string> = {
+  blue: 'bg-[#024c57]',
+  green: 'bg-[#1d4ed8]',
+  orange: 'bg-[#d97706]',
 };
 
 function StatCard({
@@ -380,15 +366,11 @@ function StatCard({
   accent: AccentColor;
 }): JSX.Element {
   return (
-    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
-      <div
-        className={`absolute left-0 top-0 h-1 w-full ${ACCENT_BAR[accent]}`}
-        aria-hidden="true"
-      />
-      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+    <div className={`${ACCENT_SOLID[accent]} dark:bg-[#161b22] dark:border dark:border-[#21262d] rounded-xl p-3 text-white`}>
+      <p className="text-white/65 text-[10px] uppercase tracking-wide mb-1">
         {label}
       </p>
-      <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">
+      <p className="text-white text-2xl font-medium">
         {value.toLocaleString()}
       </p>
     </div>
@@ -409,10 +391,10 @@ function StatusPill({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset transition ${
+      className={`rounded-full px-3 py-1 text-xs font-medium transition ${
         active
-          ? 'bg-teal-600 text-white ring-teal-600'
-          : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 ring-gray-200 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
+          ? 'bg-[#024c57] text-white dark:bg-[#024c57]'
+          : 'bg-white border border-[#c9e8ed] text-[#475569] dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600'
       }`}
     >
       {label}
@@ -546,15 +528,15 @@ function SkeletonRows(): JSX.Element {
 
 function EmptyState(): JSX.Element {
   return (
-    <div className="flex flex-col items-center text-center">
-      <div className="rounded-full bg-gray-100 dark:bg-gray-700 p-4 text-gray-400 dark:text-gray-500">
-        <Briefcase className="h-8 w-8" aria-hidden="true" />
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="w-12 h-12 rounded-full bg-[#e6f4f6] dark:bg-[#21262d] flex items-center justify-center mb-3">
+        <Briefcase className="h-6 w-6 text-[#024c57] dark:text-[#8b949e]" aria-hidden="true" />
       </div>
-      <p className="mt-4 text-sm font-medium text-gray-900 dark:text-white">
-        No corporate leads yet
+      <p className="text-[#024c57] dark:text-[#e6edf3] font-medium text-sm mb-1">
+        No proposals yet
       </p>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        Submissions from the corporate-training enquiry form will appear here.
+      <p className="text-[#475569] dark:text-[#8b949e] text-xs">
+        Submissions from the corporate training enquiry form will appear here.
       </p>
     </div>
   );
@@ -737,7 +719,7 @@ function MonthlySparkline({
   const total = counts.reduce((sum, c) => sum + c, 0);
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
+    <section className="rounded-xl border border-[#c9e8ed] dark:border-gray-700 bg-white dark:bg-gray-800 p-3">
       <header className="flex items-end justify-between">
         <div>
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white">This year</h2>
@@ -761,7 +743,7 @@ function MonthlySparkline({
             <div
               key={`bar-${i}`}
               className={`w-full rounded-t-sm transition-all ${
-                isCurrent ? 'bg-teal-700' : 'bg-teal-500'
+                isCurrent ? 'bg-[#012e36]' : 'bg-[#024c57]'
               }`}
               style={{
                 // CSS max() guarantees the 4px baseline even for empty months,

@@ -106,16 +106,16 @@ type SectionProps = {
 function Section({ title, children, defaultOpen = true }: SectionProps) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="border border-[#e2e8f0] dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 border border-[#c9e8ed] dark:border-gray-700 rounded-xl overflow-hidden mb-3">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-5 py-3.5 bg-[#f8fafc] dark:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors text-left"
+        className="w-full flex items-center justify-between px-5 py-3.5 bg-[#e6f4f6] dark:bg-gray-800/60 hover:bg-[#c9e8ed] dark:hover:bg-gray-700/50 transition-colors text-left"
       >
         <span className="font-semibold text-[#0f172a] dark:text-gray-200 text-sm">{title}</span>
         <span className="text-[#94a3b8] dark:text-gray-400 text-lg leading-none">{open ? '▲' : '▼'}</span>
       </button>
-      {open && <div className="px-5 py-5 space-y-4 bg-white dark:bg-gray-800">{children}</div>}
+      {open && <div className="px-5 py-5 space-y-4 bg-white dark:bg-gray-800 dark:border-t dark:border-gray-700">{children}</div>}
     </div>
   )
 }
@@ -134,7 +134,7 @@ function Field({ label, children }: FieldProps) {
   )
 }
 
-const inputCls = 'w-full border border-[#e2e8f0] dark:border-gray-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-700 text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+const inputCls = 'w-full bg-[#e6f4f6] dark:bg-gray-700 border border-[#c9e8ed] dark:border-gray-600 rounded-lg px-3 py-2 text-[#0f172a] dark:text-gray-100 text-sm placeholder:text-[#94a3b8] dark:placeholder-gray-500 focus:outline-none focus:border-[#024c57] focus:ring-1 focus:ring-[#024c57]/20'
 
 export default function GeoManagerPage() {
   const [branches, setBranches] = useState<BranchData[]>([])
@@ -284,7 +284,7 @@ export default function GeoManagerPage() {
       : '#'
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 space-y-6">
+    <div className="max-w-3xl mx-auto py-8 px-4 space-y-6 overflow-x-hidden">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-[#0f172a] dark:text-white">GEO &amp; Local SEO Manager</h1>
@@ -311,10 +311,10 @@ export default function GeoManagerPage() {
               type="button"
               onClick={() => setActiveBranch(b.branchKey)}
               className={[
-                'pl-4 pr-8 py-2 rounded-md text-sm font-medium transition-colors',
+                'pl-4 pr-8 py-1.5 rounded-lg text-sm font-medium transition-colors',
                 activeBranch === b.branchKey
-                  ? 'bg-blue-600 text-white'
-                  : 'border border-[#e2e8f0] dark:border-gray-600 text-[#475569] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700',
+                  ? 'bg-[#024c57] text-white dark:bg-[#024c57]'
+                  : 'bg-white dark:bg-gray-800 border border-[#c9e8ed] dark:border-gray-600 text-[#475569] dark:text-gray-300 hover:bg-[#e6f4f6] dark:hover:bg-gray-700',
               ].join(' ')}
             >
               {b.branchName || b.branchKey}
@@ -328,7 +328,7 @@ export default function GeoManagerPage() {
                 className={[
                   'absolute right-1.5 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center rounded text-xs font-bold leading-none transition-colors',
                   activeBranch === b.branchKey
-                    ? 'text-white/70 hover:text-white hover:bg-blue-700'
+                    ? 'text-white/70 hover:text-white hover:bg-[#03798a]'
                     : 'text-gray-400 hover:text-red-600 hover:bg-red-50',
                 ].join(' ')}
               >
@@ -340,7 +340,7 @@ export default function GeoManagerPage() {
         <button
           type="button"
           onClick={() => { setShowAddForm(v => !v); setAddError('') }}
-          className="px-3 py-2 rounded-md text-sm font-medium border border-dashed border-[#e2e8f0] dark:border-gray-600 text-[#475569] dark:text-gray-400 hover:border-gray-400 dark:hover:border-gray-500 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+          className="flex items-center gap-2 border-2 border-dashed border-[#024c57] dark:border-gray-600 text-[#024c57] dark:text-gray-400 bg-[#e6f4f6] dark:bg-transparent hover:bg-[#c9e8ed] dark:hover:bg-gray-700 rounded-xl px-4 py-2 text-sm font-medium transition-colors"
         >
           + Add branch
         </button>
@@ -348,7 +348,7 @@ export default function GeoManagerPage() {
 
       {/* Add branch inline form */}
       {showAddForm && (
-        <div className="border border-[#e2e8f0] dark:border-gray-700 rounded-lg px-5 py-5 space-y-4 bg-[#f8fafc] dark:bg-gray-800">
+        <div className="bg-white dark:bg-gray-800 border border-[#c9e8ed] dark:border-gray-700 rounded-xl px-5 py-5 space-y-4">
           <h2 className="font-semibold text-[#0f172a] dark:text-gray-200 text-sm">New Branch</h2>
           {addError && (
             <div className="rounded-md bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-800">
@@ -404,7 +404,7 @@ export default function GeoManagerPage() {
               type="button"
               onClick={handleAddBranch}
               disabled={adding || !addForm.branchKey || !addForm.branchName}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 disabled:opacity-60 transition-colors"
+              className="px-4 py-2 bg-[#024c57] text-white text-sm font-semibold rounded-lg hover:bg-[#03798a] disabled:opacity-60 transition-colors"
             >
               {adding ? 'Creating…' : 'Create branch'}
             </button>
@@ -478,7 +478,7 @@ export default function GeoManagerPage() {
             href={mapsHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:underline"
+            className="inline-flex items-center gap-1.5 text-[#03798a] dark:text-teal-400 font-medium text-sm underline"
           >
             View on Google Maps ↗
           </a>
@@ -499,7 +499,7 @@ export default function GeoManagerPage() {
           {form.serviceAreas.map((area, idx) => (
             <span
               key={idx}
-              className="inline-flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium px-2.5 py-1 rounded-full border border-blue-200 dark:border-blue-700"
+              className="inline-flex items-center gap-1 bg-[#e6f4f6] dark:bg-blue-900/30 border border-[#024c57] dark:border-blue-700 text-[#024c57] dark:text-blue-400 rounded-full px-2 py-0.5 text-xs font-medium"
             >
               {area}
               <button
@@ -527,7 +527,7 @@ export default function GeoManagerPage() {
           <button
             type="button"
             onClick={addArea}
-            className="px-4 py-2 bg-[#0f172a] dark:bg-gray-700 text-white text-sm rounded-md hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 bg-[#024c57] dark:bg-gray-700 text-white text-sm rounded-lg hover:bg-[#03798a] dark:hover:bg-gray-600 transition-colors"
           >
             Add
           </button>
@@ -544,8 +544,8 @@ export default function GeoManagerPage() {
             aria-checked={form.schemaEnabled}
             onClick={() => setField('schemaEnabled', !form.schemaEnabled)}
             className={[
-              'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500',
-              form.schemaEnabled ? 'bg-blue-600' : 'bg-gray-200',
+              'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-[#024c57]/40',
+              form.schemaEnabled ? 'bg-[#024c57]' : 'bg-gray-200',
             ].join(' ')}
           >
             <span
@@ -610,12 +610,12 @@ export default function GeoManagerPage() {
       </Section>
 
       {/* Save button */}
-      <div className="flex justify-end pt-2">
+      <div className="pt-2">
         <button
           type="button"
           onClick={handleSave}
           disabled={saving || !activeBranch}
-          className="px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-md hover:bg-blue-700 disabled:opacity-60 transition-colors"
+          className="w-full bg-[#024c57] text-white rounded-xl py-3 font-medium text-sm hover:bg-[#03798a] disabled:opacity-60 transition-colors"
         >
           {saving ? 'Saving…' : `Save ${activeBranchName}`}
         </button>

@@ -825,6 +825,68 @@ function DeleteDialog({
   );
 }
 
+// ─── Collapsible Role Card ────────────────────────────────────────────────────
+
+function RoleCard({ info }: { info: typeof ROLE_INFO[number] }): JSX.Element {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className={`rounded-xl border ${info.color}`}>
+      {/* Mobile: collapsible header */}
+      <button
+        type="button"
+        onClick={() => setExpanded((o) => !o)}
+        className="lg:hidden w-full flex items-center justify-between px-4 py-3"
+      >
+        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${info.badge}`}>
+          {ROLE_LABELS[info.role]}
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 text-[#03798a] dark:text-[#8b949e] transition-transform ${expanded ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {/* Mobile body */}
+      {expanded && (
+        <div className="lg:hidden px-4 pb-4">
+          <p className="mb-2 text-xs text-gray-500 dark:text-gray-400 italic">{info.scope}</p>
+          <ul className="mb-3 space-y-1">
+            {info.tasks.map((t) => (
+              <li key={t} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+                {t}
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            <strong className="text-gray-600 dark:text-gray-300">Access: </strong>
+            {info.access}
+          </p>
+        </div>
+      )}
+      {/* Desktop: always expanded */}
+      <div className="hidden lg:block p-5">
+        <div className="mb-2 flex items-center gap-2">
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${info.badge}`}>
+            {ROLE_LABELS[info.role]}
+          </span>
+        </div>
+        <p className="mb-2 text-xs text-gray-500 dark:text-gray-400 italic">{info.scope}</p>
+        <ul className="mb-3 space-y-1">
+          {info.tasks.map((t) => (
+            <li key={t} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+              {t}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          <strong className="text-gray-600 dark:text-gray-300">Access: </strong>
+          {info.access}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ─── Role info cards ─────────────────────────────────────────────────────────
 
 const ROLE_INFO = [
@@ -994,7 +1056,7 @@ export default function SettingsPage(): JSX.Element {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 px-4 py-8">
+    <div className="mx-auto max-w-5xl space-y-8 px-4 py-8 overflow-x-hidden">
       {/* Page header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 dark:bg-teal-900/30">
@@ -1032,29 +1094,7 @@ export default function SettingsPage(): JSX.Element {
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {ROLE_INFO.map((info) => (
-            <div
-              key={info.role}
-              className={`rounded-xl border p-5 ${info.color}`}
-            >
-              <div className="mb-2 flex items-center gap-2">
-                <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${info.badge}`}>
-                  {ROLE_LABELS[info.role]}
-                </span>
-              </div>
-              <p className="mb-2 text-xs text-gray-500 dark:text-gray-400 italic">{info.scope}</p>
-              <ul className="mb-3 space-y-1">
-                {info.tasks.map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                <strong className="text-gray-600 dark:text-gray-300">Access: </strong>
-                {info.access}
-              </p>
-            </div>
+            <RoleCard key={info.role} info={info} />
           ))}
         </div>
       </section>
@@ -1080,119 +1120,134 @@ export default function SettingsPage(): JSX.Element {
           </button>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          {loading ? (
-            <div className="flex items-center justify-center py-16 text-gray-400">
-              <Loader2 className="h-6 w-6 animate-spin mr-3" />
-              <span className="text-sm">Loading team members…</span>
-            </div>
-          ) : fetchError ? (
-            <div className="py-16 text-center">
-              <p className="text-sm text-red-500 dark:text-red-400">{fetchError}</p>
-              <button
-                onClick={fetchUsers}
-                className="mt-3 text-sm text-teal-600 dark:text-teal-400 hover:underline"
-              >
-                Retry
-              </button>
-            </div>
-          ) : users.length === 0 ? (
-            <div className="py-16 text-center">
-              <p className="text-sm text-gray-400 dark:text-gray-500">
-                No team members yet. Click <strong>Invite User</strong> to add one.
-              </p>
-            </div>
-          ) : (
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700/50">
-                <tr>
-                  {['Name', 'Email', 'Role', 'Permissions', 'Status', 'Actions'].map((h) => (
-                    <th
-                      key={h}
-                      className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {users.map((u) => (
-                  <tr key={u.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors${!u.isActive ? ' opacity-50' : ''}`}>
-                    <td className="px-5 py-4">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{u.name}</p>
-                      <p className="text-xs text-gray-400 dark:text-gray-500">
-                        Added {new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                      </p>
-                    </td>
-                    <td className="px-5 py-4 text-sm text-gray-600 dark:text-gray-300">
-                      {u.email}
-                    </td>
-                    <td className="px-5 py-4">
-                      <span
-                        className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${ROLE_BADGE[u.role]}`}
-                      >
+        {loading ? (
+          <div className="flex items-center justify-center py-16 text-gray-400">
+            <Loader2 className="h-6 w-6 animate-spin mr-3" />
+            <span className="text-sm">Loading team members…</span>
+          </div>
+        ) : fetchError ? (
+          <div className="py-16 text-center">
+            <p className="text-sm text-red-500 dark:text-red-400">{fetchError}</p>
+            <button onClick={fetchUsers} className="mt-3 text-sm text-teal-600 dark:text-teal-400 hover:underline">
+              Retry
+            </button>
+          </div>
+        ) : users.length === 0 ? (
+          <div className="py-16 text-center">
+            <p className="text-sm text-gray-400 dark:text-gray-500">
+              No team members yet. Click <strong>Invite User</strong> to add one.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Mobile card list */}
+            <div className="block lg:hidden space-y-2">
+              {users.map((u) => {
+                const initials = u.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+                return (
+                  <div
+                    key={u.id}
+                    className={`bg-white dark:bg-[#161b22] border border-[#c9e8ed] dark:border-[#21262d] rounded-xl p-3 ${!u.isActive ? 'opacity-50' : ''}`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="bg-[#024c57] dark:bg-[#0d2a1e] text-white dark:text-[#3fb950] w-9 h-9 rounded-full flex items-center justify-center font-medium text-sm flex-shrink-0">
+                        {initials}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[#0f172a] dark:text-[#e6edf3] font-medium text-sm truncate">{u.name}</p>
+                        <p className="text-[#475569] dark:text-[#8b949e] text-xs font-mono truncate">{u.email}</p>
+                      </div>
+                      <span className="bg-[#e6f4f6] dark:bg-[#1f3a2d] text-[#024c57] dark:text-[#3fb950] border border-[#c9e8ed] dark:border-[#2ea043] rounded-full px-2 py-0.5 text-xs font-medium flex-shrink-0">
                         {ROLE_LABELS[u.role]}
                       </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {u.permissions.length} / {ALL_PERMISSIONS.length}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          role="switch"
-                          aria-checked={u.isActive}
-                          onClick={() => handleToggle(u.id)}
-                          disabled={toggling === u.id}
-                          title={u.isActive ? 'Click to disable' : 'Click to enable'}
-                          className={[
-                            'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60',
-                            u.isActive ? 'bg-teal-500' : 'bg-gray-400 dark:bg-gray-600',
-                          ].join(' ')}
-                        >
-                          <span
-                            className={[
-                              'inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform',
-                              u.isActive ? 'translate-x-5' : 'translate-x-0',
-                            ].join(' ')}
-                          />
-                        </button>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {u.isActive ? 'Active' : 'Disabled'}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => {
-                            setEditTarget(u);
-                            setModal('edit');
-                          }}
-                          className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 dark:hover:text-teal-400"
-                          title="Edit user"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => setDeleteTarget(u)}
-                          className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500"
-                          title="Remove user"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
+                    </div>
+                    <div className="flex gap-2 mt-2.5">
+                      <button
+                        onClick={() => { setEditTarget(u); setModal('edit'); }}
+                        className="flex-1 rounded-lg py-1.5 text-xs font-medium bg-[#024c57] text-white"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => setDeleteTarget(u)}
+                        className="flex-1 rounded-lg py-1.5 text-xs font-medium border border-[#fca5a5] dark:border-red-800 text-red-600 dark:text-red-400"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden lg:block overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-700/50">
+                  <tr>
+                    {['Name', 'Email', 'Role', 'Permissions', 'Status', 'Actions'].map((h) => (
+                      <th key={h} className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                  {users.map((u) => (
+                    <tr key={u.id} className={`hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors${!u.isActive ? ' opacity-50' : ''}`}>
+                      <td className="px-5 py-4">
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{u.name}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                          Added {new Date(u.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </p>
+                      </td>
+                      <td className="px-5 py-4 text-sm text-gray-600 dark:text-gray-300">{u.email}</td>
+                      <td className="px-5 py-4">
+                        <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${ROLE_BADGE[u.role]}`}>
+                          {ROLE_LABELS[u.role]}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {u.permissions.length} / {ALL_PERMISSIONS.length}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked={u.isActive}
+                            onClick={() => handleToggle(u.id)}
+                            disabled={toggling === u.id}
+                            title={u.isActive ? 'Click to disable' : 'Click to enable'}
+                            className={[
+                              'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60',
+                              u.isActive ? 'bg-teal-500' : 'bg-gray-400 dark:bg-gray-600',
+                            ].join(' ')}
+                          >
+                            <span className={['inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform', u.isActive ? 'translate-x-5' : 'translate-x-0'].join(' ')} />
+                          </button>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">{u.isActive ? 'Active' : 'Disabled'}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => { setEditTarget(u); setModal('edit'); }} className="rounded-md p-1.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-teal-600 dark:hover:text-teal-400" title="Edit user">
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                          <button onClick={() => setDeleteTarget(u)} className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500" title="Remove user">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
 
         <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
           The <strong>Super Admin</strong> account (env-var) is not listed here and cannot be managed from this panel.
