@@ -139,14 +139,13 @@ export default function HiringPartnersPage() {
           <button
             onClick={runScan}
             disabled={scanning}
-            className="px-3 py-2 text-sm border border-[#e2e8f0] dark:border-white/10 rounded-lg bg-white dark:bg-transparent text-[#475569] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 flex items-center gap-2"
+            className="px-3 py-2 text-sm border border-[#c9e8ed] dark:border-white/10 rounded-lg bg-[#e6f4f6] dark:bg-transparent text-[#024c57] dark:text-gray-300 hover:bg-[#d4eef2] dark:hover:bg-gray-700 disabled:opacity-50 flex items-center gap-2"
           >
             {scanning ? 'Scanning…' : 'Scan dead logos'}
           </button>
           <button
             onClick={() => { resetForm(); setShowForm(true) }}
-            className="px-4 py-2 text-sm rounded-lg text-white flex items-center gap-2"
-            style={{ background: '#023340' }}
+            className="px-4 py-2 text-sm rounded-lg bg-[#024c57] text-white dark:bg-[#024c57] flex items-center gap-2"
           >
             + Add partner
           </button>
@@ -157,13 +156,13 @@ export default function HiringPartnersPage() {
       <div className="grid grid-cols-4 gap-3 mb-6">
         {[
           { label: 'Total',        val: partners.length,                       color: '' },
-          { label: 'Visible',      val: visible,                               color: 'text-teal-600 dark:text-teal-400' },
+          { label: 'Visible',      val: visible,                               color: '' },
           { label: 'Hidden',       val: hidden,                                color: '' },
-          { label: 'Broken logos', val: scanResults ? broken : '—',            color: broken > 0 ? 'text-red-600 dark:text-red-400' : 'text-teal-600 dark:text-teal-400' },
+          { label: 'Broken logos', val: scanResults ? broken : '—',            color: broken > 0 ? 'text-red-600 dark:text-red-400' : '' },
         ].map(s => (
-          <div key={s.label} className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-lg p-3">
-            <p className="text-xs text-[#94a3b8] dark:text-gray-500 mb-1">{s.label}</p>
-            <p className={`text-xl font-semibold text-[#0f172a] dark:text-white ${s.color}`}>{s.val}</p>
+          <div key={s.label} className="bg-[#e6f4f6] dark:bg-gray-800 border border-[#c9e8ed] dark:border-white/10 rounded-xl p-3">
+            <p className="text-xs text-[#475569] dark:text-gray-500 mb-1">{s.label}</p>
+            <p className={`text-xl font-medium text-[#024c57] dark:text-white ${s.color}`}>{s.val}</p>
           </div>
         ))}
       </div>
@@ -255,18 +254,18 @@ export default function HiringPartnersPage() {
 
       {/* Instruction */}
       <p className="text-xs text-[#94a3b8] dark:text-gray-500 mb-3">
-        Drag cards to reorder · click Edit to update logo URL or details
+        Drag cards to reorder · Edit to update details or delete
       </p>
 
       {/* Partner grid */}
       {loading ? (
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="h-28 bg-[#f1f5f9] dark:bg-gray-800 rounded-xl animate-pulse" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
           {partners.map((p, index) => {
             const scanResult = scanResults?.find(r => r.id === p.id)
             const isBroken   = scanResult && !scanResult.ok
@@ -278,9 +277,9 @@ export default function HiringPartnersPage() {
                 onDragEnter={() => handleDragEnter(index)}
                 onDragEnd={handleDragEnd}
                 onDragOver={e => e.preventDefault()}
-                className={`relative border rounded-xl p-3 bg-white dark:bg-gray-800 cursor-grab transition-opacity ${
+                className={`relative border rounded-xl p-3 text-center bg-white dark:bg-[#161b22] cursor-grab transition-opacity ${
                   !p.isVisible ? 'opacity-40' : ''
-                } ${isBroken ? 'border-red-300 dark:border-red-500/50' : 'border-[#e2e8f0] dark:border-white/10'}`}
+                } ${isBroken ? 'border-red-300 dark:border-red-500/50' : 'border-[#c9e8ed] dark:border-[#21262d]'}`}
               >
                 {isBroken && (
                   <span className="absolute top-2 right-2 text-xs px-1.5 py-0.5 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded">
@@ -301,26 +300,20 @@ export default function HiringPartnersPage() {
                   )}
                 </div>
 
-                <p className="text-xs text-[#475569] dark:text-gray-400 text-center truncate mb-2">{p.name}</p>
+                <p className="text-xs text-[#475569] dark:text-[#8b949e] truncate mb-2">{p.name}</p>
 
-                <div className="flex gap-1 justify-center">
+                <div className="flex flex-col gap-1.5">
                   <button
                     onClick={() => toggleVisible(p)}
-                    className="px-2 py-1 text-xs border border-[#e2e8f0] dark:border-white/10 rounded bg-transparent text-[#475569] dark:text-gray-400 hover:text-[#0f172a] dark:hover:text-gray-200"
+                    className="text-xs py-1.5 w-full font-medium rounded-lg border bg-[#e6f4f6] text-[#024c57] border-[#c9e8ed] dark:bg-[#21262d] dark:text-[#8b949e] dark:border-[#30363d]"
                   >
                     {p.isVisible ? 'Hide' : 'Show'}
                   </button>
                   <button
                     onClick={() => startEdit(p)}
-                    className="px-2 py-1 text-xs border border-sky-200 dark:border-white/10 rounded bg-transparent text-sky-600 dark:text-gray-400 hover:bg-sky-50 dark:hover:text-gray-200"
+                    className="text-xs py-1.5 w-full font-medium rounded-lg bg-[#024c57] text-white dark:bg-[#1a2c3d] dark:text-[#58a6ff] dark:border dark:border-[#1f6feb]"
                   >
                     Edit
-                  </button>
-                  <button
-                    onClick={() => deletePartner(p.id, p.name)}
-                    className="px-2 py-1 text-xs border border-red-200 dark:border-red-500/20 rounded bg-transparent text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
-                  >
-                    ✕
                   </button>
                 </div>
               </div>

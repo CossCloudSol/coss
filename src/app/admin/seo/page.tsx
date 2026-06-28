@@ -177,11 +177,23 @@ function PagesTab({
 }): JSX.Element {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [pageCategory, setPageCategory] = useState<PageCategory>('general');
+  const [mobileView, setMobileView] = useState<'list' | 'editor'>('list');
+  const [mobileSearch, setMobileSearch] = useState('');
 
   const filteredPages = useMemo(
     () => pages.filter((p) => classifyPage(p.pageSlug) === pageCategory),
     [pages, pageCategory],
   );
+
+  const mobileFilteredPages = useMemo(() => {
+    const q = mobileSearch.toLowerCase().trim();
+    if (q === '') return filteredPages;
+    return filteredPages.filter(
+      (p) =>
+        p.pageSlug.toLowerCase().includes(q) ||
+        (p.pageTitle ?? '').toLowerCase().includes(q),
+    );
+  }, [filteredPages, mobileSearch]);
 
   const selectedPage = useMemo(
     () => pages.find((p) => p.pageSlug === selectedSlug) ?? null,
@@ -199,112 +211,253 @@ function PagesTab({
     setSelectedSlug(null);
   }
 
-  return (
-    <div className="space-y-4">
-      {/* Category tabs */}
-      <div className="flex flex-wrap gap-2">
-        {PAGE_CATEGORIES.map((cat) => {
-          const active = pageCategory === cat.key;
-          const filledCount = pages.filter(
-            (p) => classifyPage(p.pageSlug) === cat.key && (p.metaTitle ?? '').trim() !== '',
-          ).length;
-          return (
-            <button
-              key={cat.key}
-              type="button"
-              onClick={() => handleCategoryChange(cat.key)}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ring-1 ring-inset transition ${
-                active
-                  ? cat.key === 'general'
-                    ? 'bg-teal-600 text-white ring-teal-600'
-                    : cat.key === 'landing'
-                      ? 'bg-amber-500 text-white ring-amber-500'
-                      : cat.key === 'courses'
-                        ? 'bg-indigo-600 text-white ring-indigo-600'
-                        : 'bg-violet-600 text-white ring-violet-600'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 ring-gray-200 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-              }`}
-            >
-              {cat.label}
-              <span
-                className={`rounded-full px-1.5 py-0.5 text-xs font-semibold ${
-                  active ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                }`}
-              >
-                {filledCount}/{counts[cat.key]}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+  function handlePageSelect(slug: string): void {
+    setSelectedSlug(slug);
+    setMobileView('editor');
+  }
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Left: page list */}
-        <aside className="lg:w-56 lg:shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700">
-          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2">
-            {PAGE_CATEGORIES.find((c) => c.key === pageCategory)?.label} Pages
-          </p>
-          <ul className="space-y-1">
-            {pages.length === 0 ? (
-              <li className="text-xs text-gray-500">Loading…</li>
-            ) : filteredPages.length === 0 ? (
-              <li className="text-xs text-gray-500">No pages in this category.</li>
-            ) : (
-              filteredPages.map((page) => {
-                const active = selectedSlug === page.pageSlug;
-                const filled = page.metaTitle !== null && page.metaTitle.trim() !== '';
-                return (
-                  <li key={page.id}>
+  function handleSaved(updated: PageSeoListItem): void {
+    onPagesUpdated(pages.map((p) => (p.id === updated.id ? updated : p)));
+  }
+
+  return (
+    <>
+      {/* ── MOBILE (< lg) ── */}
+      <div className="block lg:hidden">
+        {mobileView === 'list' ? (
+          <div className="flex flex-col">
+            {/* Sticky header */}
+            <div className="sticky top-0 z-10 bg-[#024c57] dark:bg-[#0d1117] px-3 pt-3">
+              <input
+                type="search"
+                value={mobileSearch}
+                onChange={(e) => setMobileSearch(e.target.value)}
+                placeholder="Search pages…"
+                className="w-full bg-white/15 border border-white/30 text-white placeholder-white/50 rounded-lg px-3 py-2 text-sm mb-2 outline-none focus:ring-1 focus:ring-white/40"
+              />
+              {/* Category filter tabs */}
+              <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-3 px-3 bg-[#03798a] dark:bg-[#161b22] border-b border-[#026e7e] dark:border-[#21262d]">
+                {PAGE_CATEGORIES.map((cat) => {
+                  const active = pageCategory === cat.key;
+                  return (
                     <button
+                      key={cat.key}
                       type="button"
-                      onClick={() => setSelectedSlug(page.pageSlug)}
-                      className={`flex w-full items-center justify-between text-left pl-3 pr-3 py-2 rounded-r-lg text-sm cursor-pointer transition ${
+                      onClick={() => { handleCategoryChange(cat.key); setMobileSearch(''); }}
+                      className={`shrink-0 rounded-full px-3 py-0.5 text-xs whitespace-nowrap transition ${
                         active
-                          ? pageCategory === 'landing'
-                            ? 'bg-amber-50 dark:bg-amber-900/30 border-l-2 border-amber-500 font-medium'
-                            : pageCategory === 'courses'
-                              ? 'bg-indigo-50 dark:bg-indigo-900/30 border-l-2 border-indigo-600 font-medium'
-                              : pageCategory === 'blogs'
-                                ? 'bg-violet-50 dark:bg-violet-900/30 border-l-2 border-violet-600 font-medium'
-                                : 'bg-teal-50 dark:bg-teal-900/30 border-l-2 border-teal-500 font-medium'
-                          : 'bg-transparent border-l-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
+                          ? 'bg-[#5ef0c8] text-[#012e36] font-bold'
+                          : 'bg-white/15 text-white/80'
                       }`}
                     >
-                      <span className="truncate min-w-0 flex-1 text-gray-800 dark:text-gray-100">{page.pageTitle || page.pageSlug}</span>
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Page list */}
+            <div className="bg-[#e6f4f6] dark:bg-[#0d1117]">
+              {pages.length === 0 ? (
+                <p className="px-3 py-4 text-sm text-gray-500">Loading…</p>
+              ) : mobileFilteredPages.length === 0 ? (
+                <p className="px-3 py-4 text-sm text-gray-500">No pages found.</p>
+              ) : (
+                mobileFilteredPages.map((page) => {
+                  const active = selectedSlug === page.pageSlug;
+                  const filled = (page.metaTitle ?? '').trim() !== '';
+                  return (
+                    <button
+                      key={page.id}
+                      type="button"
+                      onClick={() => handlePageSelect(page.pageSlug)}
+                      className={`flex w-full items-center px-3 py-2.5 border-b border-[#c9e8ed] dark:border-[#21262d] text-left transition ${
+                        active
+                          ? 'bg-[#024c57] dark:bg-[#0d2a1e]'
+                          : 'bg-[#e6f4f6] dark:bg-[#0d1117]'
+                      }`}
+                    >
+                      <span className="flex-1 min-w-0 mr-2">
+                        <span
+                          className={`block font-mono text-sm truncate ${
+                            active
+                              ? 'text-white font-semibold'
+                              : 'text-[#024c57] dark:text-[#8b949e]'
+                          }`}
+                        >
+                          {page.pageSlug}
+                        </span>
+                        {page.pageTitle && page.pageTitle !== page.pageSlug ? (
+                          <span
+                            className={`block text-xs truncate ${
+                              active ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'
+                            }`}
+                          >
+                            {page.pageTitle}
+                          </span>
+                        ) : null}
+                      </span>
                       <span
-                        className={`shrink-0 inline-block h-2 w-2 rounded-full ${
-                          filled ? 'bg-emerald-500' : 'bg-gray-300'
+                        className={`shrink-0 w-1.5 h-1.5 rounded-full mr-2 ${
+                          filled
+                            ? active
+                              ? 'bg-[#5ef0c8]'
+                              : 'bg-[#059669] dark:bg-[#3fb950]'
+                            : 'bg-gray-300 dark:bg-gray-600'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <ChevronRight
+                        className={`shrink-0 h-4 w-4 ${
+                          active ? 'text-white/50' : 'text-[#03798a] dark:text-[#8b949e]'
                         }`}
                         aria-hidden="true"
                       />
                     </button>
-                  </li>
-                );
-              })
-            )}
-          </ul>
-        </aside>
-
-        {/* Right: form */}
-        <section className="flex-1 min-w-0">
-          {selectedPage === null ? (
-            <div className="rounded-xl border border-dashed border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-12 text-center text-sm text-gray-500 dark:text-gray-400">
-              Select a page from the left to edit its SEO.
+                  );
+                })
+              )}
             </div>
-          ) : (
-            <PageEditor
-              key={selectedPage.id}
-              page={selectedPage}
-              onSaved={(updated) => {
-                onPagesUpdated(
-                  pages.map((p) => (p.id === updated.id ? updated : p)),
-                );
-              }}
-            />
-          )}
-        </section>
+          </div>
+        ) : selectedPage !== null ? (
+          /* Mobile editor */
+          <div className="flex flex-col">
+            {/* Back button header */}
+            <div className="sticky top-0 z-10 bg-[#024c57] dark:bg-[#0d1117] px-3 py-2 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={() => setMobileView('list')}
+                className="flex items-center gap-1 min-w-0"
+              >
+                <ChevronRight
+                  className="h-4 w-4 text-white rotate-180 shrink-0"
+                  aria-hidden="true"
+                />
+                <span className="text-white text-sm font-medium truncate max-w-[200px]">
+                  {selectedPage.pageSlug}
+                </span>
+              </button>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs px-2 py-0.5 font-medium shrink-0 ml-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" aria-hidden="true" />
+                Live
+              </span>
+            </div>
+            {/* Editor */}
+            <div className="bg-[#e6f4f6] dark:bg-[#0d1117] p-3">
+              <PageEditor
+                key={selectedPage.id}
+                page={selectedPage}
+                onSaved={handleSaved}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
-    </div>
+
+      {/* ── DESKTOP (lg+) ── */}
+      <div className="hidden lg:block space-y-4">
+        {/* Category tabs */}
+        <div className="flex flex-wrap gap-2">
+          {PAGE_CATEGORIES.map((cat) => {
+            const active = pageCategory === cat.key;
+            const filledCount = pages.filter(
+              (p) => classifyPage(p.pageSlug) === cat.key && (p.metaTitle ?? '').trim() !== '',
+            ).length;
+            return (
+              <button
+                key={cat.key}
+                type="button"
+                onClick={() => handleCategoryChange(cat.key)}
+                className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ring-1 ring-inset transition ${
+                  active
+                    ? cat.key === 'general'
+                      ? 'bg-teal-600 text-white ring-teal-600'
+                      : cat.key === 'landing'
+                        ? 'bg-amber-500 text-white ring-amber-500'
+                        : cat.key === 'courses'
+                          ? 'bg-indigo-600 text-white ring-indigo-600'
+                          : 'bg-violet-600 text-white ring-violet-600'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 ring-gray-200 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }`}
+              >
+                {cat.label}
+                <span
+                  className={`rounded-full px-1.5 py-0.5 text-xs font-semibold ${
+                    active ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                  }`}
+                >
+                  {filledCount}/{counts[cat.key]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Left: page list */}
+          <aside className="lg:w-56 lg:shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700">
+            <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 py-2">
+              {PAGE_CATEGORIES.find((c) => c.key === pageCategory)?.label} Pages
+            </p>
+            <ul className="space-y-1">
+              {pages.length === 0 ? (
+                <li className="text-xs text-gray-500">Loading…</li>
+              ) : filteredPages.length === 0 ? (
+                <li className="text-xs text-gray-500">No pages in this category.</li>
+              ) : (
+                filteredPages.map((page) => {
+                  const active = selectedSlug === page.pageSlug;
+                  const filled = page.metaTitle !== null && page.metaTitle.trim() !== '';
+                  return (
+                    <li key={page.id}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedSlug(page.pageSlug)}
+                        className={`flex w-full items-center justify-between text-left pl-3 pr-3 py-2 rounded-r-lg text-sm cursor-pointer transition ${
+                          active
+                            ? pageCategory === 'landing'
+                              ? 'bg-amber-50 dark:bg-amber-900/30 border-l-2 border-amber-500 font-medium'
+                              : pageCategory === 'courses'
+                                ? 'bg-indigo-50 dark:bg-indigo-900/30 border-l-2 border-indigo-600 font-medium'
+                                : pageCategory === 'blogs'
+                                  ? 'bg-violet-50 dark:bg-violet-900/30 border-l-2 border-violet-600 font-medium'
+                                  : 'bg-teal-50 dark:bg-teal-900/30 border-l-2 border-teal-500 font-medium'
+                            : 'bg-transparent border-l-2 border-transparent hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <span className="truncate min-w-0 flex-1 text-gray-800 dark:text-gray-100">{page.pageTitle || page.pageSlug}</span>
+                        <span
+                          className={`shrink-0 inline-block h-2 w-2 rounded-full ${
+                            filled ? 'bg-emerald-500' : 'bg-gray-300'
+                          }`}
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </li>
+                  );
+                })
+              )}
+            </ul>
+          </aside>
+
+          {/* Right: form */}
+          <section className="flex-1 min-w-0">
+            {selectedPage === null ? (
+              <div className="rounded-xl border border-dashed border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-12 text-center text-sm text-gray-500 dark:text-gray-400">
+                Select a page from the left to edit its SEO.
+              </div>
+            ) : (
+              <PageEditor
+                key={selectedPage.id}
+                page={selectedPage}
+                onSaved={handleSaved}
+              />
+            )}
+          </section>
+        </div>
+      </div>
+    </>
   );
 }
 

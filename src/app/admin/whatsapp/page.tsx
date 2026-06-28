@@ -40,12 +40,26 @@ const BRANCH_LABEL: Record<string, string> = {
   online: 'Online',
 };
 
+// Mobile card backgrounds — cycle via index % 3
+const MOBILE_CARD_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#7c3aed]'];
+
+// Stat card light-mode backgrounds and dark-mode accent bars by index
+const STAT_LIGHT_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#03798a]', 'bg-[#7c3aed]'];
+const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-orange-500'];
+
 function isStatus(v: string): v is Status {
   return v === 'new' || v === 'contacted' || v === 'enrolled' || v === 'lost';
 }
 
 function fmt(n: number): string {
   return n.toLocaleString();
+}
+
+function mobileBadgeClass(statusKey: Status): string {
+  if (statusKey === 'new') {
+    return 'bg-[#5ef0c8] text-[#012e36] font-bold dark:bg-[#1f3a2d] dark:text-[#3fb950]';
+  }
+  return 'bg-white/30 text-white dark:bg-[#21262d] dark:text-[#c9d1d9]';
 }
 
 /* -------------------------------------------------------------------------- */
@@ -89,12 +103,19 @@ export default function WhatsAppAdminPage(): JSX.Element {
   }, []);
 
   return (
-    <div className="space-y-4">
-      <header>
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">WhatsApp Log</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Floating widget submissions and per-lead WhatsApp send history.
-        </p>
+    <div className="space-y-4 bg-[#e6f4f6] dark:bg-[#0d1117]">
+      {/* Topbar --------------------------------------------------------- */}
+      <header className="flex items-center justify-between rounded-xl bg-[#024c57] dark:bg-[#0d1117] px-5 py-4">
+        <div>
+          <h1 className="text-xl font-semibold text-white">WhatsApp Log</h1>
+          <p className="mt-1 text-sm text-white/60">
+            Floating widget submissions and per-lead WhatsApp send history.
+          </p>
+        </div>
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/35 bg-white/15 px-2.5 py-1 text-xs font-medium text-[#5ef0c8]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#5ef0c8]" aria-hidden="true" />
+          Live
+        </span>
       </header>
 
       {error ? (
@@ -141,15 +162,11 @@ function WidgetStatsRow({
   topCourse: string;
   conversionRate: number;
 }): JSX.Element {
-  const items: Array<{ label: string; value: string; accent: string }> = [
-    { label: 'Widget Leads', value: fmt(total), accent: 'bg-emerald-500' },
-    { label: 'This Month', value: fmt(thisMonth), accent: 'bg-blue-500' },
-    { label: 'Top Course', value: topCourse, accent: 'bg-teal-500' },
-    {
-      label: 'Conversion Rate',
-      value: `${conversionRate.toFixed(1)}%`,
-      accent: 'bg-orange-500',
-    },
+  const items: Array<{ label: string; value: string }> = [
+    { label: 'Widget Leads', value: fmt(total) },
+    { label: 'This Month', value: fmt(thisMonth) },
+    { label: 'Top Course', value: topCourse },
+    { label: 'Conversion Rate', value: `${conversionRate.toFixed(1)}%` },
   ];
 
   return (
@@ -159,19 +176,20 @@ function WidgetStatsRow({
         Widget Performance
       </h2>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        {items.map((item) => (
+        {items.map((item, i) => (
           <div
             key={item.label}
-            className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4"
+            className={`relative overflow-hidden rounded-xl p-3 ${STAT_LIGHT_BG[i]} dark:border dark:border-gray-700 dark:bg-gray-800`}
           >
+            {/* Dark-mode accent bar */}
             <div
-              className={`absolute left-0 top-0 h-1 w-full ${item.accent}`}
+              className={`absolute left-0 top-0 h-1 w-full ${STAT_DARK_ACCENT[i]} hidden dark:block`}
               aria-hidden="true"
             />
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-white/65 dark:text-gray-400">
               {item.label}
             </p>
-            <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white truncate" title={item.value}>
+            <p className="text-2xl font-medium text-white truncate" title={item.value}>
               {item.value}
             </p>
           </div>
@@ -187,77 +205,154 @@ function WidgetStatsRow({
 
 function WidgetLeadsTable({ leads }: { leads: WidgetLead[] }): JSX.Element {
   return (
-    <section className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <section className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      {/* Section header */}
       <div className="border-b border-gray-200 dark:border-gray-700 px-5 py-4">
         <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Widget Leads</h2>
         <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
           Last 20 submissions captured by the floating WhatsApp widget.
         </p>
       </div>
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-        <thead className="bg-gray-50 dark:bg-gray-800/60">
-          <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-            <th scope="col" className="px-5 py-2.5">Name</th>
-            <th scope="col" className="px-5 py-2.5">Phone</th>
-            <th scope="col" className="px-5 py-2.5">Course</th>
-            <th scope="col" className="px-5 py-2.5">Branch</th>
-            <th scope="col" className="px-5 py-2.5">Status</th>
-            <th scope="col" className="px-5 py-2.5">Date</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
-          {leads.length === 0 ? (
-            <tr>
-              <td
-                colSpan={6}
-                className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+
+      {/* ── Mobile cards (< lg) ──────────────────────────────────────── */}
+      <div className="block lg:hidden p-3">
+        {leads.length === 0 ? (
+          <p className="py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            No widget leads yet — submissions from the floating chat button will appear here.
+          </p>
+        ) : (
+          leads.map((lead, i) => {
+            const statusKey: Status = isStatus(lead.status.toLowerCase())
+              ? (lead.status.toLowerCase() as Status)
+              : 'new';
+            const cardBg = MOBILE_CARD_BG[i % 3];
+            const branch = BRANCH_LABEL[lead.branch.toLowerCase()] ?? lead.branch;
+
+            return (
+              <div
+                key={lead.id}
+                className={`${cardBg} dark:bg-[#161b22] dark:border dark:border-[#21262d] rounded-xl p-3 mb-2`}
               >
-                No widget leads yet — submissions from the floating chat
-                button will appear here.
-              </td>
-            </tr>
-          ) : (
-            leads.map((lead) => {
-              const statusKey: Status = isStatus(lead.status.toLowerCase())
-                ? (lead.status.toLowerCase() as Status)
-                : 'new';
-              const style = STATUS_STYLES[statusKey];
-              return (
-                <tr key={lead.id} className="hover:bg-gray-50/60 dark:hover:bg-gray-700/40">
-                  <td className="px-5 py-3 font-medium text-gray-900 dark:text-white">
+                {/* Row 1: Name + status badge */}
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-white dark:text-[#e6edf3] font-medium text-sm truncate pr-2">
                     {lead.name}
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-3 text-gray-700 dark:text-gray-300">
-                    {lead.phone}
-                  </td>
-                  <td className="px-5 py-3 text-gray-700 dark:text-gray-300">
-                    {lead.course ?? <span className="text-gray-400 dark:text-gray-500">—</span>}
-                  </td>
-                  <td className="px-5 py-3 capitalize text-gray-700 dark:text-gray-300">
-                    {BRANCH_LABEL[lead.branch.toLowerCase()] ?? lead.branch}
-                  </td>
-                  <td className="px-5 py-3">
-                    <span
-                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${style.pill}`}
-                    >
-                      <span
-                        className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
-                        aria-hidden="true"
-                      />
-                      {STATUS_LABEL[statusKey]}
+                  </span>
+                  <span
+                    className={`text-xs rounded-full px-2 py-0.5 shrink-0 ${mobileBadgeClass(statusKey)}`}
+                  >
+                    {STATUS_LABEL[statusKey]}
+                  </span>
+                </div>
+
+                {/* Row 2: Phone */}
+                <p className="text-white/70 dark:text-[#8b949e] text-xs mb-1.5">
+                  {lead.phone}
+                </p>
+
+                {/* Row 3: Course + Branch badges */}
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {lead.course ? (
+                    <span className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5">
+                      {lead.course}
                     </span>
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-3 text-xs text-gray-500 dark:text-gray-400">
-                    {formatDistanceToNow(new Date(lead.createdAt), {
-                      addSuffix: true,
-                    })}
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+                  ) : null}
+                  <span className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5">
+                    {branch}
+                  </span>
+                </div>
+
+                {/* Row 4: Action buttons */}
+                <div className="flex gap-2">
+                  <a
+                    href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-[#059669] dark:bg-[#1a2c1e] dark:border dark:border-[#2ea043] text-white dark:text-[#3fb950] rounded-lg flex-1 py-1.5 text-xs font-medium flex items-center justify-center"
+                  >
+                    <i className="ti ti-brand-whatsapp mr-1" aria-hidden="true" />
+                    WhatsApp
+                  </a>
+                  <a
+                    href={`/admin/leads/${lead.id}`}
+                    className="bg-white/20 dark:bg-[#21262d] dark:border dark:border-[#30363d] text-white dark:text-[#c9d1d9] rounded-lg flex-1 py-1.5 text-xs text-center flex items-center justify-center"
+                  >
+                    View lead
+                  </a>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* ── Desktop table (lg+) ──────────────────────────────────────── */}
+      <div className="hidden lg:block overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <thead className="bg-gray-50 dark:bg-gray-800/60">
+            <tr className="text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              <th scope="col" className="px-5 py-2.5">Name</th>
+              <th scope="col" className="px-5 py-2.5">Phone</th>
+              <th scope="col" className="px-5 py-2.5">Course</th>
+              <th scope="col" className="px-5 py-2.5">Branch</th>
+              <th scope="col" className="px-5 py-2.5">Status</th>
+              <th scope="col" className="px-5 py-2.5">Date</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
+            {leads.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+                >
+                  No widget leads yet — submissions from the floating chat
+                  button will appear here.
+                </td>
+              </tr>
+            ) : (
+              leads.map((lead) => {
+                const statusKey: Status = isStatus(lead.status.toLowerCase())
+                  ? (lead.status.toLowerCase() as Status)
+                  : 'new';
+                const style = STATUS_STYLES[statusKey];
+                return (
+                  <tr key={lead.id} className="hover:bg-gray-50/60 dark:hover:bg-gray-700/40">
+                    <td className="px-5 py-3 font-medium text-gray-900 dark:text-white">
+                      {lead.name}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-3 text-gray-700 dark:text-gray-300">
+                      {lead.phone}
+                    </td>
+                    <td className="px-5 py-3 text-gray-700 dark:text-gray-300">
+                      {lead.course ?? <span className="text-gray-400 dark:text-gray-500">—</span>}
+                    </td>
+                    <td className="px-5 py-3 capitalize text-gray-700 dark:text-gray-300">
+                      {BRANCH_LABEL[lead.branch.toLowerCase()] ?? lead.branch}
+                    </td>
+                    <td className="px-5 py-3">
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${style.pill}`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${style.dot}`}
+                          aria-hidden="true"
+                        />
+                        {STATUS_LABEL[statusKey]}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-3 text-xs text-gray-500 dark:text-gray-400">
+                      {formatDistanceToNow(new Date(lead.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

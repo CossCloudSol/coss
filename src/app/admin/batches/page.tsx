@@ -26,6 +26,19 @@ const STATUS_BADGE_COLOR: Record<string, string> = {
   red:   'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700',
 };
 
+const MOBILE_STATUS_COLOR: Record<string, string> = {
+  upcoming: 'bg-[#7c3aed] text-white',
+  ongoing:  'bg-[#024c57] text-white',
+  completed: 'bg-[#94a3b8] text-white',
+  cancelled: 'bg-[#dc2626] text-white',
+};
+
+const MODE_COLOR: Record<string, string> = {
+  Classroom: 'bg-[#d97706] text-white',
+  Online:    'bg-[#1d4ed8] text-white',
+  Hybrid:    'bg-[#1d4ed8] text-white',
+};
+
 export default function AdminBatchesPage() {
   const [batches, setBatches] = useState<BatchItem[]>([]);
   const [statusFilter, setStatusFilter] = useState('');
@@ -68,7 +81,6 @@ export default function AdminBatchesPage() {
       const data = await res.json();
       showToast('Batch cloned! Edit to set start date.');
       void load();
-      // Navigate to edit of cloned batch
       setTimeout(() => window.location.href = `/admin/batches/${data.id}/edit`, 1500);
     } catch { showToast('Failed to clone', 'error'); }
   }
@@ -87,6 +99,16 @@ export default function AdminBatchesPage() {
 
   const upcoming  = batches.filter((b) => b.status === 'upcoming').length;
   const ongoing   = batches.filter((b) => b.status === 'ongoing').length;
+
+  const loader = (
+    <div className="flex items-center justify-center py-20">
+      <Loader2 className="w-6 h-6 animate-spin text-teal-500" />
+    </div>
+  );
+
+  const empty = (
+    <div className="text-center py-20 text-gray-500 dark:text-gray-400">No batches found.</div>
+  );
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -132,15 +154,104 @@ export default function AdminBatchesPage() {
         </select>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-6 h-6 animate-spin text-teal-500" />
+      {/* Mobile card list */}
+      <div className="block lg:hidden mb-5">
+        {loading ? loader : batches.length === 0 ? empty : (
+          <div className="flex flex-col gap-2">
+            {batches.map((batch, index) => {
+              const badge = getBatchStatusBadge(batch.status);
+              const isActive = batch.status === 'upcoming' || batch.status === 'ongoing';
+              const isEven = index % 2 === 0;
+              const cardBg = isActive
+                ? isEven ? 'bg-[#024c57]' : 'bg-[#03798a]'
+                : 'bg-white dark:bg-[#161b22] border-[1.5px] border-[#94a3b8] dark:border-[#21262d]';
+              const titleCls = isActive
+                ? 'text-white font-medium'
+                : 'text-[#0f172a] dark:text-[#e6edf3] font-medium';
+              const subtitleCls = isActive
+                ? 'text-white/70'
+                : 'text-[#475569] dark:text-[#8b949e]';
+              const editBg = isActive
+                ? isEven ? 'bg-[#024c57] ring-1 ring-white/30' : 'bg-[#03798a] ring-1 ring-white/30'
+                : 'bg-[#024c57]';
+              const copyBg = isActive
+                ? isEven ? 'bg-[#03798a]' : 'bg-[#024c57]'
+                : 'bg-[#03798a]';
+              const modeBadgeCls = isActive
+                ? 'bg-white/20 text-white'
+                : MODE_COLOR[batch.mode] ?? 'bg-[#1d4ed8] text-white';
+              const statusBadgeCls = isActive
+                ? 'bg-white/20 text-white'
+                : MOBILE_STATUS_COLOR[batch.status] ?? 'bg-[#94a3b8] text-white';
+
+              const filledSeats = batch.totalSeats !== null && batch.seatsAvailable !== null
+                ? batch.totalSeats - batch.seatsAvailable
+                : null;
+              const seatPct = batch.totalSeats && filledSeats !== null
+                ? filledSeats / batch.totalSeats
+                : 0;
+              const seatColor = seatPct > 0.8 ? 'text-[#dc2626]' : isActive ? 'text-white' : 'text-[#0f172a] dark:text-[#e6edf3]';
+
+              return (
+                <div key={batch.id} className={`rounded-xl p-3 ${cardBg}`}>
+                  <div className="flex items-start justify-between gap-2 mb-0.5">
+                    <div className="min-w-0">
+                      <p className={`text-sm leading-snug truncate ${titleCls}`}>{batch.course.title}</p>
+                      <p className={`text-xs truncate ${subtitleCls}`}>{batch.batchName}</p>
+                    </div>
+                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize ${statusBadgeCls}`}>
+                      {badge.label}
+                    </span>
+                  </div>
+                  <div className="flex gap-1.5 mt-2 mb-1 flex-wrap">
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${modeBadgeCls}`}>{batch.mode}</span>
+                    {batch.centre && (
+                      <span className={`rounded-full px-2 py-0.5 text-xs ${modeBadgeCls}`}>{batch.centre}</span>
+                    )}
+                  </div>
+                  <div className={`flex gap-3 text-xs mb-3 ${subtitleCls}`}>
+                    <span>{formatBatchDate(batch.startDate)}</span>
+                    <span>·</span>
+                    {batch.mode === 'Online' ? (
+                      <span className={isActive ? 'text-white/80' : 'text-[#475569] dark:text-[#8b949e]'}>Unlimited seats</span>
+                    ) : batch.seatsAvailable !== null ? (
+                      <span className={seatColor}>
+                        {batch.seatsAvailable}/{batch.totalSeats ?? '?'} seats
+                      </span>
+                    ) : (
+                      <span>—</span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/admin/batches/${batch.id}/edit`}
+                      className={`flex-1 rounded-lg py-1.5 text-center text-xs font-medium text-white ${editBg}`}
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => cloneBatch(batch.id)}
+                      className={`flex-1 rounded-lg py-1.5 text-xs font-medium text-white ${copyBg}`}
+                    >
+                      Copy
+                    </button>
+                    <button
+                      onClick={() => deleteBatch(batch.id, batch.batchName)}
+                      className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#dc2626]"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ) : batches.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 dark:text-gray-400">No batches found.</div>
-        ) : (
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden lg:block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {loading ? loader : batches.length === 0 ? empty : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">

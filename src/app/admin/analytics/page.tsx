@@ -16,6 +16,19 @@ const FUNNEL_COLORS: Record<string, string> = {
   lost: 'bg-rose-400',
 };
 
+const MOBILE_FUNNEL_CONFIG: Record<string, { lightBg: string; darkBg: string; countColor: string; width: string }> = {
+  new:       { lightBg: 'bg-[#024c57]', darkBg: 'dark:bg-[#1b8a6b]', countColor: '#5ef0c8', width: 'w-full' },
+  contacted: { lightBg: 'bg-[#1d4ed8]', darkBg: 'dark:bg-[#1f6feb]', countColor: '#93c5fd', width: 'w-3/4'  },
+  enrolled:  { lightBg: 'bg-[#7c3aed]', darkBg: 'dark:bg-[#8957e5]', countColor: '#d8b4fe', width: 'w-2/5'  },
+};
+
+const BRANCH_MOBILE_BG: Record<string, string> = {
+  dilsukhnagar: 'bg-[#024c57]',
+  ameerpet:     'bg-[#03798a]',
+  online:       'bg-[#1d4ed8]',
+};
+const BRANCH_BG_CYCLE = ['bg-[#024c57]', 'bg-[#03798a]', 'bg-[#1d4ed8]'];
+
 const STATUS_PALETTE: Record<string, string> = {
   new: 'bg-blue-500',
   contacted: 'bg-amber-500',
@@ -157,48 +170,53 @@ export default function AnalyticsPage(): JSX.Element {
 /* -------------------------------------------------------------------------- */
 
 function StatsRow({ data }: { data: AnalyticsResponse }): JSX.Element {
-  const items: Array<{ label: string; value: string; accent: string }> = [
-    { label: 'Total Leads', value: fmt(data.totals.leads), accent: 'bg-blue-500' },
-    { label: 'Enrolled', value: fmt(data.totals.enrolled), accent: 'bg-emerald-500' },
-    {
-      label: 'Conversion Rate',
-      value: `${data.totals.conversionRate.toFixed(1)}%`,
-      accent: 'bg-teal-500',
-    },
+  const mobileCards = [
+    { label: 'Total Leads',   value: fmt(data.totals.leads),       bg: 'bg-[#024c57]' },
+    { label: 'Enrolled',      value: fmt(data.totals.enrolled),     bg: 'bg-[#1d4ed8]' },
+    { label: 'This Month',    value: fmt(data.totals.thisMonth),    bg: 'bg-[#d97706]' },
+    { label: 'WhatsApp Sent', value: fmt(data.totals.whatsappSent), bg: 'bg-[#7c3aed]' },
+  ];
+
+  const desktopCards: Array<{ label: string; value: string; accent: string }> = [
+    { label: 'Total Leads',     value: fmt(data.totals.leads),          accent: 'bg-blue-500'    },
+    { label: 'Enrolled',        value: fmt(data.totals.enrolled),        accent: 'bg-emerald-500' },
+    { label: 'Conversion Rate', value: `${data.totals.conversionRate.toFixed(1)}%`, accent: 'bg-teal-500' },
     {
       label: 'Avg Response',
-      value:
-        data.totals.avgResponseHours === null
-          ? '—'
-          : `${data.totals.avgResponseHours.toFixed(1)} hrs`,
+      value: data.totals.avgResponseHours === null ? '—' : `${data.totals.avgResponseHours.toFixed(1)} hrs`,
       accent: 'bg-orange-500',
     },
-    { label: 'This Month', value: fmt(data.totals.thisMonth), accent: 'bg-purple-500' },
-    {
-      label: 'WhatsApp Sent',
-      value: fmt(data.totals.whatsappSent),
-      accent: 'bg-green-500',
-    },
+    { label: 'This Month',    value: fmt(data.totals.thisMonth),    accent: 'bg-purple-500' },
+    { label: 'WhatsApp Sent', value: fmt(data.totals.whatsappSent), accent: 'bg-green-500'  },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-      {items.map((item) => (
-        <div
-          key={item.label}
-          className="relative overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-4"
-        >
+    <>
+      {/* Mobile 2×2 — 4 key metrics with solid coloured fills */}
+      <div className="grid grid-cols-2 gap-3 mb-4 lg:hidden">
+        {mobileCards.map((item) => (
+          <div key={item.label} className={`rounded-xl p-4 ${item.bg}`}>
+            <p className="text-[10px] font-medium uppercase tracking-wide text-white/65">{item.label}</p>
+            <p className="mt-2 text-2xl font-medium text-white">{item.value}</p>
+          </div>
+        ))}
+      </div>
+      {/* Desktop 6-col — existing layout unchanged */}
+      <div className="hidden lg:grid lg:grid-cols-6 gap-3">
+        {desktopCards.map((item) => (
           <div
-            className={`absolute left-0 top-0 h-1 w-full ${item.accent}`}
-            aria-hidden="true"
-          />
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-            {item.label}
-          </p>
-          <p className="mt-2 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">{item.value}</p>
-        </div>
-      ))}
-    </div>
+            key={item.label}
+            className="relative overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-4"
+          >
+            <div className={`absolute left-0 top-0 h-1 w-full ${item.accent}`} aria-hidden="true" />
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              {item.label}
+            </p>
+            <p className="mt-2 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">{item.value}</p>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -213,6 +231,7 @@ function Funnel({
 }): JSX.Element {
   const max = Math.max(...data.map((s) => s.count), 1);
   const total = data.reduce((sum, s) => sum + s.count, 0);
+  const mobileFunnelStages = data.filter((s) => s.key in MOBILE_FUNNEL_CONFIG);
 
   return (
     <section className="rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
@@ -221,7 +240,34 @@ function Funnel({
         Lead progression — counts and drop-off between stages.
       </p>
 
-      <div className="mt-4 space-y-2">
+      {/* Mobile — full-width coloured bars, label + count both inside */}
+      <div className="mt-4 block lg:hidden">
+        {mobileFunnelStages.map((stage, i) => {
+          const cfg = MOBILE_FUNNEL_CONFIG[stage.key]!;
+          const prevStage = i > 0 ? mobileFunnelStages[i - 1] : undefined;
+          const prevCount = prevStage ? prevStage.count : null;
+          const dropoff =
+            prevCount !== null && prevCount > 0
+              ? Math.round(((prevCount - stage.count) / prevCount) * 1000) / 10
+              : null;
+          return (
+            <div key={stage.key}>
+              {dropoff !== null ? (
+                <p className="ml-1 mb-1 text-xs font-medium text-[#03798a] dark:font-normal dark:text-[#8b949e]">
+                  ↓ {dropoff.toFixed(1)}% drop off
+                </p>
+              ) : null}
+              <div className={`flex items-center px-3 rounded-lg mb-1.5 h-8 ${cfg.width} ${cfg.lightBg} ${cfg.darkBg}`}>
+                <span className="flex-1 text-sm font-semibold text-white">{stage.stage}</span>
+                <span className="text-sm font-bold" style={{ color: cfg.countColor }}>{fmt(stage.count)}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop — existing proportional bars unchanged */}
+      <div className="mt-4 hidden lg:block space-y-2">
         {data.map((stage, i) => {
           const widthPercent = (stage.count / max) * 100;
           const totalShare = total === 0 ? 0 : (stage.count / total) * 100;
@@ -333,7 +379,7 @@ function BranchTable({
   data: AnalyticsResponse['byBranch'];
 }): JSX.Element {
   return (
-    <section className="overflow-x-auto rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800">
+    <section className="rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800">
       <div className="flex items-start justify-between gap-3 border-b border-[#e2e8f0] dark:border-gray-700 px-5 py-4">
         <div>
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Branch Performance</h2>
@@ -343,38 +389,75 @@ function BranchTable({
         </div>
         <ExportCsvButton onClick={() => exportBranchCsv(data)} />
       </div>
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
-        <thead className="bg-gray-50 dark:bg-gray-800/60 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="px-5 py-2.5">Branch</th>
-            <th scope="col" className="px-5 py-2.5">Total</th>
-            <th scope="col" className="px-5 py-2.5">New</th>
-            <th scope="col" className="px-5 py-2.5">Contacted</th>
-            <th scope="col" className="px-5 py-2.5">Enrolled</th>
-            <th scope="col" className="px-5 py-2.5">Conversion %</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
-          {data.map((row) => (
-            <tr key={row.branch}>
-              <td className="px-5 py-3 font-medium text-gray-900 dark:text-white">
+
+      {/* Mobile — one stat card per branch */}
+      <div className="block lg:hidden p-4 space-y-2">
+        {data.map((row, index) => {
+          const branchBg =
+            BRANCH_MOBILE_BG[row.branch] ??
+            (BRANCH_BG_CYCLE[index % BRANCH_BG_CYCLE.length] ?? 'bg-[#024c57]');
+          return (
+            <div
+              key={row.branch}
+              className={`rounded-xl p-3 flex items-center justify-between ${branchBg} dark:bg-[#161b22] dark:border dark:border-[#21262d]`}
+            >
+              <span className="text-white dark:text-[#e6edf3] font-medium text-sm">
                 {BRANCH_LABEL[row.branch] ?? row.branch}
-              </td>
-              <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.total)}</td>
-              <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.new)}</td>
-              <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.contacted)}</td>
-              <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.enrolled)}</td>
-              <td className="px-5 py-3">
-                <span
-                  className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${conversionColor(row.conversionRate)}`}
-                >
-                  {row.conversionRate.toFixed(1)}%
-                </span>
-              </td>
+              </span>
+              <div className="flex gap-4">
+                <div className="text-right">
+                  <p className="text-[#5ef0c8] dark:text-[#3fb950] font-bold text-base leading-tight">{fmt(row.total)}</p>
+                  <p className="text-white/60 dark:text-[#8b949e] text-xs">Total</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-white dark:text-[#e6edf3] font-bold text-base leading-tight">{fmt(row.new)}</p>
+                  <p className="text-white/60 dark:text-[#8b949e] text-xs">New</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-white dark:text-[#e6edf3] font-bold text-base leading-tight">{fmt(row.contacted)}</p>
+                  <p className="text-white/60 dark:text-[#8b949e] text-xs">Contacted</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop — existing table unchanged */}
+      <div className="hidden lg:block overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+          <thead className="bg-gray-50 dark:bg-gray-800/60 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-5 py-2.5">Branch</th>
+              <th scope="col" className="px-5 py-2.5">Total</th>
+              <th scope="col" className="px-5 py-2.5">New</th>
+              <th scope="col" className="px-5 py-2.5">Contacted</th>
+              <th scope="col" className="px-5 py-2.5">Enrolled</th>
+              <th scope="col" className="px-5 py-2.5">Conversion %</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
+            {data.map((row) => (
+              <tr key={row.branch}>
+                <td className="px-5 py-3 font-medium text-gray-900 dark:text-white">
+                  {BRANCH_LABEL[row.branch] ?? row.branch}
+                </td>
+                <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.total)}</td>
+                <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.new)}</td>
+                <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.contacted)}</td>
+                <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{fmt(row.enrolled)}</td>
+                <td className="px-5 py-3">
+                  <span
+                    className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${conversionColor(row.conversionRate)}`}
+                  >
+                    {row.conversionRate.toFixed(1)}%
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }

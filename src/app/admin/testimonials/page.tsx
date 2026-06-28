@@ -53,7 +53,14 @@ function Stars({ value, onChange }: { value: number; onChange?: (v: number) => v
   )
 }
 
-function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
+const AVATAR_COLORS = [
+  'bg-[#024c57]',
+  'bg-[#03798a]',
+  'bg-[#1d4ed8]',
+  'bg-[#7c3aed]',
+] as const
+
+function Avatar({ name, photoUrl, colorIndex = 0 }: { name: string; photoUrl: string | null; colorIndex?: number }) {
   const initials = name
     .split(' ')
     .map((w) => w[0])
@@ -78,8 +85,8 @@ function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   }
 
   return (
-    <div className="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center shrink-0">
-      <span className="text-sm font-semibold text-teal-700 dark:text-teal-300">{initials}</span>
+    <div className={`h-10 w-10 rounded-full ${AVATAR_COLORS[colorIndex % 4]} flex items-center justify-center shrink-0`}>
+      <span className="text-sm font-medium text-white">{initials}</span>
     </div>
   )
 }
@@ -411,6 +418,30 @@ export default function TestimonialsAdminPage() {
             </button>
           </div>
 
+          {/* Active filter chips */}
+          {(scopeFilter !== 'all' || visibleFilter !== 'all') && (
+            <div className="flex gap-2 flex-wrap mb-3">
+              {scopeFilter !== 'all' && (
+                <button
+                  onClick={() => { setScopeFilter('all'); setPage(1) }}
+                  className="flex items-center gap-1 text-xs px-3 py-1 rounded-full bg-[#024c57] dark:bg-[#1f3a2d] text-white dark:text-[#3fb950] border border-[#024c57] dark:border-[#2ea043]"
+                >
+                  {scopeFilter.charAt(0).toUpperCase() + scopeFilter.slice(1)}
+                  <i className="ti ti-x text-[10px]" />
+                </button>
+              )}
+              {visibleFilter !== 'all' && (
+                <button
+                  onClick={() => { setVisibleFilter('all'); setPage(1) }}
+                  className="flex items-center gap-1 text-xs px-3 py-1 rounded-full bg-[#024c57] dark:bg-[#1f3a2d] text-white dark:text-[#3fb950] border border-[#024c57] dark:border-[#2ea043]"
+                >
+                  {visibleFilter === 'true' ? 'Visible' : 'Hidden'}
+                  <i className="ti ti-x text-[10px]" />
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Cards */}
           {loading ? (
             <p className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">Loading…</p>
@@ -418,27 +449,27 @@ export default function TestimonialsAdminPage() {
             <p className="text-sm text-gray-500 dark:text-gray-400 py-8 text-center">No testimonials found.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 flex flex-col gap-2 transition-opacity ${
+                  className={`bg-white dark:bg-gray-800 rounded-xl border border-[#c9e8ed] dark:border-gray-700 p-3 flex flex-col gap-2 transition-opacity ${
                     item.visible ? '' : 'opacity-50'
                   }`}
                 >
                   {/* Header */}
                   <div className="flex items-start gap-3">
-                    <Avatar name={item.name} photoUrl={item.photoUrl} />
+                    <Avatar name={item.name} photoUrl={item.photoUrl} colorIndex={index} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{item.name}</p>
+                        <p className="font-medium text-[#0f172a] dark:text-white text-sm truncate">{item.name}</p>
                         {!item.visible && (
-                          <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded px-1.5 py-0.5">
+                          <span className="text-xs bg-[#e6f4f6] dark:bg-gray-700 text-[#024c57] dark:text-gray-400 rounded px-1.5 py-0.5">
                             Hidden
                           </span>
                         )}
                       </div>
                       {(item.jobTitle || item.company) && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        <p className="text-xs text-[#024c57] dark:text-gray-400 truncate">
                           {[item.jobTitle, item.company].filter(Boolean).join(' · ')}
                         </p>
                       )}
@@ -447,35 +478,39 @@ export default function TestimonialsAdminPage() {
                   </div>
 
                   {/* Quote */}
-                  <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3 flex-1">{item.quote}</p>
+                  <p className="text-xs text-[#475569] dark:text-gray-300 leading-relaxed line-clamp-3 flex-1">{item.quote}</p>
 
                   {/* Footer */}
                   <div className="flex items-center justify-between flex-wrap gap-2 mt-1">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-400 font-medium">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-[#e6f4f6] dark:bg-teal-900/40 text-[#024c57] dark:text-teal-400 font-medium">
                         {item.scope === 'global' ? '🌐 Global' : `📘 ${item.courseSlug ?? 'course'}`}
                       </span>
                       {item.reviewDate && (
-                        <span className="text-xs text-gray-400 dark:text-gray-500">{item.reviewDate}</span>
+                        <span className="text-xs text-[#024c57] dark:text-gray-500">{item.reviewDate}</span>
                       )}
                     </div>
                     <div className="flex gap-1">
                       <button
                         onClick={() => toggleVisible(item)}
                         title={item.visible ? 'Hide' : 'Show'}
-                        className="rounded px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                          item.visible
+                            ? 'bg-[#dc2626] text-white dark:border dark:border-red-800 dark:bg-transparent dark:text-red-400'
+                            : 'bg-[#024c57] text-white dark:border dark:border-gray-600 dark:bg-transparent dark:text-gray-400'
+                        }`}
                       >
                         {item.visible ? 'Hide' : 'Show'}
                       </button>
                       <button
                         onClick={() => openEdit(item)}
-                        className="rounded px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        className="rounded-lg px-3 py-1.5 text-xs font-medium border border-[#c9e8ed] dark:border-gray-600 text-[#024c57] dark:text-gray-400 hover:bg-[#e6f4f6] dark:hover:bg-gray-700 transition-colors"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => deleteItem(item)}
-                        className="rounded px-2 py-1 text-xs border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        className="rounded-lg px-3 py-1.5 text-xs border border-[#fca5a5] dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                       >
                         Delete
                       </button>
@@ -486,9 +521,44 @@ export default function TestimonialsAdminPage() {
             </div>
           )}
 
-          {/* Pagination */}
+          {/* Pagination — mobile sticky bar */}
           {pages > 1 && (
-            <div className="flex items-center gap-3 mt-6 justify-center">
+            <div className="lg:hidden sticky bottom-16 mt-4 bg-white dark:bg-[#161b22] border-t border-[#c9e8ed] dark:border-[#21262d]">
+              <div className="flex items-center justify-between px-4 py-2">
+                <span className="text-xs font-medium text-[#024c57] dark:text-[#8b949e]">
+                  Page {page} of {pages} · {total} total
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
+                    className={
+                      page > 1
+                        ? 'bg-[#024c57] dark:bg-[#0d2a1e] text-white dark:text-[#3fb950] border border-[#024c57] dark:border-[#1b8a6b] rounded-lg px-3 py-1 text-xs font-medium'
+                        : 'bg-[#e6f4f6] dark:bg-[#21262d] text-[#94a3b8] dark:text-[#8b949e] rounded-lg px-3 py-1 text-xs cursor-not-allowed'
+                    }
+                  >
+                    Prev
+                  </button>
+                  <button
+                    disabled={page >= pages}
+                    onClick={() => setPage((p) => p + 1)}
+                    className={
+                      page < pages
+                        ? 'bg-[#024c57] dark:bg-[#0d2a1e] text-white dark:text-[#3fb950] border border-[#024c57] dark:border-[#1b8a6b] rounded-lg px-3 py-1 text-xs font-medium'
+                        : 'bg-[#e6f4f6] dark:bg-[#21262d] text-[#94a3b8] dark:text-[#8b949e] rounded-lg px-3 py-1 text-xs cursor-not-allowed'
+                    }
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Pagination — desktop */}
+          {pages > 1 && (
+            <div className="hidden lg:flex items-center gap-3 mt-6 justify-center">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}

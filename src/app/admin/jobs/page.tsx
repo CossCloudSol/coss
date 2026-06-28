@@ -96,6 +96,18 @@ export default function AdminJobsPage() {
 
   const now = new Date();
 
+  const loader = (
+    <div className="flex items-center justify-center py-20">
+      <Loader2 className="w-6 h-6 animate-spin text-teal-500" />
+    </div>
+  );
+
+  const empty = (
+    <div className="text-center py-20 text-gray-500 dark:text-gray-400">
+      <p>No jobs found.</p>
+    </div>
+  );
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Toast */}
@@ -144,17 +156,82 @@ export default function AdminJobsPage() {
         </select>
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-6 h-6 animate-spin text-teal-500" />
+      {/* Mobile card list */}
+      <div className="block lg:hidden mb-5">
+        {loading ? loader : jobs.length === 0 ? empty : (
+          <div className="flex flex-col gap-2">
+            {jobs.map((job, index) => {
+              const isActive = job.status === 'active';
+              const isEven = index % 2 === 0;
+              const expired = job.expiresAt ? new Date(job.expiresAt) < now : false;
+              const cardBg = isActive
+                ? isEven ? 'bg-[#024c57]' : 'bg-[#03798a]'
+                : 'bg-white dark:bg-[#161b22] border-[1.5px] border-[#94a3b8] dark:border-[#21262d]';
+              const titleCls = isActive
+                ? 'text-white font-medium'
+                : 'text-[#0f172a] dark:text-[#e6edf3] font-medium';
+              const subtitleCls = isActive
+                ? 'text-white/70'
+                : 'text-[#475569] dark:text-[#8b949e]';
+              const editBg = isActive
+                ? isEven ? 'bg-[#024c57] ring-1 ring-white/30' : 'bg-[#03798a] ring-1 ring-white/30'
+                : 'bg-[#024c57]';
+              const statusBadgeCls = isActive
+                ? 'bg-white/20 text-white'
+                : job.status === 'draft'
+                  ? 'bg-[#dc2626] text-white dark:bg-[#21262d] dark:text-[#8b949e]'
+                  : 'bg-[#94a3b8] text-white';
+              const catBadgeCls = isActive
+                ? 'bg-white/20 text-white'
+                : 'bg-[#1d4ed8] text-white dark:bg-[#1a2c3d] dark:text-[#58a6ff]';
+
+              return (
+                <div key={job.id} className={`rounded-xl p-3 ${cardBg}`}>
+                  <div className="flex items-start justify-between gap-2 mb-0.5">
+                    <div>
+                      <p className={`text-sm leading-snug ${titleCls}`}>{job.title}</p>
+                      <p className={`text-xs ${subtitleCls}`}>{job.company}</p>
+                    </div>
+                    <button
+                      onClick={() => toggleStatus(job.id, job.status)}
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize cursor-pointer ${statusBadgeCls}`}
+                    >
+                      {job.status}
+                    </button>
+                  </div>
+                  <div className="flex gap-1.5 mt-2 mb-3 flex-wrap">
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${catBadgeCls}`}>{job.category}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${catBadgeCls}`}>{job.type}</span>
+                    {job.expiresAt && (
+                      <span className={`rounded-full px-2 py-0.5 text-xs ${expired ? 'bg-[#dc2626] text-white' : catBadgeCls}`}>
+                        {expired ? 'Expired' : new Date(job.expiresAt).toLocaleDateString('en-IN')}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/admin/jobs/${job.id}/edit`}
+                      className={`flex-1 rounded-lg py-1.5 text-center text-xs font-medium text-white ${editBg}`}
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => deleteJob(job.id, job.title)}
+                      className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#dc2626]"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        ) : jobs.length === 0 ? (
-          <div className="text-center py-20 text-gray-500 dark:text-gray-400">
-            <p>No jobs found.</p>
-          </div>
-        ) : (
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden lg:block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        {loading ? loader : jobs.length === 0 ? empty : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700">
