@@ -2,6 +2,7 @@
 
 import { Menu, Moon, Sun } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useTheme } from '@/components/ThemeProvider';
 
 type TopBarProps = {
@@ -40,7 +41,16 @@ export default function TopBar({ title, onToggleSidebar }: TopBarProps): JSX.Ele
             <Menu className="h-5 w-5" aria-hidden="true" />
           </button>
         ) : null}
-        <h1 className="truncate text-base font-medium text-white dark:text-[#e6edf3]">{title}</h1>
+        <div className="flex items-center">
+          <Image
+            src="https://res.cloudinary.com/dfditihuw/image/upload/v1782740584/admin-logo-dark.png_vrbcyr.png"
+            alt="Coss Cloud Solutions — Institute Management System"
+            width={180}
+            height={54}
+            className="h-10 w-auto object-contain"
+            priority
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-3 text-sm">

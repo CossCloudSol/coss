@@ -1,7 +1,9 @@
 'use client';
 
-import { Fragment } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import Link from 'next/link';
+import NextImage from 'next/image';
+import { useTheme } from '@/components/ThemeProvider';
 import { usePathname } from 'next/navigation';
 import {
   ArrowLeftRight,
@@ -113,6 +115,9 @@ function isRouteActive(pathname: string, href: string): boolean {
 export default function Sidebar({ onNavigate, permissions, role }: SidebarProps): JSX.Element {
   const pathname = usePathname() ?? '';
   const isSuperAdmin = role === 'SUPER_ADMIN';
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   function canSee(item: NavItem): boolean {
     if (isSuperAdmin) return true;
@@ -126,9 +131,32 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
       className="flex h-full w-[220px] flex-col border-r border-[#e2e8f0] dark:border-[#21262d] bg-white dark:bg-[#161b22]"
     >
       {/* Brand */}
-      <div className="px-5 pt-6 pb-5 border-b border-[#e2e8f0] dark:border-[#21262d]">
-        <p className="text-xl font-bold leading-none text-teal-600 dark:text-teal-400">Coss Cloud Solutions</p>
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">IMS (Institute Management System)</p>
+      <div className="px-5 pt-6 pb-5 mb-6 border-b border-[#e2e8f0] dark:border-[#21262d]">
+        {mounted ? (
+          theme === 'dark' ? (
+            <NextImage
+              src="https://res.cloudinary.com/dfditihuw/image/upload/v1782740584/admin-logo-dark.png_vrbcyr.png"
+              alt="Coss Cloud Solutions IMS"
+              width={180}
+              height={54}
+              className="h-12 w-auto object-contain"
+              priority
+            />
+          ) : (
+            <div className="bg-white rounded-xl px-3 py-1.5 inline-flex">
+              <NextImage
+                src="https://res.cloudinary.com/dfditihuw/image/upload/v1782740583/admin-logo-light.png_e3hlz4.png"
+                alt="Coss Cloud Solutions IMS"
+                width={180}
+                height={54}
+                className="h-10 w-auto object-contain"
+                priority
+              />
+            </div>
+          )
+        ) : (
+          <div className="h-12 w-40" />
+        )}
       </div>
 
       {/* Navigation */}
