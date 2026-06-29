@@ -21,7 +21,7 @@ VOICE RULES (non-negotiable):
 - One real-world analogy per major section
 - Specific numbers beat vague claims always
 - End with a specific CTA — not "contact us" but actual next step with date or action
-  e.g. "Our next AWS batch starts [BATCH_DATE] at Dilsukhnagar. Seats are limited to 15."
+  e.g. "Our next AWS batch starts every Monday at Dilsukhnagar. Seats are limited to 15 students per batch."
 - Reading level: accessible, no jargon without a plain-English explanation
 - At least one internal link placeholder: [LINK: course name | /courses/category/slug]
 

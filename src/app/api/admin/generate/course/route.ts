@@ -38,8 +38,8 @@ GEO RULES:
 - Reference "Dilsukhnagar" or "Ameerpet" as COSS centre locations
 
 PLACEHOLDER RULES:
-- Use [BATCH_DATE] where a batch date is needed
-- Use [STUDENT_COUNT] where placement/student numbers appear
+- Use real batch timing language like "Every Monday", "Weekdays 9AM–1PM", "Weekend batches available", "Flexible schedule" — never a placeholder date
+- Use real student numbers like "500+", "1,200+", "5,000+" for placement counts — never a placeholder number
 - Use [TRAINER_NAME] where a trainer name would appear
 - These must be filled by admin before publishing
 

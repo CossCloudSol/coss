@@ -61,7 +61,7 @@ RULES:
 - Tools: 3-6 real tools
 - Price: between 15000 and 35000
 - originalPrice: 20-40% higher than price
-- Use exactly [BATCH_DATE] and [STUDENT_COUNT] as placeholders
+- Use realistic batch schedules (e.g. Every Monday, Weekend batches) and real student counts (500+, 1200+)
 - seoTitle: "[Course Name] in Hyderabad | Coss Cloud Solutions"
 - seoDesc: under 155 chars, mention Hyderabad + placement
 - excerpt: 1-2 sentence summary under 120 chars
@@ -78,8 +78,8 @@ Return ONLY valid JSON, no markdown fences:
   "highlights": ["","","",""],
   "syllabus": [{"module":"","topics":[""]}],
   "tools": [""],
-  "enrolledCount": "[STUDENT_COUNT]+ students enrolled",
-  "nextBatch": "[BATCH_DATE]",
+  "enrolledCount": "500+ students enrolled",
+  "nextBatch": "Every Monday",
   "seoTitle": "",
   "seoDesc": "",
   "excerpt": ""
