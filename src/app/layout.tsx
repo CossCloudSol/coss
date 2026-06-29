@@ -27,6 +27,7 @@ import TopInfoBar from '@/components/TopInfoBar';
 import PublicChrome from '@/components/PublicChrome';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
 import MobileStickyBar from '@/components/MobileStickyBar';
+import MobileTabBar from '@/components/MobileTabBar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { prisma } from '@/lib/db';
 import {
@@ -208,6 +209,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SiteHeader />
         </div>
         </PublicChrome>
+        <MobileTabBar />
 
         {/* Main */}
         <main>{children}</main>
