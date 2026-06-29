@@ -139,7 +139,7 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
               alt="Coss Cloud Solutions IMS"
               width={180}
               height={54}
-              className="h-12 w-auto object-contain"
+              className="h-14 w-auto object-contain"
               priority
             />
           ) : (

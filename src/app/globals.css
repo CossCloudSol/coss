@@ -2649,3 +2649,17 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* ── Mobile tab bar — dark mode colour overrides ── */
+.dark .tab-icon-home,
+.dark .tab-label-home    { color: #5ef0c8 !important; }
+.dark .tab-icon-courses,
+.dark .tab-label-courses { color: #60a5fa !important; }
+.dark .tab-icon-batches,
+.dark .tab-label-batches { color: #fbbf24 !important; }
+.dark .tab-icon-reviews,
+.dark .tab-label-reviews { color: #a78bfa !important; }
+.dark .tab-underline-home    { background: #5ef0c8 !important; }
+.dark .tab-underline-courses { background: #60a5fa !important; }
+.dark .tab-underline-batches { background: #fbbf24 !important; }
+.dark .tab-underline-reviews { background: #a78bfa !important; }

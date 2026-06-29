@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Award,
   Briefcase,
@@ -37,6 +38,7 @@ export default function SiteHeader() {
   const [courses, setCourses] = useState<Array<{ label: string; href: string }>>([]);
 
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
 
   const headerRef = useRef<HTMLElement>(null);
 
@@ -178,43 +180,129 @@ export default function SiteHeader() {
           <ThemeToggle />
         </nav>
 
-        {/* Mobile — compact Enroll Now */}
-        <div className="mobile-header-actions">
+        {/* Mobile action buttons — Row 1 right side */}
+        <div className="lg:hidden flex items-center gap-2 flex-shrink-0">
+          {/* Call button */}
           <a
             href="tel:+918885166007"
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#FF6B2B] hover:bg-[#e85a1e] transition-colors"
             aria-label="Call us"
+            className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#f97316] flex-shrink-0"
           >
             <Phone className="w-4 h-4 text-white" aria-hidden="true" />
+            <span className="absolute inset-[-3px] rounded-full border-2 border-[#f97316]/35 animate-ping" aria-hidden="true" />
           </a>
+
+          {/* Enroll Now */}
           <Link
             href="/enroll-now-with-coss/"
-            className="mobile-enroll-btn"
             onClick={closeAll}
+            className="flex items-center gap-1.5 bg-[#024c57] dark:bg-[#03798a] text-white rounded-[10px] px-3 py-2 text-xs font-medium flex-shrink-0"
           >
             <PenLine className="w-3.5 h-3.5" aria-hidden="true" />
-            Enroll Now
+            Enroll now
           </Link>
+
+          {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition-colors"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-[#f1f5f9] dark:bg-[#161b22] border border-[#e2e8f0] dark:border-[#30363d] flex-shrink-0"
           >
             {theme === 'dark'
-              ? <Sun className="w-4 h-4 text-white" aria-hidden="true" />
-              : <Moon className="w-4 h-4 text-[#0D1B2A]" aria-hidden="true" />
-            }
+              ? <Sun className="w-4 h-4 text-[#8b949e]" aria-hidden="true" />
+              : <Moon className="w-4 h-4 text-[#475569]" aria-hidden="true" />}
           </button>
+
+          {/* Hamburger */}
           <button
-            className={`hamburger${mobileOpen ? ' hamburger--open' : ''}`}
+            className={`flex items-center justify-center w-[38px] h-[38px] rounded-[9px] bg-[#0f172a] dark:bg-[#21262d] dark:border dark:border-[#30363d] flex-shrink-0${mobileOpen ? ' hamburger--open' : ''}`}
             aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
             onClick={() => setMobileOpen(prev => !prev)}
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen
+              ? <X className="w-5 h-5 text-white" />
+              : <Menu className="w-5 h-5 text-white" />}
           </button>
         </div>
+      </div>
+
+      {/* Tab bar — mobile only, sits below the main header row */}
+      <div className="lg:hidden grid grid-cols-4 border-t border-[#f1f5f9] dark:border-[#161b22] bg-white dark:bg-[#0d1117]">
+
+        {/* Home */}
+        <Link href="/" onClick={closeAll} className="relative flex flex-col items-center justify-center py-3 gap-1">
+          <Home
+            className="w-[22px] h-[22px] tab-icon-home"
+            style={{ color: '#024c57' }}
+            aria-hidden="true"
+          />
+          <span className="text-[10px] font-semibold tab-label-home" style={{ color: '#024c57' }}>
+            Home
+          </span>
+          {(pathname === '/' || pathname === '') && (
+            <span
+              className="absolute bottom-0 left-[15%] right-[15%] h-[3px] rounded-t-sm tab-underline-home"
+              style={{ background: '#024c57' }}
+            />
+          )}
+        </Link>
+
+        {/* Courses */}
+        <Link href="/courses/" onClick={closeAll} className="relative flex flex-col items-center justify-center py-3 gap-1">
+          <LayoutGrid
+            className="w-[22px] h-[22px] tab-icon-courses"
+            style={{ color: '#1d4ed8' }}
+            aria-hidden="true"
+          />
+          <span className="text-[10px] font-semibold tab-label-courses" style={{ color: '#1d4ed8' }}>
+            Courses
+          </span>
+          {pathname.startsWith('/courses') && (
+            <span
+              className="absolute bottom-0 left-[15%] right-[15%] h-[3px] rounded-t-sm tab-underline-courses"
+              style={{ background: '#1d4ed8' }}
+            />
+          )}
+        </Link>
+
+        {/* Batches */}
+        <Link href="/batches" onClick={closeAll} className="relative flex flex-col items-center justify-center py-3 gap-1">
+          <CalendarCheck
+            className="w-[22px] h-[22px] tab-icon-batches"
+            style={{ color: '#d97706' }}
+            aria-hidden="true"
+          />
+          <span className="text-[10px] font-semibold tab-label-batches" style={{ color: '#d97706' }}>
+            Batches
+          </span>
+          {pathname.startsWith('/batches') && (
+            <span
+              className="absolute bottom-0 left-[15%] right-[15%] h-[3px] rounded-t-sm tab-underline-batches"
+              style={{ background: '#d97706' }}
+            />
+          )}
+        </Link>
+
+        {/* Reviews */}
+        <Link href="/student-reviews/" onClick={closeAll} className="relative flex flex-col items-center justify-center py-3 gap-1">
+          <Award
+            className="w-[22px] h-[22px] tab-icon-reviews"
+            style={{ color: '#7c3aed' }}
+            aria-hidden="true"
+          />
+          <span className="text-[10px] font-semibold tab-label-reviews" style={{ color: '#7c3aed' }}>
+            Reviews
+          </span>
+          {pathname.startsWith('/student-reviews') && (
+            <span
+              className="absolute bottom-0 left-[15%] right-[15%] h-[3px] rounded-t-sm tab-underline-reviews"
+              style={{ background: '#7c3aed' }}
+            />
+          )}
+        </Link>
+
       </div>
 
       {/* ── Mobile Menu ───────────────────────────────────────────────── */}
