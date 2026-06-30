@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/components/ThemeProvider';
 import Link from 'next/link';
 import { ArrowLeft, Loader2, Plus, Trash2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -12,6 +13,7 @@ const STATUSES = ['draft', 'published', 'archived'];
 
 export default function EditBlogPostPage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const { theme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
@@ -143,7 +145,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
         {/* Content */}
         <div className={sectionCls}>
           <h2 className="text-sm font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-3">Content *</h2>
-          <div data-color-mode="light">
+          <div data-color-mode={theme} className="overflow-hidden rounded-lg">
             <MDEditor value={content} onChange={(v) => setContent(v ?? '')} height={400} preview="edit" />
           </div>
         </div>

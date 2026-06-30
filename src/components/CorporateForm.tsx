@@ -75,13 +75,12 @@ export default function CorporateForm(): JSX.Element {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          companyName:   values.companyName,
-          contactPerson: values.contactPerson,
-          phone:         values.phone.replace(/\D/g, ''),
-          email:         values.email,
-          trainingTopic: values.trainingTopic,
-          teamSize:      values.teamSize,
-          message:       values.message ?? '',
+          companyName:    values.companyName,
+          contactPerson:  values.contactPerson,
+          phone:          values.phone.replace(/\D/g, ''),
+          email:          values.email,
+          trainingDomain: values.trainingTopic,
+          employeeCount:  values.teamSize,
         }),
       });
     } catch (err) {
@@ -90,8 +89,18 @@ export default function CorporateForm(): JSX.Element {
       return;
     }
     if (!res.ok) {
+      let errorMsg = 'Something went wrong. Please try again.';
+      try {
+        const result: { success?: boolean; errors?: Record<string, string[]>; message?: string } = await res.json();
+        if (result.errors) {
+          const first = Object.values(result.errors).flat()[0];
+          if (typeof first === 'string') errorMsg = first;
+        } else if (typeof result.message === 'string') {
+          errorMsg = result.message;
+        }
+      } catch { /* ignore parse failure */ }
       console.error('[CorporateForm] /api/corporate-leads non-OK response:', res.status, res.statusText);
-      setState({ kind: 'error', message: 'Something went wrong. Please try again.' });
+      setState({ kind: 'error', message: errorMsg });
       return;
     }
     setState({ kind: 'success' });

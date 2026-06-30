@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/components/ThemeProvider';
 import Link from 'next/link';
 import { ArrowLeft, Loader2, Plus, RotateCcw, Sparkles, Trash2, ChevronDown } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -23,6 +24,7 @@ interface DbCategory {
 
 export default function NewBlogPostPage() {
   const router = useRouter();
+  const { theme } = useTheme();
   const [saving, setSaving] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generated, setGenerated] = useState(false);
@@ -331,7 +333,7 @@ export default function NewBlogPostPage() {
         {/* Content */}
         <div className={sectionCls}>
           <SectionHeader label="Content *" field="content" />
-          <div className={hasPlaceholder(content) ? 'ring-2 ring-amber-400 rounded-lg' : ''} data-color-mode="light">
+          <div className={`overflow-hidden rounded-lg${hasPlaceholder(content) ? ' ring-2 ring-amber-400' : ''}`} data-color-mode={theme}>
             <MDEditor value={content} onChange={(v) => setContent(v ?? '')} height={400} preview="edit" />
           </div>
           {hasPlaceholder(content) && (
