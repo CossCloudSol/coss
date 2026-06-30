@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import BottomNav from './BottomNav';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
@@ -37,6 +37,19 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
   const pathname = usePathname() ?? '';
 
   const isLoginRoute = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
+
+  // Prevent the root <body> from being scrollable while inside the admin shell.
+  // The body has `pb-16 md:pb-0` (for the public MobileStickyBar) which makes
+  // the body taller than 100vh on mobile, creating scrollable whitespace below
+  // the h-screen AdminShell container. Using a class (not inline style) avoids
+  // conflicting with BottomNav's `document.body.style.overflow` drawer control.
+  useEffect(() => {
+    if (isLoginRoute) return;
+    document.body.classList.add('overflow-hidden');
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [isLoginRoute]);
   if (isLoginRoute) {
     return <>{children}</>;
   }

@@ -208,8 +208,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <div className="sticky-chrome">
           <SiteHeader />
         </div>
-        </PublicChrome>
         <MobileTabBar />
+        </PublicChrome>
 
         {/* Main */}
         <main>{children}</main>
