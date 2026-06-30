@@ -522,7 +522,7 @@ export default async function HomePage() {
               <Link
                 key={cat.slug}
                 href={`/courses/${cat.slug}/`}
-                className="group block rounded-2xl overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1 border-[var(--cat-accent-light)] dark:border-[var(--cat-accent-dark)] bg-white dark:bg-[#161320] hover:shadow-xl"
+                className="group block rounded-2xl overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1 border-[var(--cat-accent-light)] dark:border-[var(--cat-accent-dark)] bg-[#161320] hover:shadow-xl"
                 style={{
                   ['--cat-accent-light' as string]: getCategoryAccentSolid(cat.slug),
                   ['--cat-accent-dark' as string]: getCategoryAccentDark(cat.slug),
@@ -538,7 +538,7 @@ export default async function HomePage() {
                       {getCategoryIcon(cat.slug)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-sm sm:text-base leading-snug text-slate-900 dark:text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
+                      <h3 className="font-semibold text-sm sm:text-base leading-snug text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
                         {cat.name}
                       </h3>
                       <span
@@ -553,7 +553,7 @@ export default async function HomePage() {
                   {/* Description */}
                   {cat.description && (
                     <p
-                      className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4"
+                      className="text-slate-400 text-xs leading-relaxed mb-4"
                       style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                     >
                       {cat.description}
@@ -575,10 +575,8 @@ export default async function HomePage() {
                     src={getCategoryIllustration(cat.slug)}
                     alt={`${cat.name} illustration`}
                     loading="lazy"
-                    className="w-full h-full object-cover opacity-90 dark:opacity-100 group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-transform duration-500"
                   />
-                  {/* Light mode: soft white gradient so the dark image blends into the white card */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent dark:from-transparent pointer-events-none" />
                 </div>
               </Link>
             ))}
