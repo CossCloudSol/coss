@@ -495,7 +495,7 @@ export default async function HomePage() {
 
       {/* ── Course Categories ── */}
       <section
-        className="py-20 relative overflow-hidden bg-slate-50 dark:bg-[#0f172a]"
+        className="py-20 relative overflow-hidden bg-[#0f172a]"
         aria-label="Course categories"
       >
         <div
@@ -509,15 +509,15 @@ export default async function HomePage() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <div className="text-orange-500 dark:text-orange-400 text-xs font-bold uppercase tracking-widest">30+ Courses Available</div>
-            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">Build Skills Employers Demand</h2>
+            <div className="text-orange-400 text-xs font-bold uppercase tracking-widest">30+ Courses Available</div>
+            <h2 className="text-3xl font-bold text-white mt-2">Build Skills Employers Demand</h2>
             <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="text-slate-600 dark:text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
+            <p className="text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
               Industry-focused training in Hyderabad — practical labs, expert trainers, real placement outcomes
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
@@ -528,21 +528,21 @@ export default async function HomePage() {
                   ['--cat-accent-dark' as string]: getCategoryAccentDark(cat.slug),
                 }}
               >
-                <div className="p-5 pb-0">
+                <div className="p-3 sm:p-5 pb-0">
                   {/* Icon + title row */}
                   <div className="flex items-start gap-3 mb-3">
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
                       style={{ background: getCategoryIconBg(cat.slug) }}
                     >
                       {getCategoryIcon(cat.slug)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-base leading-snug text-slate-900 dark:text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
+                      <h3 className="font-semibold text-sm sm:text-base leading-snug text-slate-900 dark:text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
                         {cat.name}
                       </h3>
                       <span
-                        className="inline-block mt-1 text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
+                        className="inline-block mt-1 text-[10px] sm:text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
                         style={{ background: getCategoryAccent(cat.slug) }}
                       >
                         {cat._count?.courses ?? 0} courses
@@ -569,7 +569,7 @@ export default async function HomePage() {
                 </div>
 
                 {/* Illustration — dark cinematic image, theme-aware treatment */}
-                <div className="relative h-32 mx-3 mb-3 rounded-xl overflow-hidden">
+                <div className="relative h-24 sm:h-32 mx-3 mb-3 rounded-xl overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={getCategoryIllustration(cat.slug)}
