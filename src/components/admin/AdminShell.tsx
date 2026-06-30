@@ -45,6 +45,7 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
   // conflicting with BottomNav's `document.body.style.overflow` drawer control.
   useEffect(() => {
     if (isLoginRoute) return;
+    window.scrollTo(0, 0);
     document.body.classList.add('overflow-hidden');
     return () => {
       document.body.classList.remove('overflow-hidden');
