@@ -11,6 +11,7 @@ import {
   RefreshCw,
   CalendarClock,
   FileText,
+  type LucideIcon,
 } from 'lucide-react';
 
 interface NotificationItem {
@@ -24,8 +25,7 @@ interface NotificationItem {
 }
 
 type IconMeta = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: any;
+  icon: LucideIcon;
   bg: string;
   color: string;
 };
