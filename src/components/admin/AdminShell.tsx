@@ -50,7 +50,7 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [isLoginRoute]);
+  }, [isLoginRoute, pathname]);
   if (isLoginRoute) {
     return <>{children}</>;
   }
