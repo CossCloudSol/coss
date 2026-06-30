@@ -30,7 +30,7 @@ export default function TopBar({ title, onToggleSidebar }: TopBarProps): JSX.Ele
   }, []);
 
   return (
-    <header className="relative z-20 flex h-14 items-center justify-between border-b border-[#023640] dark:border-[#21262d] bg-[#024c57] dark:bg-[#0d1117] px-4 md:px-6">
+    <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-[#023640] dark:border-[#21262d] bg-[#024c57] dark:bg-[#0d1117] px-4 md:px-6">
       <div className="flex min-w-0 items-center gap-2">
         {onToggleSidebar !== undefined ? (
           <button

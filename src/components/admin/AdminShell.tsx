@@ -64,10 +64,10 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
       </div>
 
       {/* Main column */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 min-h-0">
         <TopBar title={title} />
         {/* pb-16 on mobile keeps content clear of the fixed bottom nav bar */}
-        <div className="flex-1 overflow-y-auto bg-[#f0f4f8] dark:bg-[#0d1117] p-3 pb-16 sm:p-4 sm:pb-16 md:p-6 md:pb-16 lg:p-6">
+        <div className="flex-1 overflow-y-auto min-h-0 bg-[#f0f4f8] dark:bg-[#0d1117] p-3 pb-16 sm:p-4 sm:pb-16 md:p-6 md:pb-16 lg:p-6">
           {children}
         </div>
       </div>
