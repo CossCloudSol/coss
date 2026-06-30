@@ -57,10 +57,12 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [dropdownPos, setDropdownPos] = useState<{ top: number; right: number }>({
-    top: 60,
-    right: 16,
-  });
+  const [dropdownStyle, setDropdownStyle] = useState<{
+    top: number;
+    left: number;
+    right?: number;
+    width: number | string;
+  }>({ top: 60, left: 16, width: 360 });
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -98,13 +100,37 @@ export default function NotificationBell() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
+  function calculatePosition(bellRect: DOMRect): {
+    top: number;
+    left: number;
+    right?: number;
+    width: number | string;
+  } {
+    const isMobile = window.innerWidth < 480;
+    if (isMobile) {
+      return { top: bellRect.bottom + 8, left: 12, right: 12, width: 'auto' };
+    }
+    const dropdownWidth = 360;
+    let left = bellRect.right - dropdownWidth;
+    if (left < 12) left = 12;
+    return { top: bellRect.bottom + 4, left, width: dropdownWidth };
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    function handleResize() {
+      if (wrapRef.current) {
+        setDropdownStyle(calculatePosition(wrapRef.current.getBoundingClientRect()));
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   function handleToggle() {
     if (!open && wrapRef.current) {
-      const rect = wrapRef.current.getBoundingClientRect();
-      setDropdownPos({
-        top: rect.bottom + 4,
-        right: window.innerWidth - rect.right,
-      });
+      setDropdownStyle(calculatePosition(wrapRef.current.getBoundingClientRect()));
     }
     setOpen((p) => !p);
   }
@@ -127,11 +153,13 @@ export default function NotificationBell() {
       ref={dropdownRef}
       style={{
         position: 'fixed',
-        top: dropdownPos.top,
-        right: dropdownPos.right,
+        top: dropdownStyle.top,
+        left: dropdownStyle.left,
+        right: dropdownStyle.right,
+        width: dropdownStyle.width,
         zIndex: 9999,
       }}
-      className="w-[360px] max-h-[480px] bg-white dark:bg-[#161b22]
+      className="max-h-[480px] bg-white dark:bg-[#161b22]
                  border border-[#e2e8f0] dark:border-[#21262d]
                  rounded-2xl shadow-xl overflow-hidden flex flex-col"
     >
