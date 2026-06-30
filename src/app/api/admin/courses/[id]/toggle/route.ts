@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { createNotification } from '@/lib/notifications';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,6 +32,20 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
 
   try {
     const course = await prisma.course.update({ where: { id: params.id }, data });
+
+    if (data.status === 'published') {
+      try {
+        await createNotification({
+          type: 'content_published',
+          title: 'Course published',
+          body: course.title,
+          link: `/admin/courses/${course.id}/edit`,
+        });
+      } catch (notifErr) {
+        console.error('[PATCH /api/admin/courses/[id]/toggle] Notification creation failed (non-fatal):', notifErr);
+      }
+    }
+
     return NextResponse.json({ ok: true, status: course.status, featured: course.featured });
   } catch (err: unknown) {
     const e = err as { code?: string };

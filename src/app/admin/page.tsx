@@ -1,7 +1,6 @@
 import { formatDistanceToNow } from 'date-fns';
 import { headers } from 'next/headers';
 import type { AdminStatsResponse } from '@/app/api/admin/stats/route';
-import TestNotificationButton from '@/components/admin/TestNotificationButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -299,11 +298,6 @@ export default async function AdminOverviewPage(): Promise<JSX.Element> {
 
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6 bg-[#e6f4f6] dark:bg-[#0d1117] overflow-x-hidden">
-      {/* Dev-only test button — remove in a later phase */}
-      <div className="col-span-12 flex justify-end">
-        <TestNotificationButton />
-      </div>
-
       {/* Top row — 4 stat cards, 2-column grid on all sizes */}
       <div className="col-span-12">
         <div className="grid grid-cols-2 gap-3 mb-4">

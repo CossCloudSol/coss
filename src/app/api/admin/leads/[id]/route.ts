@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { createNotification } from '@/lib/notifications';
 
 // Prisma uses Node built-ins — cannot run on Edge.
 export const runtime = 'nodejs';
@@ -222,6 +223,19 @@ export async function PATCH(
 
   if (!updated) {
     return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+  }
+
+  if (nextStatus !== null) {
+    try {
+      await createNotification({
+        type: 'status_change',
+        title: 'Lead status changed',
+        body: `${updated.name} moved to ${nextStatus}`,
+        link: '/admin/leads',
+      });
+    } catch (notifErr) {
+      console.error('[PATCH /api/admin/leads/[id]] Notification creation failed (non-fatal):', notifErr);
+    }
   }
 
   return NextResponse.json(serializeLead(updated));

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { createNotification } from '@/lib/notifications';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -100,6 +101,17 @@ export async function POST(req: NextRequest): Promise<Response> {
       },
       select: { id: true },
     });
+
+    try {
+      await createNotification({
+        type: 'corporate_proposal',
+        title: 'New corporate proposal',
+        body: `${data.companyName} requested ${data.trainingDomain} training`,
+        link: '/admin/corporate',
+      });
+    } catch (notifErr) {
+      console.error('[POST /api/corporate-leads] Notification creation failed (non-fatal):', notifErr);
+    }
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
