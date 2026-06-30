@@ -4,6 +4,7 @@ import { Menu, Moon, Sun } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/components/ThemeProvider';
+import NotificationBell from '@/components/admin/NotificationBell';
 
 type TopBarProps = {
   title: string;
@@ -68,6 +69,8 @@ export default function TopBar({ title, onToggleSidebar }: TopBarProps): JSX.Ele
         >
           {today}
         </span>
+
+        <NotificationBell />
 
         {/* Dark / light toggle */}
         <button
