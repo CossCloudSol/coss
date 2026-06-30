@@ -1,4 +1,6 @@
+import { AdminRole } from '@prisma/client';
 import { prisma } from '@/lib/db';
+import { sendEmail, buildInstantEmail } from '@/lib/email';
 
 export type NotificationType =
   | 'new_lead'
@@ -12,7 +14,6 @@ export type NotificationType =
 export type TargetRole =
   | 'admissions_sales'
   | 'support_helpdesk'
-  | 'finance_it'
   | null;
 
 interface CreateNotificationInput {
@@ -30,9 +31,17 @@ const DEFAULT_ROLE_MAP: Record<NotificationType, TargetRole> = {
   corporate_proposal: 'admissions_sales',
   status_change: 'support_helpdesk',
   batch_reminder: 'support_helpdesk',
-  content_published: 'finance_it',
+  // null → visible to all admin roles (SUPER_ADMIN always sees all; others see targetRole=null too)
+  content_published: null,
   test: null,
 };
+
+// Urgent = instant email. Digest = batched into daily summary.
+const URGENT_TYPES = new Set<NotificationType>([
+  'new_lead',
+  'whatsapp_lead',
+  'corporate_proposal',
+]);
 
 export async function createNotification(input: CreateNotificationInput) {
   const targetRole =
@@ -40,7 +49,7 @@ export async function createNotification(input: CreateNotificationInput) {
       ? input.targetRole
       : DEFAULT_ROLE_MAP[input.type];
 
-  return prisma.notification.create({
+  const notification = await prisma.notification.create({
     data: {
       type: input.type,
       title: input.title,
@@ -49,6 +58,70 @@ export async function createNotification(input: CreateNotificationInput) {
       targetRole,
     },
   });
+
+  if (URGENT_TYPES.has(input.type)) {
+    void sendUrgentEmails(
+      { title: input.title, body: input.body, link: input.link ?? null, type: input.type },
+      targetRole,
+    ).catch((err) => console.error('[notifications] urgent email error:', err));
+  }
+
+  return notification;
+}
+
+async function sendUrgentEmails(
+  notification: { title: string; body: string; link: string | null; type: string },
+  targetRole: TargetRole,
+) {
+  const users = await getAdminUsersForRole(targetRole);
+  if (users.length === 0) return;
+
+  const html = buildInstantEmail({
+    title: notification.title,
+    body: notification.body,
+    link: notification.link,
+  });
+
+  await Promise.allSettled(
+    users.map(async (user) => {
+      const enabled = await isEmailEnabled(user.id, notification.type);
+      if (!enabled) return;
+      try {
+        await sendEmail({ to: user.email, subject: notification.title, html });
+      } catch (err) {
+        console.error(`[notifications] email send failed for ${user.email}:`, err);
+      }
+    }),
+  );
+}
+
+// Returns all active AdminUsers who can see a notification with the given targetRole.
+// targetRole=null → all users; otherwise the specific role + SUPER_ADMIN.
+export async function getAdminUsersForRole(targetRole: TargetRole) {
+  if (targetRole === null) {
+    return prisma.adminUser.findMany({
+      where: { isActive: true },
+      select: { id: true, email: true },
+    });
+  }
+  const prismaRole = targetRole.toUpperCase() as AdminRole;
+  return prisma.adminUser.findMany({
+    where: {
+      isActive: true,
+      OR: [{ role: prismaRole }, { role: AdminRole.SUPER_ADMIN }],
+    },
+    select: { id: true, email: true },
+  });
+}
+
+// Returns true if email notifications are enabled for this user+eventType.
+// Defaults to true when no preference row exists.
+export async function isEmailEnabled(userId: string, eventType: string): Promise<boolean> {
+  const pref = await prisma.notificationPreference.findUnique({
+    where: { userId_eventType: { userId, eventType } },
+    select: { email: true },
+  });
+  return pref === null ? true : pref.email;
 }
 
 /**
