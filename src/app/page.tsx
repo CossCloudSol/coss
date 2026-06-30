@@ -27,6 +27,7 @@ import {
 import WpImg from '@/components/WpImg';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
 import { siteImages } from '@/lib/wpImages';
+import { getCategoryIllustration } from '@/lib/category-illustrations';
 
 function getCategoryAccent(slug: string): string {
   const map: Record<string, string> = {
@@ -83,6 +84,46 @@ function getCategoryIcon(slug: string): string {
     'medical-coding':           '🏥',
   }
   return map[slug] ?? '📚'
+}
+
+function getCategoryAccentSolid(slug: string): string {
+  const map: Record<string, string> = {
+    'cloud-computing':          '#2563eb',
+    'devops-multi-cloud':       '#0f766e',
+    'data-analytics-bi':        '#7c3aed',
+    'data-engineering':         '#0284c7',
+    'programming-full-stack':   '#d97706',
+    'cyber-security':           '#059669',
+    'erp-crm-enterprise-tools': '#e11d48',
+    'software-testing-os':      '#1d4ed8',
+    'digital-design':           '#db2777',
+    'professional-soft-skills': '#d97706',
+    'human-resource':           '#7c3aed',
+    'quantum-computing':        '#0891b2',
+    'medical-coding':           '#16a34a',
+    'certification':            '#7c3aed',
+  }
+  return map[slug] ?? '#ea580c'
+}
+
+function getCategoryAccentDark(slug: string): string {
+  const map: Record<string, string> = {
+    'cloud-computing':          '#378ADD',
+    'devops-multi-cloud':       '#1D9E75',
+    'data-analytics-bi':        '#7F77DD',
+    'data-engineering':         '#6366f1',
+    'programming-full-stack':   '#D85A30',
+    'cyber-security':           '#639922',
+    'erp-crm-enterprise-tools': '#E24B4A',
+    'software-testing-os':      '#22d3ee',
+    'digital-design':           '#D4537E',
+    'professional-soft-skills': '#EF9F27',
+    'human-resource':           '#7F77DD',
+    'quantum-computing':        '#97C459',
+    'medical-coding':           '#4ade80',
+    'certification':            '#7F77DD',
+  }
+  return map[slug] ?? '#7F77DD'
 }
 
 async function getCategories() {
@@ -454,8 +495,7 @@ export default async function HomePage() {
 
       {/* ── Course Categories ── */}
       <section
-        className="py-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e293b 100%)' }}
+        className="py-20 relative overflow-hidden bg-slate-50 dark:bg-[#0f172a]"
         aria-label="Course categories"
       >
         <div
@@ -469,10 +509,10 @@ export default async function HomePage() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <div className="text-orange-400 text-xs font-bold uppercase tracking-widest">30+ Courses Available</div>
-            <h2 className="text-3xl font-bold text-white mt-2">Build Skills Employers Demand</h2>
+            <div className="text-orange-500 dark:text-orange-400 text-xs font-bold uppercase tracking-widest">30+ Courses Available</div>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mt-2">Build Skills Employers Demand</h2>
             <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
+            <p className="text-slate-600 dark:text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
               Industry-focused training in Hyderabad — practical labs, expert trainers, real placement outcomes
             </p>
           </div>
@@ -482,37 +522,38 @@ export default async function HomePage() {
               <Link
                 key={cat.slug}
                 href={`/courses/${cat.slug}/`}
-                className="group block rounded-xl overflow-hidden border border-white/10 hover:border-white/20 bg-[#1e293b] hover:bg-[#243447] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30"
+                className="group block rounded-2xl overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1 border-[var(--cat-accent-light)] dark:border-[var(--cat-accent-dark)] bg-white dark:bg-[#161320] hover:shadow-xl"
+                style={{
+                  ['--cat-accent-light' as string]: getCategoryAccentSolid(cat.slug),
+                  ['--cat-accent-dark' as string]: getCategoryAccentDark(cat.slug),
+                }}
               >
-                {/* Coloured top accent bar */}
-                <div
-                  className="h-1 w-full"
-                  style={{ background: getCategoryAccent(cat.slug) }}
-                />
-
-                <div className="p-5">
+                <div className="p-5 pb-0">
                   {/* Icon + title row */}
                   <div className="flex items-start gap-3 mb-3">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
                       style={{ background: getCategoryIconBg(cat.slug) }}
                     >
                       {getCategoryIcon(cat.slug)}
                     </div>
-                    <div className="min-w-0">
-                      <h3 className="text-white font-semibold text-sm leading-snug group-hover:text-orange-300 transition-colors">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-base leading-snug text-slate-900 dark:text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
                         {cat.name}
                       </h3>
-                      <p className="text-slate-500 text-xs mt-0.5">
+                      <span
+                        className="inline-block mt-1 text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
+                        style={{ background: getCategoryAccent(cat.slug) }}
+                      >
                         {cat._count?.courses ?? 0} courses
-                      </p>
+                      </span>
                     </div>
                   </div>
 
                   {/* Description */}
                   {cat.description && (
                     <p
-                      className="text-slate-400 text-xs leading-relaxed mb-4"
+                      className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-4"
                       style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                     >
                       {cat.description}
@@ -520,11 +561,24 @@ export default async function HomePage() {
                   )}
 
                   {/* CTA row */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-orange-400 text-xs font-semibold group-hover:text-orange-300 transition-colors">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xs font-semibold transition-colors text-[var(--cat-accent-light)] dark:text-[var(--cat-accent-dark)]">
                       Explore Courses →
                     </span>
                   </div>
+                </div>
+
+                {/* Illustration — dark cinematic image, theme-aware treatment */}
+                <div className="relative h-32 mx-3 mb-3 rounded-xl overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={getCategoryIllustration(cat.slug)}
+                    alt={`${cat.name} illustration`}
+                    loading="lazy"
+                    className="w-full h-full object-cover opacity-90 dark:opacity-100 group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Light mode: soft white gradient so the dark image blends into the white card */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent dark:from-transparent pointer-events-none" />
                 </div>
               </Link>
             ))}
