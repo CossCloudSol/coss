@@ -39,7 +39,7 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
         <div
           aria-hidden="true"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-black/30 dark:bg-black/55"
+          className="fixed inset-0 z-30 bg-black/30 dark:bg-black/55 lg:hidden"
         />
       )}
 
@@ -48,9 +48,16 @@ export default function MobileDrawer({ group, isOpen, onClose }: MobileDrawerPro
         role={isOpen ? 'dialog' : undefined}
         aria-modal={isOpen ? true : undefined}
         aria-label={group ? `${group.label} navigation` : undefined}
-        className={`fixed bottom-14 left-0 right-0 z-40 min-h-[40vh] rounded-t-[20px] border-t-2 border-[#024c57] bg-white pb-2 transition-transform duration-300 ease-out dark:border-t dark:border-[#30363d] dark:bg-[#161b22] ${
-          isOpen ? 'translate-y-0' : 'translate-y-full'
+        className={`fixed bottom-14 left-0 right-0 z-40 min-h-[200px] rounded-t-[20px] border-t-2 border-[#024c57] bg-white pb-2 lg:hidden dark:border-t dark:border-[#30363d] dark:bg-[#161b22] ${
+          isOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'
         }`}
+        style={{
+          transitionProperty: 'transform, visibility',
+          transitionDuration: '300ms, 0ms',
+          transitionTimingFunction: 'ease-out',
+          transitionDelay: isOpen ? '0ms, 0ms' : '0ms, 300ms',
+          visibility: isOpen ? 'visible' : 'hidden',
+        }}
       >
         {group !== null && groupColor !== undefined && GroupIcon !== undefined && (
           <>

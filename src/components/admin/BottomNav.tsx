@@ -23,6 +23,17 @@ export default function BottomNav(): JSX.Element {
     };
   }, [openGroupId]);
 
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 1024 && openGroupId !== null) {
+        setOpenGroupId(null);
+      }
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, [openGroupId]);
+
   const activeGroupId = getActiveGroup(pathname);
 
   const handleTabPress = (id: string): void => {
