@@ -100,7 +100,10 @@ async function sendUrgentEmails(
   targetRole: TargetRole,
 ) {
   const users = await getAdminUsersForRole(targetRole);
-  if (users.length === 0) return;
+  if (users.length === 0) {
+    console.log(`[notifications] no recipients matched for ${notification.type}/${targetRole ?? 'all'}, skipping email send`);
+    return;
+  }
 
   const html = buildInstantEmail({
     title: notification.title,
@@ -126,13 +129,19 @@ async function sendUrgentPush(
   targetRole: TargetRole,
 ) {
   const users = await getAdminUsersForRole(targetRole);
-  if (users.length === 0) return;
+  if (users.length === 0) {
+    console.log(`[notifications] no recipients matched for ${targetRole ?? 'all'}, skipping push send`);
+    return;
+  }
 
   const userIds = users.map((u) => u.id);
   const subscriptions = await prisma.pushSubscription.findMany({
     where: { adminUserId: { in: userIds } },
   });
-  if (subscriptions.length === 0) return;
+  if (subscriptions.length === 0) {
+    console.log(`[notifications] no push subscriptions found for ${userIds.length} matched user(s) [${targetRole ?? 'all'}], skipping push send`);
+    return;
+  }
 
   const payload = JSON.stringify({
     title: notification.title,

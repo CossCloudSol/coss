@@ -132,6 +132,16 @@ export async function POST(req: NextRequest): Promise<Response> {
       session.role = 'SUPER_ADMIN';
       session.permissions = ALL_PERMISSIONS;
       if (adminEmail) session.email = adminEmail.toLowerCase();
+      // If a DB row exists for this email, attach its id so DB-dependent features
+      // (push subscriptions etc.) work when logging in via env-var credentials.
+      if (adminEmail) {
+        try {
+          const dbUser = await db.adminUser.findUnique({ where: { email: adminEmail.toLowerCase() } });
+          if (dbUser) session.userId = dbUser.id;
+        } catch {
+          // DB unavailable — continue without userId; login still succeeds.
+        }
+      }
       await session.save();
       return res;
     }

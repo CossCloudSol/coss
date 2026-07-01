@@ -76,7 +76,7 @@ export default function PushNotificationPanel() {
       });
 
       const json = subscription.toJSON();
-      await fetch('/api/admin/push/subscribe', {
+      const saveRes = await fetch('/api/admin/push/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -86,6 +86,11 @@ export default function PushNotificationPanel() {
           userAgent: navigator.userAgent,
         }),
       });
+
+      if (!saveRes.ok) {
+        const data = await saveRes.json().catch(() => ({}));
+        throw new Error((data as { error?: string }).error ?? 'Failed to save subscription — please try again');
+      }
 
       setSubscribed(true);
       setMsg('Push notifications enabled for this browser.');
