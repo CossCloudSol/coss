@@ -60,10 +60,14 @@ export async function createNotification(input: CreateNotificationInput) {
   });
 
   if (URGENT_TYPES.has(input.type)) {
-    void sendUrgentEmails(
-      { title: input.title, body: input.body, link: input.link ?? null, type: input.type },
-      targetRole,
-    ).catch((err) => console.error('[notifications] urgent email error:', err));
+    try {
+      await sendUrgentEmails(
+        { title: input.title, body: input.body, link: input.link ?? null, type: input.type },
+        targetRole,
+      );
+    } catch (err) {
+      console.error('[notifications] urgent email error:', err);
+    }
   }
 
   return notification;
