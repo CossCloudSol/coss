@@ -25,6 +25,9 @@ export type NotificationType =
   | 'content_published'
   | 'test';
 
+// Event types exposed in the notification preferences UI (excludes 'test').
+const PREF_EXCLUDED: ReadonlySet<NotificationType> = new Set(['test']);
+
 export type TargetRole =
   | 'admissions_sales'
   | 'support_helpdesk'
@@ -84,7 +87,7 @@ export async function createNotification(input: CreateNotificationInput) {
     }
     try {
       await sendUrgentPush(
-        { title: input.title, body: input.body, link: input.link ?? null },
+        { title: input.title, body: input.body, link: input.link ?? null, type: input.type },
         targetRole,
       );
     } catch (err) {
@@ -125,7 +128,7 @@ async function sendUrgentEmails(
 }
 
 async function sendUrgentPush(
-  notification: { title: string; body: string; link: string | null },
+  notification: { title: string; body: string; link: string | null; type: string },
   targetRole: TargetRole,
 ) {
   const users = await getAdminUsersForRole(targetRole);
@@ -134,12 +137,23 @@ async function sendUrgentPush(
     return;
   }
 
-  const userIds = users.map((u) => u.id);
+  // Filter to users who have push enabled for this event type.
+  const enabledUserIds = (
+    await Promise.all(
+      users.map(async (u) => ((await isPushEnabled(u.id, notification.type)) ? u.id : null)),
+    )
+  ).filter((id): id is string => id !== null);
+
+  if (enabledUserIds.length === 0) {
+    console.log(`[notifications] push suppressed by preferences for all ${users.length} matched user(s) [${targetRole ?? 'all'}/${notification.type}]`);
+    return;
+  }
+
   const subscriptions = await prisma.pushSubscription.findMany({
-    where: { adminUserId: { in: userIds } },
+    where: { adminUserId: { in: enabledUserIds } },
   });
   if (subscriptions.length === 0) {
-    console.log(`[notifications] no push subscriptions found for ${userIds.length} matched user(s) [${targetRole ?? 'all'}], skipping push send`);
+    console.log(`[notifications] no push subscriptions found for ${enabledUserIds.length} matched user(s) [${targetRole ?? 'all'}], skipping push send`);
     return;
   }
 
@@ -196,6 +210,32 @@ export async function isEmailEnabled(userId: string, eventType: string): Promise
     select: { email: true },
   });
   return pref === null ? true : pref.email;
+}
+
+// Returns true if push notifications are enabled for this user+eventType.
+// Defaults to true when no preference row exists.
+export async function isPushEnabled(userId: string, eventType: string): Promise<boolean> {
+  const pref = await prisma.notificationPreference.findUnique({
+    where: { userId_eventType: { userId, eventType } },
+    select: { push: true },
+  });
+  return pref === null ? true : pref.push;
+}
+
+// Returns the event types visible in the notification preferences UI for a given
+// session role. SUPER_ADMIN / null role sees all types; role-specific users see
+// only the types they can receive. 'test' is always excluded from the UI.
+export function getVisibleEventTypesForRole(
+  sessionRole: string | undefined | null,
+): NotificationType[] {
+  const userTargetRole = sessionRoleToFilter(sessionRole);
+  return (Object.entries(DEFAULT_ROLE_MAP) as [NotificationType, TargetRole][])
+    .filter(
+      ([type, role]) =>
+        !PREF_EXCLUDED.has(type) &&
+        (userTargetRole === null || role === null || role === userTargetRole),
+    )
+    .map(([type]) => type);
 }
 
 /**

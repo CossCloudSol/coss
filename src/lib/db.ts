@@ -103,12 +103,70 @@ export type CourseCategoryRecord = {
   updatedAt: Date;
 };
 
+// ─── PushSubscription ─────────────────────────────────────────────────────────
+
+export type PushSubscriptionRecord = {
+  id: string;
+  adminUserId: string;
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  userAgent: string | null;
+  createdAt: Date;
+};
+
+type PushSubWhereInput = {
+  adminUserId?: string | { in: string[] };
+  endpoint?: string;
+};
+
+type PushSubDelegate = {
+  findMany(args?: { where?: PushSubWhereInput }): Promise<PushSubscriptionRecord[]>;
+  upsert(args: {
+    where: { endpoint: string };
+    create: Omit<PushSubscriptionRecord, 'id' | 'createdAt'>;
+    update: Partial<Omit<PushSubscriptionRecord, 'id' | 'createdAt'>>;
+  }): Promise<PushSubscriptionRecord>;
+  delete(args: { where: { id: string } }): Promise<PushSubscriptionRecord>;
+};
+
+// ─── NotificationPreference ──────────────────────────────────────────────────
+
+export type NotificationPreferenceRecord = {
+  id: string;
+  userId: string;
+  eventType: string;
+  inApp: boolean;
+  push: boolean;
+  email: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type NotifPrefDelegate = {
+  findUnique(args: {
+    where: { userId_eventType: { userId: string; eventType: string } };
+    select?: Record<string, boolean>;
+  }): Promise<NotificationPreferenceRecord | null>;
+  findMany(args?: {
+    where?: { userId?: string };
+    select?: Record<string, boolean>;
+  }): Promise<NotificationPreferenceRecord[]>;
+  upsert(args: {
+    where: { userId_eventType: { userId: string; eventType: string } };
+    create: Omit<NotificationPreferenceRecord, 'id' | 'createdAt' | 'updatedAt'>;
+    update: Partial<Pick<NotificationPreferenceRecord, 'inApp' | 'push' | 'email'>>;
+  }): Promise<NotificationPreferenceRecord>;
+};
+
 // ─── Extended client type ─────────────────────────────────────────────────────
 
 /** PrismaClient extended with models added after the last `prisma generate`. */
 type AppPrismaClient = PrismaClient & {
   announcementBar: AnnBarDelegate;
   adminUser: AdminUserDelegate;
+  pushSubscription: PushSubDelegate;
+  notificationPreference: NotifPrefDelegate;
 };
 
 // ── Singleton ────────────────────────────────────────────────────────────────
