@@ -6,6 +6,16 @@ import BottomNav from './BottomNav';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 
+// Register the admin service worker once on mount (needed for push notifications).
+function useServiceWorker() {
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/admin/' })
+      .catch((err) => console.warn('[sw] registration failed:', err));
+  }, []);
+}
+
 const TITLE_MAP: ReadonlyArray<readonly [string, string]> = [
   ['/admin/leads', 'All Leads'],
   ['/admin/corporate', 'Corporate'],
@@ -35,6 +45,7 @@ type AdminShellProps = {
 
 export default function AdminShell({ children, permissions, role }: AdminShellProps): JSX.Element {
   const pathname = usePathname() ?? '';
+  useServiceWorker();
 
   const isLoginRoute = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
 

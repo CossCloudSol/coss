@@ -1,6 +1,20 @@
+import webPush from 'web-push';
 import { AdminRole } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { sendEmail, buildInstantEmail } from '@/lib/email';
+
+// Configured once — idempotent, safe to call on each import in a serverless env.
+if (
+  process.env.VAPID_PUBLIC_KEY &&
+  process.env.VAPID_PRIVATE_KEY &&
+  process.env.VAPID_SUBJECT
+) {
+  webPush.setVapidDetails(
+    process.env.VAPID_SUBJECT,
+    process.env.VAPID_PUBLIC_KEY,
+    process.env.VAPID_PRIVATE_KEY,
+  );
+}
 
 export type NotificationType =
   | 'new_lead'
@@ -68,6 +82,14 @@ export async function createNotification(input: CreateNotificationInput) {
     } catch (err) {
       console.error('[notifications] urgent email error:', err);
     }
+    try {
+      await sendUrgentPush(
+        { title: input.title, body: input.body, link: input.link ?? null },
+        targetRole,
+      );
+    } catch (err) {
+      console.error('[notifications] urgent push error:', err);
+    }
   }
 
   return notification;
@@ -94,6 +116,45 @@ async function sendUrgentEmails(
         await sendEmail({ to: user.email, subject: notification.title, html });
       } catch (err) {
         console.error(`[notifications] email send failed for ${user.email}:`, err);
+      }
+    }),
+  );
+}
+
+async function sendUrgentPush(
+  notification: { title: string; body: string; link: string | null },
+  targetRole: TargetRole,
+) {
+  const users = await getAdminUsersForRole(targetRole);
+  if (users.length === 0) return;
+
+  const userIds = users.map((u) => u.id);
+  const subscriptions = await prisma.pushSubscription.findMany({
+    where: { adminUserId: { in: userIds } },
+  });
+  if (subscriptions.length === 0) return;
+
+  const payload = JSON.stringify({
+    title: notification.title,
+    body: notification.body,
+    url: notification.link ?? '/admin',
+  });
+
+  await Promise.allSettled(
+    subscriptions.map(async (sub) => {
+      try {
+        await webPush.sendNotification(
+          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
+          payload,
+        );
+      } catch (err: unknown) {
+        const status = (err as { statusCode?: number }).statusCode;
+        if (status === 410 || status === 404) {
+          // Subscription expired or invalid — clean it up so it stops failing.
+          await prisma.pushSubscription.delete({ where: { id: sub.id } }).catch(() => {});
+        } else {
+          console.error(`[notifications] push send failed for endpoint ${sub.endpoint.slice(0, 40)}…:`, err);
+        }
       }
     }),
   );

@@ -112,18 +112,34 @@ enum AdminRole {
 }
 
 model AdminUser {
-  id           String    @id @default(cuid())
-  name         String
-  email        String    @unique
-  passwordHash String
-  role         AdminRole @default(ADMISSIONS_SALES)
-  permissions  String[]
-  isActive     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                String             @id @default(cuid())
+  name              String
+  email             String             @unique
+  passwordHash      String
+  role              AdminRole          @default(ADMISSIONS_SALES)
+  permissions       String[]
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  pushSubscriptions PushSubscription[]
 
   @@index([email])
   @@index([role])
+}
+
+/// Web Push subscriptions for admin users. One user can have many (phone + desktop).
+model PushSubscription {
+  id          String    @id @default(cuid())
+  adminUserId String
+  endpoint    String    @unique
+  p256dh      String
+  auth        String
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
 }
 
 /// Category grouping for courses. isLegacy=true rows have locked slugs.

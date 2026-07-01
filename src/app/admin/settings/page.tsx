@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Bell,
   Check,
   ChevronDown,
   Loader2,
@@ -18,6 +19,7 @@ import {
   ROLE_PERMISSIONS,
   type Permission,
 } from '@/lib/permissions';
+import PushNotificationPanel from '@/components/admin/PushNotificationPanel';
 
 // ─── Site Settings Types ─────────────────────────────────────────────────────
 
@@ -1072,6 +1074,20 @@ export default function SettingsPage(): JSX.Element {
 
       {/* ── Site Settings ─────────────────────────────────────────────────── */}
       <SiteSettingsPanel />
+
+      {/* ── Push Notifications ───────────────────────────────────────────── */}
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+        <div className="flex items-center gap-3 mb-2">
+          <Bell className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Push Notifications</h2>
+        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Receive instant browser alerts for new leads and corporate proposals.
+        </p>
+        <div className="bg-white dark:bg-gray-800 border border-[#e2e8f0] dark:border-white/10 rounded-xl p-6">
+          <PushNotificationPanel />
+        </div>
+      </div>
 
       {/* ── Team Management divider ──────────────────────────────────────── */}
       <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
