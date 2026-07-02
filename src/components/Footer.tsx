@@ -185,8 +185,8 @@ export default function Footer() {
                 <div className="footer-branch-map">
                   <iframe
                     src={b.mapEmbed}
-                    width="100%"
-                    height="110"
+                    width="600"
+                    height="400"
                     loading="lazy"
                     style={{ border: 0, pointerEvents: 'none', display: 'block' }}
                     referrerPolicy="no-referrer-when-downgrade"
@@ -313,8 +313,8 @@ export default function Footer() {
               <div className="footer-mbranch-map">
                 <iframe
                   src={b.mapEmbed}
-                  width="80"
-                  height="60"
+                  width="240"
+                  height="160"
                   loading="lazy"
                   style={{ border: 0, pointerEvents: 'none', display: 'block' }}
                   referrerPolicy="no-referrer-when-downgrade"
