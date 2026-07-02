@@ -138,6 +138,8 @@ export function CourseSidebarNav({ active }: { active?: string }) {
     { label: 'Software Testing & OS',         href: '/courses/software-testing-os/' },
     { label: 'Digital & Design',              href: '/courses/digital-design/' },
     { label: 'Professional & Soft Skills',    href: '/courses/professional-soft-skills/' },
+    { label: 'Human Resource',                href: '/courses/human-resource/' },
+    { label: 'Quantum Computing',             href: '/courses/quantum-computing/' },
   ];
 
   return (
