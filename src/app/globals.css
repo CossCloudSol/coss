@@ -440,16 +440,18 @@ img { max-width: 100%; height: auto; display: block; }
    HERO
 ══════════════════════════════════════════════════ */
 .hero-section {
-  background: linear-gradient(135deg, #03111a 0%, #062232 25%, #094055 55%, #0c5068 80%, #0e5e79 100%);
+  background: #03111a url('https://res.cloudinary.com/dfditihuw/image/upload/v1782962375/cosscloudsol/site-images/hero-bg.png') center center / cover no-repeat;
   color: #fff; padding: 70px 0 60px; position: relative; overflow: hidden;
 }
-/* Multi-layer colour glow — orange spotlight right, teal haze left, blue crown top */
+/* Dark gradient scrim — lighter at top (image shows through), heavier at bottom (text contrast) */
+/* Accent glows retained at lower opacity to complement the image's own teal tones           */
 .hero-section::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background:
-    radial-gradient(ellipse 65% 80% at 82% 45%, rgba(228,117,56,0.38) 0%, transparent 65%),
-    radial-gradient(ellipse 55% 55% at 12% 80%, rgba(79,209,197,0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 50% at 50% 0%,  rgba(14,116,144,0.55) 0%, transparent 60%);
+    linear-gradient(180deg, rgba(10,18,28,0.42) 0%, rgba(10,18,28,0.58) 50%, rgba(10,18,28,0.76) 100%),
+    radial-gradient(ellipse 65% 80% at 82% 45%, rgba(228,117,56,0.20) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 55% at 12% 80%, rgba(79,209,197,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 0%,  rgba(14,116,144,0.28) 0%, transparent 60%);
 }
 /* Dot-matrix grid overlay */
 .hero-section::after {
