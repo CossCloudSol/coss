@@ -707,9 +707,9 @@ img { max-width: 100%; height: auto; display: block; }
 /* Branch cards — stacked inside col-5 on desktop, side-by-side on tablet */
 .footer-branches-flex { display: flex; flex-direction: column; gap: 14px; }
 .footer-branch-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px 12px; }
-.footer-branch-map { width: 130px; height: 75px; overflow: hidden; position: relative; border-radius: 6px; margin-bottom: 8px; }
-/* iframe is larger than the wrapper; negative offsets crop it to show only the clean centre area (hides attribution bar, zoom controls, "Maps ↗" button) */
-.footer-branch-map iframe { width: 600px; height: 400px; position: absolute; top: -150px; left: -235px; display: block; }
+.footer-branch-map { width: 100%; height: 140px; overflow: hidden; position: relative; border-radius: 6px; margin-bottom: 8px; }
+/* iframe larger than wrapper; negative offsets crop to show only the clean centre area */
+.footer-branch-map iframe { width: 600px; height: 400px; position: absolute; top: -130px; left: -185px; display: block; }
 .footer-branch-info { }
 .footer-branch-name { font-size: 13px; font-weight: 600; color: var(--footer-heading); margin-bottom: 4px; }
 .footer-branch-address { font-size: 11px; color: var(--footer-text); line-height: 1.5; margin-bottom: 6px; }
@@ -721,28 +721,27 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-btm-links { display: flex; gap: 16px; }
 .footer-btm-links a { color: var(--footer-text); transition: color 0.2s; }
 .footer-btm-links a:hover { color: var(--primary); }
-/* Nav columns: on desktop, <details> acts as a plain grid column */
-/* summary looks like a heading; chevron and toggle behaviour are disabled */
+/* Nav columns: plain heading+list on desktop, accordion toggle on mobile */
 .footer-nav-col { }
 .footer-nav-summary {
-  list-style: none;
-  pointer-events: none;
-  cursor: default;
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--primary);
+  padding: 0 0 8px;
+  text-align: left;
   font-family: var(--font-raleway, 'Raleway'), sans-serif;
   font-size: 15px;
   font-weight: 600;
   color: var(--footer-heading);
   margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--primary);
   display: block;
   width: 100%;
+  pointer-events: none;
+  cursor: default;
 }
-.footer-nav-summary::-webkit-details-marker,
-.footer-nav-summary::marker { display: none; }
 .footer-nav-summary .footer-acc-chevron { display: none; }
-/* Override UA stylesheet — force nav body visible on desktop regardless of [open] */
-details.footer-nav-col > .footer-nav-body { display: block; }
+/* Link list always visible on desktop */
+.footer-navcol-body { display: block; list-style: none; padding: 0; margin: 0; }
 /* Mobile quick-action buttons are only shown on small screens */
 .footer-mquick { display: none; }
 
@@ -1030,11 +1029,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .footer-maction { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 10px 6px; border-radius: 6px; font-size: 12px; font-weight: 600; color: var(--footer-heading); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: background 0.2s; }
   .footer-maction:hover { background: rgba(255,255,255,0.1); }
   /* Nav col accordions on mobile */
-  details.footer-nav-col { border-bottom: 1px solid rgba(255,255,255,0.08); }
-  /* Revert forced-open body; let native <details> toggle control visibility */
-  details.footer-nav-col > .footer-nav-body { display: none; }
-  details.footer-nav-col[open] > .footer-nav-body { display: block; padding-bottom: 14px; }
-  /* Summary becomes interactive toggle on mobile */
+  .footer-nav-col { border-bottom: 1px solid rgba(255,255,255,0.08); }
+  /* Hide link list; reveal when toggled open */
+  .footer-navcol-body { display: none; }
+  .footer-navcol-body.open { display: block; padding-bottom: 14px; }
+  /* Summary button becomes interactive toggle on mobile */
   .footer-nav-summary {
     pointer-events: auto;
     cursor: pointer;
@@ -1050,7 +1049,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   }
   .footer-nav-summary .footer-acc-chevron { display: flex; }
   .footer-acc-chevron { transition: transform 0.25s ease; flex-shrink: 0; color: var(--footer-text); display: flex; }
-  details[open] .footer-acc-chevron { transform: rotate(180deg); }
+  .footer-nav-summary[aria-expanded="true"] .footer-acc-chevron { transform: rotate(180deg); }
   /* Branch cards: horizontal layout on mobile (small map left, info right) */
   .footer-col-branches { margin-top: 4px; }
   .footer-branches-flex { flex-direction: column; }

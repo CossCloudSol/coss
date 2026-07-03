@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import FooterLogo from './FooterLogo'
+import FooterNavCol from './FooterNavCol'
 import { getTrustStats } from '@/lib/getTrustStats'
 
 const CATEGORIES = [
@@ -104,12 +105,6 @@ const SOCIALS = [
   },
 ]
 
-const ChevronDown = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="m6 9 6 6 6-6"/>
-  </svg>
-)
-
 export default async function Footer() {
   const { rating: RATING, reviewDisplay: REVIEW_COUNT } = await getTrustStats()
   const year = new Date().getFullYear()
@@ -182,44 +177,14 @@ export default async function Footer() {
           </div>
         </div>
 
-        {/* Col 2 — Courses: <details> acts as plain col on desktop, accordion on mobile */}
-        <details className="footer-nav-col">
-          <summary className="footer-nav-summary">
-            Courses
-            <span className="footer-acc-chevron" aria-hidden="true"><ChevronDown /></span>
-          </summary>
-          <div className="footer-nav-body">
-            {CATEGORIES.map(c => (
-              <Link key={c.href} href={c.href} className="footer-link">{c.label}</Link>
-            ))}
-          </div>
-        </details>
+        {/* Col 2 — Courses: accordion on mobile, plain column on desktop */}
+        <FooterNavCol title="Courses" links={CATEGORIES} />
 
         {/* Col 3 — Company */}
-        <details className="footer-nav-col">
-          <summary className="footer-nav-summary">
-            Company
-            <span className="footer-acc-chevron" aria-hidden="true"><ChevronDown /></span>
-          </summary>
-          <div className="footer-nav-body">
-            {COMPANY.map(l => (
-              <Link key={l.href} href={l.href} className="footer-link">{l.label}</Link>
-            ))}
-          </div>
-        </details>
+        <FooterNavCol title="Company" links={COMPANY} />
 
         {/* Col 4 — Resources */}
-        <details className="footer-nav-col">
-          <summary className="footer-nav-summary">
-            Resources
-            <span className="footer-acc-chevron" aria-hidden="true"><ChevronDown /></span>
-          </summary>
-          <div className="footer-nav-body">
-            {RESOURCES.map(r => (
-              <Link key={r.href} href={r.href} className="footer-link">{r.label}</Link>
-            ))}
-          </div>
-        </details>
+        <FooterNavCol title="Resources" links={RESOURCES} />
 
         {/* Col 5 — Our Branches */}
         <div className="footer-col footer-col-branches">
