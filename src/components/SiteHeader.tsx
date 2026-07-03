@@ -73,6 +73,23 @@ export default function SiteHeader() {
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
 
+  /* ── Escape key closes mobile drawer ── */
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape' && mobileOpen) {
+        setMobileOpen(false);
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileOpen]);
+
+  /* ── Body scroll lock while drawer is open ── */
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   function closeAll() {
     setMobileOpen(false);
     setCoursesOpen(false);

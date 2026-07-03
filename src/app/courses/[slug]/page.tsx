@@ -9,6 +9,7 @@ import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
 import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
+import { sanitizeDescription, excerptDescription } from '@/lib/sanitizeDescription';
 
 export const dynamic = 'force-dynamic';
 
@@ -206,7 +207,7 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
             {course.title}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '24px' }}>
-            {course.excerpt}
+            {sanitizeDescription(course.excerpt)}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
             {[
@@ -233,7 +234,7 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
           <div>
             <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)', marginBottom: '24px' }}>
               <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>Course Overview</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{course.description}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{sanitizeDescription(course.description)}</p>
             </div>
 
             {course.highlights.length > 0 && (
@@ -242,7 +243,7 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
                 <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px', listStyle: 'none', padding: 0, margin: 0 }}>
                   {course.highlights.map((h, i) => (
                     <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: 'var(--text-muted)', fontSize: '13.5px' }}>
-                      <span style={{ color: '#0f766e', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>✓</span> {h}
+                      <span style={{ color: '#0f766e', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>✓</span> {sanitizeDescription(h)}
                     </li>
                   ))}
                 </ul>
@@ -275,10 +276,10 @@ function CourseDetailView({ course }: { course: CourseDetail }) {
                       </summary>
                       {(item.details || (item.topics && item.topics.length > 0)) && (
                         <div style={{ padding: '0 0 14px 38px', color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.7' }}>
-                          {item.details}
+                          {sanitizeDescription(item.details)}
                           {item.topics && item.topics.length > 0 && (
                             <ul style={{ margin: '4px 0 0', paddingLeft: '16px' }}>
-                              {item.topics.map((t, ti) => <li key={ti}>{t}</li>)}
+                              {item.topics.map((t, ti) => <li key={ti}>{sanitizeDescription(t)}</li>)}
                             </ul>
                           )}
                         </div>
@@ -440,7 +441,7 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
           </div>
           {category.description && (
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '16px' }}>
-              {category.description}
+              {sanitizeDescription(category.description)}
             </p>
           )}
           <span style={{ background: 'rgba(255,255,255,0.12)', color: '#fff', fontSize: '13px', padding: '6px 14px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif' }}>
@@ -473,11 +474,7 @@ function CategoryLandingView({ category }: { category: CategoryDetail }) {
                 rating: course.rating ?? 4.8,
                 reviewCount: String(course.reviews ?? course.reviewCount ?? '120+'),
                 enrolledCount: String(course.enrolled ?? course.enrolledCount ?? '500+'),
-                description: (() => {
-                    const raw = course.description ?? course.excerpt ?? ''
-                    const plain = raw.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
-                    return plain.length > 120 ? plain.slice(0, 120).trim() + '...' : plain
-                  })(),
+                description: excerptDescription(course.description ?? course.excerpt, 120),
                 highlights: [
                   course.highlight1 ?? course.highlights?.[0] ?? 'Industry-relevant curriculum',
                   course.highlight2 ?? course.highlights?.[1] ?? 'Placement support included',

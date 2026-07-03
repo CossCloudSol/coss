@@ -1,6 +1,16 @@
 import { GraduationCap, Mail, MapPin, Phone, Star } from 'lucide-react';
+import { getHomepageSettings } from '@/lib/get-homepage-settings';
+import { getBranchSettings } from '@/lib/get-branch-settings';
 
-export default function TopInfoBar() {
+export default async function TopInfoBar() {
+  const [hpSettings, branch] = await Promise.all([
+    getHomepageSettings(),
+    getBranchSettings('dilsukhnagar'),
+  ]);
+
+  const rating = branch.aggregateRating.toFixed(1);
+  const studentsPlaced = hpSettings.stat2Value;
+
   return (
     <div className="header-topbar">
       <div className="header-topbar-inner">
@@ -28,12 +38,12 @@ export default function TopInfoBar() {
           <span className="htb-sep" aria-hidden="true">·</span>
           <span className="htb-item">
             <Star className="htb-icon htb-star" aria-hidden="true" />
-            <strong>4.8/5</strong>&nbsp;Google Rating
+            <strong>{rating}/5</strong>&nbsp;Google Rating
           </span>
           <span className="htb-sep" aria-hidden="true">·</span>
           <span className="htb-badge">
             <GraduationCap className="htb-icon" style={{ width: 12, height: 12 }} aria-hidden="true" />
-            1200+ Placements
+            {studentsPlaced} Placements
           </span>
         </div>
       </div>

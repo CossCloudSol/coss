@@ -6,6 +6,7 @@ import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
+import { sanitizeDescription } from '@/lib/sanitizeDescription';
 
 export const dynamic = 'force-dynamic';
 
@@ -121,7 +122,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
             {course.title}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '24px' }}>
-            {course.excerpt}
+            {sanitizeDescription(course.excerpt)}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
             {[
@@ -148,7 +149,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
           <div>
             <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)', marginBottom: '24px' }}>
               <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>Course Overview</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{course.description}</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{sanitizeDescription(course.description)}</p>
             </div>
 
             {course.highlights.length > 0 && (
@@ -157,7 +158,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                 <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '10px', listStyle: 'none', padding: 0, margin: 0 }}>
                   {course.highlights.map((h, i) => (
                     <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', color: 'var(--text-muted)', fontSize: '13.5px' }}>
-                      <span style={{ color: '#0f766e', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>✓</span> {h}
+                      <span style={{ color: '#0f766e', fontWeight: 700, marginTop: '1px', flexShrink: 0 }}>✓</span> {sanitizeDescription(h)}
                     </li>
                   ))}
                 </ul>
@@ -190,10 +191,10 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                       </summary>
                       {(item.details || (item.topics && item.topics.length > 0)) && (
                         <div style={{ padding: '0 0 14px 38px', color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.7' }}>
-                          {item.details}
+                          {sanitizeDescription(item.details)}
                           {item.topics && item.topics.length > 0 && (
                             <ul style={{ margin: '4px 0 0', paddingLeft: '16px' }}>
-                              {item.topics.map((t, ti) => <li key={ti}>{t}</li>)}
+                              {item.topics.map((t, ti) => <li key={ti}>{sanitizeDescription(t)}</li>)}
                             </ul>
                           )}
                         </div>

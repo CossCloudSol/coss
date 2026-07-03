@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
+import { sanitizeDescription } from '@/lib/sanitizeDescription'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
 
 interface HiringPartner {
@@ -109,7 +110,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
   const h1 = `${course.title} in Hyderabad`
   const categoryName = course.courseCategory?.name ?? course.category
   const titleWithoutTraining = course.title.replace(/\s*Training$/i, '').replace(/\s*Course$/i, '')
-  const desc = course.excerpt || course.description
+  const desc = sanitizeDescription(course.excerpt || course.description)
   const tags = course.tools.slice(0, 5)
   const salaryRoles = getSalaryRoles(categoryName)
 

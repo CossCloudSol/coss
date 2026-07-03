@@ -4,6 +4,8 @@ import { buildPageMetadata } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
 import { getHomepageSettings } from '@/lib/get-homepage-settings';
 import { getCourseUrl } from '@/lib/course-url';
+import { excerptDescription } from '@/lib/sanitizeDescription';
+import { getBranchSettings } from '@/lib/get-branch-settings';
 import {
   Award,
   BarChart2,
@@ -213,12 +215,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const CORP_FEATURES: Array<{ Icon: LucideIcon; text: string }> = [
-  { Icon: Users,         text: 'Highly Caliber and experienced Faculty.' },
-  { Icon: Building,      text: 'Special Batches for Hyderabad Corporate Clients.' },
-  { Icon: Award,         text: 'Certified instructor led training.' },
-  { Icon: Clock,         text: 'Classes at their flexible timings.' },
-  { Icon: Settings,      text: 'Customized approach, week end workshops on advanced technologies.' },
-  { Icon: MessageSquare, text: 'Informed by in-depth needs analysis and focus-group discussion.' },
+  { Icon: Users,         text: 'Highly experienced, industry-certified faculty.' },
+  { Icon: Building,      text: 'Dedicated batches for Hyderabad corporate clients.' },
+  { Icon: Award,         text: 'Certified instructor-led training.' },
+  { Icon: Clock,         text: 'Flexible class timings to suit your teams.' },
+  { Icon: Settings,      text: 'Customised approach with weekend workshops on advanced technologies.' },
+  { Icon: MessageSquare, text: 'Programs shaped by in-depth training-needs analysis.' },
 ];
 
 const CORP_BADGES: Array<{ label: string; Icon: LucideIcon }> = [
@@ -247,7 +249,7 @@ async function getFeaturedJobs() {
         OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
       },
       orderBy: { postedAt: 'desc' },
-      take: 4,
+      take: 6,
       select: { id: true, title: true, company: true, category: true, salary: true, mode: true },
     });
   } catch { return []; }
@@ -255,21 +257,44 @@ async function getFeaturedJobs() {
 
 async function getUpcomingBatches() {
   try {
-    return await prisma.batch.findMany({
-      where: { status: { in: ['upcoming', 'ongoing'] }, featured: true },
+    // IST = UTC+5:30; startDate must be today or later (IST midnight)
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const nowIST = new Date(now.getTime() + istOffset);
+    const todayMidnightIST = new Date(
+      Date.UTC(nowIST.getUTCFullYear(), nowIST.getUTCMonth(), nowIST.getUTCDate()) - istOffset
+    );
+
+    const all = await prisma.batch.findMany({
+      where: {
+        status: { in: ['upcoming', 'ongoing'] },
+        featured: true,
+        startDate: { gte: todayMidnightIST },
+      },
       include: { course: { select: { title: true, categorySlug: true } } },
       orderBy: { startDate: 'asc' },
-      take: 3,
+      take: 20,
     });
+
+    // Deduplicate: one earliest batch per course
+    const seen = new Set<string>();
+    const deduped: typeof all = [];
+    for (const b of all) {
+      if (!seen.has(b.courseId)) {
+        seen.add(b.courseId);
+        deduped.push(b);
+      }
+    }
+    return deduped.slice(0, 3);
   } catch { return []; }
 }
 
 async function getBlogPosts() {
   try {
-    return await prisma.blogPost.findMany({
+    const posts = await prisma.blogPost.findMany({
       where: { status: 'published' },
       orderBy: { createdAt: 'desc' },
-      take: 3,
+      take: 10,
       select: {
         id: true,
         title: true,
@@ -279,17 +304,20 @@ async function getBlogPosts() {
         category: true,
       },
     });
+    // Guard against junk slugs (e.g. /blog/a) — require slug length >= 4
+    return posts.filter(p => p.slug.length >= 4).slice(0, 3);
   } catch { return []; }
 }
 
 export default async function HomePage() {
-  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners] = await Promise.all([
+  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners, branch] = await Promise.all([
     getCategories(),
     getFeaturedJobs(),
     getUpcomingBatches(),
     getHomepageSettings(),
     getBlogPosts(),
     getHiringPartners(),
+    getBranchSettings('dilsukhnagar'),
   ]);
 
   const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
@@ -424,8 +452,8 @@ export default async function HomePage() {
                 </p>
               )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredCourses.slice(0, 8).map((course, index) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredCourses.slice(0, 6).map((course, index) => {
                 const isNew = new Date(course.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
                 const isFirst = index === 0;
                 const badgeText = isFirst ? 'Most Popular' : isNew ? 'Newly Added' : null;
@@ -433,6 +461,7 @@ export default async function HomePage() {
                 const formattedPrice = course.price != null
                   ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(course.price)
                   : null;
+                const cardExcerpt = excerptDescription(course.excerpt || course.description);
 
                 return (
                   <div key={course.id} className="rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-transparent hover:border-l-orange-500">
@@ -466,9 +495,9 @@ export default async function HomePage() {
                     </div>
                     {/* White body */}
                     <div className="bg-white dark:bg-gray-800 p-5 flex flex-col gap-4 flex-1 border-t border-gray-100 dark:border-gray-700">
-                      {course.description && (
-                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3">
-                          {course.description}
+                      {cardExcerpt && (
+                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 flex-1">
+                          {cardExcerpt}
                         </p>
                       )}
                       <div className="flex items-center justify-between mt-auto pt-2">
@@ -517,7 +546,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
@@ -541,24 +570,24 @@ export default async function HomePage() {
                       <h3 className="font-semibold text-sm sm:text-base leading-snug text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
                         {cat.name}
                       </h3>
+                      {(() => { const n = cat._count?.courses ?? 0; return (
                       <span
                         className="inline-block mt-1 text-[10px] sm:text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
                         style={{ background: getCategoryAccent(cat.slug) }}
                       >
-                        {cat._count?.courses ?? 0} courses
+                        {n} {n === 1 ? 'course' : 'courses'}
                       </span>
+                      ); })()}
                     </div>
                   </div>
 
-                  {/* Description */}
-                  {cat.description && (
-                    <p
-                      className="text-slate-400 text-xs leading-relaxed mb-4"
-                      style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                    >
-                      {cat.description}
-                    </p>
-                  )}
+                  {/* Description — always rendered for equal card heights */}
+                  <p
+                    className="text-slate-400 text-xs leading-relaxed mb-4 min-h-[2.5rem]"
+                    style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                  >
+                    {cat.description || 'Industry-focused training with placement support in Hyderabad.'}
+                  </p>
 
                   {/* CTA row */}
                   <div className="flex items-center justify-between mb-4">
@@ -594,52 +623,61 @@ export default async function HomePage() {
       </section>
 
       {/* ── Upcoming Batches Widget ── */}
-      {upcomingBatches.length > 0 && (
-        <section className="section section-light" aria-label="Upcoming batches">
-          <div className="section-inner">
-            <div className="section-header">
-              <div className="section-tag">Training Schedule</div>
-              <h2 className="section-title">Batches Starting Soon</h2>
-              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-              <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
-              {upcomingBatches.map((batch) => {
-                const d = new Date(batch.startDate);
-                const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
-                const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
-                const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
-                return (
-                  <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
-                    <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
-                      <span className="text-base font-extrabold leading-none">{day}</span>
-                      <span className="text-[10px] font-bold leading-none">{mon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
-                      {batch.mode === 'Online' ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
-                          <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
-                        </span>
-                      ) : seatsOk ? (
-                        <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
-                          {batch.seatsAvailable} seats left
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="center-btn mt-6">
-              <Link href="/batches" className="btn-primary" style={{ display: 'inline-flex' }}>
-                View all upcoming batches →
-              </Link>
-            </div>
+      <section className="section section-light" aria-label="Upcoming batches">
+        <div className="section-inner">
+          <div className="section-header">
+            <div className="section-tag">Training Schedule</div>
+            <h2 className="section-title">Batches Starting Soon</h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
+            <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
           </div>
-        </section>
-      )}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+            {upcomingBatches.map((batch) => {
+              const d = new Date(batch.startDate);
+              const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
+              const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
+              const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
+              return (
+                <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
+                  <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
+                    <span className="text-base font-extrabold leading-none">{day}</span>
+                    <span className="text-[10px] font-bold leading-none">{mon}</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
+                    {batch.mode === 'Online' ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
+                        <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
+                      </span>
+                    ) : seatsOk ? (
+                      <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
+                        {batch.seatsAvailable} seats left
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+            {/* Fallback card when fewer than 3 upcoming batches */}
+            {upcomingBatches.length < 3 && (
+              <Link
+                href="/batches"
+                className="rounded-2xl border-2 border-dashed border-teal-300 dark:border-teal-700 bg-white dark:bg-gray-800 p-5 flex flex-col items-center justify-center gap-2 text-center hover:border-teal-500 transition-colors"
+              >
+                <Calendar className="w-7 h-7 text-teal-600 dark:text-teal-400" aria-hidden="true" />
+                <p className="font-semibold text-gray-800 dark:text-gray-100 text-sm">New batches announced weekly</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Call <strong>+91 88851 66007</strong> to reserve your seat</p>
+              </Link>
+            )}
+          </div>
+          <div className="center-btn mt-6">
+            <Link href="/batches" className="btn-primary" style={{ display: 'inline-flex' }}>
+              View all upcoming batches →
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* ── Corporate Training (homepage section) ── */}
       <section className="py-16 px-4 md:px-8 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #061c26 0%, #083344 55%, #0a3d4f 100%)' }}>
@@ -865,28 +903,6 @@ export default async function HomePage() {
             </p>
           </div>
 
-          {/* ── Stats Bar ── */}
-          {hpSettings.showStats && (
-          <div className="wcu-stats-bar">
-            {[
-              { Icon: Users,     number: hpSettings.stat2Value, label: hpSettings.stat2Label },
-              { Icon: Briefcase, number: hpSettings.stat4Value, label: hpSettings.stat4Label },
-              { Icon: Award,     number: hpSettings.stat3Value, label: hpSettings.stat3Label },
-              { Icon: Shield,    number: hpSettings.stat1Value, label: hpSettings.stat1Label },
-            ].map(({ Icon, number, label }, i) => (
-              <div key={label} className="wcu-stat-item">
-                {i > 0 && <div className="wcu-stat-divider" aria-hidden="true" />}
-                <div className="wcu-stat-icon-wrap" aria-hidden="true">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="wcu-stat-number">{number}</div>
-                  <div className="wcu-stat-label">{label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-          )}
 
           {/* ── Feature Cards ── */}
           <div className="wcu-cards-layout">
@@ -1000,7 +1016,7 @@ export default async function HomePage() {
               style={{ background: 'rgba(20,184,166,0.12)', border: '1px solid rgba(20,184,166,0.28)', color: '#2dd4bf' }}
             >
               <Briefcase className="w-3.5 h-3.5" aria-hidden="true" />
-              200+ Hiring Partners
+              {hpSettings.stat4Value} {hpSettings.stat4Label}
             </div>
             <h2 className="font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(26px,4vw,40px)' }}>
               Our Graduates Get Hired at{' '}
@@ -1011,27 +1027,6 @@ export default async function HomePage() {
               From resume prep to mock interviews — we connect you directly with recruiters.
               5,000+ alumni now work at companies like these.
             </p>
-          </div>
-
-          {/* ── Trust stats row ── */}
-          <div
-            className="grid grid-cols-3 max-w-xl mx-auto mb-10 rounded-2xl overflow-hidden"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            {([
-              { value: '200+',  label: 'Hiring Partners',    color: '#2dd4bf' },
-              { value: '5,000+', label: 'Students Placed',   color: '#fff'    },
-              { value: '100%',  label: 'Placement Support',  color: '#fb923c' },
-            ] as const).map(({ value, label, color }, i) => (
-              <div
-                key={label}
-                className="py-4 text-center"
-                style={i > 0 ? { borderLeft: '1px solid rgba(255,255,255,0.08)' } : undefined}
-              >
-                <p className="text-2xl font-extrabold" style={{ color }}>{value}</p>
-                <p className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>{label}</p>
-              </div>
-            ))}
           </div>
 
           {/* ── Logo grid — white cards on dark bg so original logo colours show ── */}
@@ -1093,8 +1088,8 @@ export default async function HomePage() {
         </div>
       </section>}
 
-      {/* ── Latest Jobs Widget ── */}
-      {featuredJobs.length > 0 && (
+      {/* ── Latest Jobs Widget — only shown when >= 3 active featured jobs ── */}
+      {featuredJobs.length >= 3 && (
         <section className="section section-white" aria-label="Job openings">
           <div className="section-inner">
             <div className="section-header">
@@ -1103,14 +1098,14 @@ export default async function HomePage() {
               <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
               <p className="section-subtitle">Partner companies actively hiring in Hyderabad</p>
             </div>
-            <div className="flex flex-col gap-3 max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
               {featuredJobs.map((job) => {
                 const color = '#0f766e';
                 const initial = job.company.trim()[0]?.toUpperCase() ?? '?';
                 return (
                   <Link
                     key={job.id}
-                    href={`/jobs`}
+                    href="/jobs"
                     className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
                     style={{ textDecoration: 'none' }}
                   >
@@ -1145,10 +1140,16 @@ export default async function HomePage() {
             <div className="section-tag">Student Reviews</div>
             <h2 className="section-title">What Our Students Say</h2>
             <div className="w-24 h-0.5 bg-teal-500 mx-auto mt-3 mb-3" aria-hidden="true" />
-            {/* Aggregate rating */}
+            {/* Aggregate rating — sourced from BranchSettings (Dilsukhnagar) */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '4px' }}>
-              <span className="css-stars" aria-label="5 out of 5 stars" role="img">★★★★★</span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>4.9 / 5 — 200+ Google Reviews</span>
+              <span className="css-stars" aria-label={`${branch.aggregateRating.toFixed(1)} out of 5 stars`} role="img">★★★★★</span>
+              <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
+                {branch.aggregateRating.toFixed(1)} / 5 —{' '}
+                {branch.reviewCount > 0
+                  ? `${branch.reviewCount.toLocaleString('en-IN')}+`
+                  : '1,200+'
+                } Google Reviews
+              </span>
             </div>
           </div>
 
@@ -1226,7 +1227,6 @@ export default async function HomePage() {
                       <span className="blog-date-mon">{mon}</span>
                     </div>
                     <p className="blog-card-brand">Coss Cloud Solutions</p>
-                    <p className="blog-card-img-title">{post.title}</p>
                     {post.category && <span className="blog-card-pill">{post.category}</span>}
                   </div>
                   <div className="blog-card-body">

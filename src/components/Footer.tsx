@@ -1,9 +1,6 @@
 import Link from 'next/link'
 import FooterLogo from './FooterLogo'
-
-// Review count is a hardcoded placeholder — needs a live source (Google Business API or admin setting)
-const REVIEW_COUNT = '1,200+'
-const RATING = '4.8'
+import { getTrustStats } from '@/lib/getTrustStats'
 
 const CATEGORIES = [
   { label: 'Data, Analytics & BI',               href: '/courses/data-analytics-bi/' },
@@ -29,11 +26,10 @@ const COMPANY = [
   { label: 'Contact Us',        href: '/contact-us/' },
 ]
 
-// Only routes confirmed to exist in the codebase (FAQs and Brochure pages do not exist)
 const RESOURCES = [
   { label: 'Job Openings',      href: '/jobs/' },
   { label: 'Upcoming Batches',  href: '/batches/' },
-  { label: 'Blog',              href: '/blogs/' },
+  { label: 'Blog',              href: '/blog/' },
 ]
 
 const BRANCHES = [
@@ -108,14 +104,21 @@ const SOCIALS = [
   },
 ]
 
-export default function Footer() {
+const ChevronDown = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="m6 9 6 6 6-6"/>
+  </svg>
+)
+
+export default async function Footer() {
+  const { rating: RATING, reviewDisplay: REVIEW_COUNT } = await getTrustStats()
   const year = new Date().getFullYear()
 
   return (
     <footer className="site-footer">
 
-      {/* ── Desktop + Tablet (≥768px) — 5-col grid ── */}
-      <div className="footer-main">
+      {/* ── Single responsive footer grid ── */}
+      <div className="footer-grid">
 
         {/* Col 1 — Brand */}
         <div className="footer-col">
@@ -123,6 +126,8 @@ export default function Footer() {
           <p className="footer-desc">
             Leading IT training institute in Hyderabad with expert trainers, practical labs, and 100% placement support.
           </p>
+
+          {/* Desktop: full contact links (hidden on mobile via CSS) */}
           <div className="footer-clinks">
             <a href="tel:+918885166007" className="footer-clink">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -138,9 +143,32 @@ export default function Footer() {
               info@cosscloudsol.com
             </a>
           </div>
-          {/* 1,200+ review count is a hardcoded placeholder — needs a live source (Google Business API) */}
+
+          {/* Mobile: compact quick-action buttons (hidden on desktop via CSS) */}
+          <div className="footer-mquick">
+            <a href="tel:+918885166007" className="footer-maction">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              Call
+            </a>
+            <a href="mailto:info@cosscloudsol.com" className="footer-maction">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              Email
+            </a>
+            <a href="https://wa.me/918885166007" target="_blank" rel="noopener noreferrer" className="footer-maction">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </a>
+          </div>
+
           <div className="footer-rating">
-            <span style={{ color: '#fbbf24', letterSpacing: '1px' }} aria-label="4.8 out of 5 stars">★★★★★</span>
+            <span style={{ color: '#fbbf24', letterSpacing: '1px' }} aria-label={`${RATING} out of 5 stars`}>★★★★★</span>
             <span className="footer-rating-text">{RATING} · {REVIEW_COUNT} reviews</span>
           </div>
           <div className="footer-socials">
@@ -154,29 +182,44 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Col 2 — Courses (locked category slugs, exact display names from courseData.ts) */}
-        <div className="footer-col">
-          <h4 className="footer-heading">Courses</h4>
-          {CATEGORIES.map(c => (
-            <Link key={c.href} href={c.href} className="footer-link">{c.label}</Link>
-          ))}
-        </div>
+        {/* Col 2 — Courses: <details> acts as plain col on desktop, accordion on mobile */}
+        <details className="footer-nav-col">
+          <summary className="footer-nav-summary">
+            Courses
+            <span className="footer-acc-chevron" aria-hidden="true"><ChevronDown /></span>
+          </summary>
+          <div className="footer-nav-body">
+            {CATEGORIES.map(c => (
+              <Link key={c.href} href={c.href} className="footer-link">{c.label}</Link>
+            ))}
+          </div>
+        </details>
 
         {/* Col 3 — Company */}
-        <div className="footer-col">
-          <h4 className="footer-heading">Company</h4>
-          {COMPANY.map(l => (
-            <Link key={l.href} href={l.href} className="footer-link">{l.label}</Link>
-          ))}
-        </div>
+        <details className="footer-nav-col">
+          <summary className="footer-nav-summary">
+            Company
+            <span className="footer-acc-chevron" aria-hidden="true"><ChevronDown /></span>
+          </summary>
+          <div className="footer-nav-body">
+            {COMPANY.map(l => (
+              <Link key={l.href} href={l.href} className="footer-link">{l.label}</Link>
+            ))}
+          </div>
+        </details>
 
-        {/* Col 4 — Resources (only confirmed routes: jobs, batches, blogs) */}
-        <div className="footer-col">
-          <h4 className="footer-heading">Resources</h4>
-          {RESOURCES.map(r => (
-            <Link key={r.href} href={r.href} className="footer-link">{r.label}</Link>
-          ))}
-        </div>
+        {/* Col 4 — Resources */}
+        <details className="footer-nav-col">
+          <summary className="footer-nav-summary">
+            Resources
+            <span className="footer-acc-chevron" aria-hidden="true"><ChevronDown /></span>
+          </summary>
+          <div className="footer-nav-body">
+            {RESOURCES.map(r => (
+              <Link key={r.href} href={r.href} className="footer-link">{r.label}</Link>
+            ))}
+          </div>
+        </details>
 
         {/* Col 5 — Our Branches */}
         <div className="footer-col footer-col-branches">
@@ -205,133 +248,6 @@ export default function Footer() {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* ── Mobile (<768px) — brand block + native <details> accordions ── */}
-      {/* No 'use client' needed: <details>/<summary> toggle is handled by the browser natively */}
-      <div className="footer-mobile">
-
-        {/* Brand block */}
-        <div className="footer-mobile-brand">
-          <FooterLogo />
-          <p className="footer-desc" style={{ marginTop: '12px' }}>
-            Leading IT training institute in Hyderabad with 100% placement support.
-          </p>
-          {/* 1,200+ review count is a hardcoded placeholder — needs a live source (Google Business API) */}
-          <div className="footer-rating" style={{ marginBottom: '12px' }}>
-            <span style={{ color: '#fbbf24' }} aria-label="4.8 out of 5 stars">★★★★★</span>
-            <span className="footer-rating-text"> {RATING} · {REVIEW_COUNT} reviews</span>
-          </div>
-          {/* 3 quick-action links */}
-          <div className="footer-mquick">
-            <a href="tel:+918885166007" className="footer-maction">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
-              Call
-            </a>
-            <a href="mailto:info@cosscloudsol.com" className="footer-maction">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-              </svg>
-              Email
-            </a>
-            <a href="https://wa.me/918885166007" target="_blank" rel="noopener noreferrer" className="footer-maction">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-              </svg>
-              WhatsApp
-            </a>
-          </div>
-          <div className="footer-socials" style={{ marginTop: '14px' }}>
-            {SOCIALS.map(s => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                className="footer-social-icon" style={{ background: s.bg }}
-                aria-label={s.label}>
-                {s.icon}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Accordion — Courses */}
-        <details className="footer-acc">
-          <summary className="footer-acc-summary">
-            Courses
-            <span className="footer-acc-chevron" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6"/>
-              </svg>
-            </span>
-          </summary>
-          <div className="footer-acc-body">
-            {CATEGORIES.map(c => (
-              <Link key={c.href} href={c.href} className="footer-link">{c.label}</Link>
-            ))}
-          </div>
-        </details>
-
-        {/* Accordion — Company */}
-        <details className="footer-acc">
-          <summary className="footer-acc-summary">
-            Company
-            <span className="footer-acc-chevron" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6"/>
-              </svg>
-            </span>
-          </summary>
-          <div className="footer-acc-body">
-            {COMPANY.map(l => (
-              <Link key={l.href} href={l.href} className="footer-link">{l.label}</Link>
-            ))}
-          </div>
-        </details>
-
-        {/* Accordion — Resources */}
-        <details className="footer-acc">
-          <summary className="footer-acc-summary">
-            Resources
-            <span className="footer-acc-chevron" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m6 9 6 6 6-6"/>
-              </svg>
-            </span>
-          </summary>
-          <div className="footer-acc-body">
-            {RESOURCES.map(r => (
-              <Link key={r.href} href={r.href} className="footer-link">{r.label}</Link>
-            ))}
-          </div>
-        </details>
-
-        {/* Branch cards — horizontal thumbnail layout */}
-        <div className="footer-mbranches">
-          <h4 className="footer-heading" style={{ marginTop: '20px' }}>Our Branches</h4>
-          {BRANCHES.map(b => (
-            <div key={b.name} className="footer-mbranch-card">
-              <div className="footer-mbranch-map">
-                <iframe
-                  src={b.mapEmbed}
-                  width="240"
-                  height="160"
-                  loading="lazy"
-                  style={{ border: 0, pointerEvents: 'none', display: 'block' }}
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title={`Map – ${b.name} branch`}
-                />
-              </div>
-              <div className="footer-mbranch-info">
-                <p className="footer-mbranch-name">{b.name}</p>
-                <p className="footer-mbranch-addr">{b.address}</p>
-                <a href={b.directionsHref} target="_blank" rel="noopener noreferrer" className="footer-branch-dir">
-                  Get directions →
-                </a>
-              </div>
-            </div>
-          ))}
         </div>
       </div>
 
