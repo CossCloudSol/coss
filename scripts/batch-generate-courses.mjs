@@ -69,11 +69,10 @@ GEO RULES:
 - Mention weekend batch availability (targets Hyderabad working professionals)
 - Reference "Dilsukhnagar" or "Ameerpet" as COSS centre locations
 
-PLACEHOLDER RULES:
-- Use [BATCH_DATE] where a batch date is needed
-- Use [STUDENT_COUNT] where placement/student numbers appear
-- Use [TRAINER_NAME] where a trainer name would appear
-- These must be filled by admin before publishing
+BATCH & TRAINER RULES:
+- Use real batch timing language: "Weekend batches available", "Weekdays 9AM–1PM", "Monthly batches", "Flexible schedule" — never a bracketed placeholder like [BATCH_DATE]
+- Use real student count language: "500+", "1,200+", "5,000+", "Hundreds of" — never a bracketed placeholder like [STUDENT_COUNT]
+- If a trainer name is needed, write "our expert trainer" or omit it entirely — never a bracketed placeholder like [TRAINER_NAME]
 
 SYLLABUS RULES:
 - 5-8 modules minimum
@@ -284,7 +283,7 @@ async function main() {
   console.log(`✅  Done.  Success: ${success}  |  Skipped: ${skipped}  |  Failed: ${failed}`)
   console.log('\nNext steps:')
   console.log('  1. Go to /admin/courses and filter by status = Draft')
-  console.log('  2. Open each course — replace [BATCH_DATE] and [STUDENT_COUNT]')
+  console.log('  2. Open each course — review AI-generated content for accuracy')
   console.log('  3. Review content, then click Publish')
   console.log('─────────────────────────────────────────────────\n')
 }

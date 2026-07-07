@@ -37,11 +37,10 @@ GEO RULES:
 - Mention weekend batch availability (targets Hyderabad working professionals)
 - Reference "Dilsukhnagar" or "Ameerpet" as COSS centre locations
 
-PLACEHOLDER RULES:
-- Use real batch timing language like "Every Monday", "Weekdays 9AM–1PM", "Weekend batches available", "Flexible schedule" — never a placeholder date
-- Use real student numbers like "500+", "1,200+", "5,000+" for placement counts — never a placeholder number
-- Use [TRAINER_NAME] where a trainer name would appear
-- These must be filled by admin before publishing
+BATCH & TRAINER RULES:
+- Use real batch timing language: "Every Monday", "Weekdays 9AM–1PM", "Weekend batches available", "Flexible schedule" — never a bracketed placeholder like [BATCH_DATE]
+- Use real student count language: "500+", "1,200+", "5,000+", "Hundreds of" — never a bracketed placeholder like [STUDENT_COUNT]
+- If a trainer name is needed, write "our expert trainer" or omit it entirely — never a bracketed placeholder like [TRAINER_NAME]
 
 SYLLABUS RULES:
 - 5-8 modules minimum

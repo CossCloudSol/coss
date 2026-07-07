@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
 
+const PLACEHOLDER_RE = /\[[A-Z_]{3,}\]/;
+function hasPlaceholder(val: string): boolean {
+  return typeof val === 'string' && PLACEHOLDER_RE.test(val);
+}
+
 interface SyllabusItem { week: string; topic: string; details: string }
 
 const MODES = ['Online', 'Classroom', 'Hybrid'];
@@ -66,6 +71,16 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
   function handleField<K extends keyof typeof form>(key: K, value: typeof form[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
+
+  const hasBadPlaceholders =
+    hasPlaceholder(form.description) ||
+    hasPlaceholder(form.excerpt) ||
+    highlights.some(hasPlaceholder) ||
+    hasPlaceholder(form.seoTitle) ||
+    hasPlaceholder(form.seoDesc);
+
+  // Block saving as 'published' when placeholders remain
+  const canSave = !(form.status === 'published' && hasBadPlaceholders);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -282,8 +297,23 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
           </div>
         </div>
 
+        {hasBadPlaceholders && form.status === 'published' && (
+          <div className="rounded-lg border border-amber-400 dark:border-amber-500 bg-amber-50 dark:bg-amber-900/20 px-4 py-3 text-sm text-amber-700 dark:text-amber-300">
+            ⚠ This course has unfilled [PLACEHOLDER] values — set status to <strong>draft</strong> or replace all placeholders before saving as published.
+          </div>
+        )}
+        {hasBadPlaceholders && form.status !== 'published' && (
+          <p className="text-xs text-amber-600 dark:text-amber-400">
+            ⚠ Content still has [PLACEHOLDER] values — replace before publishing.
+          </p>
+        )}
         <div className="flex items-center gap-3">
-          <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-60 transition-colors">
+          <button
+            type="submit"
+            disabled={saving || !canSave}
+            title={!canSave ? 'Replace all [PLACEHOLDER] values before saving as published' : undefined}
+            className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-60 transition-colors"
+          >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             {saving ? 'Saving…' : 'Save Changes'}
           </button>
