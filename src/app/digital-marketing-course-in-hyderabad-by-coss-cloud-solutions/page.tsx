@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/digital-marketing-training-institute-in-hyderabad');
+  permanentRedirect('/digital-marketing-training-institute-in-hyderabad');
 }

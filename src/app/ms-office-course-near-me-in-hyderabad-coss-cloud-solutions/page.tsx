@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/ms-office-training-institute-in-hyderabad');
+  permanentRedirect('/ms-office-training-institute-in-hyderabad');
 }

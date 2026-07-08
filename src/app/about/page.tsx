@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 export default function AboutRedirect() {
-  redirect('/about-us/');
+  permanentRedirect('/about-us');
 }

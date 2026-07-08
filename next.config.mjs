@@ -2,6 +2,7 @@ import createMDX from '@next/mdx';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  trailingSlash: false,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     // Allowlist only the CDN hostnames actually used by <Image> components.

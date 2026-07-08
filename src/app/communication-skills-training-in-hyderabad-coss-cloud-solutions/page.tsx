@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/communication-skills-training-in-hyderabad');
+  permanentRedirect('/communication-skills-training-in-hyderabad');
 }

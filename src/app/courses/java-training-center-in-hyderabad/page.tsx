@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/java-training-institute-in-hyderabad');
+  permanentRedirect('/java-training-institute-in-hyderabad');
 }

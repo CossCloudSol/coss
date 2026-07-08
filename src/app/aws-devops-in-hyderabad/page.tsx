@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/aws-devops-training-institute-in-hyderabad');
+  permanentRedirect('/aws-devops-training-institute-in-hyderabad');
 }

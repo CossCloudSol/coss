@@ -292,16 +292,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
 
   // ── Session 3: ERP, CRM & Enterprise ─────────────────────────────────────
-  {
-    slug: 'sap-fico-training-institute-in-hyderabad',
-    title: 'Best SAP FICO Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best SAP FICO training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
-    keywords: 'SAP FICO training in Hyderabad, SAP FICO course Hyderabad, SAP finance certification, SAP training institute',
-    primaryKeyword: 'SAP FICO Training in Hyderabad',
-    category: 'ERP, CRM & Enterprise',
-    priority: 0.9,
-  },
+  // sap-fico-training-institute-in-hyderabad is a permanentRedirect() page, not a live page — excluded from sitemap
   {
     slug: 'oracle-fusion-hcm-training-institute-in-hyderabad',
     title: 'Best Oracle Fusion Cloud HCM Training Institute in Hyderabad',

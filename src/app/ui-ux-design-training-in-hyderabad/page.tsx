@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/ui-ux-design-training-institute-in-hyderabad');
+  permanentRedirect('/ui-ux-design-training-institute-in-hyderabad');
 }

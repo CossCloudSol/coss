@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/erp-crm-training-institute-in-hyderabad');
+  permanentRedirect('/courses/erp-crm-enterprise-tools/sap-fico-training-institute-in-hyderabad');
 }

@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/linux-administration-training-in-hyderabad');
+  permanentRedirect('/linux-administration-training-in-hyderabad');
 }

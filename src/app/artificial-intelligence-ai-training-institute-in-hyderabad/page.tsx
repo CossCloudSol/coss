@@ -1,5 +1,5 @@
-﻿import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/artificial-intelligence-training-institute-in-hyderabad');
+  permanentRedirect('/artificial-intelligence-training-institute-in-hyderabad');
 }

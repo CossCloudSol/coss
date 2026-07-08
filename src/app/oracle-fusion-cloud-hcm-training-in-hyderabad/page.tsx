@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+﻿import { permanentRedirect } from 'next/navigation';
 
 export default function Page(): never {
-  redirect('/oracle-fusion-hcm-training-in-hyderabad');
+  permanentRedirect('/oracle-fusion-hcm-training-in-hyderabad');
 }
