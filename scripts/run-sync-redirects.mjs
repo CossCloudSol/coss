@@ -1,12 +1,18 @@
-import { prisma } from '@/lib/db'
+/**
+ * Standalone script to call syncRedirectsToConfig() without TypeScript path aliases.
+ * Reads all active DB redirects and writes them to next.config.mjs.
+ * Usage: node scripts/run-sync-redirects.mjs
+ */
+import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
-// Infrastructure redirects that must always be written to next.config.mjs regardless of DB state.
-// These are not stored in the Redirect table — managing them via DB would require a DB read on
-// every Next.js request before the rewrites layer even fires, which defeats the purpose.
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const db = new PrismaClient()
+
+// Keep in sync with src/lib/sync-redirects.ts INFRA_REDIRECTS
 const INFRA_REDIRECTS = [
-  // Canonical URL consolidation (legacy short paths → category pages)
   { source: '/data-analytics-bi',                           destination: '/courses/data-analytics-bi',      permanent: true },
   { source: '/data-analytics-bi/',                          destination: '/courses/data-analytics-bi',      permanent: true },
   { source: '/software-testing-os',                         destination: '/courses/software-testing-os',    permanent: true },
@@ -17,7 +23,6 @@ const INFRA_REDIRECTS = [
   { source: '/courses/programming-full-stack-development/', destination: '/courses/programming-full-stack', permanent: true },
   { source: '/blogs',                                       destination: '/blog',                           permanent: true },
   { source: '/blogs/',                                      destination: '/blog',                           permanent: true },
-  // WordPress taxonomy wildcard patterns (must be in config — DB is exact-match only)
   { source: '/category/:path*',                             destination: '/courses',                        permanent: true },
   { source: '/tag/:path*',                                  destination: '/courses',                        permanent: true },
   { source: '/author/:path*',                               destination: '/',                               permanent: true },
@@ -29,8 +34,7 @@ const INFRA_REDIRECTS = [
 
 const INFRA_SOURCES = new Set(INFRA_REDIRECTS.map(r => r.source))
 
-/** Returns everything between the outer `[` and `]` of `async redirects() { return [...] }` */
-function extractRedirectsArrayContent(source: string): string | null {
+function extractRedirectsArrayContent(source) {
   const match = source.match(/async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[/)
   if (!match) return null
   const start = (match.index ?? 0) + match[0].length
@@ -44,9 +48,8 @@ function extractRedirectsArrayContent(source: string): string | null {
   return source.slice(start, i - 1)
 }
 
-/** Splits array content into top-level `{...}` object strings (handles nesting). */
-function splitTopLevelObjects(content: string): string[] {
-  const objects: string[] = []
+function splitTopLevelObjects(content) {
+  const objects = []
   let depth = 0
   let start = -1
   for (let i = 0; i < content.length; i++) {
@@ -65,32 +68,31 @@ function splitTopLevelObjects(content: string): string[] {
   return objects
 }
 
-export async function syncRedirectsToConfig(): Promise<void> {
-  const configPath = path.join(process.cwd(), 'next.config.mjs')
+async function main() {
+  const configPath = path.join(__dirname, '..', 'next.config.mjs')
   const original = fs.readFileSync(configPath, 'utf-8')
 
-  // Read existing redirects and keep only those with a `has:` property (e.g. bare-domain → www).
-  // These are infrastructure rules that must not be overwritten by DB state.
+  // Keep has: rules (e.g. bare domain → www)
   const arrayContent = extractRedirectsArrayContent(original)
-  const hasRules: string[] = []
+  const hasRules = []
   if (arrayContent) {
     for (const obj of splitTopLevelObjects(arrayContent)) {
       if (/\bhas\s*:/.test(obj)) {
-        // Collapse multi-line object to a single line for clean, stable output
         const oneLine = obj.split('\n').map(l => l.trim()).filter(Boolean).join(' ')
         hasRules.push(oneLine)
       }
     }
   }
 
-  // Fetch DB-managed rules, excluding any whose source conflicts with an infra rule
-  const dbRedirects = (await prisma.redirect.findMany({
+  // Fetch DB rules, filtering out any that conflict with infra
+  const dbRedirects = (await db.redirect.findMany({
     where: { isActive: true },
     orderBy: { createdAt: 'asc' },
   })).filter(r => !INFRA_SOURCES.has(r.source))
 
-  // Build combined lines: has-rules first, then infra rules, then DB rules
-  const lines: string[] = []
+  console.log(`DB rules: ${dbRedirects.length} (after filtering infra conflicts)`)
+
+  const lines = []
 
   if (hasRules.length > 0) {
     lines.push('      // preserved has: rules (bare domain → www)')
@@ -122,13 +124,10 @@ export async function syncRedirectsToConfig(): Promise<void> {
     `async redirects() {\n    return ${redirectsArray};\n  }`
   )
 
-  if (updated === original && !original.includes('async redirects')) {
-    const withRedirects = original.replace(
-      /const nextConfig\s*=\s*\{/,
-      `const nextConfig = {\n  async redirects() {\n    return ${redirectsArray};\n  },`
-    )
-    fs.writeFileSync(configPath, withRedirects, 'utf-8')
-  } else {
-    fs.writeFileSync(configPath, updated, 'utf-8')
-  }
+  fs.writeFileSync(configPath, updated, 'utf-8')
+  console.log(`next.config.mjs updated — ${lines.filter(l => l.trim().startsWith('{')).length} redirect rules written`)
 }
+
+main()
+  .catch(e => { console.error(e); process.exit(1) })
+  .finally(() => db.$disconnect())
