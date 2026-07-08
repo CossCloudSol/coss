@@ -966,6 +966,18 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 
 /* ══════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤1023px) — nav collapses to hamburger
+══════════════════════════════════════════════════ */
+@media (max-width:1023px) {
+  /* Hide full desktop nav; hamburger (lg:hidden in JSX) takes over */
+  .header-topbar { display: none; }
+  .desktop-nav { display: none; }
+  .hamburger { display: flex; }
+  .mobile-header-actions { display: flex; }
+  .header-inner { height: 64px; }
+}
+
+/* ══════════════════════════════════════════════════
    RESPONSIVE — MOBILE (≤768px)
 ══════════════════════════════════════════════════ */
 @media (max-width:768px) {
@@ -973,13 +985,6 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .topbar-left { gap: 10px; font-size: 12px; }
   .topbar-right { width: 100%; justify-content: space-between; }
   .topbar-email { display: none; }
-
-  /* Hide desktop top bar and nav on mobile */
-  .header-topbar { display: none; }
-  .desktop-nav { display: none; }
-  .hamburger { display: flex; }
-  .mobile-header-actions { display: flex; }
-  .header-inner { height: 64px; }
 
   .hero-section { padding: 44px 0 36px; }
   .hero-inner { grid-template-columns: 1fr; gap: 32px; }

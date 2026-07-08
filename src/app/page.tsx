@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import WpImg from '@/components/WpImg';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
+import CategoryGrid from '@/components/CategoryGrid';
 import { siteImages } from '@/lib/wpImages';
 import { getCategoryIllustration } from '@/lib/category-illustrations';
 
@@ -546,70 +547,20 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/courses/${cat.slug}/`}
-                className="group block rounded-2xl overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1 border-[var(--cat-accent-light)] dark:border-[var(--cat-accent-dark)] bg-[#161320] hover:shadow-xl"
-                style={{
-                  ['--cat-accent-light' as string]: getCategoryAccentSolid(cat.slug),
-                  ['--cat-accent-dark' as string]: getCategoryAccentDark(cat.slug),
-                }}
-              >
-                <div className="p-3 sm:p-5 pb-0">
-                  {/* Icon + title row */}
-                  <div className="flex items-start gap-3 mb-3">
-                    <div
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                      style={{ background: getCategoryIconBg(cat.slug) }}
-                    >
-                      {getCategoryIcon(cat.slug)}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-sm sm:text-base leading-snug text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
-                        {cat.name}
-                      </h3>
-                      {(() => { const n = cat._count?.courses ?? 0; return (
-                      <span
-                        className="inline-block mt-1 text-[10px] sm:text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
-                        style={{ background: getCategoryAccent(cat.slug) }}
-                      >
-                        {n} {n === 1 ? 'course' : 'courses'}
-                      </span>
-                      ); })()}
-                    </div>
-                  </div>
-
-                  {/* Description — always rendered for equal card heights */}
-                  <p
-                    className="text-slate-400 text-xs leading-relaxed mb-4 min-h-[2.5rem]"
-                    style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                  >
-                    {cat.description || 'Industry-focused training with placement support in Hyderabad.'}
-                  </p>
-
-                  {/* CTA row */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-semibold transition-colors text-[var(--cat-accent-light)] dark:text-[var(--cat-accent-dark)]">
-                      Explore Courses →
-                    </span>
-                  </div>
-                </div>
-
-                {/* Illustration — dark cinematic image, theme-aware treatment */}
-                <div className="relative h-24 sm:h-32 mx-3 mb-3 rounded-xl overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={getCategoryIllustration(cat.slug)}
-                    alt={`${cat.name} illustration`}
-                    loading="lazy"
-                    className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-              </Link>
-            ))}
-          </div>
+          <CategoryGrid
+            categories={categories.map((cat) => ({
+              slug: cat.slug,
+              name: cat.name,
+              description: cat.description,
+              courseCount: cat._count?.courses ?? 0,
+              accentGradient: getCategoryAccent(cat.slug),
+              accentSolid: getCategoryAccentSolid(cat.slug),
+              accentDark: getCategoryAccentDark(cat.slug),
+              iconBg: getCategoryIconBg(cat.slug),
+              icon: getCategoryIcon(cat.slug),
+              illustration: getCategoryIllustration(cat.slug),
+            }))}
+          />
 
           <div className="mt-12 text-center">
             <Link
@@ -795,8 +746,8 @@ export default async function HomePage() {
                   ))}
                 </div>
 
-                {/* QR code */}
-                <div className="relative z-10 mt-5">
+                {/* QR code — desktop/tablet only; mobile gets a direct WhatsApp link instead */}
+                <div className="relative z-10 mt-5 hidden sm:block">
                   <div className="inline-flex flex-col items-center rounded-2xl px-4 py-3" style={{ background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={CORP_QR_SRC} alt="Scan QR to WhatsApp" width={96} height={96} loading="lazy" />
@@ -808,6 +759,20 @@ export default async function HomePage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Mobile-only: direct WhatsApp CTA instead of un-scannable QR */}
+                <a
+                  href="https://wa.me/918885166007"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative z-10 mt-5 sm:hidden inline-flex items-center gap-3 rounded-2xl px-5 py-3 font-bold text-sm"
+                  style={{ background: '#25D366', color: '#fff', boxShadow: '0 4px 20px rgba(37,211,102,0.35)' }}
+                >
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" fill="currentColor" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                  </svg>
+                  Chat on WhatsApp
+                </a>
               </div>
 
               {/* Bottom bar — 3 stat columns */}
@@ -1011,13 +976,6 @@ export default async function HomePage() {
 
           {/* ── Header ── */}
           <div className="text-center mb-10">
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-4"
-              style={{ background: 'rgba(20,184,166,0.12)', border: '1px solid rgba(20,184,166,0.28)', color: '#2dd4bf' }}
-            >
-              <Briefcase className="w-3.5 h-3.5" aria-hidden="true" />
-              {hpSettings.stat4Value} {hpSettings.stat4Label}
-            </div>
             <h2 className="font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(26px,4vw,40px)' }}>
               Our Graduates Get Hired at{' '}
               <span style={{ color: '#2dd4bf' }}>Top Companies</span>
