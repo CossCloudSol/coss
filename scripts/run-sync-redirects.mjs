@@ -92,6 +92,12 @@ async function main() {
 
   console.log(`DB rules: ${dbRedirects.length} (after filtering infra conflicts)`)
 
+  // Keep in sync with src/lib/sync-redirects.ts: exact-match rules must be
+  // written before wildcard rules, since Next.js redirects match in array
+  // order (first match wins) regardless of specificity.
+  const exactInfraRedirects = INFRA_REDIRECTS.filter(r => !r.source.includes(':'))
+  const wildcardInfraRedirects = INFRA_REDIRECTS.filter(r => r.source.includes(':'))
+
   const lines = []
 
   if (hasRules.length > 0) {
@@ -101,8 +107,8 @@ async function main() {
     }
   }
 
-  lines.push('      // infrastructure redirects (always preserved by sync-redirects)')
-  for (const r of INFRA_REDIRECTS) {
+  lines.push('      // infrastructure redirects — exact-match (always preserved by sync-redirects)')
+  for (const r of exactInfraRedirects) {
     lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
   }
 
@@ -111,6 +117,11 @@ async function main() {
     for (const r of dbRedirects) {
       lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.statusCode === 301} }`)
     }
+  }
+
+  lines.push('      // infrastructure redirects — wildcard (must stay after exact-match rules above)')
+  for (const r of wildcardInfraRedirects) {
+    lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
   }
 
   const redirectsArray = lines.length === 0

@@ -11,7 +11,7 @@
  *   4. LocalBusiness — Ameerpet branch         → Local Pack / Maps
  */
 
-import { getAllBranchSettings } from '@/lib/get-branch-settings'
+import { getAllBranchSettings, type BranchSettings } from '@/lib/get-branch-settings'
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -21,6 +21,54 @@ const LOGO_URL = `${SITE_URL}/logo.png`;
 function parseOverride(raw: string | null | undefined): object | null {
   if (!raw) return null
   try { return JSON.parse(raw) } catch { return null }
+}
+
+/**
+ * Builds a LocalBusiness + EducationalOrganization JSON-LD schema for a single
+ * branch. Shared by the sitewide global schema injection (buildGlobalSchemas)
+ * and the /locations/{branch} landing pages, so the two never drift apart.
+ */
+export function buildLocalBusinessSchema(branch: BranchSettings): object {
+  return {
+    '@context': 'https://schema.org',
+    '@type': ['LocalBusiness', 'EducationalOrganization'],
+    '@id': `${SITE_URL}/#branch-${branch.branchKey}`,
+    name: branch.branchName,
+    image: LOGO_URL,
+    url: `${SITE_URL}/locations/${branch.branchKey}`,
+    telephone: branch.phone,
+    email: branch.email,
+    priceRange: '₹₹',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: branch.addressLine1 + (branch.addressLine2 ? ', ' + branch.addressLine2 : ''),
+      addressLocality: branch.city,
+      addressRegion: branch.state,
+      postalCode: branch.pincode,
+      addressCountry: 'IN',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: branch.latitude,
+      longitude: branch.longitude,
+    },
+    openingHoursSpecification: [{
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: branch.workingDays.split('-'),
+      opens: branch.workingHoursOpen,
+      closes: branch.workingHoursClose,
+    }],
+    ...(branch.reviewCount > 0 ? {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: branch.aggregateRating,
+        reviewCount: branch.reviewCount,
+        bestRating: '5',
+        worstRating: '1',
+      },
+    } : {}),
+    parentOrganization: { '@id': `${SITE_URL}/#organization` },
+  }
 }
 
 export async function buildGlobalSchemas(): Promise<object[]> {
@@ -143,87 +191,8 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     },
   }
 
-  const dilsSchema = {
-    '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'EducationalOrganization'],
-    '@id': `${SITE_URL}/#branch-dilsukhnagar`,
-    name: dilsukhnagar.branchName,
-    image: LOGO_URL,
-    url: SITE_URL,
-    telephone: dilsukhnagar.phone,
-    email: dilsukhnagar.email,
-    priceRange: '₹₹',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: dilsukhnagar.addressLine1 + (dilsukhnagar.addressLine2 ? ', ' + dilsukhnagar.addressLine2 : ''),
-      addressLocality: dilsukhnagar.city,
-      addressRegion: dilsukhnagar.state,
-      postalCode: dilsukhnagar.pincode,
-      addressCountry: 'IN',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: dilsukhnagar.latitude,
-      longitude: dilsukhnagar.longitude,
-    },
-    openingHoursSpecification: [{
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: dilsukhnagar.workingDays.split('-'),
-      opens: dilsukhnagar.workingHoursOpen,
-      closes: dilsukhnagar.workingHoursClose,
-    }],
-    ...(dilsukhnagar.reviewCount > 0 ? {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: dilsukhnagar.aggregateRating,
-        reviewCount: dilsukhnagar.reviewCount,
-        bestRating: '5',
-        worstRating: '1',
-      },
-    } : {}),
-    parentOrganization: { '@id': `${SITE_URL}/#organization` },
-  }
-
-  const ameerpetSchema = {
-    '@context': 'https://schema.org',
-    '@type': ['LocalBusiness', 'EducationalOrganization'],
-    '@id': `${SITE_URL}/#branch-ameerpet`,
-    name: ameerpet.branchName,
-    image: LOGO_URL,
-    url: SITE_URL,
-    telephone: ameerpet.phone,
-    email: ameerpet.email,
-    priceRange: '₹₹',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: ameerpet.addressLine1 + (ameerpet.addressLine2 ? ', ' + ameerpet.addressLine2 : ''),
-      addressLocality: ameerpet.city,
-      addressRegion: ameerpet.state,
-      postalCode: ameerpet.pincode,
-      addressCountry: 'IN',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: ameerpet.latitude,
-      longitude: ameerpet.longitude,
-    },
-    openingHoursSpecification: [{
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ameerpet.workingDays.split('-'),
-      opens: ameerpet.workingHoursOpen,
-      closes: ameerpet.workingHoursClose,
-    }],
-    ...(ameerpet.reviewCount > 0 ? {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: ameerpet.aggregateRating,
-        reviewCount: ameerpet.reviewCount,
-        bestRating: '5',
-        worstRating: '1',
-      },
-    } : {}),
-    parentOrganization: { '@id': `${SITE_URL}/#organization` },
-  }
+  const dilsSchema = buildLocalBusinessSchema(dilsukhnagar)
+  const ameerpetSchema = buildLocalBusinessSchema(ameerpet)
 
   return [
     // ── 1. Organization + EducationalOrganization ────────────────────────────

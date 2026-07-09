@@ -232,7 +232,7 @@ const nextConfig = {
       { source: '/computer-training-near-me-in-hyderabad-coss-cloud-solutions', destination: '/courses', permanent: true },
       { source: '/computer-institutes-near-me-in-hyderabad-coss-cloud-solutions', destination: '/courses', permanent: true },
       { source: '/it-training-institute-dilsukhnagar', destination: '/courses', permanent: true },
-      { source: '/communication-skills-training-in-hyderabad-coss-cloud-solutions', destination: '/communication-skills-training-institute-in-hyderabad', permanent: true },
+      { source: '/communication-skills-training-in-hyderabad-coss-cloud-solutions', destination: '/communication-skills-training-in-hyderabad', permanent: true },
       { source: '/spoken-english-institute-in-hyderabad-coss-cloud-solutions', destination: '/spoken-english-training-institute-in-hyderabad', permanent: true },
       { source: '/ethical-hacking-in-hyderabad-coss-cloud-solutions', destination: '/ethical-hacking-training-institute-in-hyderabad', permanent: true },
       { source: '/redhat-linux-certification-course-in-hyderabad', destination: '/linux-administration-training-institute-in-hyderabad', permanent: true },

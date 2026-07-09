@@ -568,4 +568,8 @@ export const STATIC_PAGES: ReadonlyArray<StaticPage> = [
   { slug: 'free-demo-class',     priority: 0.8, changeFrequency: 'weekly'  },
   { slug: 'privacy-policy',      priority: 0.3, changeFrequency: 'yearly'  },
   { slug: 'terms-conditions',    priority: 0.3, changeFrequency: 'yearly'  },
+  { slug: 'locations/dilsukhnagar',       priority: 0.75, changeFrequency: 'monthly' },
+  { slug: 'locations/ameerpet',           priority: 0.75, changeFrequency: 'monthly' },
+  { slug: 'locations/kukatpally',         priority: 0.7,  changeFrequency: 'monthly' },
+  { slug: 'locations/madhapur-hitec-city',priority: 0.7,  changeFrequency: 'monthly' },
 ];

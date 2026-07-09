@@ -36,16 +36,23 @@ const RESOURCES = [
 const BRANCHES = [
   {
     name: 'Dilsukhnagar',
+    slug: 'dilsukhnagar',
     address: 'Flat 109, CB Eastern Homes, Kamala Nagar, Dilsukhnagar, Hyderabad – 500060',
     mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5285426!3d17.3677401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98ec55555555%3A0xdd694f49845605aa!2sComplete%20Open%20Source%20Solutions%20(COSS)!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
     directionsHref: 'https://maps.google.com/?q=17.3694,78.5247',
   },
   {
     name: 'Ameerpet',
+    slug: 'ameerpet',
     address: '#502, Sree Swathi Ankur Building, Aditya Trade Center, Ameerpet, Hyderabad – 500038',
     mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin',
     directionsHref: 'https://maps.google.com/?q=17.4375,78.4483',
   },
+]
+
+const CATCHMENT_AREAS = [
+  { label: 'Kukatpally',            href: '/locations/kukatpally/' },
+  { label: 'Madhapur & HITEC City', href: '/locations/madhapur-hitec-city/' },
 ]
 
 const SOCIALS = [
@@ -204,7 +211,7 @@ export default async function Footer() {
                   />
                 </div>
                 <div className="footer-branch-info">
-                  <p className="footer-branch-name">{b.name}</p>
+                  <Link href={`/locations/${b.slug}/`} className="footer-branch-name">{b.name}</Link>
                   <p className="footer-branch-address">{b.address}</p>
                   <a href={b.directionsHref} target="_blank" rel="noopener noreferrer" className="footer-branch-dir">
                     Get directions →
@@ -213,6 +220,15 @@ export default async function Footer() {
               </div>
             ))}
           </div>
+          <p className="footer-areas-served">
+            Also training students &amp; professionals from{' '}
+            {CATCHMENT_AREAS.map((a, i) => (
+              <span key={a.href}>
+                {i > 0 && ' · '}
+                <Link href={a.href}>{a.label}</Link>
+              </span>
+            ))}
+          </p>
         </div>
       </div>
 

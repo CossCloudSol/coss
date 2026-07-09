@@ -89,7 +89,15 @@ export async function syncRedirectsToConfig(): Promise<void> {
     orderBy: { createdAt: 'asc' },
   })).filter(r => !INFRA_SOURCES.has(r.source))
 
-  // Build combined lines: has-rules first, then infra rules, then DB rules
+  // Next.js redirects are matched in array order, first match wins — regardless
+  // of specificity. A wildcard like /training-institutes-in-hyderabad/:path*
+  // would otherwise shadow exact-match DB rules under the same prefix
+  // (e.g. /training-institutes-in-hyderabad/dilsukhnagar) if it were written
+  // first. So exact-match rules (infra + DB) always go before wildcard infra rules.
+  const exactInfraRedirects = INFRA_REDIRECTS.filter(r => !r.source.includes(':'))
+  const wildcardInfraRedirects = INFRA_REDIRECTS.filter(r => r.source.includes(':'))
+
+  // Build combined lines: has-rules, exact infra rules, DB rules, then wildcard infra rules
   const lines: string[] = []
 
   if (hasRules.length > 0) {
@@ -99,8 +107,8 @@ export async function syncRedirectsToConfig(): Promise<void> {
     }
   }
 
-  lines.push('      // infrastructure redirects (always preserved by sync-redirects)')
-  for (const r of INFRA_REDIRECTS) {
+  lines.push('      // infrastructure redirects — exact-match (always preserved by sync-redirects)')
+  for (const r of exactInfraRedirects) {
     lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
   }
 
@@ -109,6 +117,12 @@ export async function syncRedirectsToConfig(): Promise<void> {
     for (const r of dbRedirects) {
       lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.statusCode === 301} }`)
     }
+  }
+
+  // Wildcard infra rules go last so they never shadow a more specific exact-match rule above.
+  lines.push('      // infrastructure redirects — wildcard (must stay after exact-match rules above)')
+  for (const r of wildcardInfraRedirects) {
+    lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
   }
 
   const redirectsArray = lines.length === 0
