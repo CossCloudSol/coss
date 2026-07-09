@@ -43,7 +43,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.c
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   // Try DB post first
-  const dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+  let dbPost = null;
+  try {
+    dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+  } catch {
+    // DB error — fall through to file system
+  }
   if (dbPost) {
     const title = dbPost.seoTitle ?? `${dbPost.title} | COSS Cloud Solutions`;
     const description = dbPost.seoDesc ?? dbPost.excerpt;
@@ -93,7 +98,12 @@ const RELATED = [
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   // Try DB post first — renders with react-markdown
-  const dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+  let dbPost = null;
+  try {
+    dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+  } catch {
+    // DB error — fall through to file system
+  }
   if (dbPost) {
     // Increment views (fire-and-forget)
     void prisma.blogPost.update({ where: { id: dbPost.id }, data: { views: { increment: 1 } } });

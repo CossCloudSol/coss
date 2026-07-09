@@ -2,11 +2,15 @@
  * src/app/sitemap.ts
  *
  * Generates the full XML sitemap for cosscloudsol.com.
- * Covers four groups:
+ * Covers eight groups:
  *   1. 36 SEO course pages  (from all-pages-registry.ts  → COURSE_PAGES)
- *   2. Dynamic course pages (from courses-data.ts         → COURSES)
- *   3. Static site pages    (from all-pages-registry.ts  → STATIC_PAGES)
- *   4. Blog posts           (from content/posts via getAllPosts)
+ *   2. Category overview pages (from all-pages-registry.ts → CATEGORY_PAGES)
+ *   3. Dynamic course pages (from courses-data.ts         → COURSES)
+ *   4. Static site pages    (from all-pages-registry.ts  → STATIC_PAGES)
+ *   5. Blog posts           (from content/posts via getAllPosts)
+ *   6. All 99 DB courses    (from database at /courses/{slug} or /courses/{cat}/{slug})
+ *   7. DB category pages    (new categories not in CATEGORY_PAGES)
+ *   8. DB blog posts        (published posts from admin panel)
  */
 
 import type { MetadataRoute } from 'next';
@@ -116,12 +120,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 5 -- Blog posts (dynamic, from content/posts)
   let blogEntries: MetadataRoute.Sitemap = [];
+  const fsBlogSlugs = new Set<string>();
   try {
     const posts = await getAllPosts();
     blogEntries = posts
       .filter((post) => !isExcluded(`blog/${post.slug}`))
       .map((post) => {
         const db = getDbOverride(`blog/${post.slug}`)
+        fsBlogSlugs.add(post.slug);
         return {
           url: `${BASE_URL}/blog/${post.slug}`,
           lastModified: post.frontmatter.date
@@ -135,11 +141,79 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // getAllPosts failed (e.g. no content dir in CI) — skip blog entries
   }
 
+  // 6 ── All DB courses at their canonical URLs (/courses/{slug} or /courses/{cat}/{slug})
+  let dbCourseEntries: MetadataRoute.Sitemap = [];
+  // 7 ── DB category pages not already in CATEGORY_PAGES
+  let dbCategoryEntries: MetadataRoute.Sitemap = [];
+  // 8 ── Published DB blog posts not already in FS blog entries
+  let dbBlogEntries: MetadataRoute.Sitemap = [];
+
+  try {
+    const { prisma } = await import('@/lib/db')
+
+    // 6 — DB courses
+    const dbCourses = await prisma.course.findMany({
+      select: { slug: true, urlType: true, categorySlug: true, updatedAt: true },
+    })
+    dbCourseEntries = dbCourses
+      .map((course) => {
+        const path = (course.urlType === 'legacy' || !course.categorySlug)
+          ? `/courses/${course.slug}`
+          : `/courses/${course.categorySlug}/${course.slug}`
+        const db = getDbOverride(course.slug)
+        return {
+          url: `${BASE_URL}${path}`,
+          lastModified: course.updatedAt,
+          changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
+          priority: db?.sitemapPriority ?? 0.75,
+        }
+      })
+      .filter((entry) => !isExcluded(entry.url.replace(BASE_URL, '')))
+
+    // 7 — DB categories not already registered in CATEGORY_PAGES
+    const existingCategorySlugs = new Set(CATEGORY_PAGES.map((p) => p.slug))
+    const dbCategories = await prisma.courseCategory.findMany({
+      select: { slug: true, updatedAt: true },
+    })
+    dbCategoryEntries = dbCategories
+      .filter((cat) => !existingCategorySlugs.has(`courses/${cat.slug}`))
+      .filter((cat) => !isExcluded(`courses/${cat.slug}`))
+      .map((cat) => ({
+        url: `${BASE_URL}/courses/${cat.slug}`,
+        lastModified: cat.updatedAt,
+        changeFrequency: 'monthly' as MetadataRoute.Sitemap[0]['changeFrequency'],
+        priority: 0.8,
+      }))
+
+    // 8 — Published DB blog posts not already covered by FS blog entries
+    const dbPosts = await prisma.blogPost.findMany({
+      where: { status: 'published' },
+      select: { slug: true, publishedAt: true, updatedAt: true },
+    })
+    dbBlogEntries = dbPosts
+      .filter((post) => post.slug.length > 1 && !fsBlogSlugs.has(post.slug))
+      .filter((post) => !isExcluded(`blog/${post.slug}`))
+      .map((post) => {
+        const db = getDbOverride(`blog/${post.slug}`)
+        return {
+          url: `${BASE_URL}/blog/${post.slug}`,
+          lastModified: post.publishedAt ?? post.updatedAt,
+          changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
+          priority: db?.sitemapPriority ?? 0.7,
+        }
+      })
+  } catch {
+    // DB unavailable — skip dynamic entries
+  }
+
   return [
     ...seoPageEntries,
     ...categoryEntries,
     ...dynamicCourseEntries,
     ...staticEntries,
     ...blogEntries,
+    ...dbCourseEntries,
+    ...dbCategoryEntries,
+    ...dbBlogEntries,
   ];
 }
