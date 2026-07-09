@@ -41,7 +41,7 @@ export async function POST(
       longitude:         parseFloat(body.longitude) || 0,
       workingHoursOpen:  body.workingHoursOpen  ?? '09:00',
       workingHoursClose: body.workingHoursClose ?? '19:00',
-      workingDays:       body.workingDays       ?? 'Monday-Saturday',
+      workingDays:       body.workingDays       ?? 'Monday-Sunday',
       mapEmbedUrl:       body.mapEmbedUrl       ?? '',
       serviceAreas:      JSON.stringify(body.serviceAreas ?? []),
       aggregateRating:   parseFloat(body.aggregateRating) || 4.8,

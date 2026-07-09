@@ -13,9 +13,7 @@ export async function GET(req: NextRequest) {
   const settings = await prisma.siteSettings.findFirst({
     select: {
       schemaOrgEnabled: true, schemaWebSiteEnabled: true,
-      schemaDilsEnabled: true, schemaAmeerpetEnabled: true,
       schemaOrgOverride: true, schemaWebSiteOverride: true,
-      schemaDilsOverride: true, schemaAmeerpetOverride: true,
     },
   })
 
@@ -35,7 +33,6 @@ export async function PATCH(req: NextRequest) {
 
   const overrideFields = [
     'schemaOrgOverride', 'schemaWebSiteOverride',
-    'schemaDilsOverride', 'schemaAmeerpetOverride',
   ]
   for (const field of overrideFields) {
     if (body[field] !== undefined && body[field] !== null && body[field] !== '') {

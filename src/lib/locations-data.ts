@@ -81,7 +81,7 @@ export const LOCALITIES: LocalityConfig[] = [
     h1Accent: 'Dilsukhnagar',
     h1Post: ', Hyderabad',
     heroSubtitle:
-      'Our original Dilsukhnagar centre serves LB Nagar, Kothapet, Malakpet and the whole east/south Hyderabad IT-training belt — classroom batches, real labs, and counsellors on site six days a week.',
+      'Our original Dilsukhnagar centre serves LB Nagar, Kothapet, Malakpet and the whole east/south Hyderabad IT-training belt — classroom batches, real labs, and counsellors on site seven days a week.',
     intro: [
       'Coss Cloud Solutions opened in Dilsukhnagar first, and it remains our flagship classroom centre for students coming from LB Nagar, Kothapet, Malakpet, Nagole, Uppal, Vanasthalipuram and Saidabad. If you\'re based in south or east Hyderabad, this branch is almost certainly your shortest commute for classroom training.',
       'The centre runs the same instructor-led curriculum as our Ameerpet branch — Cloud Computing, DevOps, Data Science, Cyber Security and more — with hands-on labs, mock interviews and placement support built into every batch.',

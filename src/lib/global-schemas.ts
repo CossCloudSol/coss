@@ -2,13 +2,17 @@
  * src/lib/global-schemas.ts
  *
  * Site-wide JSON-LD structured data injected on every page via RootLayout.
- * Covers four schema types that power Google Knowledge Panel, Local Pack,
+ * Covers the two schema types that power Google Knowledge Panel and
  * Sitelinks Search Box, and AI-engine entity recognition (GEO):
  *
  *   1. Organization + EducationalOrganization  → entity anchor for all pages
  *   2. WebSite + SearchAction                  → Sitelinks Search Box
- *   3. LocalBusiness — Dilsukhnagar branch     → Local Pack / Maps
- *   4. LocalBusiness — Ameerpet branch         → Local Pack / Maps
+ *
+ * Branch LocalBusiness schema is intentionally NOT included here — each
+ * /locations/{branch} page emits its own single LocalBusiness block via
+ * buildLocalBusinessSchema() below. Emitting it sitewide as well produced
+ * duplicate/irrelevant LocalBusiness blocks on every page (e.g. the
+ * Ameerpet block showing up on the Dilsukhnagar page and vice versa).
  */
 
 import { getAllBranchSettings, type BranchSettings } from '@/lib/get-branch-settings'
@@ -54,19 +58,15 @@ export function buildLocalBusinessSchema(branch: BranchSettings): object {
     },
     openingHoursSpecification: [{
       '@type': 'OpeningHoursSpecification',
-      dayOfWeek: branch.workingDays.split('-'),
+      dayOfWeek: [
+        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
+      ],
       opens: branch.workingHoursOpen,
       closes: branch.workingHoursClose,
     }],
-    ...(branch.reviewCount > 0 ? {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: branch.aggregateRating,
-        reviewCount: branch.reviewCount,
-        bestRating: '5',
-        worstRating: '1',
-      },
-    } : {}),
+    // No aggregateRating: Google disallows self-serving review markup (rating
+    // schema on your own business without genuine third-party on-page reviews).
+    // The on-page "★ Google rating" text is fine — only the schema must omit it.
     parentOrganization: { '@id': `${SITE_URL}/#organization` },
   }
 }
@@ -79,17 +79,11 @@ export async function buildGlobalSchemas(): Promise<object[]> {
   let settings: {
     schemaOrgEnabled: boolean
     schemaWebSiteEnabled: boolean
-    schemaDilsEnabled: boolean
-    schemaAmeerpetEnabled: boolean
     schemaOrgOverride: string | null
     schemaWebSiteOverride: string | null
-    schemaDilsOverride: string | null
-    schemaAmeerpetOverride: string | null
   } = {
     schemaOrgEnabled: true, schemaWebSiteEnabled: true,
-    schemaDilsEnabled: true, schemaAmeerpetEnabled: true,
     schemaOrgOverride: null, schemaWebSiteOverride: null,
-    schemaDilsOverride: null, schemaAmeerpetOverride: null,
   }
 
   try {
@@ -97,9 +91,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     const row = await prisma.siteSettings.findFirst({
       select: {
         schemaOrgEnabled: true, schemaWebSiteEnabled: true,
-        schemaDilsEnabled: true, schemaAmeerpetEnabled: true,
         schemaOrgOverride: true, schemaWebSiteOverride: true,
-        schemaDilsOverride: true, schemaAmeerpetOverride: true,
       },
     })
     if (row) settings = { ...settings, ...row }
@@ -191,9 +183,6 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     },
   }
 
-  const dilsSchema = buildLocalBusinessSchema(dilsukhnagar)
-  const ameerpetSchema = buildLocalBusinessSchema(ameerpet)
-
   return [
     // ── 1. Organization + EducationalOrganization ────────────────────────────
     ...(settings.schemaOrgEnabled ? [
@@ -205,14 +194,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
       parseOverride(settings.schemaWebSiteOverride) ?? webSiteSchema
     ] : []),
 
-    // ── 3. LocalBusiness — Dilsukhnagar ──────────────────────────────────────
-    ...(settings.schemaDilsEnabled && dilsukhnagar.schemaEnabled ? [
-      parseOverride(settings.schemaDilsOverride) ?? dilsSchema
-    ] : []),
-
-    // ── 4. LocalBusiness — Ameerpet ──────────────────────────────────────────
-    ...(settings.schemaAmeerpetEnabled && ameerpet.schemaEnabled ? [
-      parseOverride(settings.schemaAmeerpetOverride) ?? ameerpetSchema
-    ] : []),
+    // Branch LocalBusiness schema is NOT emitted here — see file header.
+    // Each /locations/{branch} page emits its own via buildLocalBusinessSchema().
   ];
 }

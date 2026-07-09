@@ -34,7 +34,7 @@ const FALLBACK: Record<string, BranchSettings> = {
     phone: '+91 88851 66007', email: 'info@cosscloudsol.com',
     latitude: 17.3617, longitude: 78.5262,
     workingHoursOpen: '09:00', workingHoursClose: '19:00',
-    workingDays: 'Monday-Saturday', mapEmbedUrl: '',
+    workingDays: 'Monday-Sunday', mapEmbedUrl: '',
     serviceAreas: ['Dilsukhnagar','LB Nagar','Kothapet','Malakpet','Nagole'],
     aggregateRating: 4.8, reviewCount: 1250, schemaEnabled: true
   },
@@ -48,7 +48,7 @@ const FALLBACK: Record<string, BranchSettings> = {
     phone: '+91 77807 27374', email: 'info@cosscloudsol.com',
     latitude: 17.4375, longitude: 78.4482,
     workingHoursOpen: '09:00', workingHoursClose: '19:00',
-    workingDays: 'Monday-Saturday', mapEmbedUrl: '',
+    workingDays: 'Monday-Sunday', mapEmbedUrl: '',
     serviceAreas: ['Ameerpet','Punjagutta','SR Nagar','Begumpet','Somajiguda'],
     aggregateRating: 4.8, reviewCount: 980, schemaEnabled: true
   }

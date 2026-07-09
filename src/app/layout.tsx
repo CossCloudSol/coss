@@ -173,9 +173,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Fonts are served by next/font from /_next/static — no external requests */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Global JSON-LD schemas: Organization, WebSite, LocalBusiness (×2)
-            Injected on every page — powers Knowledge Panel, Local Pack, and
-            AI-engine entity resolution (GEO). */}
+        {/* Global JSON-LD schemas: Organization, WebSite.
+            Injected on every page — powers Knowledge Panel, Sitelinks Search
+            Box, and AI-engine entity resolution (GEO). Branch LocalBusiness
+            schema is emitted per-page on /locations/{branch} only. */}
         {globalSchemas.map((schema, i) => (
           <script
             key={i}

@@ -52,7 +52,7 @@ const EMPTY_FORM: FormState = {
   longitude: '',
   workingHoursOpen: '09:00',
   workingHoursClose: '19:00',
-  workingDays: 'Monday-Saturday',
+  workingDays: 'Monday-Sunday',
   mapEmbedUrl: '',
   serviceAreas: [],
   aggregateRating: '4.8',
@@ -86,7 +86,7 @@ function rowToForm(row: Record<string, unknown>): FormState {
     longitude:         String(row.longitude         ?? ''),
     workingHoursOpen:  String(row.workingHoursOpen  ?? '09:00'),
     workingHoursClose: String(row.workingHoursClose ?? '19:00'),
-    workingDays:       String(row.workingDays       ?? 'Monday-Saturday'),
+    workingDays:       String(row.workingDays       ?? 'Monday-Sunday'),
     mapEmbedUrl:       String(row.mapEmbedUrl       ?? ''),
     serviceAreas:      Array.isArray(row.serviceAreas)
       ? (row.serviceAreas as string[])

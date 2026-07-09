@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         longitude: 0,
         workingHoursOpen: '09:00',
         workingHoursClose: '19:00',
-        workingDays: 'Monday-Saturday',
+        workingDays: 'Monday-Sunday',
         mapEmbedUrl: '',
         serviceAreas: '[]',
         aggregateRating: 4.8,

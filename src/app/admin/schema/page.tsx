@@ -5,12 +5,8 @@ import { useEffect, useState } from 'react'
 interface GlobalSchemaSettings {
   schemaOrgEnabled:       boolean
   schemaWebSiteEnabled:   boolean
-  schemaDilsEnabled:      boolean
-  schemaAmeerpetEnabled:  boolean
   schemaOrgOverride:      string | null
   schemaWebSiteOverride:  string | null
-  schemaDilsOverride:     string | null
-  schemaAmeerpetOverride: string | null
 }
 
 interface SchemaPage {
@@ -47,25 +43,11 @@ const GLOBAL_SCHEMAS = [
     types:       ['WebSite', 'SearchAction'],
     icon:        '🌐',
   },
-  {
-    key:         'schemaDils',
-    label:       'LocalBusiness — Dilsukhnagar',
-    desc:        'Powers Google Maps Local Pack for Dilsukhnagar branch',
-    enabledKey:  'schemaDilsEnabled'  as keyof GlobalSchemaSettings,
-    overrideKey: 'schemaDilsOverride' as keyof GlobalSchemaSettings,
-    types:       ['LocalBusiness', 'EducationalOrganization'],
-    icon:        '📍',
-  },
-  {
-    key:         'schemaAmeerpet',
-    label:       'LocalBusiness — Ameerpet',
-    desc:        'Powers Google Maps Local Pack for Ameerpet branch',
-    enabledKey:  'schemaAmeerpetEnabled'  as keyof GlobalSchemaSettings,
-    overrideKey: 'schemaAmeerpetOverride' as keyof GlobalSchemaSettings,
-    types:       ['LocalBusiness', 'EducationalOrganization'],
-    icon:        '📍',
-  },
 ]
+
+// Branch LocalBusiness schema is no longer part of the sitewide set — each
+// /locations/{branch} page emits its own single block. Manage that from the
+// branch settings (Admin → Geo), not here.
 
 const QUICK_URLS = [
   { label: 'Homepage',         value: 'https://www.cosscloudsol.com' },

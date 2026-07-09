@@ -345,7 +345,7 @@ model BranchSettings {
   longitude       Float
   workingHoursOpen  String @default("09:00")
   workingHoursClose String @default("19:00")
-  workingDays     String   @default("Monday-Saturday")
+  workingDays     String   @default("Monday-Sunday")
   mapEmbedUrl     String   @default("")
   serviceAreas    String   @default("[]")
   aggregateRating Float    @default(4.8)
