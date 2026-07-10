@@ -176,9 +176,30 @@ export async function PATCH(
     );
   }
 
+  // Skip status-change side effects (activity row + notification) when the
+  // requested status matches what's already stored — avoids duplicate
+  // "status changed" notifications from redundant PATCHes.
+  let statusUnchanged = false;
+  if (nextStatus !== null) {
+    const current = await prisma.lead.findUnique({
+      where: { id: params.id },
+      select: { status: true },
+    });
+    if (!current) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+    }
+    statusUnchanged = current.status.toLowerCase() === nextStatus;
+    if (statusUnchanged) {
+      console.log(
+        `[PATCH /api/admin/leads/[id]] No-op: status already "${nextStatus}"`,
+        { leadId: params.id, role: session.role ?? 'SUPER_ADMIN' },
+      );
+    }
+  }
+
   try {
     await prisma.$transaction(async (tx) => {
-      if (nextStatus !== null) {
+      if (nextStatus !== null && !statusUnchanged) {
         await tx.lead.update({
           where: { id: params.id },
           data: { status: nextStatus },
@@ -225,7 +246,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
   }
 
-  if (nextStatus !== null) {
+  if (nextStatus !== null && !statusUnchanged) {
     try {
       await createNotification({
         type: 'status_change',

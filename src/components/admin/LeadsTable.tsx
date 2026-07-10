@@ -11,6 +11,7 @@ import { createPortal } from 'react-dom';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import {
+  Check,
   ChevronLeft,
   ChevronRight,
   Download,
@@ -201,7 +202,7 @@ export function LeadsTable(): JSX.Element {
   /* -------------------------- Mutations ---------------------------------- */
 
   const updateStatus = useCallback(
-    async (id: string, nextStatus: Status): Promise<void> => {
+    async (id: string, nextStatus: Status): Promise<boolean> => {
       // Optimistic: flip locally, rollback on failure.
       setLeads((curr) =>
         curr.map((l) => (l.id === id ? { ...l, status: nextStatus } : l)),
@@ -213,9 +214,11 @@ export function LeadsTable(): JSX.Element {
           body: JSON.stringify({ status: nextStatus }),
         });
         if (!res.ok) throw new Error(`PATCH failed (${res.status})`);
+        return true;
       } catch {
         // Rollback by re-fetching current page. Simple + safe.
         updateParams({});
+        return false;
       }
     },
     [updateParams],
@@ -610,7 +613,7 @@ function LeadRow({
 }: {
   lead: AdminLeadListItem;
   index: number;
-  onStatusChange: (id: string, next: Status) => Promise<void>;
+  onStatusChange: (id: string, next: Status) => Promise<boolean>;
   onDelete: (id: string) => Promise<void>;
   onView: (id: string) => void;
 }): JSX.Element {
@@ -701,18 +704,28 @@ function StatusBadgeMenu({
   onStatusChange,
 }: {
   lead: AdminLeadListItem;
-  onStatusChange: (id: string, next: Status) => Promise<void>;
+  onStatusChange: (id: string, next: Status) => Promise<boolean>;
 }): JSX.Element {
   const [open, setOpen] = useState(false);
   const [coords, setCoords] = useState<{ top: number; left: number } | null>(
     null,
   );
   const [mounted, setMounted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [saved, setSaved] = useState(false);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const savedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Clear any pending "Saved" flash timeout on unmount.
+  useEffect(() => {
+    return () => {
+      if (savedTimeoutRef.current) clearTimeout(savedTimeoutRef.current);
+    };
   }, []);
 
   // Close on outside click, Escape, scroll, or resize.
@@ -767,27 +780,49 @@ function StatusBadgeMenu({
     setOpen((prev) => !prev);
   }
 
-  function pick(s: Status): void {
+  async function pick(s: Status): Promise<void> {
     setOpen(false);
-    void onStatusChange(lead.id, s);
+    setPending(true);
+    try {
+      const ok = await onStatusChange(lead.id, s);
+      if (ok) {
+        setSaved(true);
+        if (savedTimeoutRef.current) clearTimeout(savedTimeoutRef.current);
+        savedTimeoutRef.current = setTimeout(() => setSaved(false), 1500);
+      }
+    } finally {
+      setPending(false);
+    }
   }
 
   return (
     <>
-      <button
-        ref={btnRef}
-        type="button"
-        onClick={toggle}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ring-1 ring-inset transition hover:brightness-95 ${styles.pill}`}
-      >
-        <span
-          className={`h-1.5 w-1.5 rounded-full ${styles.dot}`}
-          aria-hidden="true"
-        />
-        {STATUS_LABEL[statusKey]}
-      </button>
+      <span className="relative inline-flex">
+        <button
+          ref={btnRef}
+          type="button"
+          onClick={toggle}
+          disabled={pending}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-busy={pending}
+          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ring-1 ring-inset transition hover:brightness-95 disabled:pointer-events-none disabled:opacity-50 ${styles.pill}`}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${styles.dot}`}
+            aria-hidden="true"
+          />
+          {STATUS_LABEL[statusKey]}
+        </button>
+        {saved ? (
+          <span
+            className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-teal-500 text-white shadow-sm dark:bg-teal-400"
+            aria-hidden="true"
+          >
+            <Check className="h-2.5 w-2.5" strokeWidth={3} />
+          </span>
+        ) : null}
+      </span>
 
       {mounted && open && coords
         ? createPortal(
@@ -895,7 +930,7 @@ function MobileLeadCard({
   onView,
 }: {
   lead: AdminLeadListItem;
-  onStatusChange: (id: string, next: Status) => Promise<void>;
+  onStatusChange: (id: string, next: Status) => Promise<boolean>;
   onDelete: (id: string) => Promise<void>;
   onView: (id: string) => void;
 }): JSX.Element {

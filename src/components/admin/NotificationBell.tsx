@@ -57,6 +57,8 @@ export default function NotificationBell() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [clearConfirming, setClearConfirming] = useState(false);
+  const clearConfirmTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [dropdownStyle, setDropdownStyle] = useState<{
     top: number;
     left: number;
@@ -128,6 +130,20 @@ export default function NotificationBell() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  // Reset the "Confirm clear?" state whenever the dropdown closes.
+  useEffect(() => {
+    if (!open) {
+      setClearConfirming(false);
+      if (clearConfirmTimeout.current) clearTimeout(clearConfirmTimeout.current);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    return () => {
+      if (clearConfirmTimeout.current) clearTimeout(clearConfirmTimeout.current);
+    };
+  }, []);
+
   function handleToggle() {
     if (!open && wrapRef.current) {
       setDropdownStyle(calculatePosition(wrapRef.current.getBoundingClientRect()));
@@ -138,6 +154,33 @@ export default function NotificationBell() {
   async function handleMarkAllRead() {
     await fetch('/api/admin/notifications/mark-all-read', { method: 'POST' });
     fetchNotifications();
+  }
+
+  async function handleClearAll() {
+    const prevNotifications = notifications;
+    const prevUnreadCount = unreadCount;
+    // Optimistic clear.
+    setNotifications([]);
+    setUnreadCount(0);
+    try {
+      const res = await fetch('/api/admin/notifications/clear-all', { method: 'DELETE' });
+      if (!res.ok) throw new Error(`Clear failed (${res.status})`);
+    } catch {
+      // Rollback on failure.
+      setNotifications(prevNotifications);
+      setUnreadCount(prevUnreadCount);
+    }
+  }
+
+  function handleClearAllClick() {
+    if (!clearConfirming) {
+      setClearConfirming(true);
+      clearConfirmTimeout.current = setTimeout(() => setClearConfirming(false), 3000);
+      return;
+    }
+    if (clearConfirmTimeout.current) clearTimeout(clearConfirmTimeout.current);
+    setClearConfirming(false);
+    void handleClearAll();
   }
 
   async function handleItemClick(item: NotificationItem) {
@@ -167,14 +210,34 @@ export default function NotificationBell() {
         <span className="text-sm font-medium text-[#0f172a] dark:text-[#e6edf3]">
           Notifications
         </span>
-        {unreadCount > 0 && (
-          <button
-            onClick={handleMarkAllRead}
-            className="text-xs text-[#024c57] dark:text-[#1b8a6b] font-medium"
-          >
-            Mark all read
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {unreadCount > 0 && (
+            <button
+              onClick={handleMarkAllRead}
+              className="text-xs text-[#024c57] dark:text-[#1b8a6b] font-medium"
+            >
+              Mark all read
+            </button>
+          )}
+          {unreadCount > 0 && notifications.length > 0 && (
+            <span
+              className="h-3 w-px bg-[#e2e8f0] dark:bg-[#30363d]"
+              aria-hidden="true"
+            />
+          )}
+          {notifications.length > 0 && (
+            <button
+              onClick={handleClearAllClick}
+              className={
+                clearConfirming
+                  ? 'text-xs font-medium text-red-600 dark:text-red-400'
+                  : 'text-xs text-[#024c57] dark:text-[#1b8a6b] font-medium'
+              }
+            >
+              {clearConfirming ? 'Confirm clear?' : 'Clear all'}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="overflow-y-auto flex-1">

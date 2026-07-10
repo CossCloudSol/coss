@@ -60,11 +60,35 @@ const URGENT_TYPES = new Set<NotificationType>([
   'corporate_proposal',
 ]);
 
+// Event types where an identical notification created moments earlier is
+// almost certainly a duplicate (e.g. a redundant status-change PATCH) rather
+// than a legitimate rapid repeat — safe to collapse into a single row.
+const DEDUPE_TYPES = new Set<NotificationType>(['status_change']);
+const DEDUPE_WINDOW_MS = 15_000;
+
 export async function createNotification(input: CreateNotificationInput) {
   const targetRole =
     input.targetRole !== undefined
       ? input.targetRole
       : DEFAULT_ROLE_MAP[input.type];
+
+  if (DEDUPE_TYPES.has(input.type)) {
+    const duplicate = await prisma.notification.findFirst({
+      where: {
+        type: input.type,
+        title: input.title,
+        body: input.body,
+        targetRole,
+        createdAt: { gte: new Date(Date.now() - DEDUPE_WINDOW_MS) },
+      },
+    });
+    if (duplicate) {
+      console.log(
+        `[notifications] deduped repeat notification: ${input.type}/"${input.title}" targetRole=${targetRole ?? 'all'}`,
+      );
+      return duplicate;
+    }
+  }
 
   const notification = await prisma.notification.create({
     data: {
@@ -296,4 +320,16 @@ export async function markAllAsRead(userRole: string | null) {
     where,
     data: { isRead: true },
   });
+}
+
+// Deletes all notifications visible to the given role scope (same visibility
+// rules as getNotificationsForUser). Note: notifications are broadcast by
+// role, not owned per-admin, so this deletes for every admin sharing the
+// role — matching the existing markAllAsRead semantics.
+export async function deleteAllForRole(userRole: string | null) {
+  const where: Record<string, unknown> = {};
+  if (userRole !== null) {
+    where.OR = [{ targetRole: userRole }, { targetRole: null }];
+  }
+  return prisma.notification.deleteMany({ where });
 }
