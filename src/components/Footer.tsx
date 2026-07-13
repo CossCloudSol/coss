@@ -2,6 +2,7 @@ import Link from 'next/link'
 import FooterLogo from './FooterLogo'
 import FooterNavCol from './FooterNavCol'
 import { getTrustStats } from '@/lib/getTrustStats'
+import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
 
 const CATEGORIES = [
   { label: 'Data, Analytics & BI',               href: '/courses/data-analytics-bi/' },
@@ -33,22 +34,40 @@ const RESOURCES = [
   { label: 'Blog',              href: '/blog/' },
 ]
 
-const BRANCHES = [
-  {
-    name: 'Dilsukhnagar',
-    slug: 'dilsukhnagar',
-    address: 'Flat 109, CB Eastern Homes, Kamala Nagar, Dilsukhnagar, Hyderabad – 500060',
-    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5285426!3d17.3677401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98ec55555555%3A0xdd694f49845605aa!2sComplete%20Open%20Source%20Solutions%20(COSS)!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
-    directionsHref: 'https://maps.google.com/?q=17.3694,78.5247',
-  },
-  {
-    name: 'Ameerpet',
-    slug: 'ameerpet',
-    address: '#502, Sree Swathi Ankur Building, Aditya Trade Center, Ameerpet, Hyderabad – 500038',
-    mapEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin',
-    directionsHref: 'https://maps.google.com/?q=17.4375,78.4483',
-  },
-]
+// Branch cards render from BranchSettings (DB), the same table the admin
+// GEO & Local SEO Manager (/admin/geo) edits — this list is just presentation
+// order/slug, not branch data. See buildBranchCard() below.
+const BRANCH_KEYS = [
+  { branchKey: 'dilsukhnagar', slug: 'dilsukhnagar' },
+  { branchKey: 'ameerpet', slug: 'ameerpet' },
+] as const
+
+function buildBranchCard(branchKey: string, slug: string, branch: BranchSettings) {
+  const hasCoords = !!(branch.latitude && branch.longitude)
+  if (!hasCoords) {
+    console.log(`[Footer] BranchSettings "${branchKey}" has no usable coordinates, falling back to known-correct NAP constants`)
+  }
+  const fallback = FALLBACK[branchKey] ?? FALLBACK.dilsukhnagar
+  const lat = hasCoords ? branch.latitude : fallback.latitude
+  const lng = hasCoords ? branch.longitude : fallback.longitude
+
+  const isEmbeddableUrl = /maps\/embed|output=embed/.test(branch.mapEmbedUrl)
+  if (branch.mapEmbedUrl && !isEmbeddableUrl) {
+    console.log(`[Footer] BranchSettings "${branchKey}" mapEmbedUrl is not an embeddable Google Maps URL, ignoring: ${branch.mapEmbedUrl}`)
+  }
+
+  return {
+    name: branch.branchName.replace(/^Coss Cloud Solutions\s*—\s*/, ''),
+    slug,
+    address: [branch.addressLine1, branch.addressLine2, `${branch.city} – ${branch.pincode}`]
+      .filter(Boolean)
+      .join(', '),
+    mapEmbed: isEmbeddableUrl
+      ? branch.mapEmbedUrl
+      : `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`,
+    directionsHref: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+  }
+}
 
 const CATCHMENT_AREAS = [
   { label: 'Kukatpally',            href: '/locations/kukatpally/' },
@@ -115,6 +134,14 @@ const SOCIALS = [
 export default async function Footer() {
   const { rating: RATING, reviewDisplay: REVIEW_COUNT } = await getTrustStats()
   const year = new Date().getFullYear()
+
+  // getBranchSettings() reads BranchSettings directly via Prisma with no cache
+  // layer of its own (unlike SeoSettings, which has a 5-min in-memory TTL).
+  // Root layout.tsx sets `export const dynamic = 'force-dynamic'`, so this
+  // footer re-fetches on every request — admin edits in /admin/geo are live
+  // immediately, subject only to any upstream CDN/edge cache TTL.
+  const branchRows = await Promise.all(BRANCH_KEYS.map(b => getBranchSettings(b.branchKey)))
+  const BRANCHES = BRANCH_KEYS.map((b, i) => buildBranchCard(b.branchKey, b.slug, branchRows[i]))
 
   return (
     <footer className="site-footer">
