@@ -5,9 +5,8 @@ const nextConfig = {
   trailingSlash: false,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
-    // Allowlist only the CDN hostnames actually used by <Image> components.
-    // No Next.js <Image> components are currently used (WpImg uses plain <img>),
-    // so restrict to Cloudinary to prevent this server being used as an open
+    // Allowlist only the CDN hostnames actually used by <Image> components
+    // (Cloudinary), to prevent this server being used as an open
     // image-optimization proxy for arbitrary external URLs.
     remotePatterns: [
       {

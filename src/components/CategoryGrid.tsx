@@ -2,6 +2,45 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import {
+  BarChart2,
+  BookOpen,
+  BrainCircuit,
+  Briefcase,
+  Building2,
+  Cloud,
+  Code2,
+  Database,
+  Palette,
+  Rocket,
+  Settings,
+  Shield,
+  Stethoscope,
+  TestTube2,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
+
+// Mirrors the slug→icon convention already used in category-icons.ts and
+// CategoryIconDisplay.tsx elsewhere in the app, extended with the two
+// categories (AI, medical coding) those maps don't cover yet.
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  'artificial-intelligence-training': BrainCircuit,
+  'data-analytics-bi': BarChart2,
+  'cloud-computing': Cloud,
+  'devops-multi-cloud': Settings,
+  'programming-full-stack': Code2,
+  'data-engineering': Database,
+  'cyber-security': Shield,
+  'erp-crm-enterprise-tools': Building2,
+  'software-testing-os': TestTube2,
+  'digital-design': Palette,
+  'professional-soft-skills': Users,
+  'human-resource': Briefcase,
+  'quantum-computing': Rocket,
+  'medical-coding': Stethoscope,
+};
+const DEFAULT_CATEGORY_ICON: LucideIcon = BookOpen;
 
 interface CategoryItem {
   slug: string;
@@ -12,7 +51,6 @@ interface CategoryItem {
   accentSolid: string;
   accentDark: string;
   iconBg: string;
-  icon: string;
   illustration: string;
 }
 
@@ -25,68 +63,47 @@ const MOBILE_INITIAL = 6;
 export default function CategoryGrid({ categories }: CategoryGridProps) {
   const [showAll, setShowAll] = useState(false);
 
-  const visibleOnMobile = showAll ? categories : categories.slice(0, MOBILE_INITIAL);
   const hasMore = categories.length > MOBILE_INITIAL;
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
-        {/* On mobile, show subset; on sm+ show all */}
+      <div className="cat-grid">
         {categories.map((cat, idx) => {
           const hiddenOnMobile = !showAll && idx >= MOBILE_INITIAL;
+          const Icon = CATEGORY_ICONS[cat.slug] ?? DEFAULT_CATEGORY_ICON;
+
           return (
             <Link
               key={cat.slug}
               href={`/courses/${cat.slug}/`}
-              className={`group block rounded-2xl overflow-hidden border-2 transition-all duration-300 hover:-translate-y-1 border-[var(--cat-accent-light)] dark:border-[var(--cat-accent-dark)] bg-[#161320] hover:shadow-xl${hiddenOnMobile ? ' hidden sm:block' : ''}`}
-              style={{
-                ['--cat-accent-light' as string]: cat.accentSolid,
-                ['--cat-accent-dark' as string]: cat.accentDark,
-              }}
+              aria-label={`${cat.name} — ${cat.courseCount} ${cat.courseCount === 1 ? 'course' : 'courses'}`}
+              className={`cat-card cat-card-shimmer group relative flex flex-col [-webkit-tap-highlight-color:transparent] rounded-[20px] border bg-[rgba(16,24,40,0.88)] border-white/[0.06] backdrop-blur-[8px] shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:border-white/[0.12] hover:shadow-[0_16px_48px_rgba(0,0,0,0.8)] hover:-translate-y-1.5 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow,border-color] duration-300 ease-out focus-visible:outline-none focus-visible:-translate-y-1.5 motion-reduce:focus-visible:translate-y-0 focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]${hiddenOnMobile ? ' hidden sm:flex' : ''}`}
             >
-              <div className="p-3 sm:p-5 pb-0">
-                <div className="flex items-start gap-3 mb-3">
-                  <div
-                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                    style={{ background: cat.iconBg }}
-                  >
-                    {cat.icon}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold text-sm sm:text-base leading-snug text-white group-hover:text-[var(--cat-accent-light)] dark:group-hover:text-[var(--cat-accent-dark)] transition-colors">
-                      {cat.name}
-                    </h3>
-                    <span
-                      className="inline-block mt-1 text-[10px] sm:text-xs font-medium px-2.5 py-0.5 rounded-full text-white"
-                      style={{ background: cat.accentGradient }}
-                    >
-                      {cat.courseCount} {cat.courseCount === 1 ? 'course' : 'courses'}
-                    </span>
-                  </div>
-                </div>
-
-                <p
-                  className="text-slate-400 text-xs leading-relaxed mb-4 min-h-[2.5rem]"
-                  style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+              <div className="cat-row1 flex items-center">
+                <div
+                  className="cat-icon shrink-0 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(0,0,0,.3)] transition-transform duration-300 ease-out group-hover:scale-105"
+                  style={{ background: cat.accentGradient }}
+                  aria-hidden="true"
                 >
-                  {cat.description || 'Industry-focused training with placement support in Hyderabad.'}
-                </p>
-
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-semibold transition-colors text-[var(--cat-accent-light)] dark:text-[var(--cat-accent-dark)]">
-                    Explore Courses →
-                  </span>
+                  <Icon className="cat-icon-svg text-white" aria-hidden="true" />
                 </div>
+                <h3 className="cat-title line-clamp-2 font-bold text-[#f1f5f9]" style={{ lineHeight: 1.3, letterSpacing: '-0.01em' }}>
+                  {cat.name}
+                </h3>
               </div>
 
-              <div className="relative h-24 sm:h-32 mx-3 mb-3 rounded-xl overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={cat.illustration}
-                  alt={`${cat.name} illustration`}
-                  loading="lazy"
-                  className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-transform duration-500"
-                />
+              <div className="cat-footer mt-auto flex items-center justify-between border-t border-white/[0.04]">
+                <span className="cat-count flex items-center gap-1.5 font-semibold text-[#94a3b8]">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400" aria-hidden="true" />
+                  {cat.courseCount} {cat.courseCount === 1 ? 'course' : 'courses'}
+                </span>
+
+                <span className="cat-explore inline-flex items-center gap-1 rounded-full px-2.5 py-[0.2rem] font-bold bg-white/[0.03] group-hover:bg-white/[0.06] text-[#60a5fa] group-hover:text-[#93bbfc] transition-all duration-300 ease-out">
+                  Explore
+                  <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1" aria-hidden="true">
+                    →
+                  </span>
+                </span>
               </div>
             </Link>
           );

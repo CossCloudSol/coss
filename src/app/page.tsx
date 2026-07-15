@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
@@ -31,6 +32,10 @@ import HeroEnrollForm from '@/components/HeroEnrollForm';
 import CategoryGrid from '@/components/CategoryGrid';
 import { siteImages } from '@/lib/wpImages';
 import { getCategoryIllustration } from '@/lib/category-illustrations';
+
+// Swap this URL to change the category section background
+const CATEGORY_SECTION_BG =
+  'https://res.cloudinary.com/dfditihuw/image/upload/f_auto,q_auto/v1784106397/tech_background_nvsdzj.png';
 
 function getCategoryAccent(slug: string): string {
   const map: Record<string, string> = {
@@ -68,25 +73,6 @@ function getCategoryIconBg(slug: string): string {
     'medical-coding':           'rgba(134,239,172,0.15)',
   }
   return map[slug] ?? 'rgba(249,115,22,0.15)'
-}
-
-function getCategoryIcon(slug: string): string {
-  const map: Record<string, string> = {
-    'cloud-computing':          '☁️',
-    'devops-multi-cloud':       '⚙️',
-    'data-analytics-bi':        '📊',
-    'data-engineering':         '🔧',
-    'programming-full-stack':   '💻',
-    'cyber-security':           '🛡️',
-    'erp-crm-enterprise-tools': '🏢',
-    'software-testing-os':      '🧪',
-    'digital-design':           '🎨',
-    'professional-soft-skills': '🤝',
-    'human-resource':           '👥',
-    'quantum-computing':        '⚛️',
-    'medical-coding':           '🏥',
-  }
-  return map[slug] ?? '📚'
 }
 
 function getCategoryAccentSolid(slug: string): string {
@@ -525,17 +511,27 @@ export default async function HomePage() {
 
       {/* ── Course Categories ── */}
       <section
-        className="py-20 relative overflow-hidden bg-[#0f172a]"
+        className="py-20 relative overflow-hidden bg-[#05080f]"
         aria-label="Course categories"
       >
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(circle, #ffffff 1px, transparent 1px)',
-            backgroundSize: '28px 28px',
-          }}
-          aria-hidden="true"
-        />
+        {/* Animated tech-pattern background */}
+        <div className="cat-bg-kenburns" aria-hidden="true">
+          <Image
+            src={CATEGORY_SECTION_BG}
+            alt=""
+            fill
+            loading="lazy"
+            quality={60}
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+        <div className="cat-bg-orb cat-bg-orb-1" aria-hidden="true" />
+        <div className="cat-bg-orb cat-bg-orb-2" aria-hidden="true" />
+        {/* Light veil — reveals the image's wave lines/glows, still protects contrast */}
+        <div className="absolute inset-0 z-0 bg-[rgba(5,8,15,0.35)] pointer-events-none" aria-hidden="true" />
+        {/* Radial darkening behind the header only, for extra heading contrast over the image's bright top region */}
+        <div className="cat-bg-header-veil" aria-hidden="true" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
@@ -557,7 +553,6 @@ export default async function HomePage() {
               accentSolid: getCategoryAccentSolid(cat.slug),
               accentDark: getCategoryAccentDark(cat.slug),
               iconBg: getCategoryIconBg(cat.slug),
-              icon: getCategoryIcon(cat.slug),
               illustration: getCategoryIllustration(cat.slug),
             }))}
           />

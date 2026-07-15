@@ -2753,3 +2753,176 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .dark .tab-underline-courses { background: #60a5fa !important; }
 .dark .tab-underline-batches { background: #fbbf24 !important; }
 .dark .tab-underline-reviews { background: #a78bfa !important; }
+
+/* ── Category grid: dark-glass compact cards (spacing/typography scale) ── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .cat-grid { gap: 1.25rem; }
+}
+@media (min-width: 1024px) {
+  .cat-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+}
+@media (max-width: 480px) {
+  .cat-grid { gap: 0.75rem; }
+}
+@media (max-width: 360px) {
+  .cat-grid { gap: 0.5rem; }
+}
+
+.cat-card {
+  padding: 1.5rem 1.25rem 1.25rem;
+}
+@media (max-width: 480px) {
+  .cat-card { border-radius: 14px !important; padding: 0.75rem 0.65rem 0.65rem; }
+}
+
+.cat-row1 {
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+@media (max-width: 480px) {
+  .cat-row1 { gap: 0.6rem; margin-bottom: 0.5rem; }
+}
+@media (max-width: 360px) {
+  .cat-row1 { gap: 0.5rem; margin-bottom: 0.4rem; }
+}
+
+.cat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+@media (max-width: 480px) {
+  .cat-icon { width: 34px; height: 34px; border-radius: 10px; font-size: 0.95rem; }
+}
+@media (max-width: 360px) {
+  .cat-icon { width: 30px; height: 30px; }
+}
+
+.cat-title {
+  font-size: 1.05rem;
+}
+@media (max-width: 480px) {
+  .cat-title { font-size: 0.78rem; }
+}
+@media (max-width: 360px) {
+  .cat-title { font-size: 0.7rem; }
+}
+
+.cat-footer {
+  padding-top: 0.75rem;
+}
+@media (max-width: 480px) {
+  .cat-footer { padding-top: 0.4rem; }
+}
+
+.cat-count,
+.cat-explore {
+  font-size: 0.8rem;
+}
+@media (max-width: 480px) {
+  .cat-count, .cat-explore { font-size: 0.6rem; }
+}
+@media (max-width: 360px) {
+  .cat-count, .cat-explore { font-size: 0.55rem; }
+}
+
+/* Shimmer hairline ring on hover — the category section is always-dark, so
+   this applies unconditionally (not gated behind .dark). Uses the
+   mask-composite ring technique (padding-box vs border-box masks XORed) to
+   render a 1px gradient border without affecting layout. */
+.cat-card-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .cat-card-shimmer:hover::after { opacity: 1; }
+}
+.cat-card-shimmer:focus-visible::after { opacity: 1; }
+
+/* ── Category section: animated tech background (always-dark) ──
+   Layer order: tech image (Ken Burns pan) → glow orbs → light veil → header radial veil → content. */
+@keyframes cat-kenburns {
+  0%   { transform: scale(1)    translate(0, 0); }
+  50%  { transform: scale(1.08) translate(-1.5%, -1%); }
+  100% { transform: scale(1)    translate(0, 0); }
+}
+.cat-bg-kenburns {
+  position: absolute;
+  inset: -4%;
+  z-index: 0;
+  pointer-events: none;
+  animation: cat-kenburns 24s ease-in-out infinite;
+}
+
+@keyframes cat-orb-pulse {
+  0%, 100% { opacity: 0.20; }
+  50%      { opacity: 0.40; }
+}
+.cat-bg-orb {
+  position: absolute;
+  z-index: 0;
+  width: 45%;
+  height: 60%;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+  animation: cat-orb-pulse 7s ease-in-out infinite;
+}
+.cat-bg-orb-1 {
+  top: -10%;
+  left: -10%;
+  background: rgba(37, 99, 235, 0.5);
+}
+.cat-bg-orb-2 {
+  bottom: -10%;
+  right: -10%;
+  background: rgba(124, 58, 237, 0.4);
+  animation-delay: 3.5s;
+}
+.cat-bg-header-veil {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(900px, 90%);
+  height: 260px;
+  pointer-events: none;
+  background: radial-gradient(ellipse at top, rgba(5, 8, 15, 0.55) 0%, rgba(5, 8, 15, 0) 75%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-bg-kenburns,
+  .cat-bg-orb-1,
+  .cat-bg-orb-2 {
+    animation: none;
+  }
+}
+
+/* Category card icon (Lucide) sizing tiers — mirrors the .cat-icon chip breakpoints */
+.cat-icon-svg {
+  width: 22px;
+  height: 22px;
+}
+@media (max-width: 480px) {
+  .cat-icon-svg { width: 18px; height: 18px; }
+}
+@media (max-width: 360px) {
+  .cat-icon-svg { width: 16px; height: 16px; }
+}
