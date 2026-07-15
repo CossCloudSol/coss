@@ -294,21 +294,21 @@ model HomepageSettings {
 
   // Hero
   heroHeadline           String   @default("Launch Your IT Career in Hyderabad")
-  heroSubtext            String   @default("Hands-on training at Dilsukhnagar & Ameerpet. Real projects, certified trainers, 100% placement support.")
+  heroSubtext            String   @default("Expert-led courses. Real-world projects. Job-ready skills to launch your dream career in Hyderabad.")
   heroCTAPrimaryText     String   @default("Enroll Now")
   heroCTAPrimaryUrl      String   @default("/enroll-now-with-coss")
   heroCTASecondaryText   String   @default("Free Demo Class")
   heroCTASecondaryUrl    String   @default("/free-demo-class")
 
-  // Stats
+  // Stats — labels double as hero trust-indicator copy (icons are hardcoded positionally)
   stat1Value             String   @default("15+")
-  stat1Label             String   @default("Years Experience")
+  stat1Label             String   @default("Expert Trainers")
   stat2Value             String   @default("5000+")
-  stat2Label             String   @default("Students Placed")
+  stat2Label             String   @default("Industry Recognized")
   stat3Value             String   @default("30+")
-  stat3Label             String   @default("Courses")
+  stat3Label             String   @default("Placement Assistance")
   stat4Value             String   @default("200+")
-  stat4Label             String   @default("Hiring Partners")
+  stat4Label             String   @default("Career Growth")
 
   // Announcement bar (supplemental — primary bar managed via /admin/topbar)
   announcementEnabled    Boolean  @default(true)

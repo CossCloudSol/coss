@@ -9,12 +9,16 @@ import { excerptDescription } from '@/lib/sanitizeDescription';
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import {
   Award,
+  BadgeCheck,
   BarChart2,
   BookOpen,
+  BrainCircuit,
   Briefcase,
   Building,
   Calendar,
   Clock,
+  Cloud,
+  Code2,
   GraduationCap,
   IndianRupee,
   MessageSquare,
@@ -23,12 +27,14 @@ import {
   Settings,
   Shield,
   TestTube,
+  TrendingUp,
   Users,
   Wifi,
   type LucideIcon,
 } from 'lucide-react';
 import WpImg from '@/components/WpImg';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
+import HeroLaptopComposition from '@/components/HeroLaptopComposition';
 import CategoryGrid from '@/components/CategoryGrid';
 import { siteImages } from '@/lib/wpImages';
 import { getCategoryIllustration } from '@/lib/category-illustrations';
@@ -114,6 +120,27 @@ function getCategoryAccentDark(slug: string): string {
   }
   return map[slug] ?? '#7F77DD'
 }
+
+// Hero laptop composition — floating category tiles. Slugs are locked (match
+// CATEGORY_ICONS in CategoryGrid.tsx / CATEGORY_SLUG_MAP in course-url.ts).
+const HERO_CATEGORY_TILES: {
+  slug: string;
+  label: string;
+  Icon: LucideIcon;
+  accent: string;
+  pos: 1 | 2 | 3 | 4 | 5 | 6;
+  delay: string;
+  entranceDelay: string;
+  depth: number;
+  mobileHidden?: boolean;
+}[] = [
+  { slug: 'data-analytics-bi',                 label: 'Data & BI',              Icon: BarChart2,    accent: '#60a5fa', pos: 1, delay: '0s',   entranceDelay: '.45s', depth: 34 },
+  { slug: 'cloud-computing',                   label: 'Cloud Computing',        Icon: Cloud,        accent: '#38bdf8', pos: 2, delay: '0.4s', entranceDelay: '.55s', depth: 26 },
+  { slug: 'devops-multi-cloud',                label: 'DevOps & Multi-Cloud',   Icon: Settings,     accent: '#2dd4bf', pos: 3, delay: '0.8s', entranceDelay: '.65s', depth: 38, mobileHidden: true },
+  { slug: 'artificial-intelligence-training',  label: 'Artificial Intelligence', Icon: BrainCircuit, accent: '#fb923c', pos: 4, delay: '1s',   entranceDelay: '.75s', depth: 30 },
+  { slug: 'cyber-security',                    label: 'Cyber Security',         Icon: Shield,       accent: '#e879f9', pos: 5, delay: '1.6s', entranceDelay: '.85s', depth: 24 },
+  { slug: 'programming-full-stack',            label: 'Full Stack Development', Icon: Code2,        accent: '#818cf8', pos: 6, delay: '2s',   entranceDelay: '.95s', depth: 32, mobileHidden: true },
+];
 
 async function getCategories() {
   try {
@@ -373,51 +400,111 @@ export default async function HomePage() {
           <circle cx="760" cy="350" r="2" fill="#fff" fillOpacity="0.2" />
         </svg>
 
+        {/* Flowing wave lines — lower band only, echoes the category section's tech background */}
+        <svg
+          aria-hidden="true"
+          className="hero-wave-lines"
+          viewBox="0 0 1200 300"
+          preserveAspectRatio="none"
+        >
+          <path d="M0,170 C150,130 300,210 480,180 C660,150 780,220 960,190 C1080,170 1140,200 1200,180" stroke="rgba(59,130,246,.5)" strokeWidth="1.5" fill="none" />
+          <path d="M0,210 C180,250 320,170 500,205 C680,240 820,160 1000,195 C1100,215 1150,190 1200,205" stroke="rgba(168,85,247,.45)" strokeWidth="1.5" fill="none" />
+          <path d="M0,255 C200,225 360,275 560,245 C760,215 900,265 1080,240 C1130,232 1170,245 1200,238" stroke="rgba(96,165,250,.25)" strokeWidth="1" fill="none" />
+        </svg>
+
         <div className="hero-inner">
 
-          {/* Left: copy + CTAs */}
+          {/* Left: copy + trust indicators + CTAs */}
           <div>
-            <div className="hero-badge" role="text">#1 IT Training Institute in Hyderabad</div>
+            <div className="hero-badge" role="text">
+              <GraduationCap className="hero-badge-icon" aria-hidden="true" />
+              Learn Today. <span className="hero-badge-accent">Get Hired Tomorrow.</span>
+            </div>
 
             <h1 className="hero-title">
-              {hpSettings.heroHeadline}
+              <span className="hero-title-white">Industry-Focused</span><br />
+              <span className="hero-title-orange">IT Training</span>{' '}
+              <span className="hero-title-white">for</span><br />
+              <span className="hero-title-white">Your </span>
+              <span className="hero-title-blue">Future</span>
             </h1>
 
             <p className="hero-desc">
               {hpSettings.heroSubtext}
             </p>
 
-            {/* Primary + Secondary CTAs — min 48px tap targets */}
-            <div className="hero-btns">
-              <Link href={hpSettings.heroCTAPrimaryUrl} className="btn-primary hero-cta-primary">
-                {hpSettings.heroCTAPrimaryText}
-              </Link>
-              <Link href={hpSettings.heroCTASecondaryUrl} className="btn-outline-dark hero-cta-secondary">
-                {hpSettings.heroCTASecondaryText}
-              </Link>
-            </div>
-
-            {/* Stats row — 4-col desktop, 2×2 mobile */}
-            <div className="hero-stats" aria-label="Quick stats">
+            {/* Trust indicators — labels are admin-editable (stat1-4Label), icons/colors are fixed */}
+            <div className="hero-trust-row" aria-label="Why choose us">
               {([
-                { Icon: Users,    number: hpSettings.stat2Value, label: hpSettings.stat2Label },
-                { Icon: BookOpen, number: hpSettings.stat3Value, label: hpSettings.stat3Label },
-                { Icon: Award,    number: hpSettings.stat4Value, label: hpSettings.stat4Label },
-                { Icon: Calendar, number: hpSettings.stat1Value, label: hpSettings.stat1Label },
-              ]).map(({ Icon, number, label }) => (
-                <div key={label} className="hero-stat-item">
-                  <Icon size={26} className="hero-stat-icon" aria-hidden="true" />
-                  <div className="hero-stat-number">{number}</div>
-                  <div className="hero-stat-label">{label}</div>
+                { Icon: Users,       color: 'orange',  label: hpSettings.stat1Label },
+                { Icon: BadgeCheck,  color: 'purple',  label: hpSettings.stat2Label },
+                { Icon: Briefcase,   color: 'blue',    label: hpSettings.stat3Label },
+                { Icon: TrendingUp,  color: 'emerald', label: hpSettings.stat4Label },
+              ]).map(({ Icon, color, label }) => (
+                <div key={label} className={`hero-trust-item hero-trust-item-${color}`}>
+                  <Icon className="hero-trust-icon" aria-hidden="true" />
+                  <span className="hero-trust-label">{label}</span>
                 </div>
               ))}
             </div>
+
+            {/* Primary + Secondary CTAs — min 48px tap targets. Scroll to the
+                relocated enroll form rather than navigating away from the hero. */}
+            <div className="hero-btns">
+              <a href="#enroll-form" className="btn-primary hero-cta-primary">
+                {hpSettings.heroCTAPrimaryText}
+              </a>
+              <a href="#enroll-form" className="btn-outline-dark hero-cta-secondary">
+                {hpSettings.heroCTASecondaryText}
+              </a>
+            </div>
           </div>
 
-          {/* Right: enroll form */}
-          <div>
-            <HeroEnrollForm />
+          {/* Right: laptop composition */}
+          <HeroLaptopComposition>
+            <div className="hero-ring hero-ring-outer" aria-hidden="true" />
+            <div className="hero-ring hero-ring-inner" aria-hidden="true" />
+            <div className="hero-laptop-parallax" data-depth="18">
+              <div className="hero-laptop-float">
+                <Image
+                  src="https://res.cloudinary.com/dfditihuw/image/upload/f_auto,q_auto/v1784125790/hero-laptop_h1vcqj.png"
+                  alt="Coss Cloud Solutions online learning platform"
+                  width={768}
+                  height={512}
+                  priority
+                  className="hero-laptop-img"
+                />
+              </div>
+            </div>
+            {HERO_CATEGORY_TILES.map((tile) => (
+              <div
+                key={tile.slug}
+                className={`hero-cat-tile-wrap hero-cat-tile-${tile.pos}`}
+                data-depth={tile.depth}
+              >
+                <Link
+                  href={`/courses/${tile.slug}/`}
+                  className={`hero-cat-tile flex flex-col items-center gap-1${tile.mobileHidden ? ' hidden lg:flex' : ''}`}
+                  style={{ '--tile-accent': tile.accent, animationDelay: `${tile.entranceDelay}, ${tile.delay}` } as React.CSSProperties}
+                >
+                  <tile.Icon className="hero-cat-tile-icon" aria-hidden="true" />
+                  <span className="hero-cat-tile-label">{tile.label}</span>
+                </Link>
+              </div>
+            ))}
+          </HeroLaptopComposition>
+        </div>
+      </section>
+
+      {/* ── Book Your Free Demo Class (relocated hero enroll form) ── */}
+      <section id="enroll-form" className="enroll-form-section" aria-label="Book your free demo class">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <span className="text-orange-400 text-xs font-bold uppercase tracking-widest">Get Started</span>
+            <h2 className="text-3xl font-bold text-white mt-2">Book Your Free Demo Class</h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
           </div>
+          <HeroEnrollForm />
         </div>
       </section>
 

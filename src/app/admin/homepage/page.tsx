@@ -57,7 +57,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   )
 }
 
-function Input({ value, onChange, placeholder, maxLength }: { value: string; onChange: (v: string) => void; placeholder?: string; maxLength?: number }) {
+function Input({ value, onChange, placeholder, maxLength, disabled }: { value: string; onChange: (v: string) => void; placeholder?: string; maxLength?: number; disabled?: boolean }) {
   return (
     <div className="relative">
       <input
@@ -66,7 +66,8 @@ function Input({ value, onChange, placeholder, maxLength }: { value: string; onC
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         maxLength={maxLength}
-        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+        disabled={disabled}
+        className={`w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent${disabled ? ' opacity-60 cursor-not-allowed' : ''}`}
       />
       {maxLength && (
         <span className="absolute right-2 top-2 text-xs text-gray-400">{value.length}/{maxLength}</span>
@@ -243,36 +244,45 @@ export default function HomepageManagerPage() {
 
       {/* Hero Section */}
       <SectionCard title="Hero Section" icon="🎯">
-        <Field label="Headline" hint="Main heading — keep punchy, under 60 characters.">
-          <Input value={settings.heroHeadline} onChange={(v) => update('heroHeadline', v)} maxLength={80} placeholder="Launch Your IT Career in Hyderabad" />
+        <Field label="Headline" hint="Currently controlled by the hero design (fixed copy + per-word colors), not this field. Kept here in case the hero is redesigned again later.">
+          <Input value={settings.heroHeadline} onChange={(v) => update('heroHeadline', v)} maxLength={80} placeholder="Launch Your IT Career in Hyderabad" disabled />
         </Field>
-        <Field label="Subtext" hint="Supporting text under the headline. 1–2 sentences.">
+        <Field label="Subtext" hint="Supporting text under the headline. 1–2 sentences. Live on the homepage hero.">
           <Textarea value={settings.heroSubtext} onChange={(v) => update('heroSubtext', v)} rows={2} maxLength={200} />
         </Field>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          Button text below is live on the hero. The URL fields are currently unused there — both hero
+          buttons scroll down to the on-page &quot;Book Your Free Demo Class&quot; form instead of navigating away.
+        </p>
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div>
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Primary CTA</p>
             <Field label="Button text"><Input value={settings.heroCTAPrimaryText} onChange={(v) => update('heroCTAPrimaryText', v)} placeholder="Enroll Now" /></Field>
-            <Field label="URL"><Input value={settings.heroCTAPrimaryUrl} onChange={(v) => update('heroCTAPrimaryUrl', v)} placeholder="/enroll-now-with-coss" /></Field>
+            <Field label="URL (unused on hero — see note above)"><Input value={settings.heroCTAPrimaryUrl} onChange={(v) => update('heroCTAPrimaryUrl', v)} placeholder="/enroll-now-with-coss" /></Field>
           </div>
           <div>
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Secondary CTA</p>
             <Field label="Button text"><Input value={settings.heroCTASecondaryText} onChange={(v) => update('heroCTASecondaryText', v)} placeholder="Free Demo Class" /></Field>
-            <Field label="URL"><Input value={settings.heroCTASecondaryUrl} onChange={(v) => update('heroCTASecondaryUrl', v)} placeholder="/free-demo-class" /></Field>
+            <Field label="URL (unused on hero — see note above)"><Input value={settings.heroCTASecondaryUrl} onChange={(v) => update('heroCTASecondaryUrl', v)} placeholder="/free-demo-class" /></Field>
           </div>
         </div>
       </SectionCard>
 
       {/* Stats Bar */}
-      <SectionCard title="Stats Bar" icon="📊">
-        <Toggle enabled={settings.showStats} onChange={(v) => update('showStats', v)} label="Show stats bar on homepage" />
+      <SectionCard title="Hero Trust Indicators" icon="📊">
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+          Only the label (bottom field) is shown on the homepage hero — as one of the 4 icon + text
+          trust indicators (icons are fixed: Users, BadgeCheck, Briefcase, TrendingUp). The value
+          (top field) is unused there now, except stat2&apos;s value which still feeds the &quot;Placements&quot; count in the top info bar.
+        </p>
+        <Toggle enabled={settings.showStats} onChange={(v) => update('showStats', v)} label="Show stats bar on homepage (legacy — not currently wired to any section)" />
         <div className="mt-4">
           <div className="grid grid-cols-4 gap-2 mb-2">
             {([
-              { v: 'stat1Value', l: 'stat1Label', vp: '15+', lp: 'Years Experience' },
-              { v: 'stat2Value', l: 'stat2Label', vp: '5000+', lp: 'Students Placed' },
-              { v: 'stat3Value', l: 'stat3Label', vp: '30+', lp: 'Courses' },
-              { v: 'stat4Value', l: 'stat4Label', vp: '200+', lp: 'Hiring Partners' },
+              { v: 'stat1Value', l: 'stat1Label', vp: '15+', lp: 'Expert Trainers' },
+              { v: 'stat2Value', l: 'stat2Label', vp: '5000+', lp: 'Industry Recognized' },
+              { v: 'stat3Value', l: 'stat3Label', vp: '30+', lp: 'Placement Assistance' },
+              { v: 'stat4Value', l: 'stat4Label', vp: '200+', lp: 'Career Growth' },
             ] as const).map((s, i) => (
               <div key={i} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                 <input
