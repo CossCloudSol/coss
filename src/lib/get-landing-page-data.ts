@@ -64,6 +64,16 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
       'soft-skills-training-institute-in-hyderabad':            'soft-skills-personality-development',
       'spoken-english-training-institute-in-hyderabad':         'spoken-english-communication',
       'tally-erp-training-institute-in-hyderabad':              'tally-erp-prime-accounting',
+
+      // "-institute-" variants missing — GSC 404 remediation 2026-07-16
+      'aws-cloud-training-institute-in-hyderabad':              'aws-solutions-architect-training-in-hyderabad',
+      'cloud-data-engineer-training-institute-in-hyderabad':    'data-engineering-python-training-in-hyderabad',
+      'multi-cloud-engineer-training-institute-in-hyderabad':   'multi-cloud-architecture-training-in-hyderabad',
+      'linux-administration-training-institute-in-hyderabad':  'linux-shell-scripting-training-in-hyderabad',
+      'azure-data-engineer-training-institute-in-hyderabad':    'azure-data-factory-training-in-hyderabad',
+      'java-full-stack-training-institute-in-hyderabad':        'full-stack-java-developer-training-in-hyderabad',
+      'ccna-training-institute-in-hyderabad':                   'network-security-training-in-hyderabad',
+      'oracle-fusion-hcm-training-institute-in-hyderabad':      'salesforce-admin-developer-training-in-hyderabad',
     }
 
     // Check explicit map first

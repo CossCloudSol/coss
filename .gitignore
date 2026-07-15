@@ -36,3 +36,7 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# Redirect sync backups / one-off exports
+next.config.mjs.bak
+gsc-404-urls.csv
