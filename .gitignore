@@ -40,3 +40,4 @@ Thumbs.db
 # Redirect sync backups / one-off exports
 next.config.mjs.bak
 gsc-404-urls.csv
+seo-audit-report.csv

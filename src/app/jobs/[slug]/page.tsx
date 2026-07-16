@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
+import { buildTitle } from '@/lib/build-title';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,8 +44,9 @@ async function getJob(slug: string): Promise<Job | null> {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const job = await getJob(params.slug);
   if (!job) return { title: 'Job Not Found' };
+  const finalTitle = buildTitle(`${job.title} at ${job.company} — Hyderabad`);
   return {
-    title: `${job.title} at ${job.company} — Hyderabad | Coss Cloud Solutions`,
+    title: { absolute: finalTitle },
     description: `${job.title} opening at ${job.company} in ${job.location}. ${job.experience} experience. Apply through Coss Cloud Solutions placement assistance.`,
   };
 }

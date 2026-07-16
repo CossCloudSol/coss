@@ -127,7 +127,9 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogDescription: '5000+ students placed in top IT companies. Resume building, mock interviews, campus drives & company referrals. Start your IT career with full support at Coss Cloud Solutions.',
     ogImage: OG_IMAGE,
     canonicalUrl: `${S}/placements/`,
-    schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Placements', item: `${S}/placements/` }), { '@type': 'EducationalOrganization', '@id': ORG, name: 'Coss Cloud Solutions', aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', reviewCount: '2230', bestRating: '5', worstRating: '1' } }] }),
+    // No aggregateRating: Google disallows self-serving review markup without
+    // genuine third-party on-page reviews (see global-schemas.ts).
+    schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Placements', item: `${S}/placements/` }), { '@type': 'EducationalOrganization', '@id': ORG, name: 'Coss Cloud Solutions' }] }),
   },
   {
     pageSlug: 'certification',
@@ -153,7 +155,9 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogDescription: 'Real reviews from 5000+ students who trained at Coss Cloud Solutions. See how our IT training transformed careers with 100% placement assistance.',
     ogImage: OG_IMAGE,
     canonicalUrl: `${S}/student-reviews/`,
-    schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Student Reviews', item: `${S}/student-reviews/` }), { '@type': 'EducationalOrganization', '@id': ORG, name: 'Coss Cloud Solutions', aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', reviewCount: '2230', bestRating: '5', worstRating: '1' }, review: [{ '@type': 'Review', author: { '@type': 'Person', name: 'Gopi Krishna' }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' }, reviewBody: 'Best institute in Dilsukhnagar with 100% placement. Faculty is excellent, got placed within a month.' }, { '@type': 'Review', author: { '@type': 'Person', name: 'Jahnavi S.' }, reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' }, reviewBody: 'COSS made Linux Administration easy to understand. Excellent practical sessions. Fantastic place.' }] }] }),
+    // No aggregateRating/review: Google disallows self-serving review markup
+    // without genuine third-party on-page reviews (see global-schemas.ts).
+    schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Student Reviews', item: `${S}/student-reviews/` }), { '@type': 'EducationalOrganization', '@id': ORG, name: 'Coss Cloud Solutions' }] }),
   },
   {
     pageSlug: 'blog',

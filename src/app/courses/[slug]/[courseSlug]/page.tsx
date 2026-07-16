@@ -7,6 +7,7 @@ import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 import { sanitizeDescription } from '@/lib/sanitizeDescription';
+import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,10 +81,11 @@ async function getRelated(category: string, excludeSlug: string): Promise<Array<
 export async function generateMetadata({ params }: { params: { slug: string; courseSlug: string } }): Promise<Metadata> {
   const course = await getCourse(params.slug, params.courseSlug);
   if (!course) return { title: 'Course Not Found' };
-  return {
-    title: course.seoTitle ?? `${course.title} | COSS Cloud Solutions`,
+  const fallback: Metadata = {
+    title: course.seoTitle ?? course.title,
     description: course.seoDesc ?? course.excerpt,
   };
+  return buildPageMetadataWithFallback(`courses/${params.slug}/${params.courseSlug}`, fallback);
 }
 
 export default async function NestedCourseDetailPage({ params }: { params: { slug: string; courseSlug: string } }) {
@@ -94,14 +96,21 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
   const host2  = headerList.get('host') ?? 'localhost:3000';
   const proto2 = headerList.get('x-forwarded-proto') ?? (host2.startsWith('localhost') ? 'http' : 'https');
 
-  const [related, courseBatches] = await Promise.all([
+  const [related, courseBatches, customSchema] = await Promise.all([
     getRelated(course.category, course.slug),
     getCourseBatches2(course.id, proto2, host2),
+    getPageSchemaMarkup(`courses/${params.slug}/${params.courseSlug}`),
   ]);
   const syllabusItems: SyllabusItem[] = Array.isArray(course.syllabus) ? course.syllabus : [];
 
   return (
     <>
+      {customSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(customSchema) }}
+        />
+      )}
       <ResponsivePageStyles />
 
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '48px 20px 40px', color: '#fff' }}>

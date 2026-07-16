@@ -182,7 +182,11 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data, content } = matter(fileContents);
     const cleaned = cleanContent(content);
-    const contentHtml = await marked(cleaned);
+    // The post page renders its own <h1>{title}</h1> above the article — demote
+    // any markdown h1 to h2 so the page never ends up with two H1s.
+    const contentHtml = (await marked(cleaned))
+      .replace(/<h1(\s|>)/gi, '<h2$1')
+      .replace(/<\/h1>/gi, '</h2>');
 
     const titleStr = sanitizeValue(data.title) || slug;
     const rawTags  = sanitizeArray(data.tags);

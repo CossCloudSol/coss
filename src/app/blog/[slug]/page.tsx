@@ -5,11 +5,17 @@ import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { headers } from 'next/headers';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
+
+// The page already renders its own <h1>{title}</h1> above the article —
+// demote any h1 markdown content produces to h2 so there's only ever one H1.
+const MARKDOWN_COMPONENTS: Components = {
+  h1: ({ node, ...props }) => <h2 {...props} />,
+};
 
 /**
  * Normalises a frontmatter value to a safe display string.
@@ -50,9 +56,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     // DB error — fall through to file system
   }
   if (dbPost) {
-    const title = dbPost.seoTitle ?? `${dbPost.title} | COSS Cloud Solutions`;
+    const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
     const description = dbPost.seoDesc ?? dbPost.excerpt;
-    return { title, description, openGraph: { title: dbPost.title, description, type: 'article' } };
+    const fallback: Metadata = {
+      title: dbPost.seoTitle ?? dbPost.title,
+      description,
+      alternates: { canonical: canonicalUrl },
+      openGraph: { title: dbPost.title, description, url: canonicalUrl, type: 'article' },
+    };
+    return buildPageMetadataWithFallback(`blog/${params.slug}`, fallback);
   }
 
   const post = await getPostBySlug(params.slug);
@@ -69,7 +81,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const canonicalUrl = `${SITE_URL}/blog/${params.slug}/`;
 
   const fallback: Metadata = {
-    title: `${titleStr} | COSS Cloud Solutions`,
+    title: titleStr,
     description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
@@ -148,7 +160,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 <span style={{ marginLeft: 'auto', fontSize: '12px' }}>by {dbPost.author}</span>
               </div>
               <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{dbPost.content}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={MARKDOWN_COMPONENTS}>{dbPost.content}</ReactMarkdown>
               </div>
               {dbPost.tags.length > 0 && (
                 <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">

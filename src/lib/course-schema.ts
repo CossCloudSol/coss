@@ -5,10 +5,14 @@
  * Produces four schema types that Google uses for rich results,
  * and that AI engines use for entity/content understanding (GEO):
  *
- *   • Course + AggregateRating  → course rich snippets with star rating
+ *   • Course                     → course rich snippets in SERPs
  *   • FAQPage                   → FAQ accordion directly in SERPs
  *   • BreadcrumbList            → breadcrumb trail in SERPs
  *   • WebPage + speakable       → signals key passages to AI-powered search
+ *
+ * No aggregateRating: Google disallows self-serving review markup without
+ * genuine third-party on-page reviews. See global-schemas.ts for the same
+ * rule applied to branch LocalBusiness schema.
  */
 
 const SITE_URL =
@@ -84,8 +88,7 @@ export function buildCourseSchemas(input: CourseSchemaInput): object[] {
   const pageId  = `${pageUrl}/#webpage`;
   const schemas: object[] = [];
 
-  // ── 1. Course schema with AggregateRating ──────────────────────────────────
-  // AggregateRating enables star ratings in Google SERPs — high CTR boost.
+  // ── 1. Course schema ────────────────────────────────────────────────────────
   schemas.push({
     '@context': 'https://schema.org',
     '@type': 'Course',
@@ -105,13 +108,6 @@ export function buildCourseSchemas(input: CourseSchemaInput): object[] {
       availability: 'https://schema.org/InStock',
       validFrom: new Date().toISOString().split('T')[0],
       seller: { '@id': `${SITE_URL}/#organization` },
-    },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.8',
-      reviewCount: '320',
-      bestRating: '5',
-      worstRating: '1',
     },
     hasCourseInstance: {
       '@type': 'CourseInstance',

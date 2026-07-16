@@ -10,6 +10,7 @@ import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
 import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { sanitizeDescription, excerptDescription } from '@/lib/sanitizeDescription';
+import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -153,17 +154,19 @@ async function getRelated(category: string, excludeSlug: string): Promise<Array<
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const course = await getCourse(params.slug);
   if (course) {
-    return {
-      title: course.seoTitle ?? `${course.title} | COSS Cloud Solutions`,
+    const fallback: Metadata = {
+      title: course.seoTitle ?? course.title,
       description: course.seoDesc ?? course.excerpt,
     };
+    return buildPageMetadataWithFallback(`courses/${params.slug}`, fallback);
   }
   const category = await getCategory(params.slug);
   if (category) {
-    return {
-      title: category.seoTitle ?? `${category.name} Training in Hyderabad | Coss Cloud Solutions`,
+    const fallback: Metadata = {
+      title: category.seoTitle ?? `${category.name} Training in Hyderabad`,
       description: category.seoDesc ?? category.description ?? undefined,
     };
+    return buildPageMetadataWithFallback(`courses/${params.slug}`, fallback);
   }
   return { title: 'Not Found' };
 }
@@ -172,12 +175,14 @@ export default async function CourseOrCategoryPage({ params }: { params: { slug:
   // Check course first (legacy URLs), then category for new dynamic categories
   const course = await getCourse(params.slug);
   if (course) {
-    return <CourseDetailView course={course} />;
+    const customSchema = await getPageSchemaMarkup(`courses/${params.slug}`);
+    return <CourseDetailView course={course} customSchema={customSchema} />;
   }
 
   const category = await getCategory(params.slug);
   if (category) {
-    return <CategoryLandingView category={category} />;
+    const customSchema = await getPageSchemaMarkup(`courses/${params.slug}`);
+    return <CategoryLandingView category={category} customSchema={customSchema} />;
   }
 
   notFound();
@@ -185,11 +190,17 @@ export default async function CourseOrCategoryPage({ params }: { params: { slug:
 
 // ─── Course Detail View ────────────────────────────────────────────────────────
 
-function CourseDetailView({ course }: { course: CourseDetail }) {
+function CourseDetailView({ course, customSchema }: { course: CourseDetail; customSchema: object | null }) {
   const syllabusItems: SyllabusItem[] = Array.isArray(course.syllabus) ? course.syllabus : [];
 
   return (
     <>
+      {customSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(customSchema) }}
+        />
+      )}
       <ResponsivePageStyles />
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '48px 20px 40px', color: '#fff' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -420,9 +431,15 @@ function EnquirySidebar({ price, originalPrice }: { price: number | null; origin
 
 // ─── Category Landing View ─────────────────────────────────────────────────────
 
-function CategoryLandingView({ category }: { category: CategoryDetail }) {
+function CategoryLandingView({ category, customSchema }: { category: CategoryDetail; customSchema: object | null }) {
   return (
     <>
+      {customSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(customSchema) }}
+        />
+      )}
       <ResponsivePageStyles />
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '48px 20px 40px', color: '#fff' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>

@@ -74,6 +74,12 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
       'java-full-stack-training-institute-in-hyderabad':        'full-stack-java-developer-training-in-hyderabad',
       'ccna-training-institute-in-hyderabad':                   'network-security-training-in-hyderabad',
       'oracle-fusion-hcm-training-institute-in-hyderabad':      'salesforce-admin-developer-training-in-hyderabad',
+
+      // Orphaned sitemap URLs — SEO audit remediation 2026-07-17
+      'aws-devops-cloud-training-institute-in-hyderabad':       'kubernetes-docker-devops-training-in-hyderabad',
+      'multi-cloud-devops-training-institute-in-hyderabad':     'multi-cloud-architecture-training-in-hyderabad',
+      'python-full-stack-training-institute-in-hyderabad':      'full-stack-python-training-in-hyderabad',
+      'communication-skills-training-institute-in-hyderabad':   'business-communication-training-in-hyderabad',
     }
 
     // Check explicit map first

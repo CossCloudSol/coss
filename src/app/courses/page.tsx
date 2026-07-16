@@ -1,14 +1,14 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/db'
 import { COURSE_GROUPS, CATEGORY_ACCENTS, CATEGORY_ICONS } from '@/lib/course-groups'
 import { getCourseUrl } from '@/lib/course-url'
 import CoursesTabPage from '@/components/CoursesTabPage'
+import { buildPageMetadata } from '@/lib/get-page-seo'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
-  title: 'All IT Courses in Hyderabad | Coss Cloud Solutions',
-  description:
-    'Browse 84+ IT training courses in Hyderabad across Cloud, DevOps, Data Science, Programming, ERP and more. Classroom training at Dilsukhnagar & Ameerpet.',
+export async function generateMetadata(): Promise<Metadata> {
+  return buildPageMetadata('courses')
 }
 
 export default async function CoursesPage() {
