@@ -24,8 +24,16 @@ const TRUNCATED_BRAND_RE = new RegExp(
   `\\s*${SEPARATOR}\\s*(?:${BRAND_PREFIXES.join('|')})\\s*…\\s*$`,
   'i',
 );
+const LEADING_BRAND_RE = new RegExp(`^\\s*${BRAND}(?:\\s+hyderabad)?\\s*${SEPARATOR}\\s*`, 'i');
 
-export function buildTitle(raw: string | null | undefined): string {
+/**
+ * Strips any leading/trailing brand segment (including truncated "…"
+ * fragments) from a raw title, however many times it was appended. Shared by
+ * buildTitle() and anywhere else that needs a brand-free title, e.g. the
+ * blog fallback description template, which appends its own tagline instead
+ * of the " | Coss Cloud Solutions" suffix.
+ */
+export function stripBrandFragments(raw: string | null | undefined): string {
   let title = (raw ?? '').trim();
 
   let prev: string;
@@ -33,7 +41,13 @@ export function buildTitle(raw: string | null | undefined): string {
     prev = title;
     title = title.replace(TRAILING_BRAND_RE, '').trim();
     title = title.replace(TRUNCATED_BRAND_RE, '').trim();
+    title = title.replace(LEADING_BRAND_RE, '').trim();
   } while (title !== prev);
 
+  return title;
+}
+
+export function buildTitle(raw: string | null | undefined): string {
+  const title = stripBrandFragments(raw);
   return title ? `${title} | Coss Cloud Solutions` : 'Coss Cloud Solutions';
 }

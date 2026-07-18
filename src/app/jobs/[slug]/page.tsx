@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
-import { buildTitle } from '@/lib/build-title';
+import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,11 +44,19 @@ async function getJob(slug: string): Promise<Job | null> {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const job = await getJob(params.slug);
   if (!job) return { title: 'Job Not Found' };
-  const finalTitle = buildTitle(`${job.title} at ${job.company} — Hyderabad`);
-  return {
-    title: { absolute: finalTitle },
-    description: `${job.title} opening at ${job.company} in ${job.location}. ${job.experience} experience. Apply through Coss Cloud Solutions placement assistance.`,
+  const title = `${job.title} at ${job.company} — Hyderabad`;
+  const description = `${job.title} opening at ${job.company} in ${job.location}. ${job.experience} experience. Apply through Coss Cloud Solutions placement assistance.`;
+  const fallback: Metadata = {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      images: job.companyLogo ? [{ url: job.companyLogo }] : undefined,
+    },
   };
+  return buildPageMetadataWithFallback(`jobs/${params.slug}`, fallback);
 }
 
 export default async function JobDetailPage({ params }: { params: { slug: string } }) {

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
+import { stripBrandFragments } from '@/lib/build-title';
 import { headers } from 'next/headers';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -38,6 +39,17 @@ function tagToString(value: unknown): string {
   return String(value);
 }
 
+/**
+ * Truncates to maxLen without cutting mid-word — trims back to the last
+ * space instead of leaving a half-cut word at the boundary.
+ */
+function capAtWordBoundary(text: string, maxLen: number): string {
+  if (text.length <= maxLen) return text;
+  const truncated = text.slice(0, maxLen);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated).trim();
+}
+
 import { getBlogImageUrl } from '@/lib/cloudinary';
 
 export async function generateStaticParams() {
@@ -58,11 +70,18 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (dbPost) {
     const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
     const description = dbPost.seoDesc ?? dbPost.excerpt;
+    const ogImage = dbPost.thumbnail ?? getBlogImageUrl(params.slug, 1200, 630);
     const fallback: Metadata = {
       title: dbPost.seoTitle ?? dbPost.title,
       description,
       alternates: { canonical: canonicalUrl },
-      openGraph: { title: dbPost.title, description, url: canonicalUrl, type: 'article' },
+      openGraph: {
+        title: dbPost.title,
+        description,
+        url: canonicalUrl,
+        type: 'article',
+        images: ogImage ? [{ url: ogImage }] : undefined,
+      },
     };
     return buildPageMetadataWithFallback(`blog/${params.slug}`, fallback);
   }
@@ -76,9 +95,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const isCleanExcerpt = rawExcerpt.length > 20 && !rawExcerpt.includes('[vc_');
   const description = isCleanExcerpt
     ? rawExcerpt.slice(0, 158)
-    : `${titleStr} — Expert IT training insights from COSS Cloud Solutions, Hyderabad's leading IT institute.`.slice(0, 158);
+    : capAtWordBoundary(
+        `${stripBrandFragments(titleStr)} — Expert IT training insights from COSS Cloud Solutions, Hyderabad's leading IT institute.`,
+        160,
+      );
 
   const canonicalUrl = `${SITE_URL}/blog/${params.slug}/`;
+  const ogImage = getBlogImageUrl(params.slug, 1200, 630);
 
   const fallback: Metadata = {
     title: titleStr,
@@ -90,6 +113,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url: canonicalUrl,
       siteName: 'COSS Cloud Solutions',
       type: 'article',
+      images: ogImage ? [{ url: ogImage }] : undefined,
     },
     twitter: {
       card: 'summary_large_image',

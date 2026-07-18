@@ -435,7 +435,21 @@ async function auditUrl(requestedUrl) {
     const titleCore = title.replace(new RegExp(`\\s*[|–-]\\s*${BRAND_FULL}.*$`, 'i'), '').trim();
     const ogCore = ogTitle.replace(new RegExp(`\\s*[|–-]\\s*${BRAND_FULL}.*$`, 'i'), '').trim();
     if (titleCore && ogCore && titleCore !== ogCore) {
-      flags.push('WARNING:og_title_disagrees_with_title');
+      // Two very different root causes render as the same symptom here, so
+      // split them instead of flagging every disagreement identically:
+      //  1. Either string carries a "…" truncation artifact -> stale PageSeo
+      //     metaTitle/ogTitle seeded before the buildTitle pipeline existed
+      //     (real data-quality bug, needs cleanup).
+      //  2. Both strings are clean, just deliberately different wording ->
+      //     an admin set PageSeo.ogTitle on purpose for social sharing, which
+      //     is the pipeline working as designed (get-page-seo.ts always lets
+      //     an explicit ogTitle override win). Not worth flagging as WARNING.
+      const hasTruncationArtifact = /…/.test(title) || /…/.test(ogTitle);
+      if (hasTruncationArtifact) {
+        flags.push('WARNING:og_title_stale_truncated_data');
+      } else {
+        flags.push('INFO:og_title_customized_by_admin');
+      }
     }
   }
 

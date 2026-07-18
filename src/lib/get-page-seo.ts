@@ -6,6 +6,22 @@ import { buildTitle } from './build-title';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 const DEFAULT_SITE_TITLE = 'Coss Cloud Solutions';
 
+// Sitewide fallback OG image. Used whenever a page has no admin-set PageSeo.ogImage,
+// no SeoSettings.defaultOgImage, and (for buildPageMetadataWithFallback) no
+// caller-supplied openGraph.images either. TODO: this is the generic site logo/hero
+// asset — a dedicated 1200x630 branded OG image should be designed to replace it.
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+
+function firstImageUrl(images: unknown): string | undefined {
+  if (!Array.isArray(images) || images.length === 0) return undefined;
+  const first = images[0];
+  if (typeof first === 'string') return first;
+  if (first && typeof first === 'object' && typeof (first as { url?: unknown }).url === 'string') {
+    return (first as { url: string }).url;
+  }
+  return undefined;
+}
+
 /**
  * Strips query params and trailing slash (site uses trailingSlash: false)
  * from any canonical URL — admin-entered or computed — so canonicals never
@@ -110,7 +126,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
 
     const ogTitle = seo?.ogTitle?.trim() ? seo.ogTitle : finalTitle;
     const ogDescription = seo?.ogDescription ?? description;
-    const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? null;
+    const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? DEFAULT_OG_IMAGE;
 
     const defaultCanonical = slug === 'home' ? SITE_URL : `${SITE_URL}/${slug}`;
     const canonicalUrl = normalizeCanonical(seo?.canonicalUrl?.trim() || defaultCanonical);
@@ -122,7 +138,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        images: ogImage ? [{ url: ogImage }] : [],
+        images: [{ url: ogImage }],
         url: canonicalUrl,
         siteName,
         type: 'website',
@@ -131,7 +147,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
         card: 'summary_large_image',
         title: ogTitle,
         description: ogDescription,
-        images: ogImage ? [ogImage] : [],
+        images: [ogImage],
       },
       robots: {
         index: !(seo?.noIndex ?? false),
@@ -182,7 +198,8 @@ export async function buildPageMetadataWithFallback(
     const ogTitle = seo?.ogTitle?.trim() ? seo.ogTitle : finalTitle;
     const ogDescription =
       seo?.ogDescription ?? (fallbackOg as { description?: string }).description ?? description;
-    const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? null;
+    const fallbackImage = firstImageUrl((fallbackOg as { images?: unknown }).images);
+    const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? fallbackImage ?? DEFAULT_OG_IMAGE;
     const ogType = (fallbackOg as { type?: string }).type ?? 'website';
 
     const fallbackCanonical =
@@ -204,7 +221,7 @@ export async function buildPageMetadataWithFallback(
         ...fallbackOg,
         title: ogTitle,
         description: ogDescription,
-        images: ogImage ? [{ url: ogImage }] : ((fallbackOg as { images?: unknown }).images as never) ?? [],
+        images: [{ url: ogImage }],
         url: canonicalUrl,
         siteName,
         type: ogType as never,
@@ -213,7 +230,7 @@ export async function buildPageMetadataWithFallback(
         card: 'summary_large_image',
         title: ogTitle,
         description: ogDescription,
-        images: ogImage ? [ogImage] : [],
+        images: [ogImage],
       },
       robots: {
         index: !(seo?.noIndex ?? false),

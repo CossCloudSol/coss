@@ -157,6 +157,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const fallback: Metadata = {
       title: course.seoTitle ?? course.title,
       description: course.seoDesc ?? course.excerpt,
+      openGraph: course.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
     };
     return buildPageMetadataWithFallback(`courses/${params.slug}`, fallback);
   }
