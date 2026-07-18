@@ -62,7 +62,6 @@ const TYPE_B_LOCALITIES = ['kukatpally', 'madhapur-hitec-city'];
 
 const EXTRA_URLS = [
   '/free-demo-class',
-  '/thank-you',
   '/__seo-audit-404-check__', // synthetic 404 probe
   '/locations/dilsukhnagar',
   '/locations/ameerpet',

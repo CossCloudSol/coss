@@ -7,8 +7,16 @@
  */
 
 const SEPARATOR = '[|\\-–—]';
-const BRAND = '(?:coss\\s+cloud\\s+solutions|coss)';
-const TRAILING_BRAND_RE = new RegExp(`\\s*${SEPARATOR}\\s*${BRAND}(?:\\s+hyderabad)?\\s*$`, 'i');
+// Brand variants: "Coss Cloud Solutions"/"Coss Cloud Solution" (singular),
+// "COSS Cloud Solutions/Solution", and standalone "COSS" — all matched
+// case-insensitively via the 'i' flag below.
+const BRAND = '(?:coss\\s+cloud\\s+solutions?|coss)';
+// A trailing brand mention may be introduced by a punctuation separator, a
+// bare comma, or a connector word ("...Hyderabad with Coss Cloud
+// Solutions", "...by COSS Cloud Solutions").
+const CONNECTOR = '(?:with|by|at|from)';
+const TRAILING_PREFIX = `(?:${SEPARATOR}|,|\\b${CONNECTOR}\\b)`;
+const TRAILING_BRAND_RE = new RegExp(`\\s*${TRAILING_PREFIX}\\s*${BRAND}(?:\\s+hyderabad)?\\s*$`, 'i');
 
 // Some historical DB rows were seeded by truncating a title to a fixed
 // character count with a trailing "…" *before* the brand suffix existed,
@@ -32,6 +40,19 @@ const LEADING_BRAND_RE = new RegExp(`^\\s*${BRAND}(?:\\s+hyderabad)?\\s*${SEPARA
  * buildTitle() and anywhere else that needs a brand-free title, e.g. the
  * blog fallback description template, which appends its own tagline instead
  * of the " | Coss Cloud Solutions" suffix.
+ *
+ * Trailing-only: a brand mention is only stripped when it sits at the end of
+ * the title, introduced by a separator/comma/connector word. Mid-title or
+ * leading editorial mentions are left untouched.
+ *
+ *   stripBrandFragments('Spoken English Hyderabad with Coss Cloud Solutions')
+ *     === 'Spoken English Hyderabad'
+ *   stripBrandFragments('German Classes – Coss Cloud Solution')
+ *     === 'German Classes'
+ *   stripBrandFragments('About Coss Cloud Solutions')
+ *     === 'About Coss Cloud Solutions'  // leading/mid mention, unchanged
+ *   stripBrandFragments('IELTS Coaching | COSS | Coss Cloud Solutions')
+ *     === 'IELTS Coaching'
  */
 export function stripBrandFragments(raw: string | null | undefined): string {
   let title = (raw ?? '').trim();
