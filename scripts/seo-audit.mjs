@@ -51,7 +51,13 @@ function rewriteHostToBase(url) {
 }
 
 const BRAND_FULL = 'Coss Cloud Solutions';
-const BRAND_SHORT = 'COSS';
+// Regex literal, not `new RegExp('\\bCOSS\\b')` — a template-literal-embedded
+// `\b` word-boundary escape was found to get corrupted by the Next.js build
+// pipeline's minifier into a literal backspace control character, silently
+// making the regex never match (see src/lib/build-title.ts SHORT_BRAND_RE).
+// This script runs standalone under plain Node, so it isn't actually
+// exposed to that bug, but a literal costs nothing and stays consistent.
+const SHORT_RE = /\bCOSS\b/gi;
 
 const BRANCH_GEO = {
   dilsukhnagar: { lat: 17.367741, lng: 78.528543 },
@@ -195,8 +201,7 @@ function countBrandOccurrences(text) {
   const fullMatches = text.match(fullRe) ?? [];
   // Count standalone "COSS" segments not already part of a "Coss Cloud Solutions" match
   const withoutFull = text.replace(fullRe, '');
-  const shortRe = new RegExp(`\\b${BRAND_SHORT}\\b`, 'gi');
-  const shortMatches = withoutFull.match(shortRe) ?? [];
+  const shortMatches = withoutFull.match(SHORT_RE) ?? [];
   return fullMatches.length + shortMatches.length;
 }
 

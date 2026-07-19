@@ -15,7 +15,14 @@ const BRAND = '(?:coss\\s+cloud\\s+solutions?|coss)';
 // bare comma, or a connector word ("...Hyderabad with Coss Cloud
 // Solutions", "...by COSS Cloud Solutions").
 const CONNECTOR = '(?:with|by|at|from)';
-const TRAILING_PREFIX = `(?:${SEPARATOR}|,|\\b${CONNECTOR}\\b)`;
+// Read from a regex literal rather than typed inline as `\\b` in a template
+// literal — the build pipeline's minifier was found to corrupt a
+// template-literal-embedded `\b` word-boundary escape into a literal
+// backspace control character in the deployed bundle (see SHORT_BRAND_RE
+// below). `.source` on an already-constructed regex literal isn't cooked
+// the same way, so it's safe to interpolate.
+const WORD_BOUNDARY = /\b/.source;
+const TRAILING_PREFIX = `(?:${SEPARATOR}|,|${WORD_BOUNDARY}${CONNECTOR}${WORD_BOUNDARY})`;
 const TRAILING_BRAND_RE = new RegExp(`\\s*${TRAILING_PREFIX}\\s*${BRAND}(?:\\s+hyderabad)?\\s*$`, 'i');
 // A trailing brand mention may also be wrapped in parentheses or brackets
 // with no separator at all ("...Dilsukhnagar (Coss Cloud Solutions)").
