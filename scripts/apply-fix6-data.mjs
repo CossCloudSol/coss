@@ -11,6 +11,15 @@
  *       (rows with type=title; the type=description rows are illustrative
  *       of the blog description-template bug fixed in code and are not
  *       stored data, so they are not applied here).
+ *   (c) NULLs PageSeo.metaDescription rows carrying the stale doubled-brand
+ *       concatenation ("{title incl. trailing brand} — Expert IT training
+ *       insights from Coss Cloud Solutions, ..."), written before the blog
+ *       fallback template started stripping the brand from the title
+ *       portion. Nulling lets buildPageMetadataWithFallback() fall through
+ *       to the now-correct computed description. Detection uses the exact
+ *       same countBrandOccurrences() the audit script uses, so the rows
+ *       selected here are precisely the ones seo-audit.mjs flags as
+ *       brand_repeated_in_description.
  *
  * Defaults to --dry-run (prints planned changes, writes nothing).
  * Pass --write to actually apply changes.
@@ -140,11 +149,49 @@ async function applyTitleRewrites() {
   }
 }
 
+// Mirrors scripts/seo-audit.mjs's countBrandOccurrences() exactly, so the
+// rows this selects are precisely the ones the audit flags as
+// brand_repeated_in_description. Keep in sync if that logic changes.
+const BRAND_FULL = 'Coss Cloud Solutions';
+const BRAND_SHORT = 'COSS';
+
+function countBrandOccurrences(text) {
+  if (!text) return 0;
+  const fullRe = new RegExp(BRAND_FULL.replace(/\s+/g, '\\s+'), 'gi');
+  const fullMatches = text.match(fullRe) ?? [];
+  const withoutFull = text.replace(fullRe, '');
+  const shortRe = new RegExp(`\\b${BRAND_SHORT}\\b`, 'gi');
+  const shortMatches = withoutFull.match(shortRe) ?? [];
+  return fullMatches.length + shortMatches.length;
+}
+
+async function nullStaleDoubledDescriptions() {
+  const rows = await prisma.pageSeo.findMany({
+    where: { metaDescription: { not: null } },
+    select: { pageSlug: true, metaDescription: true },
+  });
+  const stale = rows.filter((r) => countBrandOccurrences(r.metaDescription) > 1);
+
+  console.log(`\n(c) ${stale.length} PageSeo row(s) with a doubled-brand metaDescription:`);
+  for (const row of stale) {
+    console.log(`  ${row.pageSlug}: metaDescription=NULL`);
+    console.log(`    was: "${row.metaDescription}"`);
+
+    if (!DRY_RUN) {
+      await prisma.pageSeo.update({
+        where: { pageSlug: row.pageSlug },
+        data: { metaDescription: null },
+      });
+    }
+  }
+}
+
 async function main() {
   console.log(DRY_RUN ? 'DRY RUN — no writes will be made.\n' : 'WRITE MODE — changes will be applied.\n');
 
   await nullStaleTruncatedTitles();
   await applyTitleRewrites();
+  await nullStaleDoubledDescriptions();
 
   console.log(DRY_RUN ? '\nDry run complete. Re-run with --write to apply.' : '\nDone.');
   await prisma.$disconnect();
