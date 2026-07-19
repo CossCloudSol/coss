@@ -100,3 +100,19 @@ export function countBrandOccurrences(text: string | null | undefined): number {
   const shortMatches = withoutFull.match(SHORT_BRAND_RE) ?? [];
   return fullMatches.length + shortMatches.length;
 }
+
+export function __debugBrandTrace(text: string): string {
+  const fullMatches = text.match(FULL_BRAND_RE) ?? [];
+  const withoutFull = text.replace(FULL_BRAND_RE, '');
+  const shortMatches = withoutFull.match(SHORT_BRAND_RE) ?? [];
+  return JSON.stringify({
+    fullBrandSource: FULL_BRAND_RE.source,
+    fullBrandLastIndexBefore: FULL_BRAND_RE.lastIndex,
+    shortBrandSource: SHORT_BRAND_RE.source,
+    shortBrandLastIndexBefore: SHORT_BRAND_RE.lastIndex,
+    fullMatches,
+    withoutFull,
+    withoutFullEqualsText: withoutFull === text,
+    shortMatches,
+  });
+}

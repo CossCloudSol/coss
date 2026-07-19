@@ -4,7 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import { stripBrandFragments, countBrandOccurrences } from '@/lib/build-title';
+import { stripBrandFragments, countBrandOccurrences, __debugBrandTrace } from '@/lib/build-title';
 import { headers } from 'next/headers';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -93,7 +93,7 @@ function buildExcerptDescription(rawExcerpt: string, fallback: string): string {
   if (bc >= 1) {
     return `[[DEBUG:branch1:bc=${bc}:rawLen=${rawExcerpt.length}:baseLen=${base.length}]]` + capAtWordBoundary(base, 155);
   }
-  return `[[DEBUG:branch0:bc=${bc}:base=${JSON.stringify(base)}:inlineShort=${inlineShort}]]` + capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
+  return `[[DEBUG:branch0:bc=${bc}:inlineShort=${inlineShort}:trace=${__debugBrandTrace(base)}]]` + capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
 }
 
 import { getBlogImageUrl } from '@/lib/cloudinary';
