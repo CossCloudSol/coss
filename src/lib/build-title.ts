@@ -82,9 +82,14 @@ export function buildTitle(raw: string | null | undefined): string {
   return title ? `${title} | Coss Cloud Solutions` : 'Coss Cloud Solutions';
 }
 
-const BRAND_SHORT = 'COSS';
 const FULL_BRAND_RE = new RegExp(FULL_BRAND.replace(/\s+/g, '\\s+'), 'gi');
-const SHORT_BRAND_RE = new RegExp(`\\b${BRAND_SHORT}\\b`, 'gi');
+// A regex *literal* (not `new RegExp` on a template string) — the build
+// pipeline's minifier was found to corrupt a template-literal-constructed
+// `\bCOSS\b` pattern (the `\b` word-boundary escape ends up as a literal
+// backspace control character in the deployed bundle, silently making the
+// regex never match), even though the same source evaluates correctly under
+// plain Node. A literal regex isn't subject to that bug.
+const SHORT_BRAND_RE = /\bCOSS\b/gi;
 
 /**
  * Counts brand mentions in free text (title or prose), matching "Coss Cloud
@@ -99,20 +104,4 @@ export function countBrandOccurrences(text: string | null | undefined): number {
   const withoutFull = text.replace(FULL_BRAND_RE, '');
   const shortMatches = withoutFull.match(SHORT_BRAND_RE) ?? [];
   return fullMatches.length + shortMatches.length;
-}
-
-export function __debugBrandTrace(text: string): string {
-  const fullMatches = text.match(FULL_BRAND_RE) ?? [];
-  const withoutFull = text.replace(FULL_BRAND_RE, '');
-  const shortMatches = withoutFull.match(SHORT_BRAND_RE) ?? [];
-  return JSON.stringify({
-    fullBrandSource: FULL_BRAND_RE.source,
-    fullBrandLastIndexBefore: FULL_BRAND_RE.lastIndex,
-    shortBrandSource: SHORT_BRAND_RE.source,
-    shortBrandLastIndexBefore: SHORT_BRAND_RE.lastIndex,
-    fullMatches,
-    withoutFull,
-    withoutFullEqualsText: withoutFull === text,
-    shortMatches,
-  });
 }

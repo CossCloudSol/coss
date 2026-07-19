@@ -4,7 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import { stripBrandFragments, countBrandOccurrences, __debugBrandTrace } from '@/lib/build-title';
+import { stripBrandFragments, countBrandOccurrences } from '@/lib/build-title';
 import { headers } from 'next/headers';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -87,13 +87,11 @@ function truncateBeforeSecondBrandMention(text: string): string {
  */
 function buildExcerptDescription(rawExcerpt: string, fallback: string): string {
   const base = truncateBeforeSecondBrandMention(rawExcerpt);
-  if (base.length <= 20) return `[[DEBUG:short:${base.length}]]${fallback}`;
-  const bc = countBrandOccurrences(base);
-  const inlineShort = /\bCOSS\b/gi.test(base);
-  if (bc >= 1) {
-    return `[[DEBUG:branch1:bc=${bc}:rawLen=${rawExcerpt.length}:baseLen=${base.length}]]` + capAtWordBoundary(base, 155);
+  if (base.length <= 20) return fallback;
+  if (countBrandOccurrences(base) >= 1) {
+    return capAtWordBoundary(base, 155);
   }
-  return `[[DEBUG:branch0:bc=${bc}:inlineShort=${inlineShort}:trace=${__debugBrandTrace(base)}]]` + capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
+  return capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
 }
 
 import { getBlogImageUrl } from '@/lib/cloudinary';
