@@ -17,6 +17,11 @@ const BRAND = '(?:coss\\s+cloud\\s+solutions?|coss)';
 const CONNECTOR = '(?:with|by|at|from)';
 const TRAILING_PREFIX = `(?:${SEPARATOR}|,|\\b${CONNECTOR}\\b)`;
 const TRAILING_BRAND_RE = new RegExp(`\\s*${TRAILING_PREFIX}\\s*${BRAND}(?:\\s+hyderabad)?\\s*$`, 'i');
+// A trailing brand mention may also be wrapped in parentheses or brackets
+// with no separator at all ("...Dilsukhnagar (Coss Cloud Solutions)").
+// Open/close bracket types are matched as pairs, not mixed.
+const PAREN_BRAND_RE = new RegExp(`\\s*\\(\\s*${BRAND}(?:\\s+hyderabad)?\\s*\\)\\s*$`, 'i');
+const BRACKET_BRAND_RE = new RegExp(`\\s*\\[\\s*${BRAND}(?:\\s+hyderabad)?\\s*\\]\\s*$`, 'i');
 
 // Some historical DB rows were seeded by truncating a title to a fixed
 // character count with a trailing "…" *before* the brand suffix existed,
@@ -53,6 +58,8 @@ const LEADING_BRAND_RE = new RegExp(`^\\s*${BRAND}(?:\\s+hyderabad)?\\s*${SEPARA
  *     === 'About Coss Cloud Solutions'  // leading/mid mention, unchanged
  *   stripBrandFragments('IELTS Coaching | COSS | Coss Cloud Solutions')
  *     === 'IELTS Coaching'
+ *   stripBrandFragments('AWS DevOps Course in Dilsukhnagar (Coss Cloud Solutions)')
+ *     === 'AWS DevOps Course in Dilsukhnagar'
  */
 export function stripBrandFragments(raw: string | null | undefined): string {
   let title = (raw ?? '').trim();
@@ -61,6 +68,8 @@ export function stripBrandFragments(raw: string | null | undefined): string {
   do {
     prev = title;
     title = title.replace(TRAILING_BRAND_RE, '').trim();
+    title = title.replace(PAREN_BRAND_RE, '').trim();
+    title = title.replace(BRACKET_BRAND_RE, '').trim();
     title = title.replace(TRUNCATED_BRAND_RE, '').trim();
     title = title.replace(LEADING_BRAND_RE, '').trim();
   } while (title !== prev);
