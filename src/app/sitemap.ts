@@ -22,14 +22,13 @@ const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
-
   // ── DB overrides ───────────────────────────────────────────────────────────
   let pageSeoDB: Array<{
     pageSlug: string
     sitemapInclude: boolean
     sitemapPriority: number
     changeFreq: string
+    updatedAt: Date
   }> = []
 
   try {
@@ -40,6 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         sitemapInclude: true,
         sitemapPriority: true,
         changeFreq: true,
+        updatedAt: true,
       },
     })
   } catch {
@@ -67,13 +67,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // 1 ── 36 SEO course pages (/big-data-training-institute-in-hyderabad etc.)
+  // lastModified: sourced from the admin PageSeo row's updatedAt when one is
+  // tracked for this slug; omitted entirely otherwise (these are hardcoded
+  // TS-registry pages with no inherent "last changed" timestamp — fabricating
+  // one is worse than leaving lastmod out).
   const seoPageEntries: MetadataRoute.Sitemap = COURSE_PAGES
     .filter((page) => !isExcluded(page.slug))
     .map((page) => {
       const db = getDbOverride(page.slug)
       return {
         url: `${BASE_URL}/${page.slug}`,
-        lastModified: now,
+        ...(db?.updatedAt ? { lastModified: db.updatedAt } : {}),
         changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
         priority: db?.sitemapPriority ?? page.priority ?? 0.85,
       }
@@ -86,7 +90,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const db = getDbOverride(page.slug)
       return {
         url: `${BASE_URL}/${page.slug}`,
-        lastModified: now,
+        ...(db?.updatedAt ? { lastModified: db.updatedAt } : {}),
         changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
         priority: db?.sitemapPriority ?? page.priority ?? 0.85,
       }
@@ -99,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const db = getDbOverride(course.slug)
       return {
         url: `${BASE_URL}/${course.slug}`,
-        lastModified: now,
+        ...(db?.updatedAt ? { lastModified: db.updatedAt } : {}),
         changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
         priority: db?.sitemapPriority ?? 0.8,
       }
@@ -112,13 +116,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const db = getDbOverride(page.slug)
       return {
         url: `${BASE_URL}/${page.slug}`,
-        lastModified: now,
+        ...(db?.updatedAt ? { lastModified: db.updatedAt } : {}),
         changeFrequency: (db?.changeFreq ?? page.changeFrequency) as MetadataRoute.Sitemap[0]['changeFrequency'],
         priority: db?.sitemapPriority ?? page.priority,
       }
     })
 
   // 5 -- Blog posts (dynamic, from content/posts)
+  // lastModified: the admin PageSeo updatedAt wins if tracked; otherwise the
+  // source .mdx file's real filesystem mtime — NOT post.frontmatter.date,
+  // which getAllPosts() synthesizes as an evenly-spread fake publish date
+  // (see src/lib/posts.ts) and is not an honest "last changed" signal.
   let blogEntries: MetadataRoute.Sitemap = [];
   const fsBlogSlugs = new Set<string>();
   try {
@@ -130,9 +138,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         fsBlogSlugs.add(post.slug);
         return {
           url: `${BASE_URL}/blog/${post.slug}`,
-          lastModified: post.frontmatter.date
-            ? new Date(post.frontmatter.date)
-            : now,
+          ...(db?.updatedAt || post.fileMtime
+            ? { lastModified: db?.updatedAt ?? post.fileMtime }
+            : {}),
           changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
           priority: db?.sitemapPriority ?? 0.7,
         }

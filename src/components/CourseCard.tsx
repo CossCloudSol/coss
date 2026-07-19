@@ -169,7 +169,7 @@ export default function CourseCard({
           href={href}
           className="inline-flex items-center gap-[6px] bg-[#FF6B2B] text-white px-5 py-[11px] rounded-xl text-[13px] font-semibold whitespace-nowrap tracking-[0.1px] transition-[background,transform] duration-[180ms] hover:bg-[#e85a1e] hover:scale-[1.03]"
         >
-          View Details
+          View <span className="sr-only">{title} </span>Details
           <svg className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
           </svg>

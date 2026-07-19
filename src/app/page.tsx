@@ -584,7 +584,7 @@ export default async function HomePage() {
                           href={courseUrl}
                           className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
                         >
-                          View Details →
+                          View <span className="sr-only">{course.title} </span>Details →
                         </a>
                       </div>
                     </div>

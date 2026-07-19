@@ -121,14 +121,25 @@ function BlogCard({
   );
 }
 
-export async function generateMetadata(): Promise<Metadata> {
-  return buildPageMetadata('blog');
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: { page?: string; category?: string; tag?: string };
+}): Promise<Metadata> {
+  const base = await buildPageMetadata('blog');
+  // Filtered views (?category=, ?tag=) are near-duplicates of the clean /blog
+  // index — keep them crawlable (follow) so link equity still flows, but
+  // pull them out of the index. Canonical already points at clean /blog via
+  // buildPageMetadata (defaultCanonical never includes query params).
+  const isFiltered = Boolean(searchParams?.category || searchParams?.tag);
+  if (!isFiltered) return base;
+  return { ...base, robots: { index: false, follow: true } };
 }
 
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams?: { page?: string; category?: string };
+  searchParams?: { page?: string; category?: string; tag?: string };
 }) {
   const rawCat = searchParams?.category ?? 'All';
   const activeCategory = categories.includes(rawCat) ? rawCat : 'All';

@@ -22,6 +22,10 @@ export interface Post {
   frontmatter: PostFrontmatter;
   content: string;
   contentHtml?: string;
+  /** Filesystem last-modified time of the source .md/.mdx file — the one honest
+   *  "last updated" signal we have, since frontmatter.date is a synthesized
+   *  display date (evenly spread across a fake range), not a real timestamp. */
+  fileMtime?: Date;
 }
 
 /**
@@ -122,6 +126,7 @@ export async function getAllPosts(): Promise<Post[]> {
       const fullPath = path.join(postsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data, content } = matter(fileContents);
+      const fileMtime = fs.statSync(fullPath).mtime;
 
       const titleStr = sanitizeValue(data.title) || slug;
       const rawTags  = sanitizeArray(data.tags);
@@ -129,6 +134,7 @@ export async function getAllPosts(): Promise<Post[]> {
 
       return {
         slug,
+        fileMtime,
         frontmatter: {
           title: titleStr,
           date: data.date ? new Date(sanitizeValue(data.date)).toLocaleDateString('en-IN', {
