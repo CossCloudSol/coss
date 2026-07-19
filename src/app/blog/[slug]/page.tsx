@@ -4,7 +4,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import { stripBrandFragments } from '@/lib/build-title';
+import { stripBrandFragments, countBrandOccurrences } from '@/lib/build-title';
 import { headers } from 'next/headers';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -50,6 +50,50 @@ function capAtWordBoundary(text: string, maxLen: number): string {
   return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated).trim();
 }
 
+const BRAND_TAGLINE = " — Expert IT training insights from COSS Cloud Solutions, Hyderabad's leading IT institute.";
+const BRAND_ANY_RE = /(?:coss\s+cloud\s+solutions?)|(?:\bcoss\b)/gi;
+
+/**
+ * An excerpt is prose (the first N chars of the article), not a title, so a
+ * mid-excerpt brand mention ("...What Makes Coss Cloud Solutions a
+ * Strong...") is legitimate content, not a trailing suffix to strip —
+ * stripBrandFragments doesn't apply here. Instead, if the excerpt mentions
+ * the brand more than once, shorten it to end just before the 2nd mention
+ * (still just a shorter excerpt, not surgery on the surrounding prose).
+ */
+function truncateBeforeSecondBrandMention(text: string): string {
+  const matches = [...text.matchAll(BRAND_ANY_RE)];
+  if (matches.length < 2) return text;
+  return text.slice(0, matches[1].index).replace(/[,;:\s]+$/, '').trim();
+}
+
+/**
+ * Builds a blog fallback description from a (shortcode-free) excerpt,
+ * structurally guaranteeing at most one brand mention rather than relying on
+ * string surgery: truncate before any 2nd mention, then only append the
+ * brand tagline if the result doesn't already have one.
+ *
+ *   buildExcerptDescription(
+ *     'Best Full Stack Java Training Institute in Dilsukhnagar, Hyderabad – ' +
+ *       'Coss Cloud Solutions What Makes Coss Cloud Solutions a Strong', fallback,
+ *   ) === 'Best Full Stack Java Training Institute in Dilsukhnagar, Hyderabad – ' +
+ *          'Coss Cloud Solutions What Makes'   // truncated before the 2nd mention
+ *
+ *   buildExcerptDescription(
+ *     'Coss Cloud Solutions: Premier Digital Marketing Training in Dilsukhnagar, ' +
+ *       'Hyderabad Established in 2010, Coss Clo', fallback,
+ *   ) === 'Coss Cloud Solutions: Premier Digital Marketing Training in Dilsukhnagar, ' +
+ *          'Hyderabad Established in 2010'   // 2nd (truncated) mention dropped
+ */
+function buildExcerptDescription(rawExcerpt: string, fallback: string): string {
+  const base = truncateBeforeSecondBrandMention(rawExcerpt);
+  if (base.length <= 20) return fallback;
+  if (countBrandOccurrences(base) >= 1) {
+    return capAtWordBoundary(base, 155);
+  }
+  return capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
+}
+
 import { getBlogImageUrl } from '@/lib/cloudinary';
 
 export async function generateStaticParams() {
@@ -69,7 +113,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
   if (dbPost) {
     const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
-    const description = dbPost.seoDesc ?? dbPost.excerpt;
+    const dbFallback = capAtWordBoundary(`${stripBrandFragments(dbPost.title)}${BRAND_TAGLINE}`, 160);
+    const description =
+      dbPost.seoDesc ??
+      (dbPost.excerpt && dbPost.excerpt.length > 20 && !dbPost.excerpt.includes('[')
+        ? buildExcerptDescription(dbPost.excerpt, dbFallback)
+        : dbFallback);
     const ogImage = dbPost.thumbnail ?? getBlogImageUrl(params.slug, 1200, 630);
     const fallback: Metadata = {
       title: dbPost.seoTitle ?? dbPost.title,
@@ -90,15 +139,16 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!post) return { title: 'Not Found' };
 
   const titleStr = tagToString(post.frontmatter.title) || params.slug;
-  // Frontmatter excerpt is often WP shortcode garbage — use a clean fallback
+  const titleTaglineFallback = capAtWordBoundary(`${stripBrandFragments(titleStr)}${BRAND_TAGLINE}`, 160);
+  // Frontmatter excerpt is often WP shortcode garbage, or truncated mid-shortcode
+  // at the WP-export source (no closing "]" ever appears in the field, so
+  // cleanShortcodes() can't recover it) — a stray "[" left in the excerpt is
+  // the signal either way.
   const rawExcerpt = tagToString(post.frontmatter.excerpt);
-  const isCleanExcerpt = rawExcerpt.length > 20 && !rawExcerpt.includes('[vc_');
+  const isCleanExcerpt = rawExcerpt.length > 20 && !rawExcerpt.includes('[');
   const description = isCleanExcerpt
-    ? rawExcerpt.slice(0, 158)
-    : capAtWordBoundary(
-        `${stripBrandFragments(titleStr)} — Expert IT training insights from COSS Cloud Solutions, Hyderabad's leading IT institute.`,
-        160,
-      );
+    ? buildExcerptDescription(rawExcerpt, titleTaglineFallback)
+    : titleTaglineFallback;
 
   const canonicalUrl = `${SITE_URL}/blog/${params.slug}/`;
   const ogImage = getBlogImageUrl(params.slug, 1200, 630);

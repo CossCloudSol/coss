@@ -81,3 +81,22 @@ export function buildTitle(raw: string | null | undefined): string {
   const title = stripBrandFragments(raw);
   return title ? `${title} | Coss Cloud Solutions` : 'Coss Cloud Solutions';
 }
+
+const BRAND_SHORT = 'COSS';
+const FULL_BRAND_RE = new RegExp(FULL_BRAND.replace(/\s+/g, '\\s+'), 'gi');
+const SHORT_BRAND_RE = new RegExp(`\\b${BRAND_SHORT}\\b`, 'gi');
+
+/**
+ * Counts brand mentions in free text (title or prose), matching "Coss Cloud
+ * Solutions"/"Coss Cloud Solution" as one mention each, plus any standalone
+ * "COSS" not already part of one of those. Mirrors scripts/seo-audit.mjs's
+ * countBrandOccurrences() so callers select exactly the rows/strings the
+ * audit would flag as brand-repeated.
+ */
+export function countBrandOccurrences(text: string | null | undefined): number {
+  if (!text) return 0;
+  const fullMatches = text.match(FULL_BRAND_RE) ?? [];
+  const withoutFull = text.replace(FULL_BRAND_RE, '');
+  const shortMatches = withoutFull.match(SHORT_BRAND_RE) ?? [];
+  return fullMatches.length + shortMatches.length;
+}
