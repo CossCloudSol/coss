@@ -87,11 +87,12 @@ function truncateBeforeSecondBrandMention(text: string): string {
  */
 function buildExcerptDescription(rawExcerpt: string, fallback: string): string {
   const base = truncateBeforeSecondBrandMention(rawExcerpt);
-  if (base.length <= 20) return fallback;
-  if (countBrandOccurrences(base) >= 1) {
-    return capAtWordBoundary(base, 155);
+  if (base.length <= 20) return `[[DEBUG:short:${base.length}]]${fallback}`;
+  const bc = countBrandOccurrences(base);
+  if (bc >= 1) {
+    return `[[DEBUG:branch1:bc=${bc}:rawLen=${rawExcerpt.length}:baseLen=${base.length}]]` + capAtWordBoundary(base, 155);
   }
-  return capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
+  return `[[DEBUG:branch0:bc=${bc}]]` + capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
 }
 
 import { getBlogImageUrl } from '@/lib/cloudinary';
