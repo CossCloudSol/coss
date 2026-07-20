@@ -2117,7 +2117,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   position: absolute; inset: 0; border-radius: 50%;
   box-shadow: 0 0 0 14px rgba(37,211,102,0.55);
   opacity: 0; pointer-events: none;
-  animation: wa-pulse 2.4s ease-out infinite;
+  animation: wa-pulse 2.4s ease-out 3 forwards;
 }
 .wa-btn:hover  { transform: scale(1.07); filter: brightness(1.05); }
 .wa-btn:active { transform: scale(0.97); }
