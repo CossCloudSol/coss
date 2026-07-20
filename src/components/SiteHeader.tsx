@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -106,10 +107,11 @@ export default function SiteHeader() {
       <div className="header-inner">
         {/* Logo */}
         <Link href="/" className="logo-link" onClick={closeAll} aria-label="Coss Cloud Solutions — Home">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/logo.png"
             alt="Coss Cloud Solutions"
+            width={547}
+            height={456}
             style={{ height: '62px', width: 'auto', objectFit: 'contain', display: 'block' }}
             onError={(e) => {
               e.currentTarget.style.display = 'none';

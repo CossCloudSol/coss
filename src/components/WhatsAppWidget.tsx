@@ -381,7 +381,7 @@ export default function WhatsAppWidget(): JSX.Element | null {
           ref={floatBtnRef}
           type="button"
           className="wa-btn"
-          style={{ width: '56px', height: '56px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}
+          style={{ width: '56px', height: '56px', borderRadius: '50%', flexShrink: 0 }}
           onClick={() => setPanelOpen((prev) => !prev)}
           aria-label="Chat with us on WhatsApp"
           aria-expanded={panelOpen}

@@ -499,18 +499,30 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Badge pill — "Learn Today. Get Hired Tomorrow." */
 .hero-badge {
+  position: relative;
   display: inline-flex; align-items: center; gap: 8px;
   background: rgba(249,153,22,0.05); color: #fff;
   font-size: 13px; font-weight: 600; font-family: var(--font-raleway, 'Raleway'), sans-serif;
   padding: 5px 14px; border-radius: 999px; margin-bottom: 20px;
   border: 1px solid rgba(249,153,22,0.5);
-  animation: hero-badge-glow 4s ease-in-out infinite, hero-fadeup .65s ease .05s both;
+  animation: hero-fadeup .65s ease .05s both;
 }
 .hero-badge-icon { width: 15px; height: 15px; color: #f99916; flex-shrink: 0; }
 .hero-badge-accent { color: #f99916; }
+/* Glow pulse — a static-shadow pseudo-element faded via opacity instead of
+   animating box-shadow directly, so the effect stays on the compositor
+   (opacity is compositor-only; box-shadow is not — see PSI "non-composited
+   animations" audit). Same visual result as the old box-shadow keyframe. */
+.hero-badge::before {
+  content: '';
+  position: absolute; inset: -1px; border-radius: inherit;
+  box-shadow: 0 0 14px rgba(249,153,22,0.35);
+  opacity: 0; pointer-events: none;
+  animation: hero-badge-glow 4s ease-in-out infinite;
+}
 @keyframes hero-badge-glow {
-  0%, 100% { box-shadow: 0 0 0 rgba(249,153,22,0); }
-  50%      { box-shadow: 0 0 14px rgba(249,153,22,0.35); }
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 1; }
 }
 
 .hero-title {
@@ -644,7 +656,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-badge, .hero-cat-tile, .hero-ring, .hero-title, .hero-desc,
+  .hero-badge, .hero-badge::before, .hero-cat-tile, .hero-ring, .hero-title, .hero-desc,
   .hero-trust-row, .hero-btns, .hero-laptop-float {
     animation: none;
   }
@@ -2064,18 +2076,24 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
    Pulse animation respects prefers-reduced-motion.
 ══════════════════════════════════════════════════ */
 
-/* Pulse keyframe */
+/* Pulse ring — expanding-ring ripple built from a static box-shadow (set
+   once, not animated) on a pseudo-element whose transform/opacity are what
+   actually animate. Same visual ripple as the old box-shadow keyframe, but
+   composited (box-shadow itself never changes value, so it never triggers
+   paint; transform/opacity are compositor-only — see PSI "non-composited
+   animations" audit). */
 @keyframes wa-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(37,211,102,0.55); }
-  70%  { box-shadow: 0 0 0 14px rgba(37,211,102,0); }
-  100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+  0%   { transform: scale(0.72); opacity: 0.55; }
+  70%  { transform: scale(1.28); opacity: 0; }
+  100% { transform: scale(1.28); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  @keyframes wa-pulse { from { box-shadow: none; } to { box-shadow: none; } }
+  .wa-btn::after { animation: none; opacity: 0; }
 }
 
 /* Floating button */
 .wa-btn {
+  position: relative;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -2086,12 +2104,20 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  overflow: hidden;
   box-shadow: 0 4px 18px rgba(37,211,102,0.45);
-  animation: wa-pulse 2.4s ease-out infinite;
   transition: transform 0.2s, filter 0.2s;
   /* Visible focus ring — WCAG 2.4.7 */
   outline-offset: 3px;
+}
+/* No overflow:hidden here — the ::after ripple must expand past the
+   circle's edge, and the WaIcon svg is small enough (28px in a 56px
+   circle) that clipping was never load-bearing. */
+.wa-btn::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: 0 0 0 14px rgba(37,211,102,0.55);
+  opacity: 0; pointer-events: none;
+  animation: wa-pulse 2.4s ease-out infinite;
 }
 .wa-btn:hover  { transform: scale(1.07); filter: brightness(1.05); }
 .wa-btn:active { transform: scale(0.97); }

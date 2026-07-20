@@ -472,6 +472,7 @@ export default async function HomePage() {
                   width={768}
                   height={512}
                   priority
+                  sizes="(min-width: 1024px) 500px, (min-width: 600px) 560px, calc(100vw - 40px)"
                   className="hero-laptop-img"
                 />
               </div>
