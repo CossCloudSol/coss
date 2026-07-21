@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
+import { getPublishedCourseBySlug } from '@/lib/course-queries';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -8,9 +9,7 @@ type Ctx = { params: { slug: string } };
 
 export async function GET(_req: NextRequest, { params }: Ctx): Promise<Response> {
   try {
-    const course = await prisma.course.findFirst({
-      where: { slug: params.slug, status: 'published' },
-    });
+    const course = await getPublishedCourseBySlug(params.slug);
     if (course) return NextResponse.json(course);
 
     // Fallback: treat slug as a categorySlug and return that category's courses

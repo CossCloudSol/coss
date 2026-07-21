@@ -1,13 +1,14 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 import { sanitizeDescription } from '@/lib/sanitizeDescription';
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
+import { getCourseInCategory, findCourses } from '@/lib/course-queries';
+import { findBatches } from '@/lib/batch-queries';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,16 +38,8 @@ interface CourseDetail {
 }
 
 async function getCourse(categorySlug: string, slug: string): Promise<CourseDetail | null> {
-  const headerList = headers();
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
-  try {
-    const res = await fetch(`${proto}://${host}/api/courses/${categorySlug}/${slug}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+  const course = await getCourseInCategory(categorySlug, slug);
+  return course as unknown as CourseDetail | null;
 }
 
 interface BatchItem2 {
@@ -55,27 +48,14 @@ interface BatchItem2 {
   seatsAvailable: number | null; status: string;
 }
 
-async function getCourseBatches2(courseId: string, proto: string, host: string): Promise<BatchItem2[]> {
-  try {
-    const res = await fetch(`${proto}://${host}/api/batches?courseId=${courseId}`, { cache: 'no-store' });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.batches ?? []).slice(0, 3);
-  } catch { return []; }
+async function getCourseBatches2(courseId: string): Promise<BatchItem2[]> {
+  const batches = await findBatches({ courseId });
+  return batches.slice(0, 3) as unknown as BatchItem2[];
 }
 
 async function getRelated(category: string, excludeSlug: string): Promise<Array<{ id: string; title: string; slug: string; duration: string; urlType: string; categorySlug: string | null }>> {
-  const headerList = headers();
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
-  try {
-    const res = await fetch(`${proto}://${host}/api/courses?category=${encodeURIComponent(category)}`, { cache: 'no-store' });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.courses ?? []).filter((c: { slug: string }) => c.slug !== excludeSlug).slice(0, 3);
-  } catch {
-    return [];
-  }
+  const courses = await findCourses({ category });
+  return (courses as unknown as Array<{ slug: string }>).filter((c) => c.slug !== excludeSlug).slice(0, 3) as any;
 }
 
 export async function generateMetadata({ params }: { params: { slug: string; courseSlug: string } }): Promise<Metadata> {
@@ -93,13 +73,9 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
   const course = await getCourse(params.slug, params.courseSlug);
   if (!course) notFound();
 
-  const headerList = headers();
-  const host2  = headerList.get('host') ?? 'localhost:3000';
-  const proto2 = headerList.get('x-forwarded-proto') ?? (host2.startsWith('localhost') ? 'http' : 'https');
-
   const [related, courseBatches, customSchema] = await Promise.all([
     getRelated(course.category, course.slug),
-    getCourseBatches2(course.id, proto2, host2),
+    getCourseBatches2(course.id),
     getPageSchemaMarkup(`courses/${params.slug}/${params.courseSlug}`),
   ]);
   const syllabusItems: SyllabusItem[] = Array.isArray(course.syllabus) ? course.syllabus : [];

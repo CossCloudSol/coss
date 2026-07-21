@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
+import { getActiveJobBySlug } from '@/lib/job-queries';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,16 +29,8 @@ interface Job {
 }
 
 async function getJob(slug: string): Promise<Job | null> {
-  const headerList = headers();
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
-  try {
-    const res = await fetch(`${proto}://${host}/api/jobs/${slug}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+  const job = await getActiveJobBySlug(slug);
+  return job as unknown as Job | null;
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

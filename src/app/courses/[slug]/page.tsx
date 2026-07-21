@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
@@ -11,6 +10,8 @@ import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { sanitizeDescription, excerptDescription } from '@/lib/sanitizeDescription';
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
+import { getPublishedCourseBySlug, getCategoryBySlugWithCourses, findCourses } from '@/lib/course-queries';
+import { findBatches } from '@/lib/batch-queries';
 
 export const dynamic = 'force-dynamic';
 
@@ -105,50 +106,19 @@ interface CategoryDetail {
   courses: CourseDetail[];
 }
 
-async function getBaseUrl() {
-  const headerList = headers();
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const proto = headerList.get('x-forwarded-proto') ?? (host.startsWith('localhost') ? 'http' : 'https');
-  return `${proto}://${host}`;
-}
-
 async function getCourse(slug: string): Promise<CourseDetail | null> {
-  const base = await getBaseUrl();
-  try {
-    const res = await fetch(`${base}/api/courses/${slug}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const data = await res.json();
-    // The /api/courses/[slug] endpoint returns { courses: [] } when the slug
-    // matches a category rather than a course — ignore those responses here.
-    if (!data?.title) return null;
-    return data;
-  } catch {
-    return null;
-  }
+  const course = await getPublishedCourseBySlug(slug);
+  return course as unknown as CourseDetail | null;
 }
 
 async function getCategory(slug: string): Promise<CategoryDetail | null> {
-  const base = await getBaseUrl();
-  try {
-    const res = await fetch(`${base}/api/categories/${slug}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.category ?? null;
-  } catch {
-    return null;
-  }
+  const category = await getCategoryBySlugWithCourses(slug);
+  return category as unknown as CategoryDetail | null;
 }
 
 async function getRelated(category: string, excludeSlug: string): Promise<Array<{ id: string; title: string; slug: string; duration: string; urlType: string; categorySlug: string | null }>> {
-  const base = await getBaseUrl();
-  try {
-    const res = await fetch(`${base}/api/courses?category=${encodeURIComponent(category)}`, { cache: 'no-store' });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.courses ?? []).filter((c: { slug: string }) => c.slug !== excludeSlug).slice(0, 3);
-  } catch {
-    return [];
-  }
+  const courses = await findCourses({ category });
+  return (courses as unknown as Array<{ slug: string }>).filter((c) => c.slug !== excludeSlug).slice(0, 3) as any;
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -191,8 +161,13 @@ export default async function CourseOrCategoryPage({ params }: { params: { slug:
 
 // ─── Course Detail View ────────────────────────────────────────────────────────
 
-function CourseDetailView({ course, customSchema }: { course: CourseDetail; customSchema: object | null }) {
+async function CourseDetailView({ course, customSchema }: { course: CourseDetail; customSchema: object | null }) {
   const syllabusItems: SyllabusItem[] = Array.isArray(course.syllabus) ? course.syllabus : [];
+
+  const [batches, related] = await Promise.all([
+    getCourseBatches(course.id),
+    getRelated(course.category, course.slug),
+  ]);
 
   return (
     <>
@@ -302,8 +277,8 @@ function CourseDetailView({ course, customSchema }: { course: CourseDetail; cust
               </div>
             )}
 
-            <CourseBatches courseId={course.id} courseTitle={course.title} />
-            <RelatedCourses category={course.category} excludeSlug={course.slug} />
+            <CourseBatches batches={batches} courseTitle={course.title} />
+            <RelatedCourses related={related} />
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>
@@ -323,17 +298,11 @@ interface BatchItem {
 }
 
 async function getCourseBatches(courseId: string): Promise<BatchItem[]> {
-  const base = await getBaseUrl();
-  try {
-    const res = await fetch(`${base}/api/batches?courseId=${courseId}`, { cache: 'no-store' });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.batches ?? []).slice(0, 3);
-  } catch { return []; }
+  const batches = await findBatches({ courseId });
+  return batches.slice(0, 3) as unknown as BatchItem[];
 }
 
-async function CourseBatches({ courseId, courseTitle }: { courseId: string; courseTitle: string }) {
-  const batches = await getCourseBatches(courseId);
+function CourseBatches({ batches, courseTitle }: { batches: BatchItem[]; courseTitle: string }) {
   if (batches.length === 0) return null;
 
   return (
@@ -384,8 +353,7 @@ async function CourseBatches({ courseId, courseTitle }: { courseId: string; cour
   );
 }
 
-async function RelatedCourses({ category, excludeSlug }: { category: string; excludeSlug: string }) {
-  const related = await getRelated(category, excludeSlug);
+function RelatedCourses({ related }: { related: Array<{ id: string; title: string; slug: string; duration: string; urlType: string; categorySlug: string | null }> }) {
   if (related.length === 0) return null;
   return (
     <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)' }}>
