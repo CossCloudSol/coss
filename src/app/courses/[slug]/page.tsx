@@ -12,8 +12,24 @@ import { sanitizeDescription, excerptDescription } from '@/lib/sanitizeDescripti
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
 import { getPublishedCourseBySlug, getCategoryBySlugWithCourses, findCourses } from '@/lib/course-queries';
 import { findBatches } from '@/lib/batch-queries';
+import { prisma } from '@/lib/db';
 
 export const revalidate = 300;
+
+// Category slugs are NOT included — they're covered by the static /courses/<category>
+// folder routes. Dynamic categories not yet known at build time render on first
+// request and are cached thereafter under the revalidate window above.
+export async function generateStaticParams() {
+  try {
+    const courses = await prisma.course.findMany({
+      where: { status: 'published' },
+      select: { slug: true },
+    });
+    return courses.map((c) => ({ slug: c.slug }));
+  } catch {
+    return [];
+  }
+}
 
 const BADGE_MAP: Record<string, string> = {
   'popular': 'Popular',

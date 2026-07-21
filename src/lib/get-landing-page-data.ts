@@ -19,10 +19,8 @@ export type LandingPageCourse = {
   courseCategory: { name: string; slug: string } | null
 }
 
-export async function getLandingPageCourse(slug: string): Promise<LandingPageCourse | null> {
-  try {
-    // Explicit map: landing page URL slug → DB course slug
-    const SLUG_MAP: Record<string, string> = {
+// Explicit map: landing page URL slug → DB course slug
+export const SLUG_MAP: Record<string, string> = {
       // Already matched — keep working
       'artificial-intelligence-training-institute-in-hyderabad': 'artificial-intelligence-training-institute-in-hyderabad',
       'azure-devops-training-institute-in-hyderabad':           'azure-devops-training-in-hyderabad',
@@ -80,8 +78,10 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
       'multi-cloud-devops-training-institute-in-hyderabad':     'multi-cloud-architecture-training-in-hyderabad',
       'python-full-stack-training-institute-in-hyderabad':      'full-stack-python-training-in-hyderabad',
       'communication-skills-training-institute-in-hyderabad':   'business-communication-training-in-hyderabad',
-    }
+}
 
+export async function getLandingPageCourse(slug: string): Promise<LandingPageCourse | null> {
+  try {
     // Check explicit map first
     const mappedSlug = SLUG_MAP[slug]
 

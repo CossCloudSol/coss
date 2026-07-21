@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getLandingPageCourse } from '@/lib/get-landing-page-data'
+import { getLandingPageCourse, SLUG_MAP } from '@/lib/get-landing-page-data'
 import { getAllBranchSettings } from '@/lib/get-branch-settings'
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
@@ -9,6 +9,10 @@ export const revalidate = 3600
 
 interface Props {
   params: { courseSlug: string }
+}
+
+export async function generateStaticParams() {
+  return Object.keys(SLUG_MAP).map((courseSlug) => ({ courseSlug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

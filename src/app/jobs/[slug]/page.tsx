@@ -4,8 +4,24 @@ import type { Metadata } from 'next';
 import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getActiveJobBySlug } from '@/lib/job-queries';
+import { prisma } from '@/lib/db';
 
 export const revalidate = 600;
+
+export async function generateStaticParams() {
+  try {
+    const jobs = await prisma.job.findMany({
+      where: {
+        status: 'active',
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      },
+      select: { slug: true },
+    });
+    return jobs.map((j) => ({ slug: j.slug }));
+  } catch {
+    return [];
+  }
+}
 
 interface Job {
   id: string;

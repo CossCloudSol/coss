@@ -9,8 +9,23 @@ import { sanitizeDescription } from '@/lib/sanitizeDescription';
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
 import { getCourseInCategory, findCourses } from '@/lib/course-queries';
 import { findBatches } from '@/lib/batch-queries';
+import { prisma } from '@/lib/db';
 
 export const revalidate = 300;
+
+export async function generateStaticParams() {
+  try {
+    const courses = await prisma.course.findMany({
+      where: { status: 'published', categorySlug: { not: null } },
+      select: { slug: true, categorySlug: true },
+    });
+    return courses
+      .filter((c): c is { slug: string; categorySlug: string } => c.categorySlug !== null)
+      .map((c) => ({ slug: c.categorySlug, courseSlug: c.slug }));
+  } catch {
+    return [];
+  }
+}
 
 interface SyllabusItem { week?: string; topic?: string; details?: string; module?: string; topics?: string[] }
 
