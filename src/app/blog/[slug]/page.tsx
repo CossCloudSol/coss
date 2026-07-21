@@ -9,6 +9,7 @@ import { headers } from 'next/headers';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { prisma } from '@/lib/db';
+import BlogViewBeacon from '@/components/BlogViewBeacon';
 
 export const dynamic = 'force-dynamic';
 
@@ -191,15 +192,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     // DB error — fall through to file system
   }
   if (dbPost) {
-    // Increment views (fire-and-forget)
-    void prisma.blogPost.update({ where: { id: dbPost.id }, data: { views: { increment: 1 } } });
-
     const dbDateIso = dbPost.publishedAt
       ? new Date(dbPost.publishedAt).toISOString().split('T')[0]
       : new Date(dbPost.createdAt).toISOString().split('T')[0];
 
     return (
       <>
+        <BlogViewBeacon slug={params.slug} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
