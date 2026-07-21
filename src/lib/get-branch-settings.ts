@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/db'
 
 export type BranchSettings = {
@@ -54,9 +55,21 @@ export const FALLBACK: Record<string, BranchSettings> = {
   }
 }
 
+const getCachedBranchRow = unstable_cache(
+  (branchKey: string) => prisma.branchSettings.findUnique({ where: { branchKey } }),
+  ['branch-settings-by-key'],
+  { tags: ['branch-settings'], revalidate: 3600 },
+)
+
+const getCachedBranchRows = unstable_cache(
+  () => prisma.branchSettings.findMany({ orderBy: { branchKey: 'asc' } }),
+  ['branch-settings-all'],
+  { tags: ['branch-settings'], revalidate: 3600 },
+)
+
 export async function getBranchSettings(branchKey: string): Promise<BranchSettings> {
   try {
-    const row = await prisma.branchSettings.findUnique({ where: { branchKey } })
+    const row = await getCachedBranchRow(branchKey)
     if (!row) {
       console.log(`[getBranchSettings] no BranchSettings row for "${branchKey}", using fallback NAP constants`)
       return FALLBACK[branchKey] ?? FALLBACK.dilsukhnagar
@@ -73,7 +86,7 @@ export async function getBranchSettings(branchKey: string): Promise<BranchSettin
 
 export async function getAllBranchSettings(): Promise<BranchSettings[]> {
   try {
-    const rows = await prisma.branchSettings.findMany({ orderBy: { branchKey: 'asc' } })
+    const rows = await getCachedBranchRows()
     return rows.map(r => ({ ...r, serviceAreas: JSON.parse(r.serviceAreas || '[]') }))
   } catch {
     return Object.values(FALLBACK)

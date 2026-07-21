@@ -15,9 +15,6 @@ const roboto = Roboto({
   display: 'swap',
 });
 
-// Force dynamic rendering so Prisma DB reads (announcement bar, SEO settings)
-// are never cached at build time — admin changes show up immediately.
-export const dynamic = 'force-dynamic';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import Footer from '@/components/Footer';
@@ -28,6 +25,7 @@ import WhatsAppWidget from '@/components/WhatsAppWidget';
 import MobileStickyBar from '@/components/MobileStickyBar';
 import MobileTabBar from '@/components/MobileTabBar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import {
   fromDbRow,
@@ -111,17 +109,21 @@ interface SiteSettings {
  * Pull the singleton SeoSettings row for GA4 ID and GSC verification tag.
  * Swallows DB errors — a fresh deploy before migrations run shouldn't crash.
  */
-async function getSiteSettings(): Promise<SiteSettings> {
-  try {
-    const settings = await prisma.seoSettings.findFirst();
-    return {
-      gaId: settings?.googleAnalyticsId ?? '',
-      gscId: settings?.googleSearchConsoleId ?? '',
-    };
-  } catch {
-    return { gaId: '', gscId: '' };
-  }
-}
+const getSiteSettings = unstable_cache(
+  async (): Promise<SiteSettings> => {
+    try {
+      const settings = await prisma.seoSettings.findFirst();
+      return {
+        gaId: settings?.googleAnalyticsId ?? '',
+        gscId: settings?.googleSearchConsoleId ?? '',
+      };
+    } catch {
+      return { gaId: '', gscId: '' };
+    }
+  },
+  ['seo-settings'],
+  { tags: ['seo-settings'], revalidate: 3600 },
+);
 
 /**
  * Pull the AnnouncementBar singleton at request time so the component
@@ -129,15 +131,19 @@ async function getSiteSettings(): Promise<SiteSettings> {
  * Swallows DB errors the same way getSiteGaId() does — on a fresh deploy
  * the bar simply stays hidden rather than crashing the layout.
  */
-async function getAnnouncementBarConfig(): Promise<AnnouncementBarInput> {
-  try {
-    const row = await prisma.announcementBar.findFirst();
-    if (!row) return ANNOUNCEMENT_BAR_DEFAULTS;
-    return fromDbRow(row);
-  } catch {
-    return ANNOUNCEMENT_BAR_DEFAULTS;
-  }
-}
+const getAnnouncementBarConfig = unstable_cache(
+  async (): Promise<AnnouncementBarInput> => {
+    try {
+      const row = await prisma.announcementBar.findFirst();
+      if (!row) return ANNOUNCEMENT_BAR_DEFAULTS;
+      return fromDbRow(row);
+    } catch {
+      return ANNOUNCEMENT_BAR_DEFAULTS;
+    }
+  },
+  ['announcement-bar'],
+  { tags: ['announcement-bar'], revalidate: 3600 },
+);
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [{ gaId, gscId }, announcementConfig] = await Promise.all([

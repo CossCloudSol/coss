@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 
@@ -50,6 +51,7 @@ export async function POST(req: NextRequest) {
         schemaEnabled: true,
       },
     })
+    revalidateTag('branch-settings')
     return NextResponse.json(row, { status: 201 })
   } catch (e) {
     console.error('[geo branches POST]', e)

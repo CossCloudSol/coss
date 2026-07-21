@@ -15,12 +15,25 @@
  * Ameerpet block showing up on the Dilsukhnagar page and vice versa).
  */
 
+import { unstable_cache } from 'next/cache'
+import { prisma } from '@/lib/db'
 import { getAllBranchSettings, type BranchSettings } from '@/lib/get-branch-settings'
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
 const LOGO_URL = `${SITE_URL}/logo.png`;
+
+const getCachedSchemaSiteSettings = unstable_cache(
+  () => prisma.siteSettings.findFirst({
+    select: {
+      schemaOrgEnabled: true, schemaWebSiteEnabled: true,
+      schemaOrgOverride: true, schemaWebSiteOverride: true,
+    },
+  }),
+  ['global-schemas-site-settings'],
+  { tags: ['site-settings'], revalidate: 3600 },
+)
 
 function parseOverride(raw: string | null | undefined): object | null {
   if (!raw) return null
@@ -87,13 +100,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
   }
 
   try {
-    const { prisma } = await import('@/lib/db')
-    const row = await prisma.siteSettings.findFirst({
-      select: {
-        schemaOrgEnabled: true, schemaWebSiteEnabled: true,
-        schemaOrgOverride: true, schemaWebSiteOverride: true,
-      },
-    })
+    const row = await getCachedSchemaSiteSettings()
     if (row) settings = { ...settings, ...row }
   } catch {
     // DB unavailable — use defaults

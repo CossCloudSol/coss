@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/db'
 
@@ -20,8 +21,10 @@ export async function PATCH(req: NextRequest) {
   const existing = await prisma.siteSettings.findFirst()
   if (existing) {
     const updated = await prisma.siteSettings.update({ where: { id: existing.id }, data: body })
+    revalidateTag('site-settings')
     return NextResponse.json(updated)
   }
   const created = await prisma.siteSettings.create({ data: body })
+  revalidateTag('site-settings')
   return NextResponse.json(created)
 }

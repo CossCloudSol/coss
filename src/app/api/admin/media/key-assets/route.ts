@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/db'
 import { uploadAsset } from '@/lib/cloudinary-admin'
@@ -62,6 +63,8 @@ export async function POST(req: NextRequest) {
     } else {
       await prisma.siteSettings.create({ data: { [slot]: secure_url } })
     }
+
+    revalidateTag('site-settings')
 
     return NextResponse.json({ ok: true, url: secure_url })
   } catch (err) {

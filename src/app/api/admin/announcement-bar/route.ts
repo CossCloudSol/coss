@@ -13,6 +13,7 @@
  *   isEnabled, announcementText, ctaLabel, ctaUrl, backgroundColor, textColor
  */
 import { NextResponse, type NextRequest } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { ZodError } from 'zod';
 
 import { prisma } from '@/lib/db';
@@ -103,6 +104,8 @@ export async function PUT(req: NextRequest): Promise<Response> {
     ? await prisma.announcementBar.update({ where: { id: existing.id }, data: dbData })
     : await prisma.announcementBar.create({ data: dbData });
 
+  revalidateTag('announcement-bar');
+
   return NextResponse.json(fromDbRow(saved), { status: 200 });
 }
 
@@ -146,6 +149,8 @@ export async function PATCH(req: NextRequest): Promise<Response> {
       },
     });
   }
+
+  revalidateTag('announcement-bar');
 
   return NextResponse.json(fromDbRow(updated));
 }

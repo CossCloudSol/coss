@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 
@@ -15,6 +16,7 @@ export async function DELETE(
 
   try {
     await prisma.branchSettings.delete({ where: { branchKey: params.branchKey } })
+    revalidateTag('branch-settings')
     return NextResponse.json({ success: true })
   } catch (e) {
     console.error('[geo branches DELETE]', e)

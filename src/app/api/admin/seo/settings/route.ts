@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 
@@ -77,6 +78,8 @@ export async function PATCH(req: NextRequest): Promise<Response> {
         data: cleaned,
       })
     : await prisma.seoSettings.create({ data: cleaned });
+
+  revalidateTag('seo-settings');
 
   return NextResponse.json({
     ...row,

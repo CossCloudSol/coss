@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 
@@ -53,6 +54,7 @@ export async function POST(
       update: data,
       create: { branchKey: params.branchKey, ...data }
     })
+    revalidateTag('branch-settings')
     return NextResponse.json(row)
   } catch (e) {
     console.error('[geo POST]', e)
