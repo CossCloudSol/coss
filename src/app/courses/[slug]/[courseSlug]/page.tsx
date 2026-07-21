@@ -10,7 +10,7 @@ import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-pa
 import { getCourseInCategory, findCourses } from '@/lib/course-queries';
 import { findBatches } from '@/lib/batch-queries';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 interface SyllabusItem { week?: string; topic?: string; details?: string; module?: string; topics?: string[] }
 

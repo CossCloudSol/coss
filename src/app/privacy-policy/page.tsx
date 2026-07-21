@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('privacy-policy');
 }

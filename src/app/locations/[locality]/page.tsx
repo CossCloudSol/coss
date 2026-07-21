@@ -9,7 +9,7 @@ import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 600;
 
 const BRANCH_CENTRE_NAME: Record<BranchKey, string> = {
   dilsukhnagar: 'Dilsukhnagar',

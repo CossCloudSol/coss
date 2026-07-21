@@ -223,7 +223,7 @@ async function getHiringPartners() {
   } catch { return []; }
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('home');
 }

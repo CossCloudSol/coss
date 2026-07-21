@@ -13,7 +13,7 @@ import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-pa
 import { getPublishedCourseBySlug, getCategoryBySlugWithCourses, findCourses } from '@/lib/course-queries';
 import { findBatches } from '@/lib/batch-queries';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 const BADGE_MAP: Record<string, string> = {
   'popular': 'Popular',

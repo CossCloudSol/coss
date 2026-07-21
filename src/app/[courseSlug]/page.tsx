@@ -5,7 +5,7 @@ import { getAllBranchSettings } from '@/lib/get-branch-settings'
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 3600
 
 interface Props {
   params: { courseSlug: string }

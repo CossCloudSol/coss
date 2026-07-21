@@ -5,7 +5,7 @@ import ContactForm from '@/components/ContactForm';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('contact');
 }

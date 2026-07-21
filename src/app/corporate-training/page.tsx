@@ -6,7 +6,7 @@ import { prisma } from '@/lib/db';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('corporate-training');
 }

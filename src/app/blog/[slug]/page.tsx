@@ -5,13 +5,12 @@ import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { stripBrandFragments, countBrandOccurrences } from '@/lib/build-title';
-import { headers } from 'next/headers';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { prisma } from '@/lib/db';
 import BlogViewBeacon from '@/components/BlogViewBeacon';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 600;
 
 // The page already renders its own <h1>{title}</h1> above the article —
 // demote any h1 markdown content produces to h2 so there's only ever one H1.

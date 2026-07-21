@@ -5,7 +5,7 @@ import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getActiveJobBySlug } from '@/lib/job-queries';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 600;
 
 interface Job {
   id: string;
