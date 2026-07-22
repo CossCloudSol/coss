@@ -5,18 +5,11 @@ import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { stripBrandFragments, countBrandOccurrences } from '@/lib/build-title';
-import ReactMarkdown, { type Components } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { renderMarkdownToSafeHtml } from '@/lib/render-markdown';
 import { prisma } from '@/lib/db';
 import BlogViewBeacon from '@/components/BlogViewBeacon';
 
 export const revalidate = 600;
-
-// The page already renders its own <h1>{title}</h1> above the article —
-// demote any h1 markdown content produces to h2 so there's only ever one H1.
-const MARKDOWN_COMPONENTS: Components = {
-  h1: ({ node, ...props }) => <h2 {...props} />,
-};
 
 /**
  * Normalises a frontmatter value to a safe display string.
@@ -183,7 +176,7 @@ const RELATED = [
 ];
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  // Try DB post first — renders with react-markdown
+  // Try DB post first — rendered to sanitized HTML server-side
   let dbPost = null;
   try {
     dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
@@ -194,6 +187,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     const dbDateIso = dbPost.publishedAt
       ? new Date(dbPost.publishedAt).toISOString().split('T')[0]
       : new Date(dbPost.createdAt).toISOString().split('T')[0];
+    const dbContentHtml = await renderMarkdownToSafeHtml(dbPost.content);
 
     return (
       <>
@@ -231,9 +225,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 <span style={{ background: 'var(--primary)', color: '#fff', padding: '2px 10px', borderRadius: '12px', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{dbPost.category}</span>
                 <span style={{ marginLeft: 'auto', fontSize: '12px' }}>by {dbPost.author}</span>
               </div>
-              <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={MARKDOWN_COMPONENTS}>{dbPost.content}</ReactMarkdown>
-              </div>
+              <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }} dangerouslySetInnerHTML={{ __html: dbContentHtml }} />
               {dbPost.tags.length > 0 && (
                 <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">
                   <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>Tags:</span>
