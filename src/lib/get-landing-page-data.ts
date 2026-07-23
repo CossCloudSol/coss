@@ -25,8 +25,6 @@ export const SLUG_MAP: Record<string, string> = {
       'artificial-intelligence-training-institute-in-hyderabad': 'artificial-intelligence-training-institute-in-hyderabad',
       'azure-devops-training-institute-in-hyderabad':           'azure-devops-training-in-hyderabad',
       'cyber-security-training-institute-in-hyderabad':         'cyber-security-training-institute-in-hyderabad',
-      'data-analytics-training-institute-in-hyderabad':         'data-analytics-training-institute-in-hyderabad',
-      'data-science-training-institute-in-hyderabad':           'data-science-training-institute-in-hyderabad',
       'devops-training-institute-in-hyderabad':                 'devops-training-institute-in-hyderabad',
       'digital-marketing-training-institute-in-hyderabad':      'digital-marketing-training-in-hyderabad',
       'ethical-hacking-training-institute-in-hyderabad':        'ethical-hacking-training-institute-in-hyderabad',
@@ -39,22 +37,12 @@ export const SLUG_MAP: Record<string, string> = {
       'aws-training-institute-in-hyderabad':                    'aws-solutions-architect-training-in-hyderabad',
       'aws-devops-training-institute-in-hyderabad':             'kubernetes-docker-devops-training-in-hyderabad',
       'azure-training-institute-in-hyderabad':                  'azure-administrator-training-in-hyderabad',
-      'azure-data-engineer-training-in-hyderabad':              'azure-data-factory-training-in-hyderabad',
       'big-data-training-institute-in-hyderabad':               'apache-spark-training-in-hyderabad',
-      'ccna-networking-training-institute-in-hyderabad':        'network-security-training-in-hyderabad',
-      'cloud-computing-training-institute-in-hyderabad':        'multi-cloud-architecture-training-in-hyderabad',
-      'cloud-data-engineer-training-in-hyderabad':              'data-engineering-python-training-in-hyderabad',
       'communication-skills-training-in-hyderabad':             'business-communication-training-in-hyderabad',
       'data-engineering-training-institute-in-hyderabad':       'data-engineering-python-training-in-hyderabad',
-      'erp-crm-training-institute-in-hyderabad':                'salesforce-admin-developer-training-in-hyderabad',
-      'full-stack-developer-training-in-hyderabad':             'full-stack-java-developer-training-in-hyderabad',
       'google-cloud-training-institute-in-hyderabad':           'google-cloud-engineer-training-in-hyderabad',
       'java-training-institute-in-hyderabad':                   'full-stack-java-developer-training-in-hyderabad',
-      'linux-administration-training-in-hyderabad':             'linux-shell-scripting-training-in-hyderabad',
-      'multi-cloud-engineer-training-in-hyderabad':             'multi-cloud-architecture-training-in-hyderabad',
-      'oracle-fusion-hcm-training-in-hyderabad':                'salesforce-admin-developer-training-in-hyderabad',
       'python-training-institute-in-hyderabad':                 'python-programming-training-in-hyderabad',
-      'salesforce-crm-training-institute-in-hyderabad':         'salesforce-training-institute-in-hyderabad',
       'sql-training-institute-in-hyderabad':                    'sql-data-analytics-training-hyderabad',
 
       // Real slugs — seeded 2026-06-25
@@ -64,20 +52,16 @@ export const SLUG_MAP: Record<string, string> = {
       'tally-erp-training-institute-in-hyderabad':              'tally-erp-prime-accounting',
 
       // "-institute-" variants missing — GSC 404 remediation 2026-07-16
-      'aws-cloud-training-institute-in-hyderabad':              'aws-solutions-architect-training-in-hyderabad',
-      'cloud-data-engineer-training-institute-in-hyderabad':    'data-engineering-python-training-in-hyderabad',
-      'multi-cloud-engineer-training-institute-in-hyderabad':   'multi-cloud-architecture-training-in-hyderabad',
       'linux-administration-training-institute-in-hyderabad':  'linux-shell-scripting-training-in-hyderabad',
       'azure-data-engineer-training-institute-in-hyderabad':    'azure-data-factory-training-in-hyderabad',
-      'java-full-stack-training-institute-in-hyderabad':        'full-stack-java-developer-training-in-hyderabad',
       'ccna-training-institute-in-hyderabad':                   'network-security-training-in-hyderabad',
-      'oracle-fusion-hcm-training-institute-in-hyderabad':      'salesforce-admin-developer-training-in-hyderabad',
 
       // Orphaned sitemap URLs — SEO audit remediation 2026-07-17
-      'aws-devops-cloud-training-institute-in-hyderabad':       'kubernetes-docker-devops-training-in-hyderabad',
-      'multi-cloud-devops-training-institute-in-hyderabad':     'multi-cloud-architecture-training-in-hyderabad',
       'python-full-stack-training-institute-in-hyderabad':      'full-stack-python-training-in-hyderabad',
-      'communication-skills-training-institute-in-hyderabad':   'business-communication-training-in-hyderabad',
+
+      // Fallback-only slugs formalized — flat-legacy consolidation 2026-07-23
+      'salesforce-training-institute-in-hyderabad':             'salesforce-training-institute-in-hyderabad',
+      'seo-training-institute-in-hyderabad':                    'seo-training-institute-in-hyderabad',
 }
 
 export async function getLandingPageCourse(slug: string): Promise<LandingPageCourse | null> {

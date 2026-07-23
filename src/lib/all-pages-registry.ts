@@ -33,7 +33,7 @@ export interface StaticPage {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
-/*  35 SEO Course Pages (from your 3-session execution plan)                  */
+/*  27 SEO Course Pages (from your 3-session execution plan)                  */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
@@ -88,18 +88,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     category: 'Data, Analytics & BI',
     priority: 0.85,
   },
-
-  // ── Session 1: Cloud Computing ────────────────────────────────────────────
-  {
-    slug: 'aws-cloud-training-institute-in-hyderabad',
-    title: 'Best AWS Cloud Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best AWS training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
-    keywords: 'AWS training in Hyderabad, Amazon Web Services course Hyderabad, AWS certification, cloud computing training',
-    primaryKeyword: 'AWS Cloud Training in Hyderabad',
-    category: 'Cloud Computing',
-    priority: 0.9,
-  },
   {
     slug: 'azure-training-institute-in-hyderabad',
     title: 'Best Microsoft Azure Training Institute in Hyderabad',
@@ -119,16 +107,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     primaryKeyword: 'Google Cloud Training in Hyderabad',
     category: 'Cloud Computing',
     priority: 0.9,
-  },
-  {
-    slug: 'aws-devops-cloud-training-institute-in-hyderabad',
-    title: 'Best AWS DevOps Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best AWS DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'AWS DevOps training in Hyderabad, AWS DevOps course, cloud DevOps certification Hyderabad, AWS engineer training',
-    primaryKeyword: 'AWS DevOps Training in Hyderabad',
-    category: 'Cloud Computing',
-    priority: 0.85,
   },
 
   // ── Session 1: DevOps & Multi-Cloud ──────────────────────────────────────
@@ -163,28 +141,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     priority: 0.9,
   },
 
-  // ── Session 2: DevOps & Multi-Cloud (continued) ──────────────────────────
-  {
-    slug: 'multi-cloud-devops-training-institute-in-hyderabad',
-    title: 'Best Multi-Cloud with DevOps Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best multi-cloud DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'multi-cloud DevOps training in Hyderabad, multi-cloud training Hyderabad, hybrid cloud DevOps, multi-cloud certification',
-    primaryKeyword: 'Multi-Cloud DevOps Training in Hyderabad',
-    category: 'DevOps & Multi-Cloud',
-    priority: 0.85,
-  },
-  {
-    slug: 'multi-cloud-engineer-training-institute-in-hyderabad',
-    title: 'Best Multi-Cloud Engineer Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best multi-cloud engineer training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'multi-cloud engineer training in Hyderabad, cloud engineer course Hyderabad, multi-cloud certification, cloud architect training',
-    primaryKeyword: 'Multi-Cloud Engineer Training in Hyderabad',
-    category: 'DevOps & Multi-Cloud',
-    priority: 0.85,
-  },
-
   // ── Session 2: Programming & Full Stack ──────────────────────────────────
   {
     slug: 'python-training-institute-in-hyderabad',
@@ -203,16 +159,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
       'Join the best Java training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Java training in Hyderabad, Java course Hyderabad, Core Java certification, Java programming institute Hyderabad',
     primaryKeyword: 'Java Training in Hyderabad',
-    category: 'Programming & Full Stack',
-    priority: 0.9,
-  },
-  {
-    slug: 'java-full-stack-training-institute-in-hyderabad',
-    title: 'Best Java Full Stack Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best Java Full Stack training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'Java Full Stack training in Hyderabad, Java full stack developer course, Spring Boot training Hyderabad, J2EE certification',
-    primaryKeyword: 'Java Full Stack Training in Hyderabad',
     category: 'Programming & Full Stack',
     priority: 0.9,
   },
@@ -248,16 +194,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     category: 'Data Engineering',
     priority: 0.9,
   },
-  {
-    slug: 'cloud-data-engineer-training-institute-in-hyderabad',
-    title: 'Best Cloud Data Engineer Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best cloud data engineer training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'cloud data engineer training in Hyderabad, cloud data engineering course, cloud data pipeline training, GCP data engineer',
-    primaryKeyword: 'Cloud Data Engineer Training in Hyderabad',
-    category: 'Data Engineering',
-    priority: 0.85,
-  },
 
   // ── Session 2: Cyber Security ─────────────────────────────────────────────
   {
@@ -288,19 +224,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     keywords: 'CCNA training in Hyderabad, CCNA certification Hyderabad, networking course, Cisco training institute Hyderabad',
     primaryKeyword: 'CCNA Training in Hyderabad',
     category: 'Cyber Security',
-    priority: 0.85,
-  },
-
-  // ── Session 3: ERP, CRM & Enterprise ─────────────────────────────────────
-  // sap-fico-training-institute-in-hyderabad is a permanentRedirect() page, not a live page — excluded from sitemap
-  {
-    slug: 'oracle-fusion-hcm-training-institute-in-hyderabad',
-    title: 'Best Oracle Fusion Cloud HCM Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best Oracle Fusion HCM training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'Oracle Fusion HCM training in Hyderabad, Oracle Fusion Cloud course, Oracle HCM certification Hyderabad, Oracle training',
-    primaryKeyword: 'Oracle Fusion HCM Training in Hyderabad',
-    category: 'ERP, CRM & Enterprise',
     priority: 0.85,
   },
   {
@@ -386,16 +309,6 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
       'Join the best spoken English training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'spoken English training in Hyderabad, English speaking course Hyderabad, spoken English classes, communication training',
     primaryKeyword: 'Spoken English Training in Hyderabad',
-    category: 'Professional & Soft Skills',
-    priority: 0.8,
-  },
-  {
-    slug: 'communication-skills-training-institute-in-hyderabad',
-    title: 'Best Communication Skills Training Institute in Hyderabad',
-    metaDescription:
-      'Join the best communication skills training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
-    keywords: 'communication skills training in Hyderabad, communication skills course Hyderabad, personality development, soft skills course',
-    primaryKeyword: 'Communication Skills Training in Hyderabad',
     category: 'Professional & Soft Skills',
     priority: 0.8,
   },
