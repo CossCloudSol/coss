@@ -33,7 +33,7 @@ export interface StaticPage {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────── */
-/*  36 SEO Course Pages (from your 3-session execution plan)                  */
+/*  35 SEO Course Pages (from your 3-session execution plan)                  */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 export const COURSE_PAGES: ReadonlyArray<CoursePage> = [

@@ -109,6 +109,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     })
 
+  // Dedup: some slugs exist in both COURSE_PAGES (group 1) and COURSES (group 3),
+  // which otherwise emit duplicate <loc> entries. Keep the first occurrence (COURSE_PAGES wins).
+  const seoPageUrls = new Set(seoPageEntries.map((entry) => entry.url));
+  const dynamicCourseEntriesDeduped = dynamicCourseEntries.filter(
+    (entry) => !seoPageUrls.has(entry.url)
+  );
+
   // 4 -- Static pages (home, courses, about, contact, etc.)
   const staticEntries: MetadataRoute.Sitemap = STATIC_PAGES
     .filter((page) => !isExcluded(page.slug))
@@ -217,7 +224,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...seoPageEntries,
     ...categoryEntries,
-    ...dynamicCourseEntries,
+    ...dynamicCourseEntriesDeduped,
     ...staticEntries,
     ...blogEntries,
     ...dbCourseEntries,
