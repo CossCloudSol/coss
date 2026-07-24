@@ -1,6 +1,27 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/db'
 
+/**
+ * BranchSettings.serviceAreas is stored as a JSON-encoded string column.
+ * A prior admin write path double-encoded it (JSON.stringify of an
+ * already-stringified value), so a single JSON.parse can yield a string
+ * instead of an array. Guard against that — and any other malformed value —
+ * rather than letting `.map()` crash the locality page render.
+ */
+export function normalizeJsonArray(value: unknown, branchKey: string, field: string): string[] {
+  if (Array.isArray(value)) return value
+  if (typeof value === 'string') {
+    try {
+      const parsed = JSON.parse(value)
+      if (Array.isArray(parsed)) return parsed
+    } catch {
+      // falls through to the warning below
+    }
+  }
+  console.warn(`[getBranchSettings] "${field}" for branch "${branchKey}" was not a valid array (typeof=${typeof value}); falling back to []`)
+  return []
+}
+
 export type BranchSettings = {
   id: string
   branchKey: string
@@ -76,7 +97,7 @@ export async function getBranchSettings(branchKey: string): Promise<BranchSettin
     }
     return {
       ...row,
-      serviceAreas: JSON.parse(row.serviceAreas || '[]')
+      serviceAreas: normalizeJsonArray(row.serviceAreas, branchKey, 'serviceAreas')
     }
   } catch (e) {
     console.log(`[getBranchSettings] error loading "${branchKey}", using fallback NAP constants:`, e)
@@ -87,7 +108,7 @@ export async function getBranchSettings(branchKey: string): Promise<BranchSettin
 export async function getAllBranchSettings(): Promise<BranchSettings[]> {
   try {
     const rows = await getCachedBranchRows()
-    return rows.map(r => ({ ...r, serviceAreas: JSON.parse(r.serviceAreas || '[]') }))
+    return rows.map(r => ({ ...r, serviceAreas: normalizeJsonArray(r.serviceAreas, r.branchKey, 'serviceAreas') }))
   } catch {
     return Object.values(FALLBACK)
   }
