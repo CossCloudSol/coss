@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
+import { normalizeJsonArray } from '@/lib/get-branch-settings'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -16,7 +17,10 @@ export async function GET(
 
   const row = await prisma.branchSettings.findUnique({ where: { branchKey: params.branchKey } })
   if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-  return NextResponse.json(row)
+  return NextResponse.json({
+    ...row,
+    serviceAreas: normalizeJsonArray(row.serviceAreas, params.branchKey, 'serviceAreas'),
+  })
 }
 
 export async function POST(
@@ -44,7 +48,7 @@ export async function POST(
       workingHoursClose: body.workingHoursClose ?? '19:00',
       workingDays:       body.workingDays       ?? 'Monday-Sunday',
       mapEmbedUrl:       body.mapEmbedUrl       ?? '',
-      serviceAreas:      JSON.stringify(body.serviceAreas ?? []),
+      serviceAreas:      JSON.stringify(Array.isArray(body.serviceAreas) ? body.serviceAreas : []),
       aggregateRating:   parseFloat(body.aggregateRating) || 4.8,
       reviewCount:       parseInt(body.reviewCount)       || 0,
       schemaEnabled:     body.schemaEnabled     ?? true,
