@@ -25,8 +25,8 @@ export const wpImages: Record<string, CategoryImages> = {
     hero:  `${WP}/2026/02/Data-Analytics-BI-1.png`,
     icon:  `${WP}/2026/02/Data-Analytics-BI.png`,
     subcourses: [
-      { name: 'Data Analytics',          image: `${WP}/2026/02/Data-Analytics-570x321.jpg`,          href: '/data-analytics-training-institute-in-hyderabad/',           alt: 'Data Analytics Training Hyderabad' },
-      { name: 'Data Science',            image: `${WP}/2025/08/Data-Science-1-570x321.jpg`,           href: '/data-science-training-institute-in-hyderabad/',             alt: 'Data Science Training Hyderabad' },
+      { name: 'Data Analytics',          image: `${WP}/2026/02/Data-Analytics-570x321.jpg`,          href: '/courses/data-analytics-training-institute-in-hyderabad',           alt: 'Data Analytics Training Hyderabad' },
+      { name: 'Data Science',            image: `${WP}/2025/08/Data-Science-1-570x321.jpg`,           href: '/courses/data-science-training-institute-in-hyderabad',             alt: 'Data Science Training Hyderabad' },
       { name: 'Big Data',                image: `${WP}/2026/02/big-data-570x321.jpg`,                 href: '/big-data-training-in-hyderabad/',                           alt: 'Big Data Training Hyderabad' },
       { name: 'Machine Learning',        image: `${WP}/2025/08/Machine-Learning-1.jpg`,               href: '/machine-learning-training-institute-in-hyderabad/',         alt: 'Machine Learning Training Hyderabad' },
       { name: 'Artificial Intelligence', image: `${WP}/2025/08/Artificial-intelligence-1-570x321.webp`, href: '/artificial-intelligence-ai-training-institute-in-hyderabad/', alt: 'AI Training Hyderabad' },
@@ -67,7 +67,7 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'AWS DevOps',              image: `${WP}/2024/12/AWS-DevOps-Training-Image-Banner.jpg`,   href: '/aws-devops-course-in-hyderabad-by-coss-cloud-solutions/', alt: 'AWS DevOps Training' },
       { name: 'Azure DevOps',            image: `${WP}/2025/09/AzureDevops-Training-Hyderabad.png`,     href: '/azure-devops-courses-in-hyderabad-by-coss-cloud-solutions/', alt: 'Azure DevOps Training' },
       { name: 'Multi-Cloud with DevOps', image: `${WP}/2026/02/Multi-Cloud-with-DevOps.jpg`,            href: '/devops-training-institute-in-hyderabad/',           alt: 'Multi Cloud DevOps' },
-      { name: 'Multi-Cloud Engineer',    image: `${WP}/2026/02/Multi-Cloud-Engineer.jpg`,               href: '/multi-cloud-engineer-training-in-hyderabad/',            alt: 'Multi Cloud Engineer' },
+      { name: 'Multi-Cloud Engineer',    image: `${WP}/2026/02/Multi-Cloud-Engineer.jpg`,               href: '/courses/multi-cloud-architecture-training-in-hyderabad',            alt: 'Multi Cloud Engineer' },
       { name: 'DevOps Training',         image: `${WP}/2024/11/DevOps-Training-Image-Banner.jpg`,       href: '/devops-training-in-hyderabad/',                          alt: 'DevOps Training Hyderabad' },
     ],
     companyLogos: [
@@ -88,7 +88,7 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'Java Full Stack',     image: `${WP}/2026/02/Java-Full-Stack.jpg`,                  href: '/java-training-institute-in-hyderabad/',           alt: 'Java Full Stack Training' },
       { name: 'Python Training',     image: `${WP}/2025/03/Python-Training-Institute-in-Dilsukhnagar-Hyderabad.jpg`, href: '/python-training-institute-in-hyderabad/', alt: 'Python Training' },
       { name: 'Java Training',       image: `${WP}/2025/02/Java.jpg`,                             href: '/java-training-institute-in-hyderabad/', alt: 'Java Training' },
-      { name: 'Programming',         image: `${WP}/2026/02/Programming.png`,                      href: '/full-stack-developer-training-in-hyderabad/',                      alt: 'Programming Courses' },
+      { name: 'Programming',         image: `${WP}/2026/02/Programming.png`,                      href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',                      alt: 'Programming Courses' },
     ],
     companyLogos: [
       `${WP}/2021/12/wipro-jpg.webp`, `${WP}/2021/12/tcs-jpg.webp`,  `${WP}/2021/12/ibm-jpg.webp`,
@@ -101,8 +101,8 @@ export const wpImages: Record<string, CategoryImages> = {
     hero: `${WP}/2026/02/Data-Engineering-1.png`,
     icon: `${WP}/2026/02/Data-Engineering.png`,
     subcourses: [
-      { name: 'Azure Data Engineer', image: `${WP}/2025/09/Azure-Data-Engineer-Training-in-Hyderabad.jpg`, href: '/azure-data-engineer-training-in-hyderabad/', alt: 'Azure Data Engineer Training Hyderabad' },
-      { name: 'Cloud Data Engineer', image: `${WP}/2026/02/Cloud-Data-Engineer-570x321.jpg`,              href: '/cloud-data-engineer-training-in-hyderabad/', alt: 'Cloud Data Engineer Training' },
+      { name: 'Azure Data Engineer', image: `${WP}/2025/09/Azure-Data-Engineer-Training-in-Hyderabad.jpg`, href: '/courses/data-engineering/azure-data-factory-training-in-hyderabad', alt: 'Azure Data Engineer Training Hyderabad' },
+      { name: 'Cloud Data Engineer', image: `${WP}/2026/02/Cloud-Data-Engineer-570x321.jpg`,              href: '/data-engineering-training-institute-in-hyderabad', alt: 'Cloud Data Engineer Training' },
       { name: 'Data Engineering',    image: `${WP}/2026/02/Data-Engineering-2.png`,                        href: '/data-engineering-training-institute-in-hyderabad/',                  alt: 'Data Engineering Training' },
     ],
     companyLogos: [
@@ -133,7 +133,7 @@ export const wpImages: Record<string, CategoryImages> = {
       { name: 'SAP FICO',              image: `${WP}/2025/09/SAP-FICO-Training-at-COSS-Cloud-Solutions-1.jpg`, href: '/sap-fico-training-institute-in-hyderabad/',             alt: 'SAP FICO Training' },
       { name: 'Oracle Fusion Cloud HCM', image: `${WP}/2026/02/Oracle-Fusion-Cloud-HCM.jpg`,                  href: '/oracle-fusion-cloud-hcm-training-in-hyderabad/',        alt: 'Oracle Fusion HCM Training' },
       { name: 'Salesforce CRM',        image: `${WP}/2025/03/Coss-Cloud-Solutions-Salesforce-Training-Hyderabad.jpg`, href: '/salesforce-training-center-in-hyderabad/',        alt: 'Salesforce CRM Training' },
-      { name: 'ERP & CRM Tools',       image: `${WP}/2026/02/ERP-CRM.png`,                                    href: '/erp-crm-training-institute-in-hyderabad/',                     alt: 'ERP CRM Training' },
+      { name: 'ERP & CRM Tools',       image: `${WP}/2026/02/ERP-CRM.png`,                                    href: '/courses/erp-crm-enterprise-tools/salesforce-admin-developer-training-in-hyderabad',                     alt: 'ERP CRM Training' },
     ],
     companyLogos: [
       `${WP}/2021/12/oracle-jpg.webp`, `${WP}/2021/12/google-jpg.webp`, `${WP}/2021/12/ibm-jpg.webp`,

@@ -279,7 +279,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     discountedPrice: '₹32,000',
     emi: 'EMI from ₹2,700/mo',
     urgency: 'Only 8 seats left in current batch',
-    href: '/data-science-training-institute-in-hyderabad/',
+    href: '/courses/data-science-training-institute-in-hyderabad',
   },
   {
     title: 'Machine Learning Training in Hyderabad',
@@ -379,7 +379,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     discountedPrice: '₹17,000',
     emi: 'EMI from ₹1,450/mo',
     urgency: 'Next batch starts June 10',
-    href: '/data-analytics-training-institute-in-hyderabad/',
+    href: '/courses/data-analytics-training-institute-in-hyderabad',
   },
 ];
 
@@ -462,7 +462,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     discountedPrice: '₹30,000',
     emi: 'EMI from ₹2,500/mo',
     urgency: 'Only 6 seats left in current batch',
-    href: '/multi-cloud-engineer-training-in-hyderabad/',
+    href: '/courses/multi-cloud-architecture-training-in-hyderabad',
   },
   {
     title: 'Cloud Architecture Training',
@@ -668,7 +668,7 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     discountedPrice: '₹26,000',
     emi: 'EMI from ₹2,200/mo',
     urgency: 'Enrollments closing soon',
-    href: '/full-stack-developer-training-in-hyderabad/',
+    href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
   },
   {
     title: 'React.js Training in Hyderabad',
@@ -688,7 +688,7 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
     urgency: 'Only 10 seats left in current batch',
-    href: '/full-stack-developer-training-in-hyderabad/',
+    href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
   },
   {
     title: 'Core Java Training in Hyderabad',
@@ -731,7 +731,7 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
     urgency: 'Only 8 seats left in current batch',
-    href: '/azure-data-engineer-training-in-hyderabad/',
+    href: '/courses/data-engineering/azure-data-factory-training-in-hyderabad',
   },
   {
     title: 'Apache Spark & PySpark Training',
