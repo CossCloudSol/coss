@@ -168,6 +168,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // 6 — DB courses
     const dbCourses = await prisma.course.findMany({
+      where: { status: 'published' },
       select: { slug: true, urlType: true, categorySlug: true, updatedAt: true },
     })
     dbCourseEntries = dbCourses

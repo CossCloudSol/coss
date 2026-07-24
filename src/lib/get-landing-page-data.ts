@@ -81,28 +81,35 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
       slug.replace(/-in-hyderabad$/, ''),
     ]))
 
-    const course = await prisma.course.findFirst({
-      where: { slug: { in: variants } },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        categorySlug: true,
-        description: true,
-        excerpt: true,
-        duration: true,
-        level: true,
-        price: true,
-        originalPrice: true,
-        thumbnail: true,
-        highlights: true,
-        syllabus: true,
-        tools: true,
-        category: true,
-        courseCategory: { select: { name: true, slug: true } },
-      },
-    })
-    return course
+    // Query variants in priority order (explicit SLUG_MAP entry first) — a single
+    // findFirst({ slug: { in: variants } }) would lose that order since SQL IN
+    // doesn't preserve array order, letting a regex-fallback variant that
+    // happens to match a different (possibly unpublished) course win instead.
+    for (const variant of variants) {
+      const course = await prisma.course.findFirst({
+        where: { slug: variant, status: 'published' },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          categorySlug: true,
+          description: true,
+          excerpt: true,
+          duration: true,
+          level: true,
+          price: true,
+          originalPrice: true,
+          thumbnail: true,
+          highlights: true,
+          syllabus: true,
+          tools: true,
+          category: true,
+          courseCategory: { select: { name: true, slug: true } },
+        },
+      })
+      if (course) return course
+    }
+    return null
   } catch {
     return null
   }
