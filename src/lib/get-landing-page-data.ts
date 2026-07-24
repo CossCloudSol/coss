@@ -31,14 +31,14 @@ export const SLUG_MAP: Record<string, string> = {
       'machine-learning-training-institute-in-hyderabad':       'machine-learning-training-institute-in-hyderabad',
       'power-bi-training-institute-in-hyderabad':               'power-bi-training-in-hyderabad',
       'software-testing-training-institute-in-hyderabad':       'software-testing-training-institute-in-hyderabad',
-      'ui-ux-design-training-institute-in-hyderabad':           'ui-ux-design-training-in-hyderabad',
+      'ui-ux-design-training-institute-in-hyderabad':           'ui-ux-design-training-institute-in-hyderabad',
 
       // Newly mapped — 16 slugs fixed
       'aws-training-institute-in-hyderabad':                    'aws-solutions-architect-training-in-hyderabad',
       'aws-devops-training-institute-in-hyderabad':             'kubernetes-docker-devops-training-in-hyderabad',
       'azure-training-institute-in-hyderabad':                  'azure-administrator-training-in-hyderabad',
       'big-data-training-institute-in-hyderabad':               'apache-spark-training-in-hyderabad',
-      'communication-skills-training-in-hyderabad':             'business-communication-training-in-hyderabad',
+      'communication-skills-training-in-hyderabad':             'business-communication-english-training-in-hyderabad',
       'data-engineering-training-institute-in-hyderabad':       'data-engineering-python-training-in-hyderabad',
       'google-cloud-training-institute-in-hyderabad':           'google-cloud-engineer-training-in-hyderabad',
       'java-training-institute-in-hyderabad':                   'full-stack-java-developer-training-in-hyderabad',
