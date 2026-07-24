@@ -162,7 +162,7 @@ export const wpImages: Record<string, CategoryImages> = {
     icon: `${WP}/2026/02/Digital-Design.png`,
     subcourses: [
       { name: 'Digital Marketing', image: `${WP}/2025/03/Digital-Marketing.jpg`,                                    href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions/', alt: 'Digital Marketing Training' },
-      { name: 'UI / UX Design',   image: `${WP}/2026/02/UI-UX-Design.jpg`,                                          href: '/ui-ux-design-training-in-hyderabad/',             alt: 'UI UX Design Training' },
+      { name: 'UI / UX Design',   image: `${WP}/2026/02/UI-UX-Design.jpg`,                                          href: '/ui-ux-design-training-institute-in-hyderabad/',   alt: 'UI UX Design Training' },
       { name: 'SEO Training',     image: `${WP}/2025/04/Best-Digital-Marketing-Institute-in-Hyderabad.png`,          href: '/digital-marketing-training-institute-in-dilsukhnagar-hyderabad/', alt: 'SEO Training' },
     ],
     companyLogos: [

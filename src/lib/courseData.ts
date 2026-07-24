@@ -1083,7 +1083,7 @@ export const digitalDesignCourses: CourseCardProps[] = [
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
     urgency: 'Next batch starts soon — 6 seats left',
-    href: '/ui-ux-design-training-in-hyderabad/',
+    href: '/ui-ux-design-training-institute-in-hyderabad/',
   },
   {
     title: 'Graphic Design Training in Hyderabad',
