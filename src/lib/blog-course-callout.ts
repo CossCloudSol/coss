@@ -85,6 +85,40 @@ function getFlatCandidates(): FlatCandidate[] {
   }))
 }
 
+/** Resolves a manual OVERRIDES href against the live coursePool/SLUG_MAP — throws if it no longer exists, since these are meant to be verified live survivors. */
+function resolveOverride(
+  postSlug: string,
+  href: string,
+  coursePool: CalloutCourseInput[],
+  coursesBySlug: Map<string, CalloutCourseInput>
+): CalloutTarget {
+  if (href.startsWith('/courses/')) {
+    const course = coursePool.find((c) => getCourseUrl(c) === href)
+    if (!course) {
+      throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a published course`)
+    }
+    return {
+      kind: 'course',
+      title: course.title,
+      description: `Learn more about our ${course.title} course — structured curriculum with placement support.`,
+      href,
+    }
+  }
+
+  const flatSlug = href.slice(1)
+  const dbSlug = SLUG_MAP[flatSlug]
+  const course = dbSlug ? coursesBySlug.get(dbSlug) : undefined
+  if (!course) {
+    throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve via SLUG_MAP to a published course`)
+  }
+  return {
+    kind: 'flat',
+    title: course.title,
+    description: `Continue exploring ${course.title} at our training institute in Hyderabad.`,
+    href,
+  }
+}
+
 interface Scored<T> {
   item: T
   score: number
@@ -111,12 +145,68 @@ function bestMatch<T>(candidates: T[], getTokens: (item: T) => string[], getSlug
   return scored[0]
 }
 
+// Manual corrections for posts the token-overlap matcher below sends to the
+// wrong course family (e.g. generic "cloud computing" posts landing on
+// quantum computing) or that shouldn't get a callout at all (`null`).
+// Takes precedence over bestMatch. Every non-null href is validated against
+// the live coursePool/SLUG_MAP in matchPostToCallout — reviewed 2026-07-26
+// against the flat-legacy consolidation survivors.
+const OVERRIDES: Record<string, string | null> = {
+  // Wrong-family fixes
+  'learning-tally-with-coss-cloud-solutions-in-dilsukhnagar-hyderabad': '/tally-erp-training-institute-in-hyderabad',
+  'machine-learning-training-in-hyderabad': '/courses/machine-learning-training-institute-in-hyderabad',
+  'sap-fico-training-in-hyderabad': '/courses/erp-crm-enterprise-tools/sap-fico-training-institute-in-hyderabad',
+  'cloud-computing-classes-with-coss-cloud-solutions-in-hyderabad': '/courses/multi-cloud-architecture-training-in-hyderabad',
+  'cloud-computing-future-in-hyderabad-with-coss-cloud-solutions': '/courses/multi-cloud-architecture-training-in-hyderabad',
+  'cloud-computing-training-in-hyderabad-the-best-career-move-in-2025': '/courses/multi-cloud-architecture-training-in-hyderabad',
+  'cloud-computing-training-institute-in-dilsukhnagar-hyderabad': '/courses/multi-cloud-architecture-training-in-hyderabad',
+  'best-full-stack-java-training-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': '/java-training-institute-in-hyderabad',
+  'best-python-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': '/python-training-institute-in-hyderabad',
+  'best-python-institute-in-hyderabad-coss-cloud-solutions': '/python-training-institute-in-hyderabad',
+  'full-stack-power-bi-training-in-dilsukhnagar-hyderabad': '/power-bi-training-institute-in-hyderabad',
+
+  // Data science / analytics → their real courses (top-performing pages)
+  'data-science-course-hyderabad-choosing-institute': '/courses/data-science-training-institute-in-hyderabad',
+  'data-science-training-dilsukhnagar-hyderabad': '/courses/data-science-training-institute-in-hyderabad',
+  'data-science-training-institute-in-dilsukhnagar-coss-cloud-solutions': '/courses/data-science-training-institute-in-hyderabad',
+  'data-science-training-in-hyderabad': '/courses/data-science-training-institute-in-hyderabad',
+  'data-analytics-course-hyderabad-beginners': '/courses/data-analytics-training-institute-in-hyderabad',
+  'data-analytics-institute-in-dilsukhnagar-hyderabad': '/courses/data-analytics-training-institute-in-hyderabad',
+  'data-analytics-training-in-hyderabad': '/courses/data-analytics-training-institute-in-hyderabad',
+  'ai-career-growth-hyderabad': '/courses/artificial-intelligence-training/artificial-intelligence-ai-training-hyderabad',
+
+  // DevOps/AWS family precision (generic devops ≠ aws-devops ≠ azure-devops)
+  'devops-institute-in-dilsukhnagar-hyderabad': '/devops-training-institute-in-hyderabad',
+  'devops-training-in-dilsukhnagar': '/devops-training-institute-in-hyderabad',
+  'best-institute-for-devops-in-hyderabad-coss-cloud-solutions': '/devops-training-institute-in-hyderabad',
+  'advance-your-career-at-the-top-devops-institute-in-dilsukhnagar-coss-cloud-solutions': '/devops-training-institute-in-hyderabad',
+  'devops-training-in-hyderabad-with-coss-cloud-solutions': '/courses/devops-training-institute-in-hyderabad',
+  'job-opportunities-for-devops-professionals-in-hyderabad': '/courses/devops-training-institute-in-hyderabad',
+  'learn-aws-devops-in-hyderabad-with-coss-cloud-solutions': '/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad',
+  'learn-aws-devops-from-industry-experts-at-coss-cloud-solutions-hyderabad': '/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad',
+  'multi-cloud-devops-course-hyderabad-career-guide': '/courses/multi-cloud-architecture-training-in-hyderabad',
+  'best-aws-institutes-in-hyderabad-coss-cloud-solutions': '/aws-training-institute-in-hyderabad',
+  'join-our-industry-leading-aws-cloud-institute-in-dilsukhnagar-hyderabad': '/aws-training-institute-in-hyderabad',
+
+  // Junk posts — no callout
+  '77674-2': null,
+  a: null,
+}
+
 /**
  * Deterministic post → course/flat-page match for the blog-to-course callout.
  * No randomness, no dates, no runtime fetch beyond the given coursePool —
  * safe to bake into an ISR-cached page.
  */
 export function matchPostToCallout(post: CalloutPostInput, coursePool: CalloutCourseInput[]): CalloutTarget | null {
+  const coursesBySlug = new Map(coursePool.map((c) => [c.slug, c]))
+
+  if (post.slug in OVERRIDES) {
+    const overrideHref = OVERRIDES[post.slug]
+    if (overrideHref === null) return null
+    return resolveOverride(post.slug, overrideHref, coursePool, coursesBySlug)
+  }
+
   const postTokens = tokenSet([post.slug.replace(/-/g, ' '), post.title, ...post.tags, ...post.categories])
   if (postTokens.size === 0) return null
 
@@ -129,7 +219,6 @@ export function matchPostToCallout(post: CalloutPostInput, coursePool: CalloutCo
   )
 
   const preferFlat = isInstituteOrLocalityFlavored(post.slug, post.title)
-  const coursesBySlug = new Map(coursePool.map((c) => [c.slug, c]))
 
   function resolveFlat(): CalloutTarget | null {
     if (!bestFlat) return null
