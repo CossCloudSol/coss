@@ -8,6 +8,9 @@ import { stripBrandFragments, countBrandOccurrences } from '@/lib/build-title';
 import { renderMarkdownToSafeHtml } from '@/lib/render-markdown';
 import { prisma } from '@/lib/db';
 import BlogViewBeacon from '@/components/BlogViewBeacon';
+import { getPublishedCoursesForMatching } from '@/lib/course-queries';
+import { matchPostToCallout } from '@/lib/blog-course-callout';
+import BlogCourseCallout from '@/components/BlogCourseCallout';
 
 export const revalidate = 600;
 
@@ -188,6 +191,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       ? new Date(dbPost.publishedAt).toISOString().split('T')[0]
       : new Date(dbPost.createdAt).toISOString().split('T')[0];
     const dbContentHtml = await renderMarkdownToSafeHtml(dbPost.content);
+    const dbCoursePool = await getPublishedCoursesForMatching();
+    const dbCalloutTarget = matchPostToCallout(
+      { slug: dbPost.slug, title: dbPost.title, tags: dbPost.tags, categories: dbPost.category ? [dbPost.category] : [] },
+      dbCoursePool
+    );
 
     return (
       <>
@@ -236,6 +244,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   ))}
                 </div>
               )}
+              {dbCalloutTarget && <BlogCourseCallout target={dbCalloutTarget} />}
               <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
                 <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
                 <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
@@ -282,6 +291,16 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const categories = Array.isArray(post.frontmatter.categories)
     ? post.frontmatter.categories
     : [];
+  const mdxCoursePool = await getPublishedCoursesForMatching();
+  const mdxCalloutTarget = matchPostToCallout(
+    {
+      slug: post.slug,
+      title: titleStr,
+      tags: Array.isArray(post.frontmatter.tags) ? post.frontmatter.tags.map(tagToString).filter(Boolean) : [],
+      categories: categories.map(tagToString).filter(Boolean),
+    },
+    mdxCoursePool
+  );
 
   return (
     <>
@@ -385,6 +404,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 })}
               </div>
             ) : null}
+
+            {mdxCalloutTarget && <BlogCourseCallout target={mdxCalloutTarget} />}
 
             {/* CTA */}
             <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>

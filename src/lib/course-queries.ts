@@ -29,6 +29,23 @@ export interface CourseListFilters {
   level?: string;
 }
 
+/** Full published-course pool for deterministic keyword matching (blog-to-course callout). */
+export async function getPublishedCoursesForMatching() {
+  return prisma.course.findMany({
+    where: { status: 'published' },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      category: true,
+      categorySlug: true,
+      urlType: true,
+      highlights: true,
+      tools: true,
+    },
+  })
+}
+
 /** Shared by GET /api/courses and the related-courses section of course detail pages. */
 export async function findCourses(filters: CourseListFilters = {}) {
   const where: Prisma.CourseWhereInput = { status: 'published' };
