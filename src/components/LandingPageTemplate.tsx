@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
 import { sanitizeDescription } from '@/lib/sanitizeDescription'
+import type { RelatedCourseItem } from '@/lib/related-courses'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
+import RelatedCourses from '@/components/RelatedCourses'
 
 interface HiringPartner {
   id: string
@@ -18,6 +20,7 @@ interface Props {
   course: LandingPageCourse
   branches: BranchSettings[]
   pageSlug: string
+  related: RelatedCourseItem[]
 }
 
 function getSalaryRoles(category: string): Array<{ role: string; salary: string; tiIcon: string; expNote: string }> {
@@ -78,7 +81,7 @@ const WaIcon = ({ cls }: { cls?: string }) => (
   </svg>
 )
 
-export default function LandingPageTemplate({ course, branches, pageSlug: _pageSlug }: Props) {
+export default function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related }: Props) {
   const [hiringPartners, setHiringPartners] = useState<HiringPartner[]>([])
 
   useEffect(() => {
@@ -714,6 +717,15 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           </div>
         </div>
       </section>
+
+      {/* ── RELATED COURSES ─────────────────────────────────────────────── */}
+      {related.length > 0 && (
+        <section className="py-10 md:py-16 px-4 md:px-8 bg-white dark:bg-slate-900">
+          <div className="max-w-6xl mx-auto">
+            <RelatedCourses related={related} />
+          </div>
+        </section>
+      )}
 
       {/* ── SECTION 9: LOCATIONS ────────────────────────────────────────── */}
       <section className="py-10 md:py-16 px-4 md:px-8 bg-[#0d1b2e]">

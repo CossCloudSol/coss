@@ -2,13 +2,14 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
-import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 import { sanitizeDescription } from '@/lib/sanitizeDescription';
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
-import { getCourseInCategory, findCourses } from '@/lib/course-queries';
+import { getCourseInCategory } from '@/lib/course-queries';
 import { findBatches } from '@/lib/batch-queries';
+import { getRelatedCourses } from '@/lib/related-courses';
+import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 
 export const revalidate = 300;
@@ -68,11 +69,6 @@ async function getCourseBatches2(courseId: string): Promise<BatchItem2[]> {
   return batches.slice(0, 3) as unknown as BatchItem2[];
 }
 
-async function getRelated(category: string, excludeSlug: string): Promise<Array<{ id: string; title: string; slug: string; duration: string; urlType: string; categorySlug: string | null }>> {
-  const courses = await findCourses({ category });
-  return (courses as unknown as Array<{ slug: string }>).filter((c) => c.slug !== excludeSlug).slice(0, 3) as any;
-}
-
 export async function generateMetadata({ params }: { params: { slug: string; courseSlug: string } }): Promise<Metadata> {
   const course = await getCourse(params.slug, params.courseSlug);
   if (!course) return { title: 'Course Not Found' };
@@ -89,7 +85,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
   if (!course) notFound();
 
   const [related, courseBatches, customSchema] = await Promise.all([
-    getRelated(course.category, course.slug),
+    getRelatedCourses(course.categorySlug, course.id),
     getCourseBatches2(course.id),
     getPageSchemaMarkup(`courses/${params.slug}/${params.courseSlug}`),
   ]);
@@ -249,19 +245,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
               </div>
             )}
 
-            {related.length > 0 && (
-              <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>Related Courses</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '14px' }}>
-                  {related.map((r) => (
-                    <Link key={r.id} href={getCourseUrl(r)} style={{ display: 'block', background: 'var(--bg-alt)', border: '1px solid var(--border)', borderRadius: '10px', padding: '14px', textDecoration: 'none' }}>
-                      <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text)', marginBottom: '4px' }}>{r.title}</p>
-                      <p style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{r.duration}</p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
+            <RelatedCourses related={related} />
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>

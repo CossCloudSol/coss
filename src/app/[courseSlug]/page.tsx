@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getLandingPageCourse, SLUG_MAP } from '@/lib/get-landing-page-data'
 import { getAllBranchSettings } from '@/lib/get-branch-settings'
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
+import { getRelatedCourses } from '@/lib/related-courses'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
 
 export const revalidate = 3600
@@ -41,11 +42,14 @@ export default async function CourseSlugPage({ params }: Props) {
 
   if (!course) notFound()
 
+  const related = await getRelatedCourses(course.categorySlug, course.id)
+
   return (
     <LandingPageTemplate
       course={course}
       branches={branches}
       pageSlug={params.courseSlug}
+      related={related}
     />
   )
 }
