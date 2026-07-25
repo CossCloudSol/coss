@@ -4,7 +4,10 @@ import { getLandingPageCourse, SLUG_MAP } from '@/lib/get-landing-page-data'
 import { getAllBranchSettings } from '@/lib/get-branch-settings'
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
 import { getRelatedCourses } from '@/lib/related-courses'
+import { getFlatSiblingSlugs } from '@/lib/flat-siblings'
+import { getFlatCourseUrl } from '@/lib/flat-url'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
+import type { FlatSiblingLink } from '@/components/LandingPageTemplate'
 
 export const revalidate = 3600
 
@@ -43,6 +46,7 @@ export default async function CourseSlugPage({ params }: Props) {
   if (!course) notFound()
 
   const related = await getRelatedCourses(course.categorySlug, course.id)
+  const siblings = await getFlatSiblings(params.courseSlug)
 
   return (
     <LandingPageTemplate
@@ -50,6 +54,27 @@ export default async function CourseSlugPage({ params }: Props) {
       branches={branches}
       pageSlug={params.courseSlug}
       related={related}
+      siblings={siblings}
     />
   )
+}
+
+async function getFlatSiblings(currentSlug: string): Promise<FlatSiblingLink[]> {
+  const siblingSlugs = getFlatSiblingSlugs(currentSlug)
+  if (siblingSlugs.length === 0) {
+    console.warn(`[flat-sibling-strip] pool resolution failed for "${currentSlug}" — rendering nothing`)
+    return []
+  }
+
+  const siblingCourses = await Promise.all(siblingSlugs.map((slug) => getLandingPageCourse(slug)))
+  const siblings: FlatSiblingLink[] = []
+  siblingSlugs.forEach((slug, i) => {
+    const siblingCourse = siblingCourses[i]
+    if (!siblingCourse) {
+      console.warn(`[flat-sibling-strip] could not resolve course for sibling slug "${slug}" (page: "${currentSlug}")`)
+      return
+    }
+    siblings.push({ slug, title: siblingCourse.title, href: getFlatCourseUrl(slug) })
+  })
+  return siblings
 }

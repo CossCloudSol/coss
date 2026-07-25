@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
 import { sanitizeDescription } from '@/lib/sanitizeDescription'
@@ -16,11 +17,18 @@ interface HiringPartner {
   website: string
 }
 
+export interface FlatSiblingLink {
+  slug: string
+  title: string
+  href: string
+}
+
 interface Props {
   course: LandingPageCourse
   branches: BranchSettings[]
   pageSlug: string
   related: RelatedCourseItem[]
+  siblings: FlatSiblingLink[]
 }
 
 function getSalaryRoles(category: string): Array<{ role: string; salary: string; tiIcon: string; expNote: string }> {
@@ -81,7 +89,7 @@ const WaIcon = ({ cls }: { cls?: string }) => (
   </svg>
 )
 
-export default function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related }: Props) {
+export default function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related, siblings }: Props) {
   const [hiringPartners, setHiringPartners] = useState<HiringPartner[]>([])
 
   useEffect(() => {
@@ -723,6 +731,28 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         <section className="py-10 md:py-16 px-4 md:px-8 bg-white dark:bg-slate-900">
           <div className="max-w-6xl mx-auto">
             <RelatedCourses related={related} />
+          </div>
+        </section>
+      )}
+
+      {/* ── OTHER TRAINING INSTITUTES (flat→flat sibling strip) ─────────── */}
+      {siblings.length > 0 && (
+        <section className="py-10 md:py-16 px-4 md:px-8 bg-slate-50 dark:bg-slate-950">
+          <div className="max-w-6xl mx-auto">
+            <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Explore More</p>
+            <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+            <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-10">Other Training Institutes in Hyderabad</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {siblings.map((s) => (
+                <Link
+                  key={s.slug}
+                  href={s.href}
+                  className="block bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 text-center transition-all hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-sm"
+                >
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{s.title}</p>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}
