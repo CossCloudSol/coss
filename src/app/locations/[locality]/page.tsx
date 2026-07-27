@@ -11,10 +11,21 @@ import { prisma } from '@/lib/db';
 
 export const revalidate = 600;
 
-const BRANCH_CENTRE_NAME: Record<BranchKey, string> = {
-  dilsukhnagar: 'Dilsukhnagar',
-  ameerpet: 'Ameerpet',
+/**
+ * Batch.centre is free-text and nullable, entered by hand in the admin
+ * panel — so it drifts from the canonical branch name (casing, whitespace,
+ * "branch" suffix, typos). Match against an alias list per branch rather
+ * than a single hardcoded literal, so one typo doesn't silently zero out a
+ * whole branch page's batch list.
+ */
+const BRANCH_CENTRE_ALIASES: Record<BranchKey, string[]> = {
+  dilsukhnagar: ['dilsukhnagar', 'dilsukhnagar branch', 'dsnr', 'dilshuknagar'],
+  ameerpet: ['ameerpet', 'ameerpet branch', 'amerpet'],
 };
+
+function normalizeCentre(value: string | null): string {
+  return (value ?? '').trim().toLowerCase();
+}
 
 interface CourseLite {
   title: string;
@@ -31,12 +42,21 @@ function courseHref(course: CourseLite): string {
 
 async function getBranchBatches(branchKey: BranchKey): Promise<{ batches: BatchCardBatch[]; courses: CourseLite[] }> {
   try {
-    const rows = await prisma.batch.findMany({
-      where: { centre: BRANCH_CENTRE_NAME[branchKey], status: { in: ['upcoming', 'ongoing'] } },
+    const aliases = BRANCH_CENTRE_ALIASES[branchKey];
+    const candidates = await prisma.batch.findMany({
+      where: { status: { in: ['upcoming', 'ongoing'] } },
       include: { course: { select: { title: true, slug: true, category: true, categorySlug: true, urlType: true } } },
       orderBy: { startDate: 'asc' },
-      take: 6,
     });
+    const rows = candidates
+      .filter((b) => aliases.includes(normalizeCentre(b.centre)))
+      .slice(0, 6);
+
+    if (rows.length === 0) {
+      const distinctCentres = Array.from(new Set(candidates.map((b) => b.centre ?? '(null)')));
+      console.warn(`[getBranchBatches] branch "${branchKey}" resolved 0 batches. Distinct centre values in DB: ${JSON.stringify(distinctCentres)}`);
+    }
+
     const batches: BatchCardBatch[] = rows.map((b) => ({
       id: b.id,
       batchName: b.batchName,
