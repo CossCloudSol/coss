@@ -22,6 +22,13 @@ export function normalizeJsonArray(value: unknown, branchKey: string, field: str
   return []
 }
 
+/**
+ * Only these branchKeys are real, live branches. Any other BranchSettings
+ * row (e.g. a stray/duplicate GBP listing entered by mistake) is filtered
+ * out of getAllBranchSettings() so it can never leak into a page or sitemap.
+ */
+export const LIVE_BRANCH_KEYS = ['dilsukhnagar', 'ameerpet'] as const
+
 export type BranchSettings = {
   id: string
   branchKey: string
@@ -120,7 +127,9 @@ export async function getBranchSettings(branchKey: string): Promise<BranchSettin
 export async function getAllBranchSettings(): Promise<BranchSettings[]> {
   try {
     const rows = await getCachedBranchRows()
-    return rows.map(r => ({ ...r, serviceAreas: normalizeJsonArray(r.serviceAreas, r.branchKey, 'serviceAreas') }))
+    return rows
+      .filter(r => (LIVE_BRANCH_KEYS as readonly string[]).includes(r.branchKey))
+      .map(r => ({ ...r, serviceAreas: normalizeJsonArray(r.serviceAreas, r.branchKey, 'serviceAreas') }))
   } catch {
     return Object.values(FALLBACK)
   }
