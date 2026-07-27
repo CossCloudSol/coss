@@ -321,6 +321,17 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
               ))}
             </div>
 
+            {config.secondaryHeading && config.secondaryBody && (
+              <div style={{ marginBottom: '28px' }}>
+                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
+                  {config.secondaryHeading}
+                </h2>
+                {config.secondaryBody.map((p, i) => (
+                  <p key={i} style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.8', marginBottom: '10px' }}>{p}</p>
+                ))}
+              </div>
+            )}
+
             {/* Nearest branches */}
             <div style={{ marginBottom: '28px' }}>
               <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>

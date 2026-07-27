@@ -58,6 +58,11 @@ export interface CatchmentLocalityConfig {
   intro: string[]
   audienceHeading: string
   audienceBody: string[]
+  /** Optional second content section for a catchment page covering more than
+   *  one distinct sub-area (e.g. Madhapur vs. HITEC City) that shouldn't be
+   *  flattened into one generic paragraph. */
+  secondaryHeading?: string
+  secondaryBody?: string[]
   nearestBranches: NearestBranchInfo[]
   onlineNote: string
   areasCovered: string[]
@@ -209,6 +214,11 @@ export const LOCALITIES: LocalityConfig[] = [
     audienceBody: [
       'Most students we get from this corridor are 2–8 years into an IT career and upskilling for a specific reason — a cloud migration at work, a DevOps transition, a move into data engineering, or simply staying certifiable in a fast-moving stack. Weekend batches (Saturday–Sunday) are the most common choice, with a smaller evening-weekday track for people whose managers are flexible about a 6:30 pm start.',
       'Because this audience already has hands-on production experience, our trainers pitch these batches differently from our fresher-focused sessions elsewhere — less time on fundamentals, more time on real migration patterns, architecture trade-offs and certification-exam prep.',
+    ],
+    secondaryHeading: 'If You Work Inside HITEC City\'s Tech Parks',
+    secondaryBody: [
+      'HITEC City itself is a different audience from residential Madhapur — this is where the large MNC and IT-park campuses sit: Cyber Towers, Mindspace, Raheja IT Park, DLF Cyber City, Q-City and the Wipro Circle stretch toward Gachibowli. If your badge swipes into one of these, you\'re usually optimising for a tight window between a 6 pm wrap-up and a Saturday class, not a long commute.',
+      'The metro makes this easy to plan around: HITEC City has its own Blue Line station, one stop past Madhapur, with entrances close to Mindspace and the Cyber Towers cluster — so the walk to the platform is often shorter than the walk across your own campus. From there it\'s a direct ride to Ameerpet with no line change, typically a few minutes longer than from Madhapur station.',
     ],
     nearestBranches: [
       {
