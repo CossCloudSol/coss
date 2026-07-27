@@ -17,7 +17,7 @@
 
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/db'
-import { getAllBranchSettings, type BranchSettings } from '@/lib/get-branch-settings'
+import { getAllBranchSettings, GBP_SAME_AS, type BranchSettings } from '@/lib/get-branch-settings'
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -80,6 +80,7 @@ export function buildLocalBusinessSchema(branch: BranchSettings): object {
     // No aggregateRating: Google disallows self-serving review markup (rating
     // schema on your own business without genuine third-party on-page reviews).
     // The on-page "★ Google rating" text is fine — only the schema must omit it.
+    ...(GBP_SAME_AS[branch.branchKey] ? { sameAs: [GBP_SAME_AS[branch.branchKey]] } : {}),
     parentOrganization: { '@id': `${SITE_URL}/#organization` },
   }
 }

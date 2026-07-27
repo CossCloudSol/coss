@@ -45,6 +45,18 @@ export type BranchSettings = {
   schemaEnabled: boolean
 }
 
+/**
+ * Google Business Profile identity binding — one canonical Maps CID per real,
+ * live branch. Used as `sameAs` on the branch's LocalBusiness schema so
+ * search engines resolve the schema entity to the actual GBP listing.
+ * Keyed by branchKey so new branches follow the same pattern; branches with
+ * no entry here simply emit no `sameAs`.
+ */
+export const GBP_SAME_AS: Record<string, string> = {
+  dilsukhnagar: 'https://maps.google.com/?cid=11978838050055640290',
+  ameerpet: 'https://maps.google.com/?cid=9517745032412619256',
+}
+
 export const FALLBACK: Record<string, BranchSettings> = {
   dilsukhnagar: {
     id: 'branch_dilsukhnagar',
