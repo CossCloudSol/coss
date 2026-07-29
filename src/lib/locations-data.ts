@@ -256,3 +256,98 @@ export const LOCALITIES: LocalityConfig[] = [
 export function getLocalityBySlug(slug: string): LocalityConfig | undefined {
   return LOCALITIES.find((l) => l.slug === slug)
 }
+
+/* ─────────────────── Locality × Topic pages (Phase 2 Wave 1) ───────────────────
+ *
+ * A narrower tier beneath the locality hub pages above:
+ * /locations/{locality}/{topic}. Each entry is genuinely bespoke content, not
+ * a template with the locality name swapped in — two near-identical pages is
+ * exactly the doorway-page pattern Phase 1 dismantled. This is a 2-page pilot
+ * (Cloud Computing at Dilsukhnagar and Ameerpet); the shape supports the
+ * remaining locality×topic combinations if the pilot performs.
+ */
+
+export type TopicKey = 'cloud-computing'
+
+/** Topic → the Course.categorySlug values it covers. Deterministic,
+ *  config-driven course matching — no runtime keyword heuristics. */
+export const TOPIC_CATEGORY_SLUGS: Record<TopicKey, string[]> = {
+  'cloud-computing': ['cloud-computing'],
+}
+
+export const TOPIC_LABELS: Record<TopicKey, string> = {
+  'cloud-computing': 'Cloud Computing',
+}
+
+export interface LocalityTopicConfig {
+  localitySlug: string
+  branchKey: BranchKey
+  topicKey: TopicKey
+  /** URL segment for the topic — kept separate from topicKey in case a
+   *  future topic needs a URL slug that differs from its internal key. */
+  slug: string
+  h1: string
+  badge: string
+  metaTitle: string
+  metaDescription: string
+  keywords: string
+  intro: string[]
+  whyThisBranch: string[]
+  commuteNote: string
+}
+
+export const LOCALITY_TOPIC_PAGES: LocalityTopicConfig[] = [
+  /* ───────────────── Dilsukhnagar × Cloud Computing ───────────────── */
+  {
+    localitySlug: 'dilsukhnagar',
+    branchKey: 'dilsukhnagar',
+    topicKey: 'cloud-computing',
+    slug: 'cloud-computing',
+    h1: 'Cloud Computing Training in Dilsukhnagar',
+    badge: 'CLOUD COMPUTING BATCHES — DILSUKHNAGAR BRANCH',
+    metaTitle: 'Cloud Computing Training in Dilsukhnagar, Hyderabad | AWS, Azure & GCP',
+    metaDescription:
+      'AWS, Azure and multi-cloud training at our Dilsukhnagar branch — evening weekday batches built for students and career-switchers from Kamala Nagar, Uppal, Saidabad and Karmanghat. Free demo class.',
+    keywords: 'cloud computing course Dilsukhnagar, AWS training Dilsukhnagar, cloud certification Dilsukhnagar Hyderabad, evening cloud computing batch Hyderabad',
+    intro: [
+      'Dilsukhnagar sits in the middle of Hyderabad\'s residential east, and most of the people who walk into our cloud computing batches here aren\'t commuting from an office nearby — they\'re coming in from Kamala Nagar, Uppal, Saidabad and Karmanghat after a college day or a work shift somewhere else in the city. That changes how we schedule this course: fewer daytime slots, more evening weekday classes timed for after 6 pm.',
+      'A lot of this branch\'s cloud computing intake is career-switchers rather than IT professionals topping up a skill — students finishing a mechanical, commerce or BSc degree who\'ve decided cloud is where the jobs are, alongside early-career engineers who want an AWS certification their resume doesn\'t yet have. We built the course around that: it starts from cloud fundamentals rather than assuming production experience, but every session is still hands-on inside the actual AWS console, not slides.',
+      'Right now AWS Solutions Architect is the track running here, and it\'s consistently the most-requested certification path among Dilsukhnagar students — it\'s the credential recruiters in this part of the city ask for by name.',
+    ],
+    whyThisBranch: [
+      'If you\'re already based in south or east Hyderabad, the case for training here over Ameerpet is mostly about not adding a cross-town commute onto an evening class — Kamala Nagar, Uppal and Saidabad are all a short hop from Dilsukhnagar, not from the Ameerpet side of the city.',
+      'The evening batches here also run smaller than our Ameerpet cohorts, which means more one-on-one time at the console during labs, and our placement counsellors on this side of town are used to coaching first-time career-switchers specifically — resume building for someone with zero IT experience looks different from resume building for someone already three years into a tech job.',
+    ],
+    commuteNote:
+      'Evening classes are timed for a 7 pm start, giving Kamala Nagar, Uppal and Saidabad students enough runway to leave work or college and get here comfortably. Dilsukhnagar Metro (Red Line) is a 5-minute walk from the centre, and Chaitanyapuri/Kothapet bus stops are within walking distance for anyone coming from Karmanghat or Vanasthalipuram.',
+  },
+
+  /* ────────────────────── Ameerpet × Cloud Computing ────────────────────── */
+  {
+    localitySlug: 'ameerpet',
+    branchKey: 'ameerpet',
+    topicKey: 'cloud-computing',
+    slug: 'cloud-computing',
+    h1: 'Cloud Computing Training in Ameerpet',
+    badge: 'CLOUD COMPUTING BATCHES — AMEERPET, HYDERABAD\'S IT CORRIDOR',
+    metaTitle: 'Cloud Computing Training in Ameerpet, Hyderabad | AWS, Azure & Multi-Cloud',
+    metaDescription:
+      'Multi-cloud, AWS and Azure training at our Ameerpet branch — steps from the metro interchange. Morning, evening and hybrid batches for working IT professionals. Free demo class.',
+    keywords: 'cloud computing training Ameerpet, AWS certification Ameerpet, multi cloud training Hyderabad, Azure administrator course Ameerpet',
+    intro: [
+      'Ameerpet is where Hyderabad\'s working IT professionals already commute for training, so our cloud computing batches here run at a different pace than a fresher-focused branch. Being a short walk from the Ameerpet Metro interchange means the people filling these classrooms are mostly commuting straight from a job in Punjagutta, SR Nagar or Begumpet — not starting a first career, but adding or switching a cloud platform.',
+      'It also shows up in what people are training for: Multi-Cloud Architecture is the busiest track at this branch, currently running two active batches, alongside AWS Cloud Practitioner, AWS Solutions Architect and Azure Administrator all running at once. That spread reflects the audience — working professionals who increasingly need to speak more than one cloud vendor rather than specialise in only one.',
+      'Because this branch draws people already in a live IT job, our trainers pitch the material differently here — less time on "what is a VPC", more on real migration patterns, cost and architecture trade-offs, and exam-specific prep for whichever AWS or Azure certification a person is booked to sit.',
+    ],
+    whyThisBranch: [
+      'Running five cloud tracks concurrently is only possible because Ameerpet is our highest-volume branch — it means a Multi-Cloud batch, an Azure Administrator batch and an AWS Solutions Architect batch can all be full at the same time, so you\'re rarely waiting on a minimum headcount to start.',
+      'It\'s also the only branch where we run a hybrid cloud computing option alongside classroom and online — useful if your manager is fine with one weekly WFH day for class but you still want in-person lab time for the rest. And since Ameerpet is where the Red and Blue metro lines meet, it\'s genuinely the most convenient branch for professionals converging here from opposite sides of the city.',
+    ],
+    commuteNote:
+      'Ameerpet Metro Station is the interchange for the Red Line (Miyapur–LB Nagar) and Blue Line (Raidurg–Nagole), so however you\'re travelling in, you won\'t need to change trains to reach it. Morning batches start early enough to leave time for a full office day afterward; evening batches are timed for professionals coming straight from work in Punjagutta, SR Nagar or Begumpet.',
+  },
+]
+
+export function getLocalityTopicPage(localitySlug: string, topicSlug: string): LocalityTopicConfig | undefined {
+  return LOCALITY_TOPIC_PAGES.find((p) => p.localitySlug === localitySlug && p.slug === topicSlug)
+}
