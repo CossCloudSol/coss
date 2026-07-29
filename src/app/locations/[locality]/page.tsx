@@ -7,6 +7,7 @@ import { LOCALITIES, getLocalityBySlug, type BranchKey } from '@/lib/locations-d
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
+import { getCourseUrl } from '@/lib/course-url';
 import { prisma } from '@/lib/db';
 
 export const revalidate = 600;
@@ -34,11 +35,10 @@ interface CourseLite {
   urlType: string;
 }
 
-function courseHref(course: CourseLite): string {
-  return course.urlType === 'legacy' || !course.categorySlug
-    ? `/courses/${course.slug}`
-    : `/courses/${course.categorySlug}/${course.slug}`;
-}
+/** Batch cards shown per branch page. Raised from 6 -> 12: Ameerpet alone has
+ *  13 active batches, and the old cap of 6 silently hid 7 of them (DevOps,
+ *  Azure DevOps, AWS Solutions Architect, Azure Administrator, etc). */
+const BATCH_DISPLAY_CAP = 12;
 
 async function getBranchBatches(branchKey: BranchKey): Promise<{ batches: BatchCardBatch[]; courses: CourseLite[] }> {
   try {
@@ -48,15 +48,14 @@ async function getBranchBatches(branchKey: BranchKey): Promise<{ batches: BatchC
       include: { course: { select: { title: true, slug: true, category: true, categorySlug: true, urlType: true } } },
       orderBy: { startDate: 'asc' },
     });
-    const rows = candidates
-      .filter((b) => aliases.includes(normalizeCentre(b.centre)))
-      .slice(0, 6);
+    const matched = candidates.filter((b) => aliases.includes(normalizeCentre(b.centre)));
 
-    if (rows.length === 0) {
+    if (matched.length === 0) {
       const distinctCentres = Array.from(new Set(candidates.map((b) => b.centre ?? '(null)')));
       console.warn(`[getBranchBatches] branch "${branchKey}" resolved 0 batches. Distinct centre values in DB: ${JSON.stringify(distinctCentres)}`);
     }
 
+    const rows = matched.slice(0, BATCH_DISPLAY_CAP);
     const batches: BatchCardBatch[] = rows.map((b) => ({
       id: b.id,
       batchName: b.batchName,
@@ -71,8 +70,12 @@ async function getBranchBatches(branchKey: BranchKey): Promise<{ batches: BatchC
       featured: b.featured,
       course: { title: b.course.title, category: b.course.category, categorySlug: b.course.categorySlug },
     }));
+
+    // "Courses Running at This Branch" is derived from the full matched set,
+    // not the display-limited `rows` — otherwise a batch cap also hides its
+    // course chip even though the course genuinely runs at this branch.
     const courseMap = new Map<string, CourseLite>();
-    for (const b of rows) {
+    for (const b of matched) {
       if (!courseMap.has(b.course.slug)) {
         courseMap.set(b.course.slug, {
           title: b.course.title,
@@ -204,9 +207,14 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
               {/* Batches */}
               {batches.length > 0 && (
                 <div style={{ marginBottom: '28px' }}>
-                  <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
-                    Upcoming Batches at {config.name}
-                  </h2>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                    <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
+                      Upcoming Batches at {config.name}
+                    </h2>
+                    <Link href="/batches" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
+                      View all batches at this branch →
+                    </Link>
+                  </div>
                   <div className="course-list-grid">
                     {batches.map((b) => <BatchCard key={b.id} batch={b} />)}
                   </div>
@@ -221,7 +229,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {courses.map((c) => (
-                      <Link key={c.slug} href={courseHref(c)}
+                      <Link key={c.slug} href={getCourseUrl(c)}
                         style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
                         {c.title}
                       </Link>
@@ -377,7 +385,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '14px' }}>
                   {courses.map((c) => (
-                    <Link key={c.slug} href={courseHref(c)}
+                    <Link key={c.slug} href={getCourseUrl(c)}
                       style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
                       {c.title}
                     </Link>
