@@ -12,6 +12,24 @@ const DEFAULT_SITE_TITLE = 'Coss Cloud Solutions';
 // asset — a dedicated 1200x630 branded OG image should be designed to replace it.
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
+/**
+ * The admin "Google Search Console ID" field is meant to hold just the
+ * verification token, but has at least once been filled in with the whole
+ * `<meta name="google-site-verification" content="..." />` tag copy-pasted
+ * from Search Console's instructions. Rendered raw, that produces a broken,
+ * HTML-escaped meta tag in <head>. Extract the inner content attribute when
+ * that shape is detected; otherwise pass the value through unchanged.
+ */
+export function sanitizeGscVerificationId(raw: string): string {
+  const trimmed = raw.trim();
+  const metaTagMatch = trimmed.match(/<meta\b[^>]*\bcontent=["']([^"']+)["'][^>]*>/i);
+  if (metaTagMatch) {
+    console.warn(`[SEO] googleSearchConsoleId contained a full <meta> tag, not just the token — extracted content attribute. Raw value: ${raw}`);
+    return metaTagMatch[1];
+  }
+  return trimmed;
+}
+
 function firstImageUrl(images: unknown): string | undefined {
   if (!Array.isArray(images) || images.length === 0) return undefined;
   const first = images[0];
@@ -155,7 +173,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
       },
       alternates: { canonical: canonicalUrl },
       other: settings?.googleSearchConsoleId
-        ? { 'google-site-verification': settings.googleSearchConsoleId }
+        ? { 'google-site-verification': sanitizeGscVerificationId(settings.googleSearchConsoleId) }
         : undefined,
     };
   } catch (error) {

@@ -33,6 +33,7 @@ import {
   type AnnouncementBarInput,
 } from '@/lib/validations/announcement-bar';
 import { buildGlobalSchemas } from '@/lib/global-schemas';
+import { sanitizeGscVerificationId } from '@/lib/get-page-seo';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 const SITE_URL =
@@ -115,7 +116,7 @@ const getSiteSettings = unstable_cache(
       const settings = await prisma.seoSettings.findFirst();
       return {
         gaId: settings?.googleAnalyticsId ?? '',
-        gscId: settings?.googleSearchConsoleId ?? '',
+        gscId: settings?.googleSearchConsoleId ? sanitizeGscVerificationId(settings.googleSearchConsoleId) : '',
       };
     } catch {
       return { gaId: '', gscId: '' };
