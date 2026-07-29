@@ -139,7 +139,9 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
           subtitle={config.heroSubtitle}
           stats={[
             { value: `${branch.aggregateRating}★`, label: 'GOOGLE RATING' },
-            { value: `${branch.reviewCount}+`, label: 'STUDENTS TRAINED' },
+            config.studentsTrained
+              ? { value: `${config.studentsTrained}+`, label: 'STUDENTS TRAINED' }
+              : { value: `${branch.reviewCount}+`, label: 'GOOGLE REVIEWS' },
             { value: String(branch.serviceAreas.length), label: 'AREAS SERVED' },
             { value: branch.workingDays.replace('-', '–'), label: `${branch.workingHoursOpen}–${branch.workingHoursClose}` },
           ]}

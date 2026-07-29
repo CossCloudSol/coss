@@ -41,6 +41,9 @@ export interface BranchLocalityConfig {
   mapEmbed: string
   directionsHref: string
   nearbyCatchmentSlugs: string[]
+  /** Owner-confirmed count for the hero stat tile ("N+ STUDENTS TRAINED").
+   *  When unset, the page falls back to reviewCount labelled "GOOGLE REVIEWS". */
+  studentsTrained?: number
 }
 
 export interface CatchmentLocalityConfig {
@@ -107,6 +110,7 @@ export const LOCALITIES: LocalityConfig[] = [
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5285426!3d17.3677401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98ec55555555%3A0xdd694f49845605aa!2sComplete%20Open%20Source%20Solutions%20(COSS)!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
     directionsHref: 'https://maps.google.com/?q=17.367741,78.528543',
     nearbyCatchmentSlugs: ['kukatpally'],
+    studentsTrained: 3500,
   },
 
   /* ─────────────────────────── Ameerpet (branch) ─────────────────────────── */
@@ -144,6 +148,7 @@ export const LOCALITIES: LocalityConfig[] = [
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin',
     directionsHref: 'https://maps.google.com/?q=17.436986,78.447128',
     nearbyCatchmentSlugs: ['kukatpally', 'madhapur-hitec-city'],
+    studentsTrained: 1500,
   },
 
   /* ────────────────────────── Kukatpally (catchment) ─────────────────────── */
