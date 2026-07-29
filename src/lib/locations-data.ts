@@ -13,6 +13,12 @@
 
 export type BranchKey = 'dilsukhnagar' | 'ameerpet'
 
+/** Branch coordinates for per-locality geo meta tags (geo.position / ICBM). */
+export const BRANCH_GEO: Record<BranchKey, { lat: string; lng: string }> = {
+  dilsukhnagar: { lat: '17.367741', lng: '78.528543' },
+  ameerpet: { lat: '17.436986', lng: '78.447128' },
+}
+
 export interface NearestBranchInfo {
   branchKey: BranchKey
   label: string

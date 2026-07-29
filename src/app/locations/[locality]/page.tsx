@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { HeroBanner, CtaBanner, EnrollSidebar, ResponsivePageStyles } from '@/components/shared';
 import BatchCard, { type BatchCardBatch } from '@/components/BatchCard';
-import { LOCALITIES, getLocalityBySlug, type BranchKey } from '@/lib/locations-data';
+import { LOCALITIES, getLocalityBySlug, BRANCH_GEO, type BranchKey } from '@/lib/locations-data';
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
@@ -99,6 +99,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locality:
   const { locality } = await params;
   const config = getLocalityBySlug(locality);
   if (!config) return {};
+
+  // Per-locality geo meta — branch pages use their own coordinates,
+  // catchment pages use the nearest branch's coordinates.
+  const branchKey = config.type === 'branch' ? config.branchKey : config.nearestBranches[0].branchKey;
+  const geo = BRANCH_GEO[branchKey];
+
   return buildPageMetadataWithFallback(`locations/${locality}`, {
     title: config.metaTitle,
     description: config.metaDescription,
@@ -109,6 +115,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locality:
       description: config.metaDescription,
       type: 'website',
       url: `https://www.cosscloudsol.com/locations/${locality}`,
+    },
+    other: {
+      'geo.region': 'IN-TG',
+      'geo.placename': `${config.name}, Hyderabad`,
+      'geo.position': `${geo.lat};${geo.lng}`,
+      'ICBM': `${geo.lat}, ${geo.lng}`,
     },
   });
 }
