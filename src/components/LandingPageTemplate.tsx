@@ -115,7 +115,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
   const ameerpet = branches.find(b => b.branchKey === 'ameerpet')
 
   const phone1 = dilsukhnagar?.phone ?? '+91 88851 66007'
-  const phone2 = ameerpet?.phone ?? '+91 77807 27374'
+  const phone2 = ameerpet?.phone ?? '+91 88851 66007'
   const wa1 = `https://wa.me/${phone1.replace(/\D/g, '')}`
 
   const h1 = `${course.title} in Hyderabad`
@@ -165,7 +165,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         location: {
           '@type': 'Place',
           name: 'Coss Cloud Solutions Ameerpet',
-          address: { '@type': 'PostalAddress', streetAddress: ameerpet?.addressLine1 ?? '#502, Sree Swathi Ankur Building', addressLocality: 'Ameerpet', addressRegion: 'Telangana', postalCode: ameerpet?.pincode ?? '500038', addressCountry: 'IN' },
+          address: { '@type': 'PostalAddress', streetAddress: ameerpet?.addressLine1 ?? '#502, Sree Swathi Ankur Building', addressLocality: 'Ameerpet', addressRegion: 'Telangana', postalCode: ameerpet?.pincode ?? '500016', addressCountry: 'IN' },
         },
       },
     ],
@@ -209,7 +209,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       branchObj: ameerpet,
       fallbackName: 'Coss Cloud Solutions — Ameerpet',
       fallbackAddr1: '#502, Sree Swathi Ankur Building',
-      fallbackAddr2: 'Besides Aditya Trade Center, Ameerpet, Hyderabad – 500038',
+      fallbackAddr2: 'Besides Aditya Trade Center, Ameerpet, Hyderabad – 500016',
       fallbackPhone: phone2,
     },
   ]

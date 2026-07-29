@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const contactInfo = [
   { icon: '📍', title: 'Dilsukhnagar Branch', lines: ['Flat No. 109, C.B Eastern Homes,', 'Above Bank of Maharashtra, Srinagar Colony,', 'Opposite Chai Vaai Cafe, Beside Anjana Function Hall,', 'Dilsukhnagar, Hyderabad – 500060'] },
-  { icon: '📍', title: 'Ameerpet Branch', lines: ['#502, Sree Swathi Ankur Building,', 'Besides Aditya Trade Center,', 'Ameerpet, Hyderabad – 500038'] },
+  { icon: '📍', title: 'Ameerpet Branch', lines: ['#502, Sree Swathi Ankur Building,', 'Besides Aditya Trade Center,', 'Ameerpet, Hyderabad – 500016'] },
   { icon: '📞', title: 'Phone Numbers', lines: ['+91 88851 66007', '+91 77807 27374'] },
   { icon: '✉️', title: 'Email Address', lines: ['info@cosscloudsol.com'] },
 ];

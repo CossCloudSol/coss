@@ -259,7 +259,7 @@ export default function EnrollPage() {
             <div className="bg-white/[0.06] border border-white/[0.12] rounded-2xl p-6">
               <div className="font-semibold text-white mb-2">Ameerpet Branch</div>
               <p className="text-slate-400 text-sm leading-relaxed">
-                #502, Sree Swathi Ankur Building, Besides Aditya Trade Center, Ameerpet, Hyderabad – 500038
+                #502, Sree Swathi Ankur Building, Besides Aditya Trade Center, Ameerpet, Hyderabad – 500016
               </p>
             </div>
           </div>

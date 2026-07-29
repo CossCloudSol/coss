@@ -142,7 +142,7 @@ export const LOCALITIES: LocalityConfig[] = [
     addressLines: [
       '#502, Sree Swathi Ankur Building,',
       'Besides Aditya Trade Center,',
-      'Ameerpet, Hyderabad – 500038',
+      'Ameerpet, Hyderabad – 500016',
     ],
     mapEmbed:
       'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin',
