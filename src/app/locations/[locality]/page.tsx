@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { HeroBanner, CtaBanner, EnrollSidebar, ResponsivePageStyles } from '@/components/shared';
 import BatchCard, { type BatchCardBatch } from '@/components/BatchCard';
-import { LOCALITIES, getLocalityBySlug, BRANCH_GEO, type BranchKey } from '@/lib/locations-data';
+import { LOCALITIES, getLocalityBySlug, BRANCH_GEO, LOCALITY_TOPIC_PAGES, TOPIC_LABELS, type BranchKey } from '@/lib/locations-data';
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
@@ -244,6 +244,23 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                       <Link key={c.slug} href={getCourseUrl(c)}
                         style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
                         {c.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Outbound links to this branch's locality x topic pages */}
+              {LOCALITY_TOPIC_PAGES.filter((t) => t.localitySlug === config.slug).length > 0 && (
+                <div style={{ marginBottom: '24px' }}>
+                  <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
+                    Explore by Course Area
+                  </h2>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {LOCALITY_TOPIC_PAGES.filter((t) => t.localitySlug === config.slug).map((t) => (
+                      <Link key={t.slug} href={`/locations/${t.localitySlug}/${t.slug}`}
+                        style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--primary-light)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--primary)' }}>
+                        {TOPIC_LABELS[t.topicKey]} at {config.name} →
                       </Link>
                     ))}
                   </div>

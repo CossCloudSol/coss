@@ -9,9 +9,11 @@ import {
   getLocalityBySlug,
   TOPIC_LABELS,
   TOPIC_CATEGORY_SLUGS,
+  BRANCH_GEO,
   type BranchKey,
 } from '@/lib/locations-data';
 import { getBranchSettings } from '@/lib/get-branch-settings';
+import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getCourseUrl } from '@/lib/course-url';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
@@ -106,6 +108,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locality:
   if (!config) return {};
 
   const url = `https://www.cosscloudsol.com/locations/${config.localitySlug}/${config.slug}`;
+  const geo = BRANCH_GEO[config.branchKey];
+  const localityConfig = getLocalityBySlug(config.localitySlug);
 
   return buildPageMetadataWithFallback(`locations/${locality}/${topic}`, {
     title: config.metaTitle,
@@ -117,6 +121,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locality:
       description: config.metaDescription,
       type: 'website',
       url,
+    },
+    other: {
+      'geo.region': 'IN-TG',
+      'geo.placename': `${localityConfig?.name ?? config.localitySlug}, Hyderabad`,
+      'geo.position': `${geo.lat};${geo.lng}`,
+      'ICBM': `${geo.lat}, ${geo.lng}`,
     },
   });
 }
@@ -150,10 +160,37 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
   const noBatchMessage = `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${topicLabel} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
   const noBatchWhatsAppUrl = buildWhatsAppUrl(noBatchMessage);
 
+  const localBusinessSchema = branch.schemaEnabled ? buildLocalBusinessSchema(branch) : null;
+  const itemListSchema = courses.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${pageUrl}/#courses`,
+    name: `${topicLabel} Courses at ${localityConfig.name}`,
+    itemListElement: courses.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.title,
+      url: `${SITE_URL}${getCourseUrl(c)}`,
+    })),
+  } : null;
+
+  // Cross-link to the other branch's same-topic page — the natural
+  // internal-link path between the two pilot pages.
+  const otherBranchPage = LOCALITY_TOPIC_PAGES.find(
+    (p) => p.topicKey === config.topicKey && p.localitySlug !== config.localitySlug,
+  );
+  const otherBranchLocality = otherBranchPage ? getLocalityBySlug(otherBranchPage.localitySlug) : undefined;
+
   return (
     <>
       <ResponsivePageStyles />
+      {localBusinessSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+      )}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {itemListSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      )}
 
       <HeroBanner
         badge={config.badge}
@@ -242,6 +279,23 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                 🚇 Getting Here
               </h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.8' }}>{config.commuteNote}</p>
+            </div>
+
+            {/* Internal links: back to the parent locality page, across to the other branch's same-topic page */}
+            <div style={{ fontSize: '13.5px', color: 'var(--text-muted)' }}>
+              <p style={{ marginBottom: '8px' }}>
+                <Link href={`/locations/${config.localitySlug}`} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+                  ← Back to the {localityConfig.name} branch page
+                </Link>
+              </p>
+              {otherBranchPage && otherBranchLocality && (
+                <p>
+                  Also available at our{' '}
+                  <Link href={`/locations/${otherBranchPage.localitySlug}/${otherBranchPage.slug}`} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+                    {otherBranchLocality.name} branch
+                  </Link>.
+                </p>
+              )}
             </div>
           </div>
 
