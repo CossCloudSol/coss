@@ -212,7 +212,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {courseBatches.map((b) => {
-                    const badge = getBatchStatusBadge(b.status);
+                    const badge = getBatchStatusBadge(b.status, b.startDate);
                     const dateStr = formatBatchDate(b.startDate);
                     const waMsg = batchBookingMessage({ courseName: course.title, mode: b.mode, startDate: dateStr, centre: b.centre, schedule: b.schedule });
                     const waUrl = buildWhatsAppUrl(waMsg);

@@ -43,7 +43,7 @@ interface BatchCardProps {
 
 export default function BatchCard({ batch }: BatchCardProps) {
   const seatStatus = getSeatStatus(batch.mode, batch.seatsAvailable, batch.totalSeats);
-  const statusBadge = getBatchStatusBadge(batch.status);
+  const statusBadge = getBatchStatusBadge(batch.status, batch.startDate);
   const formattedDate = formatBatchDate(batch.startDate);
 
   const bookMsg = batchBookingMessage({

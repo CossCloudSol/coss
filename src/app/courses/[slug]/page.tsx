@@ -330,7 +330,7 @@ function CourseBatches({ batches, courseTitle }: { batches: BatchItem[]; courseT
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {batches.map((b) => {
-          const badge = getBatchStatusBadge(b.status);
+          const badge = getBatchStatusBadge(b.status, b.startDate);
           const dateStr = formatBatchDate(b.startDate);
           const waMsg = batchBookingMessage({ courseName: courseTitle, mode: b.mode, startDate: dateStr, centre: b.centre, schedule: b.schedule });
           const waUrl = buildWhatsAppUrl(waMsg);
