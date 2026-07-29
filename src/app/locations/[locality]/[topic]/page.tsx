@@ -17,6 +17,7 @@ import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getCourseUrl } from '@/lib/course-url';
 import { buildWhatsAppUrl } from '@/lib/whatsapp';
+import { formatBatchDate } from '@/lib/batch-utils';
 import { prisma } from '@/lib/db';
 
 export const revalidate = 600;
@@ -37,29 +38,43 @@ function normalizeCentre(value: string | null): string {
   return (value ?? '').trim().toLowerCase();
 }
 
-interface CourseLite {
+interface TopicCourse {
   title: string;
   slug: string;
   categorySlug: string | null;
   urlType: string;
+  /** ISO date of the earliest upcoming/ongoing batch for this course at this
+   *  branch, or null if the course is in the topic's catalogue but has no
+   *  batch scheduled here right now. */
+  nextBatchDate: string | null;
 }
 
 const BATCH_DISPLAY_CAP = 12;
 
-async function getBranchTopicBatches(
+async function getBranchTopicData(
   branchKey: BranchKey,
   categorySlugs: string[],
-): Promise<{ batches: BatchCardBatch[]; courses: CourseLite[] }> {
+): Promise<{ batches: BatchCardBatch[]; courses: TopicCourse[] }> {
   try {
     const aliases = BRANCH_CENTRE_ALIASES[branchKey];
-    const candidates = await prisma.batch.findMany({
-      where: {
-        status: { in: ['upcoming', 'ongoing'] },
-        course: { categorySlug: { in: categorySlugs } },
-      },
-      include: { course: { select: { title: true, slug: true, category: true, categorySlug: true, urlType: true } } },
-      orderBy: { startDate: 'asc' },
-    });
+    const [allCourses, candidates] = await Promise.all([
+      // The full topic catalogue — shown regardless of whether a batch is
+      // currently scheduled at this branch, per the owner-confirmed rule
+      // that both branches teach the complete cloud-computing catalogue.
+      prisma.course.findMany({
+        where: { categorySlug: { in: categorySlugs }, status: 'published' },
+        orderBy: { sortOrder: 'asc' },
+        select: { title: true, slug: true, categorySlug: true, urlType: true },
+      }),
+      prisma.batch.findMany({
+        where: {
+          status: { in: ['upcoming', 'ongoing'] },
+          course: { categorySlug: { in: categorySlugs } },
+        },
+        include: { course: { select: { title: true, slug: true, category: true, categorySlug: true, urlType: true } } },
+        orderBy: { startDate: 'asc' },
+      }),
+    ]);
     const matched = candidates.filter((b) => aliases.includes(normalizeCentre(b.centre)));
 
     const rows = matched.slice(0, BATCH_DISPLAY_CAP);
@@ -78,21 +93,24 @@ async function getBranchTopicBatches(
       course: { title: b.course.title, category: b.course.category, categorySlug: b.course.categorySlug },
     }));
 
-    // Course chips are derived from the full matched set, not the
-    // display-limited `rows` — a batch cap shouldn't also hide a course
-    // that genuinely runs at this branch under this topic.
-    const courseMap = new Map<string, CourseLite>();
+    // `matched` is ordered by startDate asc, so the first hit per course
+    // slug is its earliest upcoming/ongoing batch at this branch.
+    const nextBatchBySlug = new Map<string, string>();
     for (const b of matched) {
-      if (!courseMap.has(b.course.slug)) {
-        courseMap.set(b.course.slug, {
-          title: b.course.title,
-          slug: b.course.slug,
-          categorySlug: b.course.categorySlug,
-          urlType: b.course.urlType,
-        });
+      if (!nextBatchBySlug.has(b.course.slug)) {
+        nextBatchBySlug.set(b.course.slug, b.startDate.toISOString());
       }
     }
-    return { batches, courses: Array.from(courseMap.values()) };
+
+    const courses: TopicCourse[] = allCourses.map((c) => ({
+      title: c.title,
+      slug: c.slug,
+      categorySlug: c.categorySlug,
+      urlType: c.urlType,
+      nextBatchDate: nextBatchBySlug.get(c.slug) ?? null,
+    }));
+
+    return { batches, courses };
   } catch {
     return { batches: [], courses: [] };
   }
@@ -143,7 +161,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
   const categorySlugs = TOPIC_CATEGORY_SLUGS[config.topicKey];
   const [branch, { batches, courses }] = await Promise.all([
     getBranchSettings(config.branchKey),
-    getBranchTopicBatches(config.branchKey, categorySlugs),
+    getBranchTopicData(config.branchKey, categorySlugs),
   ]);
 
   const pageUrl = `${SITE_URL}/locations/${config.localitySlug}/${config.slug}`;
@@ -159,6 +177,12 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
 
   const noBatchMessage = `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${topicLabel} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
   const noBatchWhatsAppUrl = buildWhatsAppUrl(noBatchMessage);
+
+  // Same "ask on WhatsApp" CTA as the zero-batch fallback above, but scoped
+  // to one course — used by catalogue courses that have no batch currently
+  // scheduled at this branch.
+  const courseWhatsAppUrl = (courseTitle: string) =>
+    buildWhatsAppUrl(`Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${courseTitle} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`);
 
   const localBusinessSchema = branch.schemaEnabled ? buildLocalBusinessSchema(branch) : null;
   const itemListSchema = courses.length > 0 ? {
@@ -257,7 +281,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
               )}
             </div>
 
-            {/* Courses */}
+            {/* Courses — the full topic catalogue, not just courses with a scheduled batch here */}
             {courses.length > 0 && (
               <div style={{ marginBottom: '28px' }}>
                 <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
@@ -265,10 +289,19 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {courses.map((c) => (
-                    <Link key={c.slug} href={getCourseUrl(c)}
-                      style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
-                      {c.title}
-                    </Link>
+                    c.nextBatchDate ? (
+                      <Link key={c.slug} href={getCourseUrl(c)}
+                        style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{c.title}</span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)' }}>Next batch: {formatBatchDate(c.nextBatchDate)}</span>
+                      </Link>
+                    ) : (
+                      <a key={c.slug} href={courseWhatsAppUrl(c.title)} target="_blank" rel="noopener noreferrer"
+                        style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'transparent', border: '1px dashed var(--border)' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>{c.title}</span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#25D366' }}>Next batch on request →</span>
+                      </a>
+                    )
                   ))}
                 </div>
               </div>

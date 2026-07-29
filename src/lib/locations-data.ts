@@ -340,7 +340,7 @@ export const LOCALITY_TOPIC_PAGES: LocalityTopicConfig[] = [
       'Because this branch draws people already in a live IT job, our trainers pitch the material differently here — less time on "what is a VPC", more on real migration patterns, cost and architecture trade-offs, and exam-specific prep for whichever AWS or Azure certification a person is booked to sit.',
     ],
     whyThisBranch: [
-      'Running five cloud tracks concurrently is only possible because Ameerpet is our highest-volume branch — it means a Multi-Cloud batch, an Azure Administrator batch and an AWS Solutions Architect batch can all be full at the same time, so you\'re rarely waiting on a minimum headcount to start.',
+      'We run the full five-track cloud catalogue at this branch, and Ameerpet\'s volume means several of those tracks are usually filling up in parallel — a Multi-Cloud batch, an Azure Administrator batch and an AWS Solutions Architect batch can all be close to full at the same time, so you\'re rarely waiting alone on a minimum headcount to start.',
       'It\'s also the only branch where we run a hybrid cloud computing option alongside classroom and online — useful if your manager is fine with one weekly WFH day for class but you still want in-person lab time for the rest. And since Ameerpet is where the Red and Blue metro lines meet, it\'s genuinely the most convenient branch for professionals converging here from opposite sides of the city.',
     ],
     commuteNote:
