@@ -343,6 +343,7 @@ const nextConfig = {
       { source: '/courses/selenium-testing-training-in-hyderabad', destination: '/courses/software-testing-os/selenium-automation-testing-training-in-hyderabad', permanent: true },
       { source: '/courses/snowflake-training-in-hyderabad', destination: '/courses/data-engineering/snowflake-data-warehousing-training-in-hyderabad', permanent: true },
       { source: '/courses/digital-design/ui-ux-design-training-in-hyderabad', destination: '/courses/digital-design/ui-ux-design-training-institute-in-hyderabad', permanent: true },
+      { source: '/courses/aws-cloud-practitioner-training-in-hyderabad', destination: '/courses/aws-cloud-practitioner-certification', permanent: true },
       // infrastructure redirects — wildcard (must stay after exact-match rules above),
       { source: '/category/:path*', destination: '/courses', permanent: true },
       { source: '/tag/:path*', destination: '/courses', permanent: true },
