@@ -1,6 +1,7 @@
 import { SLUG_MAP } from '@/lib/get-landing-page-data'
 import { getFlatCourseUrl } from '@/lib/flat-url'
 import { getCourseUrl } from '@/lib/course-url'
+import { LOCALITY_TOPIC_PAGES, getLocalityBySlug } from '@/lib/locations-data'
 
 export interface CalloutPostInput {
   slug: string
@@ -21,7 +22,7 @@ export interface CalloutCourseInput {
 }
 
 export interface CalloutTarget {
-  kind: 'flat' | 'course'
+  kind: 'flat' | 'course' | 'locality'
   title: string
   description: string
   href: string
@@ -101,6 +102,29 @@ function resolveOverride(
       kind: 'course',
       title: course.title,
       description: `Learn more about our ${course.title} course — structured curriculum with placement support.`,
+      href,
+    }
+  }
+
+  if (href.startsWith('/locations/')) {
+    const [localitySlug, topicSlug] = href.slice('/locations/'.length).split('/').filter(Boolean)
+
+    if (topicSlug) {
+      const topicPage = LOCALITY_TOPIC_PAGES.find((p) => p.localitySlug === localitySlug && p.slug === topicSlug)
+      if (!topicPage) {
+        throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a locality topic page`)
+      }
+      return { kind: 'locality', title: topicPage.h1, description: topicPage.metaDescription, href }
+    }
+
+    const locality = localitySlug ? getLocalityBySlug(localitySlug) : undefined
+    if (!locality) {
+      throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a locality page`)
+    }
+    return {
+      kind: 'locality',
+      title: `${locality.h1Pre}${locality.h1Accent}${locality.h1Post}`,
+      description: locality.metaDescription,
       href,
     }
   }
