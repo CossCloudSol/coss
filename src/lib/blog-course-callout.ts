@@ -183,7 +183,6 @@ const OVERRIDES: Record<string, string | null> = {
   'cloud-computing-classes-with-coss-cloud-solutions-in-hyderabad': '/courses/multi-cloud-architecture-training-in-hyderabad',
   'cloud-computing-future-in-hyderabad-with-coss-cloud-solutions': '/courses/multi-cloud-architecture-training-in-hyderabad',
   'cloud-computing-training-in-hyderabad-the-best-career-move-in-2025': '/courses/multi-cloud-architecture-training-in-hyderabad',
-  'cloud-computing-training-institute-in-dilsukhnagar-hyderabad': '/courses/multi-cloud-architecture-training-in-hyderabad',
   'best-full-stack-java-training-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': '/java-training-institute-in-hyderabad',
   'best-python-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': '/python-training-institute-in-hyderabad',
   'best-python-institute-in-hyderabad-coss-cloud-solutions': '/python-training-institute-in-hyderabad',
@@ -210,7 +209,16 @@ const OVERRIDES: Record<string, string | null> = {
   'learn-aws-devops-from-industry-experts-at-coss-cloud-solutions-hyderabad': '/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad',
   'multi-cloud-devops-course-hyderabad-career-guide': '/courses/multi-cloud-architecture-training-in-hyderabad',
   'best-aws-institutes-in-hyderabad-coss-cloud-solutions': '/aws-training-institute-in-hyderabad',
-  'join-our-industry-leading-aws-cloud-institute-in-dilsukhnagar-hyderabad': '/aws-training-institute-in-hyderabad',
+
+  // Locality-specific posts → matching locality×topic page (Wave 1 pilot:
+  // /locations/{locality}/cloud-computing). A locality-specific post pointing
+  // at a locality-specific page is a stronger relevance signal than sending
+  // it to a city-wide course. aws-devops-multi-cloud-course-dilsukhnagar is
+  // deliberately NOT here — it's a DevOps post, not cloud-computing.
+  'cloud-computing-training-institute-in-dilsukhnagar-hyderabad': '/locations/dilsukhnagar/cloud-computing',
+  'join-our-industry-leading-aws-cloud-institute-in-dilsukhnagar-hyderabad': '/locations/dilsukhnagar/cloud-computing',
+  'best-azure-cloud-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution': '/locations/dilsukhnagar/cloud-computing',
+  'best-certification-course-institute-in-ameerpet-hyderabad-coss-cloud-solutions': '/locations/ameerpet/cloud-computing',
 
   // Junk posts — no callout
   '77674-2': null,
