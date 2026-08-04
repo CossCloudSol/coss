@@ -22,7 +22,7 @@ export type LandingPageCourse = {
 // Explicit map: landing page URL slug → DB course slug
 export const SLUG_MAP: Record<string, string> = {
       // Already matched — keep working
-      'artificial-intelligence-training-institute-in-hyderabad': 'artificial-intelligence-training-institute-in-hyderabad',
+      'artificial-intelligence-training-institute-in-hyderabad': 'artificial-intelligence-ai-training-hyderabad',
       'azure-devops-training-institute-in-hyderabad':           'azure-devops-training-in-hyderabad',
       'cyber-security-training-institute-in-hyderabad':         'cyber-security-training-institute-in-hyderabad',
       'devops-training-institute-in-hyderabad':                 'devops-training-institute-in-hyderabad',
@@ -60,7 +60,7 @@ export const SLUG_MAP: Record<string, string> = {
       'python-full-stack-training-institute-in-hyderabad':      'full-stack-python-training-in-hyderabad',
 
       // Fallback-only slugs formalized — flat-legacy consolidation 2026-07-23
-      'salesforce-training-institute-in-hyderabad':             'salesforce-training-institute-in-hyderabad',
+      'salesforce-training-institute-in-hyderabad':             'salesforce-admin-developer-training-in-hyderabad',
       'seo-training-institute-in-hyderabad':                    'seo-training-institute-in-hyderabad',
 }
 
