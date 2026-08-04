@@ -89,6 +89,16 @@ export function buildTitle(raw: string | null | undefined): string {
   return title ? `${title} | Coss Cloud Solutions` : 'Coss Cloud Solutions';
 }
 
+/**
+ * Appends " Training in Hyderabad" to a raw title for flat-page fallback
+ * titles — skipping the "Training" word when the title already ends with it
+ * (e.g. a DB course titled "... Training") to avoid "... Training Training in Hyderabad".
+ */
+export function appendTrainingInHyderabad(raw: string): string {
+  const trimmed = raw.trim();
+  return /training$/i.test(trimmed) ? `${trimmed} in Hyderabad` : `${trimmed} Training in Hyderabad`;
+}
+
 const FULL_BRAND_RE = new RegExp(FULL_BRAND.replace(/\s+/g, '\\s+'), 'gi');
 // A regex *literal* (not `new RegExp` on a template string) — the build
 // pipeline's minifier was found to corrupt a template-literal-constructed

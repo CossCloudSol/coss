@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getLandingPageCourse, SLUG_MAP } from '@/lib/get-landing-page-data'
 import { getAllBranchSettings } from '@/lib/get-branch-settings'
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
+import { appendTrainingInHyderabad } from '@/lib/build-title'
 import { getRelatedCourses } from '@/lib/related-courses'
 import { getFlatSiblingSlugs } from '@/lib/flat-siblings'
 import { getFlatCourseUrl } from '@/lib/flat-url'
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const fallback: Metadata = {
     title: course
-      ? `${course.title} Training in Hyderabad | Coss Cloud Solutions`
+      ? `${appendTrainingInHyderabad(course.title)} | Coss Cloud Solutions`
       : 'IT Training in Hyderabad | Coss Cloud Solutions',
     description:
       course?.excerpt ??
