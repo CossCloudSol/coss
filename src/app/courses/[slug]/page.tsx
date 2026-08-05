@@ -18,6 +18,8 @@ import { prisma } from '@/lib/db';
 
 export const revalidate = 300;
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
+
 // Category slugs are NOT included — they're covered by the static /courses/<category>
 // folder routes. Dynamic categories not yet known at build time render on first
 // request and are cached thereafter under the revalidate window above.
@@ -141,6 +143,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: course.seoTitle ?? course.title,
       description: course.seoDesc ?? course.excerpt,
       openGraph: course.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
+      alternates: { canonical: `${SITE_URL}${getCourseUrl(course)}` },
     };
     return buildPageMetadataWithFallback(`courses/${params.slug}`, fallback);
   }

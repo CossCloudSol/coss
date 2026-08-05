@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
+import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
 import { sanitizeDescription } from '@/lib/sanitizeDescription';
@@ -13,6 +14,8 @@ import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 
 export const revalidate = 300;
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
 export async function generateStaticParams() {
   try {
@@ -76,6 +79,7 @@ export async function generateMetadata({ params }: { params: { slug: string; cou
     title: course.seoTitle ?? course.title,
     description: course.seoDesc ?? course.excerpt,
     openGraph: course.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
+    alternates: { canonical: `${SITE_URL}${getCourseUrl(course)}` },
   };
   return buildPageMetadataWithFallback(`courses/${params.slug}/${params.courseSlug}`, fallback);
 }
