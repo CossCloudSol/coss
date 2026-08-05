@@ -8,7 +8,8 @@
  *   3. Dynamic course pages (from courses-data.ts         → COURSES)
  *   4. Static site pages    (from all-pages-registry.ts  → STATIC_PAGES)
  *   5. Blog posts           (from content/posts via getAllPosts)
- *   6. All 99 DB courses    (from database at /courses/{slug} or /courses/{cat}/{slug})
+ *   6. DB courses at their getCourseUrl() canonical, excluding the ones already
+ *      covered by group 1's flat-legacy SLUG_MAP pages (from database)
  *   7. DB category pages    (new categories not in CATEGORY_PAGES)
  *   8. DB blog posts        (published posts from admin panel)
  */
@@ -17,6 +18,8 @@ import type { MetadataRoute } from 'next';
 import { COURSES } from '@/data/courses-data';
 import { COURSE_PAGES, CATEGORY_PAGES, STATIC_PAGES } from '@/lib/all-pages-registry';
 import { getAllPosts } from '@/lib/posts';
+import { getCourseUrl } from '@/lib/course-url';
+import { SLUG_MAP } from '@/lib/get-landing-page-data';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -166,19 +169,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { prisma } = await import('@/lib/db')
 
-    // 6 — DB courses
+    // 6 — DB courses, at their getCourseUrl() canonical only.
+    // Courses whose own slug is a SLUG_MAP key are excluded here: that slug is
+    // one of the 30 flat-legacy money pages (group 1, self-canonicalizing),
+    // and the DB route resolves the exact same row — including both would put
+    // two sitemap entries for identical content.
     const dbCourses = await prisma.course.findMany({
       where: { status: 'published' },
       select: { slug: true, urlType: true, categorySlug: true, updatedAt: true },
     })
     dbCourseEntries = dbCourses
+      .filter((course) => !(course.slug in SLUG_MAP))
       .map((course) => {
-        const path = (course.urlType === 'legacy' || !course.categorySlug)
-          ? `/courses/${course.slug}`
-          : `/courses/${course.categorySlug}/${course.slug}`
         const db = getDbOverride(course.slug)
         return {
-          url: `${BASE_URL}${path}`,
+          url: `${BASE_URL}${getCourseUrl(course)}`,
           lastModified: course.updatedAt,
           changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
           priority: db?.sitemapPriority ?? 0.75,
