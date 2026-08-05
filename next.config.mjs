@@ -359,6 +359,7 @@ const nextConfig = {
       { source: '/courses/cyber-security/ethical-hacking-ceh-training-hyderabad', destination: '/courses/ethical-hacking-training-institute-in-hyderabad', permanent: true },
       { source: '/courses/salesforce-training-institute-in-hyderabad', destination: '/courses/erp-crm-enterprise-tools/salesforce-admin-developer-training-in-hyderabad', permanent: true },
       { source: '/courses/erp-crm-enterprise-tools/salesforce-training-institute-in-hyderabad', destination: '/courses/erp-crm-enterprise-tools/salesforce-admin-developer-training-in-hyderabad', permanent: true },
+      { source: '/courses/ui-ux-design-training-in-hyderabad', destination: '/courses/digital-design/ui-ux-design-training-institute-in-hyderabad', permanent: true },
       // infrastructure redirects — wildcard (must stay after exact-match rules above),
       { source: '/category/:path*', destination: '/courses', permanent: true },
       { source: '/tag/:path*', destination: '/courses', permanent: true },
