@@ -326,9 +326,6 @@ export default function FreeDemoClassPage() {
       {/* ── BOTTOM CTA STRIP ── */}
       <section className="py-16 px-4 bg-[#FF6B2B]">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="text-white/80 text-sm font-semibold uppercase tracking-widest mb-3">
-            Limited seats per batch
-          </div>
           <h2 className="font-heading text-3xl font-bold text-white mb-3">
             Your IT career starts with one free class
           </h2>

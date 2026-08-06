@@ -194,7 +194,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                           originalPrice: String(course.originalPrice ?? course.mrp ?? ''),
                           discountedPrice: String(course.price ?? course.fee ?? course.discountedPrice ?? ''),
                           emi: course.emi ?? 'Easy EMI available',
-                          urgency: course.urgency ?? course.seats ?? 'New batch starting soon · Limited seats',
+                          urgency: course.urgency ?? course.seats ?? 'Book your free demo class',
                           href: course.href ?? '#',
                           animationIndex: i,
                         }
