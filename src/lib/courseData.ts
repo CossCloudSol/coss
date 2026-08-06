@@ -396,7 +396,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     rating: 4.9,
     reviewCount: '1,580 reviews',
     enrolledCount: '5,200+',
-    description: 'Become an AWS Certified Solutions Architect with hands-on labs on EC2, S3, RDS, Lambda, and VPC. 100% exam pass guarantee.',
+    description: 'Become an AWS Certified Solutions Architect with hands-on labs on EC2, S3, RDS, Lambda, and VPC. 100% exam assistance.',
     highlights: ['AWS Solutions Architect exam prep', 'Hands-on labs on real AWS'],
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',

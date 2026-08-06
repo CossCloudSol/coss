@@ -133,7 +133,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                 { icon: '👨‍🏫', label: 'Expert Trainers', val: '10+ Yrs Exp' },
                 { icon: '🛠️', label: 'Hands-on Labs',   val: 'Real Tools' },
                 { icon: '🏆', label: 'Certifications',  val: 'Recognized' },
-                { icon: '🚀', label: 'Placement',       val: '100% Support' },
+                { icon: '🚀', label: 'Placement',       val: 'Resume & Interview Support' },
               ].map(s => (
                 <div key={s.label} style={{ background: 'var(--bg-alt)', borderRadius: '10px', padding: '14px 10px', textAlign: 'center', border: '1px solid var(--border)' }}>
                   <div style={{ fontSize: '22px', marginBottom: '5px' }}>{s.icon}</div>

@@ -284,8 +284,8 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               <span className="text-xs text-slate-400 font-medium mt-2 block">Students Trained</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
-              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">100%</strong>
-              <span className="text-xs text-slate-400 font-medium mt-2 block">Placement Support</span>
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">Placement</strong>
+              <span className="text-xs text-slate-400 font-medium mt-2 block">Resume, Interview &amp; Referral Support</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
               <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">15+</strong>
@@ -310,7 +310,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               Our hiring partners
             </h2>
             <p className="text-sm text-gray-500">
-              500+ students placed across India&apos;s top companies
+              Placement assistance including resume support, interview preparation, and employer referrals
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden bg-white">
@@ -586,7 +586,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Student Success Stories</p>
           <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">What Our Students Say</h2>
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">1,200+ students placed at top companies from our Hyderabad centres</p>
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Hear from students who trained with us at our Dilsukhnagar and Ameerpet centres</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {testimonials.map(t => (
               <div key={t.name} className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 flex flex-col gap-4 hover:shadow-xl hover:border-orange-200 dark:hover:border-orange-800 transition-all duration-300">

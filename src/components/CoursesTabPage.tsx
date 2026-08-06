@@ -315,7 +315,7 @@ export default function CoursesTabPage({ groups, totalCourses, totalCategories }
             {[
               { value: `${totalCourses}+`, label: 'Courses' },
               { value: `${totalCategories}`,  label: 'Categories' },
-              { value: '100%',               label: 'Placement support' },
+              { value: 'Placement',          label: 'Assistance provided' },
               { value: '15+',                label: 'Years experience' },
             ].map(s => (
               <div key={s.label} className="text-center">
