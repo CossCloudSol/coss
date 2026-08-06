@@ -477,7 +477,7 @@ function CategoryLandingView({ category, customSchema }: { category: CategoryDet
                     return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
                   })(),
                 emi: course.emi ?? 'Easy EMI available',
-                urgency: course.urgency ?? course.seats ?? 'New batch starting soon · Limited seats',
+                urgency: course.urgency ?? course.seats ?? 'Book your free demo class',
                 href: getCourseUrl({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
                 animationIndex: i,
               }

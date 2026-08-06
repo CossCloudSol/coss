@@ -76,9 +76,6 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           <span className="text-orange-500">FREE</span>{' '}
           Demo
         </h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5 font-medium">
-          Limited Seats. Reserve your spot now!
-        </p>
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
@@ -166,14 +163,6 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           </p>
         )}
 
-        <div className="flex items-center justify-between text-xs mb-3 flex-wrap gap-1">
-          <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            12 people viewing this right now
-          </span>
-          <span className="text-orange-600 font-semibold">Only 4 seats left!</span>
-        </div>
-
         <button
           type="submit"
           disabled={isSubmitting}
@@ -194,7 +183,6 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           </svg>
           Free · No Obligation
         </span>
-        <span className="text-orange-500 font-semibold">Limited seats!</span>
       </div>
     </div>
   )

@@ -621,11 +621,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                       </div>
                     ))}
                   </div>
-                  {batch.urgency && (
-                    <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl px-4 py-2.5 text-sm text-orange-300 font-semibold flex items-center gap-2">
-                      <i className="ti ti-alert-triangle text-orange-500" />Only a few seats remaining!
-                    </div>
-                  )}
                 </div>
                 <div className="px-5 pb-5">
                   <a
@@ -834,7 +829,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           </h2>
 
           <p className="text-slate-400 text-base mb-8">
-            Book your FREE demo class today — limited seats per batch!
+            Book your FREE demo class today.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
