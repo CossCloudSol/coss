@@ -564,75 +564,17 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
       {/* ── SECTION 6: BATCHES ──────────────────────────────────────────── */}
       <section className="py-10 md:py-16 px-4 md:px-8 bg-[#0d1b2e]">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Enroll Now</p>
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Enroll Now</p>
           <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
-          <h2 className="text-center text-3xl font-extrabold text-white mb-2">Upcoming Batches</h2>
-          <p className="text-center text-sm text-slate-400 mt-2 mb-10">Online &amp; classroom at Dilsukhnagar and Ameerpet</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-4xl mx-auto">
-            {[
-              {
-                label: 'Weekday Batch',
-                days: 'Mon–Fri',
-                rows: [
-                  { icon: 'ti-clock', label: 'Time', value: '8:00 PM – 10:00 PM' },
-                  { icon: 'ti-map-pin', label: 'Centre', value: 'Dilsukhnagar & Ameerpet' },
-                  { icon: 'ti-device-laptop', label: 'Mode', value: 'Online + Classroom' },
-                  { icon: 'ti-users', label: 'Batch Size', value: '20 seats max' },
-                  { icon: 'ti-calendar', label: 'Duration', value: course.duration || '3 months' },
-                ],
-                urgency: true,
-              },
-              {
-                label: 'Weekend Batch',
-                days: 'Sat–Sun',
-                rows: [
-                  { icon: 'ti-clock', label: 'Time', value: '10:00 AM – 2:00 PM' },
-                  { icon: 'ti-map-pin', label: 'Centre', value: 'Dilsukhnagar & Ameerpet' },
-                  { icon: 'ti-device-laptop', label: 'Mode', value: 'Online + Classroom' },
-                  { icon: 'ti-users', label: 'Batch Size', value: '20 seats max' },
-                  { icon: 'ti-calendar', label: 'Duration', value: course.duration || '3 months' },
-                ],
-                urgency: false,
-              },
-            ].map(batch => (
-              <div key={batch.label} className="bg-[#112240] border border-slate-700 rounded-2xl overflow-hidden flex flex-col transition-all hover:border-orange-500/40 hover:shadow-lg hover:shadow-orange-500/5">
-                <div className="bg-[#080f1e] px-5 py-4 flex items-center justify-between border-b border-slate-700">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                      <i className="ti ti-calendar text-orange-400 text-lg" />
-                    </div>
-                    <span className="text-white font-bold text-base flex items-center gap-2">
-                      {batch.urgency
-                        ? <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                        : <span className="w-2 h-2 rounded-full bg-green-400" />
-                      }
-                      {batch.label}
-                    </span>
-                  </div>
-                  <span className="bg-orange-500/15 text-orange-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-orange-500/20">{batch.days}</span>
-                </div>
-                <div className="p-5 flex-1 flex flex-col gap-3">
-                  <div className="flex flex-col gap-2.5">
-                    {batch.rows.map(row => (
-                      <div key={row.label} className="flex items-center gap-2.5 text-sm text-slate-300">
-                        <i className={`ti ${row.icon} text-blue-500 text-base flex-shrink-0`} />
-                        <span className="font-semibold text-slate-100">{row.label}:</span> {row.value}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="px-5 pb-5">
-                  <a
-                    href="https://www.cosscloudsol.com/free-demo-class"
-                    className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all flex items-center justify-center gap-2 text-sm shadow-lg shadow-orange-500/20"
-                  >
-                    Reserve {batch.label.split(' ')[0]} Seat →
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
+          <h2 className="text-3xl font-extrabold text-white mb-2">Weekday &amp; Weekend Batches</h2>
+          <p className="text-sm text-slate-400 mt-2 mb-8">Online &amp; classroom at Dilsukhnagar and Ameerpet</p>
+          <Link
+            href="/batches"
+            className="inline-flex items-center gap-2 py-3.5 px-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all text-sm shadow-lg shadow-orange-500/20"
+          >
+            See current batch schedule →
+          </Link>
         </div>
       </section>
 
