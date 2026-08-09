@@ -5,6 +5,22 @@ import { buildTitle } from './build-title';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 const DEFAULT_SITE_TITLE = 'Coss Cloud Solutions';
+const PRODUCTION_ORIGIN = 'https://www.cosscloudsol.com';
+
+// Build-time sanity check: every canonical/OG URL in this build is derived from
+// SITE_URL. A wrong NEXT_PUBLIC_SITE_URL (e.g. a preview deploy's origin) silently
+// pushes that wrong origin into every page. Warn loudly once; never throw — preview
+// builds with an intentionally different origin must still complete.
+try {
+  const builtOrigin = new URL(SITE_URL).origin;
+  if (builtOrigin !== PRODUCTION_ORIGIN) {
+    console.warn(
+      `[SEO] NEXT_PUBLIC_SITE_URL origin is "${builtOrigin}", not the production origin "${PRODUCTION_ORIGIN}". Every canonical and OG URL built in this run will use "${builtOrigin}".`,
+    );
+  }
+} catch {
+  console.warn(`[SEO] NEXT_PUBLIC_SITE_URL is not a valid URL: "${SITE_URL}".`);
+}
 
 // Sitewide fallback OG image. Used whenever a page has no admin-set PageSeo.ogImage,
 // no SeoSettings.defaultOgImage, and (for buildPageMetadataWithFallback) no
@@ -57,6 +73,19 @@ function normalizeCanonical(url: string): string {
     return url;
   }
 }
+
+function safePathname(url: string): string | undefined {
+  try {
+    return new URL(url).pathname;
+  } catch {
+    return undefined;
+  }
+}
+
+// Set once a build has logged an origin-only canonical difference, so a bad
+// NEXT_PUBLIC_SITE_URL doesn't spam a warning per page — the assertion at
+// module load already names the offending origin once.
+let originMismatchWarnedThisBuild = false;
 
 export interface PageSeoBundle {
   seo: import('@prisma/client').PageSeo | null;
@@ -232,11 +261,29 @@ export async function buildPageMetadataWithFallback(
     if (dbCanonicalRaw && fallbackCanonical) {
       const normalizedDb = normalizeCanonical(dbCanonicalRaw);
       const normalizedComputed = normalizeCanonical(fallbackCanonical);
-      if (normalizedDb !== normalizedComputed) {
+      // The guard only arbitrates PATH — the DB row is the source of truth for
+      // URL shape (e.g. legacy vs. nested course paths). A full-URL comparison
+      // here would also flag a build-time origin difference (wrong
+      // NEXT_PUBLIC_SITE_URL) as a "mismatch" and let a bad origin override an
+      // otherwise-correct DB canonical.
+      const dbPath = safePathname(normalizedDb);
+      const computedPath = safePathname(normalizedComputed);
+      if (dbPath !== undefined && computedPath !== undefined && dbPath !== computedPath) {
         console.warn(
           `[SEO] canonical mismatch for "${slug}": stored DB value "${normalizedDb}" differs from computed fallback "${normalizedComputed}". Using computed fallback — a DB row must not override the real canonical URL logic.`,
         );
         canonicalUrl = normalizedComputed;
+      } else if (dbPath !== undefined && normalizedDb !== normalizedComputed) {
+        // Paths agree; only the origin differs. Not a real mismatch — always
+        // canonicalize to the production origin regardless of which origin
+        // either side happened to be built with.
+        if (!originMismatchWarnedThisBuild) {
+          console.warn(
+            `[SEO] canonical origin differs from computed fallback for "${slug}" (path matches: "${dbPath}") — DB "${normalizedDb}" vs computed "${normalizedComputed}". Using the production origin for the rest of this build; not logging further per-page origin diffs.`,
+          );
+          originMismatchWarnedThisBuild = true;
+        }
+        canonicalUrl = `${PRODUCTION_ORIGIN}${dbPath}`;
       } else {
         canonicalUrl = normalizedDb;
       }
