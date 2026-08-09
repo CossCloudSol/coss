@@ -1,7 +1,9 @@
 /**
  * force-update-seo.ts
  *
- * Run with:  npx tsx src/scripts/force-update-seo.ts
+ * Run with:
+ *   npx tsx src/scripts/force-update-seo.ts --confirm             (Step 2 dry-run only)
+ *   npx tsx src/scripts/force-update-seo.ts --confirm --apply     (Step 2 writes too)
  *
  * Does TWO things:
  *  1. Hard-UPDATE specific page rows (home, about/about-us, blog) with exact
@@ -15,6 +17,14 @@
  * corrections tracked in the Tier 1 content-remediation work — re-running
  * this script with stale wording will silently overwrite live admin-edited
  * SEO rows with outdated or contradictory claims.
+ *
+ * Step 2 is an UNSCOPED regex pass over every row's canonicalUrl (and other
+ * fields) with no per-row review — it is the most likely part of this script
+ * to introduce a regression (e.g. a false-positive domain match rewriting a
+ * canonical that didn't need it). It always runs dry-run (print-only) unless
+ * --apply is also passed, so you can review the exact diff before anything
+ * is written. --confirm alone lets Steps 0/1 (the small, named, intentional
+ * overwrites) run; it does not imply --apply for Step 2.
  */
 
 import { readFileSync } from 'fs';
@@ -95,6 +105,26 @@ function needsReplacement(value: string | null): boolean {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
+  const args = process.argv.slice(2);
+  const confirmed = args.includes('--confirm');
+  const apply = args.includes('--apply');
+
+  if (!confirmed) {
+    console.error(`
+Refusing to run: this script force-overwrites production PageSeo rows
+(home/about/blog) and can rewrite canonicalUrl/metaTitle/etc. across every
+PageSeo row via an unscoped domain-replacement pass. There is no undo.
+
+Re-run with --confirm to proceed. By default (--confirm alone) Step 2's
+global replacement pass runs in dry-run mode only — it prints what it would
+change without writing. Add --apply as well to let Step 2 write its changes.
+
+  npx tsx src/scripts/force-update-seo.ts --confirm
+  npx tsx src/scripts/force-update-seo.ts --confirm --apply
+`);
+    process.exit(1);
+  }
+
   // ── Step 0: Update SeoSettings (singleton) ──────────────────────────────────
 
   console.log('\n── Step 0: Updating SeoSettings ──');
@@ -138,7 +168,11 @@ async function main() {
 
   // ── Step 2: Global text-replacement pass ────────────────────────────────────
 
-  console.log('\n── Step 2: Scanning all rows for stale brand strings ──');
+  console.log(
+    apply
+      ? '\n── Step 2: Scanning all rows for stale brand strings (will write) ──'
+      : '\n── Step 2: Scanning all rows for stale brand strings (DRY RUN — pass --apply to write) ──',
+  );
 
   const allRows = await prisma.pageSeo.findMany();
   let fixedCount = 0;
@@ -175,6 +209,17 @@ async function main() {
 
     if (Object.keys(patch).length === 0) continue;
 
+    if (!apply) {
+      console.log(`  [DRY RUN] would fix: ${row.pageSlug}`);
+      for (const [field, newValue] of Object.entries(patch)) {
+        console.log(`    ${field}:`);
+        console.log(`      - ${row[field as keyof typeof row]}`);
+        console.log(`      + ${newValue}`);
+      }
+      fixedCount++;
+      continue;
+    }
+
     await prisma.pageSeo.update({
       where: { id: row.id },
       data: patch,
@@ -183,7 +228,11 @@ async function main() {
     console.log(`  Fixed: ${row.pageSlug}`);
   }
 
-  console.log(`  Total rows fixed in replacement pass: ${fixedCount}`);
+  console.log(
+    apply
+      ? `  Total rows fixed in replacement pass: ${fixedCount}`
+      : `  Total rows that WOULD be fixed (dry run, nothing written): ${fixedCount}`,
+  );
 
   // ── Step 3: Verification — read back key rows ───────────────────────────────
 
