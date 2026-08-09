@@ -226,9 +226,23 @@ export async function buildPageMetadataWithFallback(
       'canonical' in fallback.alternates
         ? (fallback.alternates.canonical as string | undefined)
         : undefined;
-    const canonicalUrl = normalizeCanonical(
-      seo?.canonicalUrl?.trim() || fallbackCanonical || `${SITE_URL}/${slug}`,
-    );
+
+    const dbCanonicalRaw = seo?.canonicalUrl?.trim() || undefined;
+    let canonicalUrl: string;
+    if (dbCanonicalRaw && fallbackCanonical) {
+      const normalizedDb = normalizeCanonical(dbCanonicalRaw);
+      const normalizedComputed = normalizeCanonical(fallbackCanonical);
+      if (normalizedDb !== normalizedComputed) {
+        console.warn(
+          `[SEO] canonical mismatch for "${slug}": stored DB value "${normalizedDb}" differs from computed fallback "${normalizedComputed}". Using computed fallback — a DB row must not override the real canonical URL logic.`,
+        );
+        canonicalUrl = normalizedComputed;
+      } else {
+        canonicalUrl = normalizedDb;
+      }
+    } else {
+      canonicalUrl = normalizeCanonical(dbCanonicalRaw || fallbackCanonical || `${SITE_URL}/${slug}`);
+    }
 
     return {
       ...fallback,
