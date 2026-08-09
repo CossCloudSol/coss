@@ -11,6 +11,7 @@ import matter from 'gray-matter';
 import { prisma } from './db';
 import { COURSES } from '@/data/courses-data';
 import { CATEGORY_PAGES } from '@/lib/all-pages-registry';
+import { getFlatCourseUrl } from '@/lib/flat-url';
 
 const S = 'https://www.cosscloudsol.com';
 const ORG = `${S}/#organization`;
@@ -68,7 +69,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: '30+ IT Courses in Hyderabad with Placement | Coss Cloud Solutions',
     ogDescription: 'AI, Cloud, DevOps, Data Science, Cyber Security & more. Industry-aligned courses with expert trainers, live projects & placement assistance in Hyderabad.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/courses/`,
+    canonicalUrl: `${S}/courses`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Courses', item: `${S}/courses/` }), { '@type': 'ItemList', name: 'IT Training Courses in Hyderabad', url: `${S}/courses/`, numberOfItems: 10, itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Data, Analytics & BI', url: `${S}/courses/data-analytics-bi/` }, { '@type': 'ListItem', position: 2, name: 'Cloud Computing', url: `${S}/courses/cloud-computing/` }, { '@type': 'ListItem', position: 3, name: 'DevOps & Multi-Cloud', url: `${S}/courses/devops-multi-cloud/` }, { '@type': 'ListItem', position: 4, name: 'Programming & Full Stack', url: `${S}/courses/programming-full-stack/` }, { '@type': 'ListItem', position: 5, name: 'Data Engineering', url: `${S}/courses/data-engineering/` }, { '@type': 'ListItem', position: 6, name: 'Cyber Security', url: `${S}/courses/cyber-security/` }, { '@type': 'ListItem', position: 7, name: 'ERP, CRM & Enterprise', url: `${S}/courses/erp-crm-enterprise-tools/` }, { '@type': 'ListItem', position: 8, name: 'Software Testing & OS', url: `${S}/courses/software-testing-os/` }, { '@type': 'ListItem', position: 9, name: 'Digital Marketing & Design', url: `${S}/courses/digital-design/` }, { '@type': 'ListItem', position: 10, name: 'Professional & Soft Skills', url: `${S}/courses/professional-soft-skills/` }] }] }),
   },
   {
@@ -81,7 +82,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'About Coss Cloud Solutions — Hyderabad IT Training',
     ogDescription: 'Leading IT training institute in Hyderabad since 2010. 5,000+ students trained, 2 centres, 30+ courses, expert trainers with 15+ years of industry experience.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/about-us/`,
+    canonicalUrl: `${S}/about-us`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'AboutPage', url: `${S}/about-us/`, name: 'About Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'About Us', item: `${S}/about-us/` }), mainEntity: { '@id': ORG }, foundingDate: '2010' }),
   },
   {
@@ -94,7 +95,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Why Choose Coss Cloud Solutions for IT Training in Hyderabad',
     ogDescription: 'Expert trainers, placement assistance, flexible batches, affordable fees & globally recognised certifications. Discover why 5000+ students chose Coss Cloud Solutions.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/why-us/`,
+    canonicalUrl: `${S}/why-us`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Why Choose Us', item: `${S}/why-us/` }), { '@type': 'FAQPage', mainEntity: [{ '@type': 'Question', name: 'Why should I choose Coss Cloud Solutions for IT training?', acceptedAnswer: { '@type': 'Answer', text: 'Coss Cloud Solutions offers industry expert trainers with 10+ years experience, placement assistance, small batch sizes, flexible scheduling, globally recognised certifications and affordable fees.' } }, { '@type': 'Question', name: 'Does Coss Cloud Solutions provide placement support?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, Coss Cloud Solutions provides placement assistance including resume building, mock interviews, company referrals and interview coaching. Over 5,000 students have trained with us.' } }, { '@type': 'Question', name: 'Does Coss Cloud Solutions offer online training?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, Coss Cloud Solutions offers live interactive online training alongside offline batches at Dilsukhnagar and Ameerpet. All sessions are recorded for review.' } }, { '@type': 'Question', name: 'What certifications does Coss Cloud Solutions prepare students for?', acceptedAnswer: { '@type': 'Answer', text: 'AWS, Microsoft Azure, Google Cloud, CompTIA, CEH, Salesforce, SAP and many more globally recognised IT certifications.' } }] }] }),
   },
   {
@@ -107,7 +108,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Contact Coss Cloud Solutions — Hyderabad',
     ogDescription: 'Reach us at Dilsukhnagar or Ameerpet, Hyderabad. Call +91 88851 66007 or email info@cosscloudsol.com for course enquiries and admissions.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/contact-us/`,
+    canonicalUrl: `${S}/contact-us`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'ContactPage', url: `${S}/contact-us/`, name: 'Contact Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'Contact Us', item: `${S}/contact-us/` }), mainEntity: { '@id': ORG } }),
   },
   {
@@ -120,7 +121,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Corporate IT Training in Hyderabad | Coss Cloud Solutions',
     ogDescription: 'Upskill your workforce with customised corporate IT training. AI, Cloud, DevOps & more. Flexible scheduling, expert trainers, on-site & online delivery.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/corporate-training/`,
+    canonicalUrl: `${S}/corporate-training`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Corporate Training', item: `${S}/corporate-training/` }), { '@type': 'Service', name: 'Corporate IT Training in Hyderabad', provider: { '@id': ORG }, areaServed: { '@type': 'City', name: 'Hyderabad' }, serviceType: 'Corporate IT Training', url: `${S}/corporate-training/` }] }),
   },
   {
@@ -133,7 +134,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Placement Assistance — Coss Cloud Solutions',
     ogDescription: '5,000+ students trained for careers at top IT companies. Resume building, mock interviews, campus drives & company referrals. Start your IT career with full support at Coss Cloud Solutions.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/placements/`,
+    canonicalUrl: `${S}/placements`,
     // No aggregateRating: Google disallows self-serving review markup without
     // genuine third-party on-page reviews (see global-schemas.ts).
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Placements', item: `${S}/placements/` }), { '@type': 'EducationalOrganization', '@id': ORG, name: 'Coss Cloud Solutions' }] }),
@@ -148,7 +149,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'IT Certifications — AWS, Azure, Google & More | Coss Cloud Solutions',
     ogDescription: 'Prepare for AWS, Microsoft Azure, Google Cloud, CompTIA & more globally recognised certifications at Coss Cloud Solutions Hyderabad with expert-led coaching.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/certification/`,
+    canonicalUrl: `${S}/certification`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Certification', item: `${S}/certification/` }), { '@type': 'ItemList', name: 'IT Certifications at Coss Cloud Solutions', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'AWS Certified Solutions Architect' }, { '@type': 'ListItem', position: 2, name: 'Microsoft Azure Administrator (AZ-104)' }, { '@type': 'ListItem', position: 3, name: 'Google Cloud Professional Architect' }, { '@type': 'ListItem', position: 4, name: 'Certified Ethical Hacker (CEH)' }, { '@type': 'ListItem', position: 5, name: 'Azure Data Engineer (DP-203)' }, { '@type': 'ListItem', position: 6, name: 'Salesforce Certified Administrator' }] }] }),
   },
   {
@@ -161,7 +162,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Student Reviews & Success Stories | Coss Cloud Solutions',
     ogDescription: 'Real reviews from 5000+ students who trained at Coss Cloud Solutions. See how our IT training transformed careers with placement assistance.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/student-reviews/`,
+    canonicalUrl: `${S}/student-reviews`,
     // No aggregateRating/review: Google disallows self-serving review markup
     // without genuine third-party on-page reviews (see global-schemas.ts).
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Student Reviews', item: `${S}/student-reviews/` }), { '@type': 'EducationalOrganization', '@id': ORG, name: 'Coss Cloud Solutions' }] }),
@@ -176,7 +177,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'IT Training Blog & Career Tips | Coss Cloud Solutions',
     ogDescription: 'Expert IT articles, technology tutorials and career guidance from Coss Cloud Solutions trainers. Stay ahead in Cloud, AI, DevOps & Data Science.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/blog/`,
+    canonicalUrl: `${S}/blog`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Blog', item: `${S}/blog/` }), { '@type': 'Blog', name: 'Coss Cloud Solutions IT Training Blog', url: `${S}/blog/`, publisher: { '@id': ORG }, inLanguage: 'en-IN' }] }),
   },
   {
@@ -189,7 +190,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Enroll in IT Training — Coss Cloud Solutions Hyderabad',
     ogDescription: 'Start your IT career today. Join 30+ expert-led courses in AI, Cloud, DevOps & Data Science. Free demo available. Placement assistance at Coss Cloud Solutions.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/enroll-now-with-coss/`,
+    canonicalUrl: `${S}/enroll-now-with-coss`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'ContactPage', url: `${S}/enroll-now-with-coss/`, name: 'Enroll at Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'Enroll Now', item: `${S}/enroll-now-with-coss/` }), mainEntity: { '@id': ORG } }),
   },
   {
@@ -202,7 +203,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Free IT Training Demo Class | Coss Cloud Solutions',
     ogDescription: 'Book a free demo class at Coss Cloud Solutions. Experience expert-led IT training in Cloud, DevOps, AI & more — no fees, no commitment, in Hyderabad.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/free-demo-class/`,
+    canonicalUrl: `${S}/free-demo-class`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Free Demo Class', item: `${S}/free-demo-class/` }), { '@type': 'Event', name: 'Free IT Training Demo Class', organizer: { '@id': ORG }, eventAttendanceMode: 'https://schema.org/MixedEventAttendanceMode', eventStatus: 'https://schema.org/EventScheduled', offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR', availability: 'https://schema.org/InStock', url: `${S}/free-demo-class/` } }] }),
   },
   {
@@ -215,7 +216,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Privacy Policy | Coss Cloud Solutions',
     ogDescription: 'How Coss Cloud Solutions collects, uses and protects your personal information when using our IT training and placement services in Hyderabad.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/privacy-policy/`,
+    canonicalUrl: `${S}/privacy-policy`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebPage', url: `${S}/privacy-policy/`, name: 'Privacy Policy — Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'Privacy Policy', item: `${S}/privacy-policy/` }), publisher: { '@id': ORG } }),
   },
   {
@@ -228,7 +229,7 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     ogTitle: 'Terms & Conditions | Coss Cloud Solutions',
     ogDescription: 'Enrollment terms, fees, refund policy and student conduct guidelines for Coss Cloud Solutions IT training programs in Hyderabad.',
     ogImage: OG_IMAGE,
-    canonicalUrl: `${S}/terms-conditions/`,
+    canonicalUrl: `${S}/terms-conditions`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebPage', url: `${S}/terms-conditions/`, name: 'Terms & Conditions — Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'Terms & Conditions', item: `${S}/terms-conditions/` }), publisher: { '@id': ORG } }),
   },
 ];
@@ -293,7 +294,7 @@ export async function seedSeoPages(): Promise<void> {
 
 export async function seedCoursePages(): Promise<void> {
   for (const course of COURSES) {
-    const url = `${S}/${course.slug}/`;
+    const url = `${S}${getFlatCourseUrl(course.slug)}`;
     const ogTitle = course.metaTitle.replace(' | Coss Cloud Solutions', '').replace(' | Coss Cloud Solutions', '');
     const schema = JSON.stringify({
       '@context': 'https://schema.org',
@@ -337,7 +338,7 @@ export async function seedCoursePages(): Promise<void> {
 
 export async function seedCategoryPages(): Promise<void> {
   for (const cat of CATEGORY_PAGES) {
-    const url = `${S}/${cat.slug}/`;
+    const url = `${S}/${cat.slug}`;
     const schema = JSON.stringify({
       '@context': 'https://schema.org',
       '@graph': [
@@ -409,7 +410,7 @@ export async function seedBlogPosts(): Promise<void> {
           : slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
       const pageSlug = `blog/${slug}`;
-      const url = `${S}/blog/${slug}/`;
+      const url = `${S}/blog/${slug}`;
       const metaTitle = truncate(title, 55) + ' | Coss Cloud Solutions';
       const metaDescription = blogMetaDescription(title);
       const focusKeyword = title.split(' ').slice(0, 4).join(' ').toLowerCase();
