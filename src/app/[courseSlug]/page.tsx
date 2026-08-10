@@ -10,6 +10,19 @@ import { getFlatCourseUrl } from '@/lib/flat-url'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
 import type { FlatSiblingLink } from '@/components/LandingPageTemplate'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com'
+
+// Nested canonical override allowlist — EXACTLY these 2 flat slugs. Each entry
+// requires GSC Performance + URL Inspection evidence that the nested URL
+// matches or beats the flat URL. Do NOT key this off urlType/categorySlug —
+// that predicate matches 12 pages, 10 of which are unreviewed in GSC.
+const NESTED_CANONICAL_OVERRIDES: Record<string, string> = {
+  'ui-ux-design-training-institute-in-hyderabad':
+    '/courses/digital-design/ui-ux-design-training-institute-in-hyderabad',
+  'digital-marketing-training-institute-in-hyderabad':
+    '/courses/digital-design/digital-marketing-training-in-hyderabad',
+}
+
 export const revalidate = 3600
 
 interface Props {
@@ -33,6 +46,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       course?.description ??
       'Best IT training institute in Hyderabad. Hands-on courses with 100% placement support at Dilsukhnagar & Ameerpet.',
     openGraph: course?.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
+  }
+
+  const nestedCanonical = NESTED_CANONICAL_OVERRIDES[slug]
+  if (nestedCanonical) {
+    fallback.alternates = { canonical: `${SITE_URL}${nestedCanonical}` }
   }
 
   return buildPageMetadataWithFallback(slug, fallback)
