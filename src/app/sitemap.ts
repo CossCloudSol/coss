@@ -20,6 +20,7 @@ import { COURSE_PAGES, CATEGORY_PAGES, STATIC_PAGES } from '@/lib/all-pages-regi
 import { getAllPosts } from '@/lib/posts';
 import { getCourseUrl } from '@/lib/course-url';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
+import { NESTED_CANONICAL_OVERRIDES } from '@/app/[courseSlug]/page';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -173,13 +174,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Courses whose own slug is a SLUG_MAP key are excluded here: that slug is
     // one of the 30 flat-legacy money pages (group 1, self-canonicalizing),
     // and the DB route resolves the exact same row — including both would put
-    // two sitemap entries for identical content.
+    // two sitemap entries for identical content. Exception: a course on the
+    // NESTED_CANONICAL_OVERRIDES allowlist has a nested canonical that
+    // *differs* from its flat URL, so it must still get its own group-6 entry.
     const dbCourses = await prisma.course.findMany({
       where: { status: 'published' },
       select: { slug: true, urlType: true, categorySlug: true, updatedAt: true },
     })
     dbCourseEntries = dbCourses
-      .filter((course) => !(course.slug in SLUG_MAP))
+      .filter((course) => !(course.slug in SLUG_MAP) || course.slug in NESTED_CANONICAL_OVERRIDES)
       .map((course) => {
         const db = getDbOverride(course.slug)
         return {

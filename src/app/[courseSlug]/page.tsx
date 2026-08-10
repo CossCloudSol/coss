@@ -16,7 +16,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.c
 // requires GSC Performance + URL Inspection evidence that the nested URL
 // matches or beats the flat URL. Do NOT key this off urlType/categorySlug —
 // that predicate matches 12 pages, 10 of which are unreviewed in GSC.
-const NESTED_CANONICAL_OVERRIDES: Record<string, string> = {
+export const NESTED_CANONICAL_OVERRIDES: Record<string, string> = {
   'ui-ux-design-training-institute-in-hyderabad':
     '/courses/digital-design/ui-ux-design-training-institute-in-hyderabad',
   'digital-marketing-training-institute-in-hyderabad':
