@@ -77,7 +77,6 @@ export function dbCoursesToCards(courses: DbCourse[], categorySlug: string): Cou
       originalPrice: course.originalPrice ? '₹' + course.originalPrice.toLocaleString('en-IN') : '',
       discountedPrice: course.price ? '₹' + course.price.toLocaleString('en-IN') : '',
       emi: 'Easy EMI available',
-      urgency: 'Book your free demo class',
       href: getCourseUrl({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
       animationIndex: i,
     }

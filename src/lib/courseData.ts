@@ -275,7 +275,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹45,000',
     discountedPrice: '₹32,000',
     emi: 'EMI from ₹2,700/mo',
-    urgency: 'Only 8 seats left in current batch',
     href: '/courses/data-science-training-institute-in-hyderabad',
   },
   {
@@ -292,7 +291,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹28,000',
     discountedPrice: '₹20,000',
     emi: 'EMI from ₹1,700/mo',
-    urgency: 'Next batch starts soon — 6 seats left',
     href: '/machine-learning-training-institute-in-hyderabad/',
   },
   {
@@ -309,7 +307,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹40,000',
     discountedPrice: '₹28,000',
     emi: 'EMI from ₹2,350/mo',
-    urgency: 'Enrollments closing soon',
     href: '/artificial-intelligence-ai-training-institute-in-hyderabad/',
   },
   {
@@ -326,7 +323,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    urgency: 'Only 10 seats left in current batch',
     href: '/full-stack-power-bi-training-institute-in-hyderabad/',
   },
   {
@@ -343,7 +339,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹32,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    urgency: 'Only 5 seats left in current batch',
     href: '/full-stack-power-bi-training-institute-in-hyderabad/',
   },
   {
@@ -360,7 +355,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹17,000',
     emi: 'EMI from ₹1,450/mo',
-    urgency: 'Next batch starts June 10',
     href: '/courses/data-analytics-training-institute-in-hyderabad',
   },
 ];
@@ -380,7 +374,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    urgency: 'Only 7 seats left in current batch',
     href: '/aws-cloud-training-in-hyderabad/',
   },
   {
@@ -397,7 +390,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    urgency: 'Next batch starts soon — 5 seats left',
     href: '/azure-training-institute-in-hyderabad/',
   },
   {
@@ -414,7 +406,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹16,000',
     emi: 'EMI from ₹1,350/mo',
-    urgency: 'Enrollments closing soon',
     href: '/google-cloud-training-institute-in-hyderabad/',
   },
   {
@@ -431,7 +422,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹42,000',
     discountedPrice: '₹30,000',
     emi: 'EMI from ₹2,500/mo',
-    urgency: 'Only 6 seats left in current batch',
     href: '/courses/multi-cloud-architecture-training-in-hyderabad',
   },
   {
@@ -448,7 +438,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹38,000',
     discountedPrice: '₹26,000',
     emi: 'EMI from ₹2,200/mo',
-    urgency: 'Only 9 seats left in current batch',
     href: '/courses/cloud-computing/',
   },
 ];
@@ -468,7 +457,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    urgency: 'Only 6 seats left in current batch',
     href: '/aws-devops-course-in-hyderabad-by-coss-cloud-solutions/',
   },
   {
@@ -485,7 +473,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    urgency: 'Next batch starts June 10 — 5 seats left',
     href: '/azure-devops-courses-in-hyderabad-by-coss-cloud-solutions/',
   },
   {
@@ -502,7 +489,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    urgency: 'Only 8 seats left in current batch',
     href: '/devops-training-institute-in-hyderabad/',
   },
   {
@@ -519,7 +505,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    urgency: 'Enrollments closing soon',
     href: '/devops-training-in-hyderabad/',
   },
   {
@@ -536,7 +521,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    urgency: 'Only 12 seats left in current batch',
     href: '/devops-training-in-hyderabad/',
   },
   {
@@ -553,7 +537,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹55,000',
     discountedPrice: '₹38,000',
     emi: 'EMI from ₹3,200/mo',
-    urgency: 'Only 4 seats left in current batch',
     href: '/devops-training-in-hyderabad/',
   },
 ];
@@ -573,7 +556,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹48,000',
     discountedPrice: '₹34,000',
     emi: 'EMI from ₹2,850/mo',
-    urgency: 'Only 7 seats left in current batch',
     href: '/java-training-institute-in-hyderabad/',
   },
   {
@@ -590,7 +572,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹42,000',
     discountedPrice: '₹30,000',
     emi: 'EMI from ₹2,500/mo',
-    urgency: 'Next batch starts soon — 6 seats left',
     href: '/python-training-institute-in-hyderabad/',
   },
   {
@@ -607,7 +588,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹38,000',
     discountedPrice: '₹26,000',
     emi: 'EMI from ₹2,200/mo',
-    urgency: 'Enrollments closing soon',
     href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
   },
   {
@@ -624,7 +604,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    urgency: 'Only 10 seats left in current batch',
     href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
   },
   {
@@ -641,7 +620,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    urgency: 'Only 14 seats left in current batch',
     href: '/java-training-institute-in-hyderabad/',
   },
 ];
@@ -661,7 +639,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹32,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    urgency: 'Only 8 seats left in current batch',
     href: '/courses/data-engineering/azure-data-factory-training-in-hyderabad',
   },
   {
@@ -678,7 +655,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹26,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    urgency: 'Next batch starts soon — 7 seats left',
     href: '/data-engineering-training-institute-in-hyderabad/',
   },
   {
@@ -695,7 +671,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    urgency: 'Enrollments closing soon',
     href: '/data-engineering-training-institute-in-hyderabad/',
   },
   {
@@ -712,7 +687,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹13,000',
     emi: 'EMI from ₹1,100/mo',
-    urgency: 'Only 11 seats left in current batch',
     href: '/data-engineering-training-institute-in-hyderabad/',
   },
 ];
@@ -732,7 +706,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    urgency: 'Only 6 seats left in current batch',
     href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions/',
   },
   {
@@ -749,7 +722,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹17,000',
     emi: 'EMI from ₹1,450/mo',
-    urgency: 'Next batch starts June 10',
     href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions/',
   },
   {
@@ -766,7 +738,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    urgency: 'Enrollments closing soon',
     href: '/ccna-networking-training-in-hyderabad/',
   },
   {
@@ -783,7 +754,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹16,000',
     emi: 'EMI from ₹1,350/mo',
-    urgency: 'Only 9 seats left in current batch',
     href: '/ccna-networking-training-in-hyderabad/',
   },
 ];
@@ -803,7 +773,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹38,000',
     discountedPrice: '₹28,000',
     emi: 'EMI from ₹2,350/mo',
-    urgency: 'Only 6 seats left in current batch',
     href: '/sap-fico-training-institute-in-hyderabad/',
   },
   {
@@ -820,7 +789,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹26,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    urgency: 'Next batch starts soon — 7 seats left',
     href: '/salesforce-training-center-in-hyderabad/',
   },
   {
@@ -837,7 +805,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹32,000',
     discountedPrice: '₹24,000',
     emi: 'EMI from ₹2,000/mo',
-    urgency: 'Only 12 seats left in current batch',
     href: '/oracle-fusion-cloud-hcm-training-in-hyderabad/',
   },
   {
@@ -854,7 +821,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹26,000',
     discountedPrice: '₹19,000',
     emi: 'EMI from ₹1,600/mo',
-    urgency: 'Enrollments closing soon',
     href: '/sap-fico-training-institute-in-hyderabad/',
   },
 ];
@@ -874,7 +840,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    urgency: 'Only 15 seats left in current batch',
     href: '/software-testing-training-institute-in-hyderabad/',
   },
   {
@@ -891,7 +856,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    urgency: 'Next batch starts June 10 — 8 seats left',
     href: '/software-testing-training-institute-in-hyderabad/',
   },
   {
@@ -908,7 +872,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    urgency: 'Enrollments closing soon',
     href: '/linux-training-in-hyderabad/',
   },
   {
@@ -925,7 +888,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    urgency: 'Only 12 seats left in current batch',
     href: '/software-testing-training-institute-in-hyderabad/',
   },
 ];
@@ -945,7 +907,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    urgency: 'Only 9 seats left in current batch',
     href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions/',
   },
   {
@@ -962,7 +923,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    urgency: 'Next batch starts soon — 6 seats left',
     href: '/ui-ux-design-training-institute-in-hyderabad/',
   },
   {
@@ -979,7 +939,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    urgency: 'Enrollments closing soon',
     href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions/',
   },
   {
@@ -996,7 +955,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    urgency: 'Only 11 seats left in current batch',
     href: '/digital-marketing-training-institute-in-dilsukhnagar-hyderabad/',
   },
 ];
@@ -1016,7 +974,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    urgency: 'Only 14 seats left in current batch',
     href: '/ms-office-course-near-me-in-hyderabad-coss-cloud-solutions/',
   },
   {
@@ -1033,7 +990,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    urgency: 'Next batch starts soon — 10 seats left',
     href: '/spoken-english-institute-in-hyderabad-coss-cloud-solutions/',
   },
   {
@@ -1050,7 +1006,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹12,000',
     discountedPrice: '₹8,000',
     emi: 'EMI from ₹680/mo',
-    urgency: 'Enrollments closing soon',
     href: '/communication-skills-training-in-hyderabad-coss-cloud-solutions/',
   },
   {
@@ -1067,7 +1022,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹12,000',
     discountedPrice: '₹8,000',
     emi: 'EMI from ₹680/mo',
-    urgency: 'Only 10 seats left in current batch',
     href: '/tally-classes-in-hyderabad/',
   },
 ];
@@ -1087,7 +1041,6 @@ export const humanResourceCourses: CourseCardProps[] = [
     originalPrice: '₹35,000',
     discountedPrice: '₹25,000',
     emi: 'EMI from ₹2,100/mo',
-    urgency: 'Only 8 seats left in current batch',
     href: '/enroll-now-with-coss/',
   },
   {
@@ -1104,7 +1057,6 @@ export const humanResourceCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹17,000',
     emi: 'EMI from ₹1,450/mo',
-    urgency: 'Next batch starts soon — 6 seats left',
     href: '/enroll-now-with-coss/',
   },
   {
@@ -1121,7 +1073,6 @@ export const humanResourceCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    urgency: 'Enrollments closing soon',
     href: '/enroll-now-with-coss/',
   },
 ];
@@ -1141,7 +1092,6 @@ export const quantumComputingCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    urgency: 'Only 15 seats left in current batch',
     href: '/enroll-now-with-coss/',
   },
   {
@@ -1158,7 +1108,6 @@ export const quantumComputingCourses: CourseCardProps[] = [
     originalPrice: '₹28,000',
     discountedPrice: '₹20,000',
     emi: 'EMI from ₹1,700/mo',
-    urgency: 'Next batch starts soon — 8 seats left',
     href: '/enroll-now-with-coss/',
   },
   {
@@ -1175,7 +1124,6 @@ export const quantumComputingCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    urgency: 'Enrollments closing soon',
     href: '/enroll-now-with-coss/',
   },
 ];

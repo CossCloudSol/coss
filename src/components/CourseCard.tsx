@@ -15,7 +15,6 @@ export interface CourseCardProps {
   originalPrice: string
   discountedPrice: string
   emi: string
-  urgency: string
   href: string
   animationIndex?: number
 }
@@ -58,7 +57,6 @@ export default function CourseCard({
   originalPrice,
   discountedPrice,
   emi,
-  urgency,
   href,
   animationIndex = 0,
 }: CourseCardProps) {
@@ -165,14 +163,6 @@ export default function CourseCard({
             <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
           </svg>
         </Link>
-      </div>
-
-      {/* Urgency strip */}
-      <div className="bg-[#FFF7ED] border-t border-[#FED7AA] px-5 py-[7px] flex items-center gap-[6px] text-[11px] font-semibold text-[#C2410C]">
-        <svg className="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        {urgency}
       </div>
     </div>
   )
