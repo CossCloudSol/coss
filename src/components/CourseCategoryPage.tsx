@@ -161,6 +161,9 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                   </section>
                 );
               }
+              if (!data.courses || data.courses.length === 0) {
+                return null;
+              }
               return (
                 <section className="py-12 px-4">
                   <div className="max-w-7xl mx-auto mb-10 text-center">
@@ -173,7 +176,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                   </div>
                   <div className="max-w-7xl mx-auto">
                     <CourseGrid
-                      courses={(data.courses ?? []).map((course: any, i: number) => {
+                      courses={data.courses.map((course: any, i: number) => {
                         const badgeKey = String(course.badge ?? course.tag ?? '').toLowerCase()
                         return {
                           title: course.title ?? '',
@@ -202,26 +205,30 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             })()}
 
             {/* Why Learn */}
-            <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#0f3460)', borderRadius: '14px', padding: '28px', marginBottom: '36px', color: '#fff' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px' }}>💡 Why Learn {data.name}?</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                {data.whyLearn.map(w => (
-                  <div key={w} style={{ display: 'flex', gap: '8px', fontSize: '13.5px', color: '#ccc', lineHeight: '1.5' }}>
-                    <span style={{ color: '#e8401c', fontWeight: 700, flexShrink: 0 }}>✓</span><span>{w}</span>
-                  </div>
-                ))}
+            {data.whyLearn.length > 0 && (
+              <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#0f3460)', borderRadius: '14px', padding: '28px', marginBottom: '36px', color: '#fff' }}>
+                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px' }}>💡 Why Learn {data.name}?</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  {data.whyLearn.map(w => (
+                    <div key={w} style={{ display: 'flex', gap: '8px', fontSize: '13.5px', color: '#ccc', lineHeight: '1.5' }}>
+                      <span style={{ color: '#e8401c', fontWeight: 700, flexShrink: 0 }}>✓</span><span>{w}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Tools */}
-            <div style={{ marginBottom: '36px' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🔨 Tools & Technologies</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                {data.tools.map(t => (
-                  <span key={t} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{t}</span>
-                ))}
+            {data.tools.length > 0 && (
+              <div style={{ marginBottom: '36px' }}>
+                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🔨 Tools & Technologies</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                  {data.tools.map(t => (
+                    <span key={t} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{t}</span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Real company logos */}
             {(imgs?.companyLogos?.length > 0 || hiringPartners.length > 0) && (
@@ -307,27 +314,31 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             )}
 
             {/* Careers */}
-            <div style={{ marginBottom: '36px' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🚀 Career Opportunities</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                {data.careers.map(c => (
-                  <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
-                ))}
+            {data.careers.length > 0 && (
+              <div style={{ marginBottom: '36px' }}>
+                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🚀 Career Opportunities</h3>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                  {data.careers.map(c => (
+                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* FAQs */}
-            <div style={{ marginBottom: '36px' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>❓ Frequently Asked Questions</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {data.faqs.map((faq, i) => (
-                  <div key={i} style={{ background: 'var(--bg-alt)', borderRadius: '10px', padding: '18px 20px', border: '1px solid var(--border)' }}>
-                    <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>Q: {faq.q}</h4>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.65' }}>A: {faq.a}</p>
-                  </div>
-                ))}
+            {data.faqs.length > 0 && (
+              <div style={{ marginBottom: '36px' }}>
+                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>❓ Frequently Asked Questions</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {data.faqs.map((faq, i) => (
+                    <div key={i} style={{ background: 'var(--bg-alt)', borderRadius: '10px', padding: '18px 20px', border: '1px solid var(--border)' }}>
+                      <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>Q: {faq.q}</h4>
+                      <p style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.65' }}>A: {faq.a}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <CtaBanner />
           </div>
