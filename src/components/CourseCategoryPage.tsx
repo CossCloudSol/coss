@@ -183,9 +183,6 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                           duration: course.duration ?? course.months ?? '',
                           mode: course.mode ?? course.delivery ?? 'Classroom',
                           level: course.level ?? course.difficulty ?? 'Beginner',
-                          rating: course.rating ?? 4.8,
-                          reviewCount: String(course.reviews ?? course.reviewCount ?? '120+'),
-                          enrolledCount: String(course.enrolled ?? course.enrolledCount ?? '500+'),
                           description: course.description ?? course.excerpt ?? '',
                           highlights: [
                             course.highlight1 ?? course.highlights?.[0] ?? 'Industry-relevant curriculum',

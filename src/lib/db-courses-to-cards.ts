@@ -69,9 +69,6 @@ export function dbCoursesToCards(courses: DbCourse[], categorySlug: string): Cou
       duration: course.duration,
       mode: course.mode,
       level: course.level,
-      rating: 4.8,
-      reviewCount: '120+',
-      enrolledCount: '500+',
       description,
       highlights: [
         course.highlights[0] ?? 'Industry-relevant curriculum',

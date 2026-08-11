@@ -10,9 +10,6 @@ export interface CourseCardProps {
   duration: string
   mode: string
   level: string
-  rating: number
-  reviewCount: string
-  enrolledCount: string
   description: string
   highlights: [string, string]
   originalPrice: string
@@ -56,9 +53,6 @@ export default function CourseCard({
   duration,
   mode,
   level,
-  rating,
-  reviewCount,
-  enrolledCount,
   description,
   highlights,
   originalPrice,
@@ -129,13 +123,10 @@ export default function CourseCard({
 
       {/* Card Body */}
       <div className="px-5 py-[18px] flex-1 flex flex-col gap-[14px]">
-        {/* Rating row */}
+        {/* Institute-level trust stat (replaces per-course rating/enrollment claims) */}
         <div className="flex items-center gap-[10px]">
-          <span className="text-amber-400 text-[13px] tracking-[1px]">★★★★★</span>
-          <span className="text-[13px] font-semibold text-slate-800">{rating}</span>
-          <span className="text-[12px] text-slate-400">({reviewCount})</span>
-          <span className="ml-auto bg-sky-50 text-sky-700 text-[11px] font-semibold px-[10px] py-[3px] rounded-full border border-sky-200">
-            {enrolledCount} Enrolled
+          <span className="bg-sky-50 text-sky-700 text-[11px] font-semibold px-[10px] py-[3px] rounded-full border border-sky-200">
+            5,000+ students trained
           </span>
         </div>
 
