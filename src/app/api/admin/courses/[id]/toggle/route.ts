@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { createNotification } from '@/lib/notifications';
+import { checkPublishRedirectCollision, type RedirectCollision } from '@/lib/redirect-collision';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,7 +32,17 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
   }
 
   try {
+    const existing = await prisma.course.findUnique({
+      where: { id: params.id },
+      select: { status: true },
+    });
+
     const course = await prisma.course.update({ where: { id: params.id }, data });
+
+    let redirectCollision: RedirectCollision | null = null;
+    if (data.status === 'published' && existing?.status !== 'published') {
+      redirectCollision = await checkPublishRedirectCollision(course);
+    }
 
     if (data.status === 'published') {
       try {
@@ -46,7 +57,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
       }
     }
 
-    return NextResponse.json({ ok: true, status: course.status, featured: course.featured });
+    return NextResponse.json({ ok: true, status: course.status, featured: course.featured, redirectCollision });
   } catch (err: unknown) {
     const e = err as { code?: string };
     if (e.code === 'P2025') {

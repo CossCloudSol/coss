@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { checkPublishRedirectCollision, type RedirectCollision } from '@/lib/redirect-collision';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -39,6 +40,11 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
   }
 
   try {
+    const existing = await prisma.course.findUnique({
+      where: { id: params.id },
+      select: { status: true },
+    });
+
     const course = await prisma.course.update({
       where: { id: params.id },
       data: {
@@ -64,7 +70,13 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
         seoDesc: (body.seoDesc as string) || null,
       },
     });
-    return NextResponse.json(course);
+
+    let redirectCollision: RedirectCollision | null = null;
+    if (body.status === 'published' && existing?.status !== 'published') {
+      redirectCollision = await checkPublishRedirectCollision(course);
+    }
+
+    return NextResponse.json({ ...course, redirectCollision });
   } catch (err: unknown) {
     const e = err as { code?: string };
     if (e.code === 'P2002') {
