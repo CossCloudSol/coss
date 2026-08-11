@@ -34,7 +34,7 @@ const cloudCourses: CourseCategoryData = {
     { name: 'Multi-Cloud Engineer', duration: '4 Months', level: 'Advanced', highlights: ['AWS + Azure + GCP', 'Cloud Migration', 'Cost Optimization', 'Multi-Cloud Architecture'], fee: '₹ 25,000–40,000' },
     { name: 'Cloud Architecture', duration: '3 Months', level: 'Advanced', highlights: ['Solution Design', 'High Availability', 'DR & Backup Strategies', 'Cost Management'], fee: '₹ 20,000–35,000' },
   ],
-  whyLearn: ['Highest paying IT domain globally', 'Cloud jobs growing 30%+ year over year', 'Remote work opportunities worldwide', 'Industry certifications from AWS, Microsoft, Google'],
+  whyLearn: ['Cloud jobs growing 30%+ year over year', 'Remote work opportunities worldwide', 'Industry certifications from AWS, Microsoft, Google'],
   tools: ['AWS Console', 'Azure Portal', 'Google Cloud Console', 'Terraform', 'CloudFormation', 'Ansible'],
   careers: ['Cloud Engineer', 'Solutions Architect', 'Cloud Administrator', 'DevOps Engineer', 'Cloud Consultant'],
   faqs: [
@@ -58,7 +58,7 @@ const devopsCourses: CourseCategoryData = {
     { name: 'Jenkins & CI/CD', duration: '1 Month', level: 'Intermediate', highlights: ['Pipeline as Code', 'Integration with Git', 'Build Automation', 'Deployment Strategies'] },
     { name: 'Full DevOps Bootcamp', duration: '5 Months', level: 'Beginner to Advanced', highlights: ['Git & GitHub', 'Linux Admin', 'Docker + K8s', 'AWS/Azure + Jenkins + Terraform'] },
   ],
-  whyLearn: ['DevOps engineers earn 40–60% more than traditional developers', 'Fastest-growing engineering role in 2024–25', 'Automation skills are universally in demand', 'Bridge between dev and ops teams'],
+  whyLearn: ['Fastest-growing engineering role in 2024–25', 'Automation skills are universally in demand', 'Bridge between dev and ops teams'],
   tools: ['Jenkins', 'Docker', 'Kubernetes', 'Terraform', 'Ansible', 'Git', 'SonarQube', 'Prometheus', 'Grafana'],
   careers: ['DevOps Engineer', 'Site Reliability Engineer', 'Cloud Infrastructure Engineer', 'Platform Engineer', 'Release Manager'],
   faqs: [
@@ -103,7 +103,7 @@ const dataEngCourses: CourseCategoryData = {
     { name: 'Hadoop Ecosystem', duration: '2 Months', level: 'Intermediate', highlights: ['HDFS & MapReduce', 'Hive & Pig', 'HBase', 'Sqoop & Flume'] },
     { name: 'ETL & Data Pipelines', duration: '1.5 Months', level: 'Intermediate', highlights: ['ETL Design Patterns', 'SSIS & Informatica', 'Airflow', 'Pipeline Orchestration'] },
   ],
-  whyLearn: ['Data engineering is among the highest-paid IT roles', 'Every company needs engineers to manage data at scale', 'Bridge between raw data and insights', 'Growing demand in fintech, healthcare, and e-commerce'],
+  whyLearn: ['Every company needs engineers to manage data at scale', 'Bridge between raw data and insights', 'Growing demand in fintech, healthcare, and e-commerce'],
   tools: ['Azure Data Factory', 'Databricks', 'Apache Spark', 'Hadoop', 'Airflow', 'dbt', 'Kafka'],
   careers: ['Data Engineer', 'Azure Data Engineer', 'Big Data Engineer', 'ETL Developer', 'Data Pipeline Engineer'],
   faqs: [
@@ -145,7 +145,7 @@ const erpCourses: CourseCategoryData = {
     { name: 'Oracle Fusion HCM', duration: '2.5 Months', level: 'Intermediate', highlights: ['HR Management', 'Payroll & Benefits', 'Workforce Management', 'Oracle Cloud'] },
     { name: 'SAP HR', duration: '2 Months', level: 'Beginner to Intermediate', highlights: ['Personnel Management', 'Payroll in SAP', 'Org Management', 'Time Management'] },
   ],
-  whyLearn: ['SAP & Salesforce skills command premium salaries', 'Enterprise tools are used in 90% of large companies', 'Limited talent pool means better career opportunities', 'Remote and consulting opportunities worldwide'],
+  whyLearn: ['SAP & Salesforce skills command premium salaries', 'Limited talent pool means better career opportunities', 'Remote and consulting opportunities worldwide'],
   tools: ['SAP S/4HANA', 'Salesforce Lightning', 'Oracle HCM Cloud', 'MS Dynamics', 'ServiceNow'],
   careers: ['SAP Consultant', 'Salesforce Admin/Developer', 'Oracle HCM Consultant', 'ERP Analyst', 'Business Analyst'],
   faqs: [
@@ -231,7 +231,7 @@ const dataAnalyticsCourses: CourseCategoryData = {
     { name: 'Full Stack Power BI', duration: '3 Months', level: 'Beginner to Advanced', highlights: ['Power BI + SQL + Excel', 'Data Warehousing', 'Paginated Reports', 'Power BI Service'] },
     { name: 'Azure Data Analyst', duration: '2 Months', level: 'Intermediate', highlights: ['Azure Synapse', 'Power BI Integration', 'DP-100 Prep', 'Data Visualization'] },
   ],
-  whyLearn: ['Data science is the #1 most in-demand job globally', 'AI skills are the future of every industry', 'Power BI is used in 90% of Fortune 500 companies', 'Salary packages of ₹6–25 LPA for freshers'],
+  whyLearn: [],
   tools: ['Python', 'Pandas', 'NumPy', 'Scikit-learn', 'TensorFlow', 'Power BI', 'Tableau', 'SQL', 'Azure ML'],
   careers: ['Data Scientist', 'ML Engineer', 'AI Engineer', 'Business Intelligence Analyst', 'Data Analyst', 'Power BI Developer'],
   faqs: [
@@ -327,7 +327,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
   },
   {
     title: 'Full Stack Power BI Training',
-    badge: 'Best Seller',
+    badge: 'Popular',
     badgeVariant: 'teal',
     accentVariant: 'data',
     categoryLabel: "DATA ANALYTICS & BI",
@@ -369,7 +369,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     duration: '2–3 Months',
     mode: 'Classroom',
     level: 'Beginner – Advanced',
-    description: 'Become an AWS Certified Solutions Architect with hands-on labs on EC2, S3, RDS, Lambda, and VPC. 100% exam assistance.',
+    description: 'Become an AWS Certified Solutions Architect with hands-on labs on EC2, S3, RDS, Lambda, and VPC. Includes exam assistance.',
     highlights: ['AWS Solutions Architect exam prep', 'Hands-on labs on real AWS'],
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
@@ -525,7 +525,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
   },
   {
     title: 'Full DevOps Bootcamp',
-    badge: 'Best Seller',
+    badge: 'Popular',
     badgeVariant: 'rose',
     accentVariant: 'devops',
     categoryLabel: "DEVOPS & MULTI-CLOUD",
@@ -769,7 +769,7 @@ export const erpCrmCourses: CourseCardProps[] = [
     mode: 'Classroom',
     level: 'Beginner – Advanced',
     description: 'Complete SAP FI/CO consultant training — GL, accounts payable/receivable, cost centre accounting, and S/4HANA workflows. SAP certified trainer.',
-    highlights: ['SAP certified trainer, live system', '₹12–₹35 LPA average salary'],
+    highlights: ['SAP certified trainer, live system', 'GL, AP/AR & cost centre accounting'],
     originalPrice: '₹38,000',
     discountedPrice: '₹28,000',
     emi: 'EMI from ₹2,350/mo',
@@ -801,7 +801,7 @@ export const erpCrmCourses: CourseCardProps[] = [
     mode: 'Classroom',
     level: 'Intermediate',
     description: 'Become an Oracle HCM consultant — master Global HR, Payroll, Talent Management, and Workforce Compensation on Oracle Fusion Cloud.',
-    highlights: ['Live Oracle cloud tenant access', '₹8–₹25 LPA average salary'],
+    highlights: ['Live Oracle cloud tenant access', 'Global HR, Payroll & Talent Management'],
     originalPrice: '₹32,000',
     discountedPrice: '₹24,000',
     emi: 'EMI from ₹2,000/mo',
@@ -1010,7 +1010,7 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
   },
   {
     title: 'Tally ERP Training in Hyderabad',
-    badge: 'Best Seller',
+    badge: 'Popular',
     badgeVariant: 'green',
     accentVariant: 'softskills',
     categoryLabel: "PROFESSIONAL SKILLS",
