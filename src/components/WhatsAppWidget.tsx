@@ -1,7 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { COURSES } from '@/data/courses-data';
+import { WA_NUMBER } from '@/lib/whatsapp';
+import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
 
 /* ─────────────────────────────────────────────────────────────── */
 /*  Constants                                                      */
@@ -36,14 +39,21 @@ const coursesByCategory: Array<{ category: string; courses: string[] }> = (() =>
 /*  Helpers                                                        */
 /* ─────────────────────────────────────────────────────────────── */
 
-function buildWhatsAppUrl(number: string, name: string, course: string): string {
-  const digits = number.replace(/\D/g, '');
-  const to = digits.length === 12 && digits.startsWith('91') ? digits : `91${digits}`;
+// Skip path never collected a name/course/branch, so its message stays generic —
+// see handleSkip, which uses this instead of buildFormMessage.
+const SKIP_MESSAGE = "Hi Coss Cloud Solutions! I'd like to know more about your courses. Please get in touch.";
+
+function buildFormMessage(name: string, course: string, branch: Branch): string {
   const parts: string[] = ["Hi Coss Cloud Solutions! I'd like to know more about your courses."];
   if (name.trim()) parts.push(`My name is ${name.trim()}.`);
   if (course) parts.push(`I'm interested in: ${course}.`);
+  parts.push(branch === 'Online' ? "I'd like to join online classes." : `I'd prefer the ${branch} branch.`);
   parts.push('Please get in touch.');
-  return `https://wa.me/${to}?text=${encodeURIComponent(parts.join(' '))}`;
+  return parts.join(' ');
+}
+
+function buildWaUrl(message: string): string {
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -81,9 +91,11 @@ const defaultForm: FormState = {
 /* ─────────────────────────────────────────────────────────────── */
 
 export default function WhatsAppWidget(): JSX.Element | null {
+  const pathname = usePathname();
   const [mounted, setMounted]     = useState(false);
   const [visible, setVisible]     = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [ctaOrigin, setCtaOrigin] = useState<'widget' | 'sticky'>('widget');
 
   const [form, setForm]           = useState<FormState>(defaultForm);
   const [errors, setErrors]       = useState<Partial<Record<keyof FormState, string>>>({});
@@ -133,11 +145,15 @@ export default function WhatsAppWidget(): JSX.Element | null {
     }
   }, []);
 
-  /* Custom event from sticky bar — open panel immediately */
+  /* Custom event from sticky bar — open panel immediately. detail.origin
+     distinguishes the mobile sticky-bar trigger from the desktop floating
+     button so the eventual click logs the right ctaType. */
   useEffect(() => {
-    const handler = () => {
+    const handler = (e: Event) => {
+      const origin = (e as CustomEvent<{ origin?: string }>).detail?.origin;
       setMounted(true);
       setVisible(true);
+      setCtaOrigin(origin === 'sticky' ? 'sticky' : 'widget');
       setPanelOpen(true);
     };
     window.addEventListener('coss:open-whatsapp', handler);
@@ -165,8 +181,7 @@ export default function WhatsAppWidget(): JSX.Element | null {
   }, [panelOpen]);
 
   /* ── Helpers ── */
-  const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '918885166007';
-  const directUrl = buildWhatsAppUrl(waNumber, '', '');
+  const directUrl = buildWaUrl(SKIP_MESSAGE);
 
   function validate(): boolean {
     const next: typeof errors = {};
@@ -195,20 +210,33 @@ export default function WhatsAppWidget(): JSX.Element | null {
           formType: 'whatsapp_widget',
         }),
       });
-    } catch {
-      /* silently continue — open WhatsApp even if DB save fails */
+    } catch (err) {
+      console.warn('[WhatsAppWidget] Failed to save lead before opening WhatsApp:', err);
     } finally {
       setSubmitting(false);
     }
 
     setSubmitted(true);
-    const waUrl = buildWhatsAppUrl(waNumber, form.name, form.course);
-    window.open(waUrl, '_blank', 'noopener,noreferrer');
+    const message = buildFormMessage(form.name, form.course, form.branch);
+    window.open(buildWaUrl(message), '_blank', 'noopener,noreferrer');
+    logWhatsAppClick(buildWhatsAppClickPayload({
+      pathname,
+      ctaType: ctaOrigin,
+      phoneNumber: `+${WA_NUMBER}`,
+      hadPrefill: true,
+      branchKey: form.branch.toLowerCase(),
+    }));
     setTimeout(() => setPanelOpen(false), 1400);
   }
 
   function handleSkip() {
     window.open(directUrl, '_blank', 'noopener,noreferrer');
+    logWhatsAppClick(buildWhatsAppClickPayload({
+      pathname,
+      ctaType: ctaOrigin,
+      phoneNumber: `+${WA_NUMBER}`,
+      hadPrefill: false,
+    }));
     setPanelOpen(false);
   }
 
@@ -382,7 +410,11 @@ export default function WhatsAppWidget(): JSX.Element | null {
           type="button"
           className="wa-btn"
           style={{ width: '56px', height: '56px', borderRadius: '50%', flexShrink: 0 }}
-          onClick={() => setPanelOpen((prev) => !prev)}
+          onClick={() => setPanelOpen((prev) => {
+            const next = !prev;
+            if (next) setCtaOrigin('widget');
+            return next;
+          })}
           aria-label="Chat with us on WhatsApp"
           aria-expanded={panelOpen}
           aria-haspopup="dialog"

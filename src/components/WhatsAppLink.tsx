@@ -25,7 +25,7 @@ function normalizeToWaDigits(raw: string): string {
   return `91${tenDigit}`;
 }
 
-interface WhatsAppClickPayload {
+export interface WhatsAppClickPayload {
   path: string;
   pageType: PageType;
   ctaType: WhatsAppCtaType;
@@ -40,7 +40,33 @@ interface WhatsAppClickPayload {
   utmCampaign?: string;
 }
 
-function logWhatsAppClick(payload: WhatsAppClickPayload): void {
+/** Exported for WhatsAppWidget, whose outbound click follows an async lead POST rather than a plain anchor click — it can't render <WhatsAppLink> directly but builds/logs a payload through the same helpers. */
+export function buildWhatsAppClickPayload(params: {
+  pathname: string | null;
+  pageType?: PageType;
+  ctaType: WhatsAppCtaType;
+  phoneNumber: string;
+  hadPrefill: boolean;
+  courseSlug?: string;
+  branchKey?: string;
+}): WhatsAppClickPayload {
+  const resolvedPath = params.pathname || '/';
+  const payload: WhatsAppClickPayload = {
+    path: resolvedPath,
+    pageType: params.pageType ?? classifyPageType(resolvedPath),
+    ctaType: params.ctaType,
+    phoneNumber: params.phoneNumber,
+    hadPrefill: params.hadPrefill,
+    deviceType: detectDeviceType(),
+  };
+  if (params.courseSlug) payload.courseSlug = params.courseSlug;
+  if (params.branchKey) payload.branchKey = params.branchKey;
+  if (typeof document !== 'undefined' && document.referrer) payload.referrer = document.referrer;
+  Object.assign(payload, extractUtmParams());
+  return payload;
+}
+
+export function logWhatsAppClick(payload: WhatsAppClickPayload): void {
   try {
     const body = JSON.stringify(payload);
     if (navigator.sendBeacon) {
@@ -100,21 +126,15 @@ export default function WhatsAppLink({
   const href = `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
 
   const handleClick = useCallback(() => {
-    const resolvedPath = pathname || '/';
-    const payload: WhatsAppClickPayload = {
-      path: resolvedPath,
-      pageType: pageType ?? classifyPageType(resolvedPath),
+    logWhatsAppClick(buildWhatsAppClickPayload({
+      pathname,
+      pageType,
       ctaType,
       phoneNumber: `+${digits}`,
       hadPrefill: hadPrefill ?? Boolean(message?.trim()),
-      deviceType: detectDeviceType(),
-    };
-    if (courseSlug) payload.courseSlug = courseSlug;
-    if (branchKey) payload.branchKey = branchKey;
-    if (typeof document !== 'undefined' && document.referrer) payload.referrer = document.referrer;
-    Object.assign(payload, extractUtmParams());
-
-    logWhatsAppClick(payload);
+      courseSlug,
+      branchKey,
+    }));
   }, [pathname, pageType, ctaType, courseSlug, branchKey, digits, hadPrefill, message]);
 
   return (

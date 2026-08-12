@@ -6,7 +6,7 @@ export default function MobileStickyBar() {
   const phone = '+918885166007'
 
   function openWhatsApp() {
-    window.dispatchEvent(new Event('coss:open-whatsapp'))
+    window.dispatchEvent(new CustomEvent('coss:open-whatsapp', { detail: { origin: 'sticky' } }))
   }
 
   return (
