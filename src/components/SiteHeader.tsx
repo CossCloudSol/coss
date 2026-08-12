@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import CallLink from './CallLink';
 import {
   Award,
   Briefcase,
@@ -202,14 +203,14 @@ export default function SiteHeader() {
         {/* Mobile action buttons — Row 1 right side */}
         <div className="lg:hidden flex items-center gap-2 flex-shrink-0">
           {/* Call button */}
-          <a
-            href="tel:+918885166007"
+          <CallLink
+            number="+918885166007"
             aria-label="Call us"
             className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[#f97316] flex-shrink-0"
           >
             <Phone className="w-4 h-4 text-white" aria-hidden="true" />
             <span className="absolute inset-[-3px] rounded-full border-2 border-[#f97316]/35 animate-ping" aria-hidden="true" />
-          </a>
+          </CallLink>
 
           {/* Enroll Now */}
           <Link
@@ -256,10 +257,10 @@ export default function SiteHeader() {
         inert={!mobileOpen || undefined}
       >
         {/* Phone strip inside mobile menu */}
-        <a href="tel:+918885166007" className="mobile-phone-strip">
+        <CallLink number="+918885166007" className="mobile-phone-strip">
           <Phone className="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>+91 88851 66007 — Call us now!</span>
-        </a>
+        </CallLink>
 
         {/* Home */}
         <Link href="/" className="mobile-nav-item" onClick={closeAll}>

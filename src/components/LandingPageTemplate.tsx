@@ -8,6 +8,7 @@ import { sanitizeDescription } from '@/lib/sanitizeDescription'
 import type { RelatedCourseItem } from '@/lib/related-courses'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
 import RelatedCourses from '@/components/RelatedCourses'
+import CallLink from '@/components/CallLink'
 
 interface HiringPartner {
   id: string
@@ -200,6 +201,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
   const locationData = [
     {
       branchObj: dilsukhnagar,
+      branchKey: 'dilsukhnagar',
       fallbackName: 'Coss Cloud Solutions — Dilsukhnagar',
       fallbackAddr1: 'Flat 109, CB Eastern Homes, Kamala Nagar',
       fallbackAddr2: 'Dilsukhnagar, Hyderabad – 500060',
@@ -207,6 +209,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
     },
     {
       branchObj: ameerpet,
+      branchKey: 'ameerpet',
       fallbackName: 'Coss Cloud Solutions — Ameerpet',
       fallbackAddr1: '#502, Sree Swathi Ankur Building',
       fallbackAddr2: 'Besides Aditya Trade Center, Ameerpet, Hyderabad – 500016',
@@ -702,7 +705,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           <h2 className="text-center text-3xl font-extrabold text-white mb-2">Our Training Centres in Hyderabad</h2>
           <p className="text-sm text-slate-400 mt-2 text-center mb-10">Two conveniently located centres for {titleWithoutTraining} training</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {locationData.map(({ branchObj, fallbackName, fallbackAddr1, fallbackAddr2, fallbackPhone }) => {
+            {locationData.map(({ branchObj, branchKey, fallbackName, fallbackAddr1, fallbackAddr2, fallbackPhone }) => {
               const branchPhone = branchObj?.phone ?? fallbackPhone
               const branchName = branchObj?.branchName ?? fallbackName
               const addr1 = branchObj?.addressLine1 ?? fallbackAddr1
@@ -724,9 +727,15 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                       <p className="text-sm text-slate-300 leading-relaxed mb-3">{addr1}</p>
                       <p className="text-sm text-slate-300 leading-relaxed mb-3">{addr2}</p>
                     </div>
-                    <a href={`tel:${branchPhone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-orange-400 font-bold text-base hover:text-orange-300 transition-colors">
+                    <CallLink
+                      number={branchPhone}
+                      pageType="course"
+                      courseSlug={course.slug}
+                      branchKey={branchKey}
+                      className="flex items-center gap-2 text-orange-400 font-bold text-base hover:text-orange-300 transition-colors"
+                    >
                       <PhoneIcon cls="w-5 h-5 text-orange-400" /> {branchPhone}
-                    </a>
+                    </CallLink>
                     {(() => {
                       const isDilsukhnagar = branchName.toLowerCase().includes('dilsukhnagar')
                       const mapSrc = (branchObj?.mapEmbedUrl || '') ||

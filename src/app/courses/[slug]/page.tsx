@@ -15,6 +15,7 @@ import { findBatches } from '@/lib/batch-queries';
 import { getRelatedCourses } from '@/lib/related-courses';
 import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
+import CallLink from '@/components/CallLink';
 
 export const revalidate = 300;
 
@@ -298,7 +299,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>
-            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} />
+            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} courseSlug={course.slug} />
           </div>
         </div>
       </div>
@@ -369,7 +370,7 @@ function CourseBatches({ batches, courseTitle }: { batches: BatchItem[]; courseT
   );
 }
 
-function EnquirySidebar({ price, originalPrice }: { price: number | null; originalPrice: number | null }) {
+function EnquirySidebar({ price, originalPrice, courseSlug }: { price: number | null; originalPrice: number | null; courseSlug: string }) {
   return (
     <>
       <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '24px', color: '#fff', marginBottom: '16px' }}>
@@ -389,7 +390,7 @@ function EnquirySidebar({ price, originalPrice }: { price: number | null; origin
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <a href="tel:8885166007" style={{ color: '#e47538', fontWeight: 600 }}>+91 88851 66007</a><br />
+          <CallLink number="+918885166007" pageType="course" courseSlug={courseSlug} style={{ color: '#e47538', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
           <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
         </p>
       </div>

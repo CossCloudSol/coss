@@ -9,6 +9,7 @@ import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getCourseUrl } from '@/lib/course-url';
 import { prisma } from '@/lib/db';
+import CallLink from '@/components/CallLink';
 
 export const revalidate = 600;
 
@@ -182,7 +183,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                       <p key={i} style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.8' }}>{line}</p>
                     ))}
                     <p style={{ marginTop: '12px', fontSize: '13.5px', color: 'var(--text)' }}>
-                      📞 <a href={`tel:${branch.phone.replace(/\s/g, '')}`} style={{ color: 'var(--primary)', fontWeight: 600 }}>{branch.phone}</a>
+                      📞 <CallLink number={branch.phone} pageType="locality" branchKey={config.branchKey} style={{ color: 'var(--primary)', fontWeight: 600 }}>{branch.phone}</CallLink>
                     </p>
                     <p style={{ fontSize: '13.5px', color: 'var(--text)' }}>
                       🕐 {branch.workingDays}, {branch.workingHoursOpen}–{branch.workingHoursClose}

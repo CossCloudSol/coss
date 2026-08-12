@@ -1,5 +1,6 @@
 ﻿import Link from 'next/link';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
+import CallLink from '@/components/CallLink';
 
 /* ── Page Banner ── */
 export function PageBanner({ title, breadcrumb }: { title: string; breadcrumb?: { label: string; href: string }[] }) {
@@ -112,8 +113,8 @@ export function EnrollSidebar() {
       <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '12px' }}>📞 Talk to Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <a href="tel:+918885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</a><br />
-          <a href="tel:+917780727374" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 77807 27374</a><br />
+          <CallLink number="+918885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
+          <CallLink number="+917780727374" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 77807 27374</CallLink><br />
           <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
         </p>
         <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>

@@ -11,6 +11,7 @@ import BlogViewBeacon from '@/components/BlogViewBeacon';
 import { getPublishedCoursesForMatching } from '@/lib/course-queries';
 import { matchPostToCallout } from '@/lib/blog-course-callout';
 import BlogCourseCallout from '@/components/BlogCourseCallout';
+import CallLink from '@/components/CallLink';
 
 export const revalidate = 600;
 
@@ -264,7 +265,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
                 <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                  <a href="tel:8885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</a><br />
+                  <CallLink number="+918885166007" pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
                   <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
                 </p>
               </div>
@@ -445,7 +446,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                <a href="tel:8885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</a><br />
+                <CallLink number="+918885166007" pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
                 <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
               </p>
             </div>

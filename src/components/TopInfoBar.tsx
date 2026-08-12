@@ -1,6 +1,7 @@
 import { GraduationCap, Mail, MapPin, Phone, Star } from 'lucide-react';
 import { getHomepageSettings } from '@/lib/get-homepage-settings';
 import { getBranchSettings } from '@/lib/get-branch-settings';
+import CallLink from './CallLink';
 
 export default async function TopInfoBar() {
   const [hpSettings, branch] = await Promise.all([
@@ -15,14 +16,14 @@ export default async function TopInfoBar() {
     <div className="header-topbar">
       <div className="header-topbar-inner">
         <div className="header-topbar-left">
-          <a href="tel:+918885166007" className="htb-item htb-phone">
+          <CallLink number="+918885166007" className="htb-item htb-phone">
             <Phone className="htb-icon" aria-hidden="true" />
             <span>+91 88851 66007</span>
-          </a>
+          </CallLink>
           <span className="htb-sep" aria-hidden="true">·</span>
-          <a href="tel:+917780727374" className="htb-item">
+          <CallLink number="+917780727374" className="htb-item">
             <span>+91 77807 27374</span>
-          </a>
+          </CallLink>
           <span className="htb-sep" aria-hidden="true">·</span>
           <a href="mailto:info@cosscloudsol.com" className="htb-item">
             <Mail className="htb-icon" aria-hidden="true" />

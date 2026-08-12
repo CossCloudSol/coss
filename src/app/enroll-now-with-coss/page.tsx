@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import HeroEnrollForm from '@/components/HeroEnrollForm';
+import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
 export const revalidate = 3600;
@@ -265,14 +266,14 @@ export default function EnrollPage() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
-            <a href="tel:+918885166007" className="flex items-center gap-2 font-semibold transition-colors" style={{ color: '#FF6B2B' }}>
+            <CallLink number="+918885166007" pageType="static" className="flex items-center gap-2 font-semibold transition-colors" style={{ color: '#FF6B2B' }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.7 19.79 19.79 0 0 1 1.62 4.08 2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
               +91 88851 66007
-            </a>
+            </CallLink>
             <span className="text-white/30">•</span>
-            <a href="tel:+917780727374" className="font-semibold transition-colors" style={{ color: '#FF6B2B' }}>77807 27374</a>
+            <CallLink number="+917780727374" pageType="static" className="font-semibold transition-colors" style={{ color: '#FF6B2B' }}>77807 27374</CallLink>
             <span className="text-white/30">•</span>
             <a href="mailto:info@cosscloudsol.com" className="font-semibold transition-colors" style={{ color: '#FF6B2B' }}>info@cosscloudsol.com</a>
           </div>

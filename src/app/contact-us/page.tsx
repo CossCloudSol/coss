@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
 import ContactForm from '@/components/ContactForm';
+import CallLink from '@/components/CallLink';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -80,7 +81,7 @@ export default function ContactUsPage() {
                 </div>
               ))}
               <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(232,64,28,0.1)', borderRadius: '8px', fontSize: '12px', color: '#aaa', lineHeight: '1.6' }}>
-                📞 For urgent queries, call us directly at <a href="tel:+918885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</a>
+                📞 For urgent queries, call us directly at <CallLink number="+918885166007" pageType="static" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink>
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PageBanner, ResponsivePageStyles } from '@/components/shared';
+import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
 export const revalidate = 3600;
@@ -100,9 +101,9 @@ export default function TermsPage() {
           <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '10px' }}>Have Questions?</h3>
           <p style={{ color: '#ccc', fontSize: '14px', marginBottom: '18px' }}>Our team is happy to clarify any of these terms before you enroll.</p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="tel:8885166007" style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            <CallLink number="+918885166007" pageType="static" style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               📞 Call Us
-            </a>
+            </CallLink>
             <a href="mailto:info@cosscloudsol.com" style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '11px 24px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.3)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
               ✉ Email Us
             </a>
