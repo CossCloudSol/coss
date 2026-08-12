@@ -2,6 +2,7 @@ import {
   Users,
   Building2,
   MessageCircle,
+  Phone,
   BarChart2,
   FolderOpen,
   GraduationCap,
@@ -53,6 +54,7 @@ export const NAV_GROUPS: ReadonlyArray<NavGroup> = [
       { label: 'All leads',    icon: Users,         href: '/admin/leads',     desc: 'Enquiries and pipeline' },
       { label: 'Corporate',    icon: Building2,     href: '/admin/corporate', desc: 'Proposal requests' },
       { label: 'WhatsApp log', icon: MessageCircle, href: '/admin/whatsapp',  desc: 'Widget submissions and sends' },
+      { label: 'Call log',    icon: Phone,          href: '/admin/call-clicks', desc: 'Anonymous tel: click intent' },
       { label: 'Analytics',   icon: BarChart2,      href: '/admin/analytics', desc: 'Funnel, branches, 30-day volume' },
     ],
   },
@@ -109,7 +111,7 @@ export const NAV_GROUPS: ReadonlyArray<NavGroup> = [
 ];
 
 export function getActiveGroup(pathname: string): string {
-  if (['/admin/leads', '/admin/corporate', '/admin/whatsapp', '/admin/analytics'].some(p => pathname.startsWith(p))) return 'leads';
+  if (['/admin/leads', '/admin/corporate', '/admin/whatsapp', '/admin/call-clicks', '/admin/analytics'].some(p => pathname.startsWith(p))) return 'leads';
   if (['/admin/categories', '/admin/courses', '/admin/blog', '/admin/jobs', '/admin/batches', '/admin/testimonials', '/admin/hiring-partners'].some(p => pathname.startsWith(p))) return 'content';
   if (['/admin/homepage', '/admin/topbar', '/admin/content-blocks', '/admin/media', '/admin/redirects'].some(p => pathname.startsWith(p))) return 'site';
   if (['/admin/seo', '/admin/geo', '/admin/sitemap', '/admin/schema'].some(p => pathname.startsWith(p))) return 'seo';

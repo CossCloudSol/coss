@@ -12,6 +12,7 @@ export type Permission =
   | 'topbar:view'
   | 'topbar:edit'
   | 'whatsapp:view'
+  | 'callclicks:view'
   | 'settings:view'
   | 'settings:edit';
 
@@ -29,6 +30,7 @@ export const ALL_PERMISSIONS: Permission[] = [
   'topbar:view',
   'topbar:edit',
   'whatsapp:view',
+  'callclicks:view',
   'settings:view',
   'settings:edit',
 ];
@@ -100,6 +102,10 @@ export const PERMISSION_GROUPS: Array<{
   {
     label: 'WhatsApp Log',
     permissions: [{ key: 'whatsapp:view', label: 'View' }],
+  },
+  {
+    label: 'Call Log',
+    permissions: [{ key: 'callclicks:view', label: 'View' }],
   },
   {
     label: 'Settings',
