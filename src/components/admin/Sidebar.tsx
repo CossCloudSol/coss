@@ -59,6 +59,7 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
       { href: '/admin/corporate', label: 'Corporate',     icon: Building2,     permissionKey: 'corporate:view' },
       { href: '/admin/whatsapp',  label: 'WhatsApp Log',  icon: MessageCircle, permissionKey: 'whatsapp:view' },
       { href: '/admin/call-clicks', label: 'Call Log',    icon: Phone,         permissionKey: 'callclicks:view' },
+      { href: '/admin/whatsapp-clicks', label: 'WhatsApp Clicks', icon: MessageCircle, permissionKey: 'whatsappclicks:view' },
       { href: '/admin/analytics', label: 'Analytics',     icon: BarChart2,     permissionKey: 'analytics:view' },
     ],
   },
