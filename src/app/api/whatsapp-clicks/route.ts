@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { WA_NUMBER as WA_NUMBER_DIGITS } from '@/lib/whatsapp';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -69,16 +70,19 @@ const whatsAppClickSchema = z.object({
 /*  Phone allowlist                                                           */
 /*                                                                            */
 /*  phoneNumber is NOT free text — it must be one of the site's own known     */
-/*  WhatsApp numbers. WA_NUMBER is the central number every <WhatsAppLink>    */
-/*  targets by default; branch numbers come live from BranchSettings so an   */
-/*  admin changing a centre's number doesn't need a code deploy to keep      */
-/*  click-tracking working (LandingPageTemplate opens WhatsApp to the        */
-/*  branch's own number, not the central one — see WA_NUMBER usage there).  */
-/*  Cached briefly — BranchSettings changes rarely, and this endpoint may    */
-/*  see far more traffic than the admin table.                               */
+/*  WhatsApp numbers. WA_NUMBER is imported from lib/whatsapp.ts — the same   */
+/*  single source <WhatsAppLink> resolves its default number from — so a     */
+/*  NEXT_PUBLIC_WHATSAPP_NUMBER change can't desync the client from this      */
+/*  allowlist and start rejecting every click with a silent 422 (sendBeacon   */
+/*  gives the caller no feedback on failure). Branch numbers still come live  */
+/*  from BranchSettings so an admin changing a centre's number doesn't need   */
+/*  a code deploy to keep click-tracking working (LandingPageTemplate opens   */
+/*  WhatsApp to the branch's own number, not the central one). Cached         */
+/*  briefly — BranchSettings changes rarely, and this endpoint may see far    */
+/*  more traffic than the admin table.                                       */
 /* -------------------------------------------------------------------------- */
 
-const WA_NUMBER = '+918885166007';
+const WA_NUMBER = normalizePhone(WA_NUMBER_DIGITS);
 
 const ALLOWLIST_TTL_MS = 60_000;
 let allowlistCache: { numbers: Set<string>; expiresAt: number } | null = null;

@@ -8,6 +8,7 @@ import { getCourseUrl } from '@/lib/course-url';
 import { excerptDescription } from '@/lib/sanitizeDescription';
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import WhatsAppLink from '@/components/WhatsAppLink';
+import { WA_NUMBER } from '@/lib/whatsapp';
 import {
   Award,
   BadgeCheck,
@@ -252,7 +253,7 @@ const CORP_BOTTOM_BAR: Array<{ Icon: LucideIcon; title: string; desc: string }> 
 ];
 
 const CORP_QR_SRC =
-  'https://api.qrserver.com/v1/create-qr-code/?size=88x88&data=https%3A%2F%2Fwa.me%2F918885166007&bgcolor=ffffff&color=083344&margin=4';
+  `https://api.qrserver.com/v1/create-qr-code/?size=88x88&data=https%3A%2F%2Fwa.me%2F${WA_NUMBER}&bgcolor=ffffff&color=083344&margin=4`;
 
 async function getFeaturedJobs() {
   try {
