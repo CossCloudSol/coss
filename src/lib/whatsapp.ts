@@ -1,8 +1,7 @@
-const WA_NUMBER = '918885166007'
-
-export function buildWhatsAppUrl(message: string): string {
-  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`
-}
+// The ONLY place '918885166007' appears as a literal in application code.
+// Every WhatsApp CTA resolves its number through this export (directly, or
+// via <WhatsAppLink>'s default) instead of hardcoding its own copy.
+export const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '918885166007'
 
 export function batchBookingMessage(params: {
   courseName: string
