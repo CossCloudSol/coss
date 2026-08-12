@@ -316,6 +316,37 @@ model CallClick {
   @@index([phoneNumber])
 }
 
+/// Anonymous wa.me click-intent event — NOT a Lead (no name/phone captured,
+/// no way to dedupe a person). One row per tap on a <WhatsAppLink>, mirroring
+/// CallClick. High-volume and append-only; no update path. RETENTION: same
+/// caveat as CallClick — no pruning job yet, revisit with an archival/rollup
+/// strategy once volume matters (see /admin/whatsapp).
+model WhatsAppClick {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+
+  path        String
+  pageType    String
+  ctaType     String
+  courseSlug  String?
+  branchKey   String?
+  phoneNumber String
+  hadPrefill  Boolean
+
+  deviceType  String
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  @@index([createdAt])
+  @@index([pageType])
+  @@index([ctaType])
+  @@index([courseSlug])
+  @@index([branchKey])
+  @@index([phoneNumber])
+}
+
 /// Singleton controlling all editable homepage content. id is always "main".
 model HomepageSettings {
   id                     String   @id @default("main")
