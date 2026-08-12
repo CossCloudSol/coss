@@ -359,6 +359,9 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
               {b.mode === 'Online' && (
                 <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>Unlimited</span>
               )}
+              {/* No branchKey: b.centre is free-text on Batch (not a BranchSettings
+                  foreign key), e.g. "Dilsukhnagar" vs the canonical 'dilsukhnagar'
+                  key — deriving one here would produce unreliable/mismatched keys. */}
               <WhatsAppLink
                 ctaType="batch"
                 pageType="category"
