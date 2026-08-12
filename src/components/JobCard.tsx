@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
+import { jobApplyMessage } from '@/lib/whatsapp';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 export interface JobCardJob {
   id: string;
@@ -44,9 +45,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
   const color = getCompanyColor(job.company);
   const initial = job.company.trim()[0]?.toUpperCase() ?? '?';
 
-  const waUrl = buildWhatsAppUrl(
-    jobApplyMessage({ jobTitle: job.title, company: job.company })
-  );
+  const waMessage = jobApplyMessage({ jobTitle: job.title, company: job.company });
 
   const categorySlug = job.category
     .toLowerCase()
@@ -126,15 +125,14 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
             <span className="text-xs text-gray-500 dark:text-gray-400">Salary not disclosed</span>
           )}
         </div>
-        <a
-          href={waUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <WhatsAppLink
+          ctaType="job"
+          message={waMessage}
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
           style={{ background: '#e47538' }}
         >
           Apply via Coss Cloud Solutions
-        </a>
+        </WhatsAppLink>
       </div>
 
       {/* Course link */}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
 import ContactForm from '@/components/ContactForm';
 import CallLink from '@/components/CallLink';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -90,9 +91,14 @@ export default function ContactUsPage() {
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>💬</div>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px' }}>Chat on WhatsApp</h4>
               <p style={{ fontSize: '13px', opacity: 0.9, marginBottom: '14px' }}>Get instant answers to your queries</p>
-              <a href="https://wa.me/918885166007" target="_blank" rel="noopener noreferrer" style={{ display: 'block', background: 'var(--bg-card)', color: '#25D366', padding: '10px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+              <WhatsAppLink
+                ctaType="contact_page"
+                pageType="static"
+                message="Hi Coss Cloud Solutions Team, I'd like to know more about your courses. Could you help me?"
+                style={{ display: 'block', background: 'var(--bg-card)', color: '#25D366', padding: '10px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}
+              >
                 Chat Now on WhatsApp
-              </a>
+              </WhatsAppLink>
             </div>
 
             {/* Quick links */}

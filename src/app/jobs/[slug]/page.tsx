@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { buildWhatsAppUrl, jobApplyMessage } from '@/lib/whatsapp';
+import { jobApplyMessage } from '@/lib/whatsapp';
+import WhatsAppLink from '@/components/WhatsAppLink';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getActiveJobBySlug } from '@/lib/job-queries';
 import { prisma } from '@/lib/db';
@@ -71,7 +72,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
   const job = await getJob(params.slug);
   if (!job) notFound();
 
-  const waUrl = buildWhatsAppUrl(jobApplyMessage({ jobTitle: job.title, company: job.company }));
+  const waMessage = jobApplyMessage({ jobTitle: job.title, company: job.company });
 
   const jobSchema = {
     '@context': 'https://schema.org/',
@@ -157,10 +158,10 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               </p>
             </div>
 
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <WhatsAppLink
+              ctaType="job"
+              pageType="static"
+              message={waMessage}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 background: '#e47538', color: '#fff', fontWeight: 700, fontSize: '14px',
@@ -169,7 +170,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               }}
             >
               Apply via Coss Cloud Solutions
-            </a>
+            </WhatsAppLink>
           </div>
         </div>
       </div>
@@ -218,14 +219,14 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px', marginBottom: '20px', lineHeight: '1.6' }}>
                 Apply through Coss Cloud Solutions placement assistance. Our team will help you with resume review, interview prep, and direct referral.
               </p>
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <WhatsAppLink
+                ctaType="job"
+                pageType="static"
+                message={waMessage}
                 style={{ display: 'block', textAlign: 'center', background: '#e47538', color: '#fff', fontWeight: 700, fontSize: '14px', padding: '14px', borderRadius: '10px', textDecoration: 'none' }}
               >
                 Apply via WhatsApp
-              </a>
+              </WhatsAppLink>
               {job.applyUrl && (
                 <a
                   href={job.applyUrl}

@@ -158,7 +158,7 @@ function allowSubmission(ip: string): boolean {
 /*  Handler                                                                   */
 /*                                                                            */
 /*  Called via navigator.sendBeacon from <WhatsAppLink> — the CLIENT is      */
-/*  fire-and-forget (it never waits on this response, since the wa.me        */
+/*  fire-and-forget (it never waits on this response, since the WhatsApp     */
 /*  navigation must never be delayed). The SERVER is not: this handler       */
 /*  awaits the insert before returning, because a serverless function that   */
 /*  returns before its background work finishes gets its execution           */

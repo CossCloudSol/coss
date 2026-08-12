@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { submitLead, type Branch } from '@/lib/submitLead'
+import WhatsAppLink from '@/components/WhatsAppLink'
 
 interface Props {
   courseTitle: string
   duration: string
   level: string
   phone1: string
+  courseSlug?: string
 }
 
 type SubmitState =
@@ -16,7 +18,7 @@ type SubmitState =
   | { kind: 'success' }
   | { kind: 'error'; message: string }
 
-export default function LandingEnrollForm({ courseTitle, duration, level, phone1 }: Props) {
+export default function LandingEnrollForm({ courseTitle, duration, level, phone1, courseSlug }: Props) {
   const [state, setState] = useState<SubmitState>({ kind: 'idle' })
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -24,7 +26,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   const [branch, setBranch] = useState<'Dilsukhnagar' | 'Ameerpet'>('Dilsukhnagar')
   const [batch, setBatch] = useState<string>('Weekday Mon-Fri')
 
-  const waLink = `https://wa.me/${phone1.replace(/\D/g, '')}`
+  const waMessage = `Hi Coss Cloud Solutions Team, I just booked a free demo for the ${courseTitle} course. Could you confirm my slot?`
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -53,14 +55,17 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
         </div>
         <h3 className="text-lg font-bold text-gray-900">Seat Reserved! We&apos;ll Call Within 2 Hours.</h3>
         <p className="mt-2 text-sm text-gray-600">Our counsellor will reach you on WhatsApp to confirm your free demo slot.</p>
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
+        <WhatsAppLink
+          ctaType="hero"
+          pageType="course"
+          courseSlug={courseSlug}
+          branchKey="dilsukhnagar"
+          number={phone1}
+          message={waMessage}
           className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#20BD5C]"
         >
           <WaIcon /> Chat on WhatsApp
-        </a>
+        </WhatsAppLink>
       </div>
     )
   }

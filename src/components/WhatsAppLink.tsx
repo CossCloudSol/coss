@@ -94,6 +94,9 @@ export default function WhatsAppLink({
 }: WhatsAppLinkProps): JSX.Element {
   const pathname = usePathname();
   const digits = normalizeToWaDigits(number ?? WA_NUMBER);
+  if (number && !/^91\d{10}$/.test(digits)) {
+    console.warn(`[WhatsAppLink] normalized number "${digits}" (from override "${number}") does not match the expected 91XXXXXXXXXX shape`);
+  }
   const href = `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
 
   const handleClick = useCallback(() => {

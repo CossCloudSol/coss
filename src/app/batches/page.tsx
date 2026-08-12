@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
 import BatchCard, { type BatchCardBatch } from '@/components/BatchCard';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 const MODE_FILTERS = ['All', 'Classroom', 'Online', 'Hybrid'];
 const CENTRE_FILTERS = ['All', 'Dilsukhnagar', 'Ameerpet'];
@@ -105,14 +106,14 @@ export default function BatchesPage() {
             <p className="text-gray-500 dark:text-gray-400 text-base">
               No upcoming batches right now — contact us to know next dates
             </p>
-            <a
-              href="https://wa.me/918885166007"
-              target="_blank"
-              rel="noopener noreferrer"
+            <WhatsAppLink
+              ctaType="batches_page"
+              pageType="static"
+              message="Hi Coss Cloud Solutions Team, I don't see any upcoming batches listed right now. Could you share the next available dates?"
               className="inline-block mt-4 text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline"
             >
               Ask on WhatsApp →
-            </a>
+            </WhatsAppLink>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -126,15 +127,15 @@ export default function BatchesPage() {
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
             Not finding the right batch? We can arrange custom schedules.
           </p>
-          <a
-            href="https://wa.me/918885166007"
-            target="_blank"
-            rel="noopener noreferrer"
+          <WhatsAppLink
+            ctaType="batches_page"
+            pageType="static"
+            message="Hi Coss Cloud Solutions Team, I couldn't find a batch that fits my schedule. Could we arrange a custom schedule?"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
             style={{ background: '#25D366' }}
           >
             Ask on WhatsApp
-          </a>
+          </WhatsAppLink>
         </div>
       </div>
     </main>

@@ -4,7 +4,8 @@ import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
-import { buildWhatsAppUrl, batchBookingMessage } from '@/lib/whatsapp';
+import { batchBookingMessage } from '@/lib/whatsapp';
+import WhatsAppLink from '@/components/WhatsAppLink';
 import { sanitizeDescription } from '@/lib/sanitizeDescription';
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
 import { getCourseInCategory } from '@/lib/course-queries';
@@ -220,7 +221,6 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                     const badge = getBatchStatusBadge(b.status, b.startDate);
                     const dateStr = formatBatchDate(b.startDate);
                     const waMsg = batchBookingMessage({ courseName: course.title, mode: b.mode, startDate: dateStr, centre: b.centre, schedule: b.schedule });
-                    const waUrl = buildWhatsAppUrl(waMsg);
                     return (
                       <div key={b.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
                         <div style={{ flex: 1, minWidth: '180px' }}>
@@ -240,9 +240,15 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                           </span>
                         )}
                         {b.mode === 'Online' && <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>Unlimited</span>}
-                        <a href={waUrl} target="_blank" rel="noopener noreferrer" style={{ background: '#e47538', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                        <WhatsAppLink
+                          ctaType="batch"
+                          pageType="course"
+                          courseSlug={course.slug}
+                          message={waMsg}
+                          style={{ background: '#e47538', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                        >
                           Book Seat
-                        </a>
+                        </WhatsAppLink>
                       </div>
                     );
                   })}

@@ -16,9 +16,9 @@ import { getBranchSettings } from '@/lib/get-branch-settings';
 import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getCourseUrl } from '@/lib/course-url';
-import { buildWhatsAppUrl } from '@/lib/whatsapp';
 import { formatBatchDate } from '@/lib/batch-utils';
 import { prisma } from '@/lib/db';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 export const revalidate = 600;
 
@@ -176,13 +176,12 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
   };
 
   const noBatchMessage = `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${topicLabel} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
-  const noBatchWhatsAppUrl = buildWhatsAppUrl(noBatchMessage);
 
   // Same "ask on WhatsApp" CTA as the zero-batch fallback above, but scoped
   // to one course — used by catalogue courses that have no batch currently
   // scheduled at this branch.
-  const courseWhatsAppUrl = (courseTitle: string) =>
-    buildWhatsAppUrl(`Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${courseTitle} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`);
+  const courseWhatsAppMessage = (courseTitle: string) =>
+    `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${courseTitle} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
 
   const localBusinessSchema = branch.schemaEnabled ? buildLocalBusinessSchema(branch) : null;
   const itemListSchema = courses.length > 0 ? {
@@ -269,14 +268,15 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                   <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>
                     No {topicLabel} batch is scheduled at {localityConfig.name} right this moment — the next batch dates are available on request.
                   </p>
-                  <a
-                    href={noBatchWhatsAppUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <WhatsAppLink
+                    ctaType="locality"
+                    pageType="locality"
+                    branchKey={config.branchKey}
+                    message={noBatchMessage}
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#25D366' }}
                   >
                     Ask for Next Batch Dates on WhatsApp
-                  </a>
+                  </WhatsAppLink>
                 </div>
               )}
             </div>
@@ -296,11 +296,18 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                         <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)' }}>Next batch: {formatBatchDate(c.nextBatchDate)}</span>
                       </Link>
                     ) : (
-                      <a key={c.slug} href={courseWhatsAppUrl(c.title)} target="_blank" rel="noopener noreferrer"
-                        style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'transparent', border: '1px dashed var(--border)' }}>
+                      <WhatsAppLink
+                        key={c.slug}
+                        ctaType="locality"
+                        pageType="locality"
+                        branchKey={config.branchKey}
+                        courseSlug={c.slug}
+                        message={courseWhatsAppMessage(c.title)}
+                        style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'transparent', border: '1px dashed var(--border)' }}
+                      >
                         <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>{c.title}</span>
                         <span style={{ fontSize: '11px', fontWeight: 700, color: '#25D366' }}>Next batch on request →</span>
-                      </a>
+                      </WhatsAppLink>
                     )
                   ))}
                 </div>
