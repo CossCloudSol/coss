@@ -288,6 +288,34 @@ model LeadActivity {
   @@index([createdAt])
 }
 
+/// Anonymous tel: click-intent event — NOT a Lead (no name/phone captured,
+/// no way to dedupe a person). One row per tap on a <CallLink>. High-volume
+/// and append-only; no update path. RETENTION: this table has no pruning job
+/// yet — it will grow unbounded with every anonymous click. Revisit with an
+/// archival/rollup strategy once volume matters (see /admin/call-clicks).
+model CallClick {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+
+  path        String
+  pageType    String
+  courseSlug  String?
+  branchKey   String?
+  phoneNumber String
+
+  deviceType  String
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  @@index([createdAt])
+  @@index([pageType])
+  @@index([courseSlug])
+  @@index([branchKey])
+  @@index([phoneNumber])
+}
+
 /// Singleton controlling all editable homepage content. id is always "main".
 model HomepageSettings {
   id                     String   @id @default("main")
