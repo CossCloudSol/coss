@@ -224,7 +224,11 @@ export default function WhatsAppWidget(): JSX.Element | null {
       ctaType: ctaOrigin,
       phoneNumber: `+${WA_NUMBER}`,
       hadPrefill: true,
-      branchKey: form.branch.toLowerCase(),
+      // branchKey must only ever hold a real BranchSettings key
+      // ('dilsukhnagar' | 'ameerpet') — 'online' isn't one, so it's omitted
+      // here. The branch selection still reaches the message text via
+      // buildFormMessage() above; nothing is lost operationally.
+      branchKey: form.branch === 'Online' ? undefined : form.branch.toLowerCase(),
     }));
     setTimeout(() => setPanelOpen(false), 1400);
   }
