@@ -35,9 +35,18 @@ next-env.d.ts
 Thumbs.db
 
 # Claude Code
-.claude/
+.claude/settings.local.json
 
 # Redirect sync backups / one-off exports
 next.config.mjs.bak
 gsc-404-urls.csv
 seo-audit-report.csv
+
+# Regenerable audit script output
+scripts/.output/
+dead-host-apply-report.json
+dead-host-cloudinary-folder-listing.json
+dead-host-final-mapping.json
+dead-host-image-mapping.json
+dead-host-link-mapping.json
+dead-host-occurrences.json
