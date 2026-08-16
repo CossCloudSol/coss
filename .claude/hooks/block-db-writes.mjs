@@ -9,9 +9,19 @@ process.stdin.on("end", () => {
     process.exit(0);
   }
 
-  const blocked = /\bprisma\s+(migrate\b|db\s+push\b)/i;
+  // Text inside quotes is data, not a command being run — a commit message,
+  // an echoed string, or a grep pattern shouldn't trip this hook.
+  const unquoted = command
+    .replace(/"(?:\\.|[^"\\])*"/g, " ")
+    .replace(/'(?:\\.|[^'\\])*'/g, " ");
 
-  if (blocked.test(command)) {
+  // Only match an actual invocation: prisma (bare, or via npx/pnpm/yarn) as
+  // the command starting the string or starting a new command after a shell
+  // separator, followed by migrate or db push.
+  const blocked =
+    /(?:^|[;&|(\n])\s*(?:(?:npx|pnpm|yarn)\s+)?prisma\s+(?:migrate\b|db\s+push\b)/i;
+
+  if (blocked.test(unquoted)) {
     console.error(
       "Blocked by project policy: prisma migrate and prisma db push are never run in this repo. " +
         "Schema changes are applied by the developer in the Supabase SQL Editor, followed by " +
