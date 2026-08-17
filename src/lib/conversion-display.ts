@@ -5,13 +5,22 @@
  */
 export const MIN_SAMPLE_FOR_PERCENT = 20;
 
+/**
+ * @param noun singular noun for the denominator, e.g. "lead" or "click"
+ * @param suffix optional trailing phrase, e.g. "enrolled" — omit for a bare count
+ */
 export function conversionDisplay(
-  enrolled: number,
-  total: number,
+  numerator: number,
+  denominator: number,
   ratePercent: number,
+  noun: string,
+  suffix: string = '',
 ): string {
-  if (total < MIN_SAMPLE_FOR_PERCENT) {
-    return `${enrolled} of ${total} lead${total === 1 ? '' : 's'} enrolled`;
+  if (denominator < MIN_SAMPLE_FOR_PERCENT) {
+    const plural = denominator === 1 ? '' : 's';
+    return suffix
+      ? `${numerator} of ${denominator} ${noun}${plural} ${suffix}`
+      : `${numerator} of ${denominator} ${noun}${plural}`;
   }
   return `${ratePercent.toFixed(1)}%`;
 }

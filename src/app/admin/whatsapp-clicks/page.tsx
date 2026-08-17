@@ -8,6 +8,7 @@ import type {
   WhatsAppClickRow,
   ChannelBucket,
 } from '@/app/api/admin/whatsapp-clicks/route';
+import { conversionDisplay } from '@/lib/conversion-display';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants                                                                 */
@@ -123,7 +124,7 @@ export default function WhatsAppClicksAdminPage(): JSX.Element {
             topPageType={data.stats.topPageType}
           />
 
-          <CtaTypeBreakdown data={data.stats.byCtaType} />
+          <CtaTypeBreakdown data={data.stats.byCtaType} total={data.stats.total} />
 
           <ChannelSeriesPanel series={data.series} />
 
@@ -192,11 +193,12 @@ function StatsRow({
 
 function CtaTypeBreakdown({
   data,
+  total,
 }: {
   data: WhatsAppClicksAdminResponse['stats']['byCtaType'];
+  total: number;
 }): JSX.Element {
   const max = Math.max(...data.map((d) => d.count), 1);
-  const total = data.reduce((sum, d) => sum + d.count, 0);
 
   return (
     <section className="rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-5">
@@ -223,7 +225,7 @@ function CtaTypeBreakdown({
                   <span className="font-semibold text-gray-900 dark:text-white">
                     {fmt(item.count)}{' '}
                     <span className="font-normal text-gray-500 dark:text-gray-400">
-                      ({share.toFixed(1)}%)
+                      ({conversionDisplay(item.count, total, share, 'click')})
                     </span>
                   </span>
                 </div>

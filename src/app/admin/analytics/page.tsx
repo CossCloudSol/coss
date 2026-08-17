@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { Bell, Download, Loader2, RefreshCw } from 'lucide-react';
 import type { AnalyticsResponse } from '@/app/api/admin/analytics/route';
-import { conversionDisplay } from '@/lib/conversion-display';
+import { conversionDisplay, MIN_SAMPLE_FOR_PERCENT } from '@/lib/conversion-display';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers / palettes                                                        */
@@ -451,7 +451,7 @@ function BranchTable({
                   <span
                     className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${conversionColor(row.conversionRate)}`}
                   >
-                    {row.conversionRate.toFixed(1)}%
+                    {conversionDisplay(row.enrolled, row.total, row.conversionRate, 'lead', 'enrolled')}
                   </span>
                 </td>
               </tr>
@@ -511,7 +511,7 @@ function FormSourceTable({
                 <span
                   className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${conversionColor(row.conversionRate)}`}
                 >
-                  {row.conversionRate.toFixed(1)}%
+                  {conversionDisplay(row.enrolled, row.submissions, row.conversionRate, 'lead', 'enrolled')}
                 </span>
               </td>
             </tr>
@@ -538,7 +538,7 @@ function WhatsAppCard({
     { label: 'This Month', value: fmt(data.thisMonth) },
     {
       label: 'WhatsApp → Enrollment',
-      value: conversionDisplay(data.enrolled, data.sampleSize, data.conversionRate),
+      value: conversionDisplay(data.enrolled, data.sampleSize, data.conversionRate, 'lead', 'enrolled'),
     },
   ];
   return (
@@ -750,7 +750,7 @@ function exportBranchCsv(data: AnalyticsResponse['byBranch']): void {
       String(b.new),
       String(b.contacted),
       String(b.enrolled),
-      `${b.conversionRate.toFixed(1)}%`,
+      b.total < MIN_SAMPLE_FOR_PERCENT ? '' : `${b.conversionRate.toFixed(1)}%`,
     ]),
   ];
   downloadCsv(rows, `coss-analytics-branch-${todayIsoDate()}.csv`);
@@ -765,7 +765,7 @@ function exportFormSourceCsv(
       FORM_LABEL[f.formType] ?? f.formType,
       String(f.submissions),
       String(f.enrolled),
-      `${f.conversionRate.toFixed(1)}%`,
+      f.submissions < MIN_SAMPLE_FOR_PERCENT ? '' : `${f.conversionRate.toFixed(1)}%`,
     ]),
   ];
   downloadCsv(rows, `coss-analytics-form-source-${todayIsoDate()}.csv`);

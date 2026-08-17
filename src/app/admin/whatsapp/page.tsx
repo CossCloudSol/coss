@@ -170,7 +170,7 @@ function WidgetStatsRow({
     { label: 'Widget Leads', value: fmt(total) },
     { label: 'This Month', value: fmt(thisMonth) },
     { label: 'Top Course', value: topCourse },
-    { label: 'Conversion Rate', value: conversionDisplay(enrolled, total, conversionRate) },
+    { label: 'Conversion Rate', value: conversionDisplay(enrolled, total, conversionRate, 'lead', 'enrolled') },
   ];
 
   return (
