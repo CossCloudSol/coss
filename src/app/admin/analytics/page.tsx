@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { Bell, Download, Loader2, RefreshCw } from 'lucide-react';
 import type { AnalyticsResponse } from '@/app/api/admin/analytics/route';
+import { conversionDisplay } from '@/lib/conversion-display';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers / palettes                                                        */
@@ -535,7 +536,10 @@ function WhatsAppCard({
     { label: 'Today', value: fmt(data.today) },
     { label: 'This Week', value: fmt(data.thisWeek) },
     { label: 'This Month', value: fmt(data.thisMonth) },
-    { label: 'WhatsApp → Enrollment', value: `${data.conversionRate.toFixed(1)}%` },
+    {
+      label: 'WhatsApp → Enrollment',
+      value: conversionDisplay(data.enrolled, data.sampleSize, data.conversionRate),
+    },
   ];
   return (
     <section className="rounded-xl border border-[#e2e8f0] dark:border-gray-700 bg-white dark:bg-gray-800 p-5">

@@ -41,6 +41,8 @@ export interface AnalyticsResponse {
     thisWeek: number;
     thisMonth: number;
     conversionRate: number; // % of leads with whatsapp_sent activity that are enrolled
+    sampleSize: number; // distinct leads with a whatsapp_sent activity — denominator for conversionRate
+    enrolled: number; // of sampleSize, how many are enrolled — numerator for conversionRate
   };
   dailyLeads: Array<{ date: string; count: number }>; // last 30 days, oldest → newest
 }
@@ -323,6 +325,8 @@ export async function GET(req: NextRequest): Promise<Response> {
     thisWeek: waThisWeek,
     thisMonth: waThisMonth,
     conversionRate: pct(waEnrolledLeads, waTotalLeads),
+    sampleSize: waTotalLeads,
+    enrolled: waEnrolledLeads,
   };
 
   /* ------------------------------ Final payload ------------------------- */

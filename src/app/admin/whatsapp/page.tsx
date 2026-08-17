@@ -7,6 +7,7 @@ import type {
   WhatsAppAdminResponse,
   WidgetLead,
 } from '@/app/api/admin/whatsapp/route';
+import { conversionDisplay } from '@/lib/conversion-display';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants                                                                 */
@@ -131,6 +132,7 @@ export default function WhatsAppAdminPage(): JSX.Element {
         <>
           <WidgetStatsRow
             total={data.widgetStats.total}
+            enrolled={data.widgetStats.enrolled}
             thisMonth={data.widgetStats.thisMonth}
             topCourse={data.widgetStats.topCourse}
             conversionRate={data.widgetStats.conversionRate}
@@ -153,11 +155,13 @@ export default function WhatsAppAdminPage(): JSX.Element {
 
 function WidgetStatsRow({
   total,
+  enrolled,
   thisMonth,
   topCourse,
   conversionRate,
 }: {
   total: number;
+  enrolled: number;
   thisMonth: number;
   topCourse: string;
   conversionRate: number;
@@ -166,7 +170,7 @@ function WidgetStatsRow({
     { label: 'Widget Leads', value: fmt(total) },
     { label: 'This Month', value: fmt(thisMonth) },
     { label: 'Top Course', value: topCourse },
-    { label: 'Conversion Rate', value: `${conversionRate.toFixed(1)}%` },
+    { label: 'Conversion Rate', value: conversionDisplay(enrolled, total, conversionRate) },
   ];
 
   return (

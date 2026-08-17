@@ -30,6 +30,7 @@ export interface WhatsAppActivityItem {
 export interface WhatsAppAdminResponse {
   widgetStats: {
     total: number;
+    enrolled: number;
     thisMonth: number;
     topCourse: string;
     conversionRate: number;
@@ -144,6 +145,7 @@ export async function GET(req: NextRequest): Promise<Response> {
     const payload: WhatsAppAdminResponse = {
       widgetStats: {
         total: totalWidget,
+        enrolled: widgetEnrolled,
         thisMonth: thisMonthWidget,
         topCourse,
         conversionRate,
