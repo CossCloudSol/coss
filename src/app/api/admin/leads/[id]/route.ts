@@ -126,11 +126,13 @@ export async function GET(
 /* -------------------------------------------------------------------------- */
 /*  PATCH /api/admin/leads/[id]                                               */
 /*                                                                            */
-/*  Body: { status?: string, note?: string }                                  */
+/*  Body: { status?: string, note?: string, whatsappSent?: boolean, called?: boolean } */
 /*                                                                            */
-/*  • status present → update lead.status + create LeadActivity(status_changed) */
-/*  • note   present → create LeadActivity(note)                              */
-/*  Both may appear in the same request (recorded as two activity rows).      */
+/*  • status       present → update lead.status + create LeadActivity(status_changed) */
+/*  • note         present → create LeadActivity(note)                        */
+/*  • whatsappSent true    → create LeadActivity(whatsapp_sent)               */
+/*  • called       true    → create LeadActivity(called)                      */
+/*  Any combination may appear in the same request (one activity row each).   */
 /* -------------------------------------------------------------------------- */
 
 export async function PATCH(
@@ -150,7 +152,12 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const patch = body as { status?: unknown; note?: unknown };
+  const patch = body as {
+    status?: unknown;
+    note?: unknown;
+    whatsappSent?: unknown;
+    called?: unknown;
+  };
 
   const nextStatus =
     typeof patch.status === 'string' ? patch.status.toLowerCase() : null;
@@ -169,9 +176,20 @@ export async function PATCH(
     );
   }
 
-  if (nextStatus === null && noteRaw === '') {
+  const markWhatsappSent = patch.whatsappSent === true;
+  const markCalled = patch.called === true;
+
+  if (
+    nextStatus === null &&
+    noteRaw === '' &&
+    !markWhatsappSent &&
+    !markCalled
+  ) {
     return NextResponse.json(
-      { error: 'Nothing to update — provide `status` and/or `note`' },
+      {
+        error:
+          'Nothing to update — provide `status`, `note`, `whatsappSent`, and/or `called`',
+      },
       { status: 400 },
     );
   }
@@ -219,6 +237,26 @@ export async function PATCH(
             leadId: params.id,
             action: 'note',
             note: noteRaw,
+          },
+        });
+      }
+
+      if (markWhatsappSent) {
+        await tx.leadActivity.create({
+          data: {
+            leadId: params.id,
+            action: 'whatsapp_sent',
+            note: 'WhatsApp opened from admin',
+          },
+        });
+      }
+
+      if (markCalled) {
+        await tx.leadActivity.create({
+          data: {
+            leadId: params.id,
+            action: 'called',
+            note: 'Call initiated from admin',
           },
         });
       }

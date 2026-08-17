@@ -265,6 +265,38 @@ export default function LeadDrawer({
     }
   }, [lead, noteDraft]);
 
+  // Fire-and-forget: must never delay opening wa.me / the dialer, so this is
+  // not awaited by the click handler. The server route awaits its own write.
+  const recordWhatsappSent = useCallback((): void => {
+    if (!lead) return;
+    fetch(`/api/admin/leads/${lead.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whatsappSent: true }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`PATCH failed (${res.status})`);
+      })
+      .catch((err) => {
+        console.warn('[LeadDrawer] Failed to record whatsapp_sent activity:', err);
+      });
+  }, [lead]);
+
+  const recordCalled = useCallback((): void => {
+    if (!lead) return;
+    fetch(`/api/admin/leads/${lead.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ called: true }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`PATCH failed (${res.status})`);
+      })
+      .catch((err) => {
+        console.warn('[LeadDrawer] Failed to record called activity:', err);
+      });
+  }, [lead]);
+
   /* ----------------------------- Render --------------------------------- */
 
   if (!leadId) return null;
@@ -308,6 +340,8 @@ export default function LeadDrawer({
               lead={lead}
               updating={updatingStatus}
               onChangeStatus={changeStatus}
+              onWhatsappClick={recordWhatsappSent}
+              onCallClick={recordCalled}
             />
             <div className="flex-1 overflow-y-auto px-5 pb-8">
               <DetailsGrid lead={lead} />
@@ -335,10 +369,14 @@ function DrawerHeader({
   lead,
   updating,
   onChangeStatus,
+  onWhatsappClick,
+  onCallClick,
 }: {
   lead: LeadDetail;
   updating: boolean;
   onChangeStatus: (s: Status) => void;
+  onWhatsappClick: () => void;
+  onCallClick: () => void;
 }): JSX.Element {
   const [pickerOpen, setPickerOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement | null>(null);
@@ -441,6 +479,7 @@ function DrawerHeader({
           href={`https://wa.me/${waNumber}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onWhatsappClick}
           className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
         >
           <MessageCircle className="h-4 w-4" aria-hidden="true" />
@@ -448,6 +487,7 @@ function DrawerHeader({
         </a>
         <a
           href={`tel:${lead.phone}`}
+          onClick={onCallClick}
           className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-teal-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-teal-700"
         >
           <Phone className="h-4 w-4" aria-hidden="true" />
