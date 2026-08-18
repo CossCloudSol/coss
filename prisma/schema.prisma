@@ -460,6 +460,19 @@ model MediaScanResult {
   createdAt     DateTime @default(now())
 }
 
+/// Sidecar metadata for Cloudinary assets — alt text, title, tags. Keyed by
+/// Cloudinary's own public_id (no FK, no relation to Course/BlogPost/etc.).
+/// Rows are created lazily on upload or first edit; starts empty.
+model MediaAsset {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  altText   String?
+  title     String?
+  tags      String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Testimonial {
   id          String   @id @default(cuid())
   name        String
