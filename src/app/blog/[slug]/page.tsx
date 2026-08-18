@@ -91,8 +91,6 @@ function buildExcerptDescription(rawExcerpt: string, fallback: string): string {
   return capAtWordBoundary(`${capAtWordBoundary(base, 65)}${BRAND_TAGLINE}`, 160);
 }
 
-import { getBlogImageUrl } from '@/lib/cloudinary';
-
 export async function generateStaticParams() {
   const posts = await getAllPosts();
   return posts.map(p => ({ slug: p.slug }));
@@ -116,7 +114,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       (dbPost.excerpt && dbPost.excerpt.length > 20 && !dbPost.excerpt.includes('[')
         ? buildExcerptDescription(dbPost.excerpt, dbFallback)
         : dbFallback);
-    const ogImage = dbPost.thumbnail ?? getBlogImageUrl(params.slug, 1200, 630);
+    const ogImage = dbPost.thumbnail;
     const fallback: Metadata = {
       title: dbPost.seoTitle ?? dbPost.title,
       description,
@@ -148,7 +146,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     : titleTaglineFallback;
 
   const canonicalUrl = `${SITE_URL}/blog/${params.slug}/`;
-  const ogImage = getBlogImageUrl(params.slug, 1200, 630);
 
   const fallback: Metadata = {
     title: titleStr,
@@ -160,7 +157,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url: canonicalUrl,
       siteName: 'COSS Cloud Solutions',
       type: 'article',
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      images: undefined,
     },
     twitter: {
       card: 'summary_large_image',
@@ -283,8 +280,6 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   // Use spread date from getAllPosts so the post page matches the blog grid
   const allMdxPosts = await getAllPosts();
   const mdxMeta = allMdxPosts.find(p => p.slug === params.slug);
-
-  const cldImage = getBlogImageUrl(params.slug, 1200, 450);
 
   const titleStr   = tagToString(post.frontmatter.title) || params.slug;
   const dateStr    = mdxMeta?.frontmatter.dateFormatted ?? tagToString(post.frontmatter.date);
