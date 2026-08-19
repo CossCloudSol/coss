@@ -78,7 +78,15 @@ export async function uploadAsset(
   mimeType: string,
   folder: string,
   publicId: string
-): Promise<{ secure_url: string; public_id: string }> {
+): Promise<{
+  secure_url:    string
+  public_id:     string
+  width?:        number
+  height?:       number
+  format:        string
+  bytes:         number
+  resource_type: string
+}> {
   const blob = new Blob([new Uint8Array(fileBuffer)], { type: mimeType })
 
   const timestamp = Math.floor(Date.now() / 1000)
@@ -108,5 +116,13 @@ export async function uploadAsset(
   }
 
   const data = await res.json()
-  return { secure_url: data.secure_url, public_id: data.public_id }
+  return {
+    secure_url:    data.secure_url,
+    public_id:     data.public_id,
+    width:         data.width,
+    height:        data.height,
+    format:        data.format,
+    bytes:         data.bytes,
+    resource_type: data.resource_type,
+  }
 }
