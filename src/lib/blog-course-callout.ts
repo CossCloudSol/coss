@@ -86,25 +86,37 @@ function getFlatCandidates(): FlatCandidate[] {
   }))
 }
 
-/** Resolves a manual OVERRIDES href against the live coursePool/SLUG_MAP — throws if it no longer exists, since these are meant to be verified live survivors. */
-function resolveOverride(
-  postSlug: string,
-  href: string,
-  coursePool: CalloutCourseInput[],
-  coursesBySlug: Map<string, CalloutCourseInput>
-): CalloutTarget {
-  if (href.startsWith('/courses/')) {
-    const course = coursePool.find((c) => getCourseUrl(c) === href)
-    if (!course) {
-      throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a published course`)
-    }
-    return {
-      kind: 'course',
-      title: course.title,
-      description: `Learn more about our ${course.title} course — structured curriculum with placement support.`,
-      href,
-    }
+/** Single source of truth for a course callout's copy — used for both the OVERRIDES 'course' branch and the token-match resolveCourse() path, so the two can never drift. href always comes from getCourseUrl(), never a hardcoded path. */
+function buildCourseCallout(course: CalloutCourseInput): CalloutTarget {
+  return {
+    kind: 'course',
+    title: course.title,
+    description: `Learn more about our ${course.title} course — structured curriculum with placement support.`,
+    href: getCourseUrl(course),
   }
+}
+
+/**
+ * Resolves a manual OVERRIDES entry against the live coursesBySlug/SLUG_MAP.
+ * A stale override (e.g. a deleted/unpublished course, or a locality page
+ * that no longer exists) must not crash the article it's attached to — the
+ * callout is decorative, so this logs and returns null rather than throwing.
+ */
+export function resolveOverride(
+  postSlug: string,
+  override: { kind: 'course'; slug: string } | { kind: 'path'; href: string },
+  coursesBySlug: Map<string, CalloutCourseInput>
+): CalloutTarget | null {
+  if (override.kind === 'course') {
+    const course = coursesBySlug.get(override.slug)
+    if (!course) {
+      console.error(`[blog-course-callout] override for post "${postSlug}" points to course slug "${override.slug}", which is not a published course`)
+      return null
+    }
+    return buildCourseCallout(course)
+  }
+
+  const { href } = override
 
   if (href.startsWith('/locations/')) {
     const [localitySlug, topicSlug] = href.slice('/locations/'.length).split('/').filter(Boolean)
@@ -112,14 +124,16 @@ function resolveOverride(
     if (topicSlug) {
       const topicPage = LOCALITY_TOPIC_PAGES.find((p) => p.localitySlug === localitySlug && p.slug === topicSlug)
       if (!topicPage) {
-        throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a locality topic page`)
+        console.error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a locality topic page`)
+        return null
       }
       return { kind: 'locality', title: topicPage.h1, description: topicPage.metaDescription, href }
     }
 
     const locality = localitySlug ? getLocalityBySlug(localitySlug) : undefined
     if (!locality) {
-      throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a locality page`)
+      console.error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve to a locality page`)
+      return null
     }
     return {
       kind: 'locality',
@@ -133,7 +147,8 @@ function resolveOverride(
   const dbSlug = SLUG_MAP[flatSlug]
   const course = dbSlug ? coursesBySlug.get(dbSlug) : undefined
   if (!course) {
-    throw new Error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve via SLUG_MAP to a published course`)
+    console.error(`[blog-course-callout] override for post "${postSlug}" points to "${href}", which does not resolve via SLUG_MAP to a published course`)
+    return null
   }
   return {
     kind: 'flat',
@@ -169,56 +184,67 @@ function bestMatch<T>(candidates: T[], getTokens: (item: T) => string[], getSlug
   return scored[0]
 }
 
+// A course-shaped override stores the course's DB slug, never a hardcoded
+// href — the href is always computed live via getCourseUrl() in
+// resolveOverride(), so a urlType change (legacy <-> nested category path)
+// can never desync it again. Path-shaped overrides (flat-legacy pages and
+// /locations/ pages) have no single DB row backing them the same way, so
+// they keep storing the literal href.
+export type OverrideValue =
+  | { kind: 'course'; slug: string }
+  | { kind: 'path'; href: string }
+  | null
+
 // Manual corrections for posts the token-overlap matcher below sends to the
 // wrong course family (e.g. generic "cloud computing" posts landing on
 // quantum computing) or that shouldn't get a callout at all (`null`).
-// Takes precedence over bestMatch. Every non-null href is validated against
-// the live coursePool/SLUG_MAP in matchPostToCallout — reviewed 2026-07-26
-// against the flat-legacy consolidation survivors.
-const OVERRIDES: Record<string, string | null> = {
+// Takes precedence over bestMatch. Every non-null entry is validated against
+// the live coursesBySlug/SLUG_MAP by scripts/validate-blog-overrides.ts —
+// reviewed 2026-07-26 against the flat-legacy consolidation survivors.
+export const OVERRIDES: Record<string, OverrideValue> = {
   // Wrong-family fixes
-  'learning-tally-with-coss-cloud-solutions-in-dilsukhnagar-hyderabad': '/tally-erp-training-institute-in-hyderabad',
-  'machine-learning-training-in-hyderabad': '/courses/machine-learning-training-institute-in-hyderabad',
-  'sap-fico-training-in-hyderabad': '/courses/erp-crm-enterprise-tools/sap-fico-training-institute-in-hyderabad',
-  'cloud-computing-classes-with-coss-cloud-solutions-in-hyderabad': '/courses/multi-cloud-architecture-training-in-hyderabad',
-  'cloud-computing-future-in-hyderabad-with-coss-cloud-solutions': '/courses/multi-cloud-architecture-training-in-hyderabad',
-  'cloud-computing-training-in-hyderabad-the-best-career-move-in-2025': '/courses/multi-cloud-architecture-training-in-hyderabad',
-  'best-full-stack-java-training-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': '/java-training-institute-in-hyderabad',
-  'best-python-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': '/python-training-institute-in-hyderabad',
-  'best-python-institute-in-hyderabad-coss-cloud-solutions': '/python-training-institute-in-hyderabad',
-  'full-stack-power-bi-training-in-dilsukhnagar-hyderabad': '/power-bi-training-institute-in-hyderabad',
+  'learning-tally-with-coss-cloud-solutions-in-dilsukhnagar-hyderabad': { kind: 'path', href: '/tally-erp-training-institute-in-hyderabad' },
+  'machine-learning-training-in-hyderabad': { kind: 'course', slug: 'machine-learning-training-institute-in-hyderabad' },
+  'sap-fico-training-in-hyderabad': { kind: 'course', slug: 'sap-fico-training-institute-in-hyderabad' },
+  'cloud-computing-classes-with-coss-cloud-solutions-in-hyderabad': { kind: 'course', slug: 'multi-cloud-architecture-training-in-hyderabad' },
+  'cloud-computing-future-in-hyderabad-with-coss-cloud-solutions': { kind: 'course', slug: 'multi-cloud-architecture-training-in-hyderabad' },
+  'cloud-computing-training-in-hyderabad-the-best-career-move-in-2025': { kind: 'course', slug: 'multi-cloud-architecture-training-in-hyderabad' },
+  'best-full-stack-java-training-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/java-training-institute-in-hyderabad' },
+  'best-python-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/python-training-institute-in-hyderabad' },
+  'best-python-institute-in-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/python-training-institute-in-hyderabad' },
+  'full-stack-power-bi-training-in-dilsukhnagar-hyderabad': { kind: 'path', href: '/power-bi-training-institute-in-hyderabad' },
 
   // Data science / analytics → their real courses (top-performing pages)
-  'data-science-course-hyderabad-choosing-institute': '/courses/data-science-training-institute-in-hyderabad',
-  'data-science-training-dilsukhnagar-hyderabad': '/courses/data-science-training-institute-in-hyderabad',
-  'data-science-training-institute-in-dilsukhnagar-coss-cloud-solutions': '/courses/data-science-training-institute-in-hyderabad',
-  'data-science-training-in-hyderabad': '/courses/data-science-training-institute-in-hyderabad',
-  'data-analytics-course-hyderabad-beginners': '/courses/data-analytics-training-institute-in-hyderabad',
-  'data-analytics-institute-in-dilsukhnagar-hyderabad': '/courses/data-analytics-training-institute-in-hyderabad',
-  'data-analytics-training-in-hyderabad': '/courses/data-analytics-training-institute-in-hyderabad',
-  'ai-career-growth-hyderabad': '/courses/artificial-intelligence-training/artificial-intelligence-ai-training-hyderabad',
+  'data-science-course-hyderabad-choosing-institute': { kind: 'course', slug: 'data-science-training-institute-in-hyderabad' },
+  'data-science-training-dilsukhnagar-hyderabad': { kind: 'course', slug: 'data-science-training-institute-in-hyderabad' },
+  'data-science-training-institute-in-dilsukhnagar-coss-cloud-solutions': { kind: 'course', slug: 'data-science-training-institute-in-hyderabad' },
+  'data-science-training-in-hyderabad': { kind: 'course', slug: 'data-science-training-institute-in-hyderabad' },
+  'data-analytics-course-hyderabad-beginners': { kind: 'course', slug: 'data-analytics-training-institute-in-hyderabad' },
+  'data-analytics-institute-in-dilsukhnagar-hyderabad': { kind: 'course', slug: 'data-analytics-training-institute-in-hyderabad' },
+  'data-analytics-training-in-hyderabad': { kind: 'course', slug: 'data-analytics-training-institute-in-hyderabad' },
+  'ai-career-growth-hyderabad': { kind: 'course', slug: 'artificial-intelligence-ai-training-hyderabad' },
 
   // DevOps/AWS family precision (generic devops ≠ aws-devops ≠ azure-devops)
-  'devops-institute-in-dilsukhnagar-hyderabad': '/devops-training-institute-in-hyderabad',
-  'devops-training-in-dilsukhnagar': '/devops-training-institute-in-hyderabad',
-  'best-institute-for-devops-in-hyderabad-coss-cloud-solutions': '/devops-training-institute-in-hyderabad',
-  'advance-your-career-at-the-top-devops-institute-in-dilsukhnagar-coss-cloud-solutions': '/devops-training-institute-in-hyderabad',
-  'devops-training-in-hyderabad-with-coss-cloud-solutions': '/courses/devops-training-institute-in-hyderabad',
-  'job-opportunities-for-devops-professionals-in-hyderabad': '/courses/devops-training-institute-in-hyderabad',
-  'learn-aws-devops-in-hyderabad-with-coss-cloud-solutions': '/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad',
-  'learn-aws-devops-from-industry-experts-at-coss-cloud-solutions-hyderabad': '/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad',
-  'multi-cloud-devops-course-hyderabad-career-guide': '/courses/multi-cloud-architecture-training-in-hyderabad',
-  'best-aws-institutes-in-hyderabad-coss-cloud-solutions': '/aws-training-institute-in-hyderabad',
+  'devops-institute-in-dilsukhnagar-hyderabad': { kind: 'path', href: '/devops-training-institute-in-hyderabad' },
+  'devops-training-in-dilsukhnagar': { kind: 'path', href: '/devops-training-institute-in-hyderabad' },
+  'best-institute-for-devops-in-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/devops-training-institute-in-hyderabad' },
+  'advance-your-career-at-the-top-devops-institute-in-dilsukhnagar-coss-cloud-solutions': { kind: 'path', href: '/devops-training-institute-in-hyderabad' },
+  'devops-training-in-hyderabad-with-coss-cloud-solutions': { kind: 'course', slug: 'devops-training-institute-in-hyderabad' },
+  'job-opportunities-for-devops-professionals-in-hyderabad': { kind: 'course', slug: 'devops-training-institute-in-hyderabad' },
+  'learn-aws-devops-in-hyderabad-with-coss-cloud-solutions': { kind: 'course', slug: 'kubernetes-docker-devops-training-in-hyderabad' },
+  'learn-aws-devops-from-industry-experts-at-coss-cloud-solutions-hyderabad': { kind: 'course', slug: 'kubernetes-docker-devops-training-in-hyderabad' },
+  'multi-cloud-devops-course-hyderabad-career-guide': { kind: 'course', slug: 'multi-cloud-architecture-training-in-hyderabad' },
+  'best-aws-institutes-in-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/aws-training-institute-in-hyderabad' },
 
   // Locality-specific posts → matching locality×topic page (Wave 1 pilot:
   // /locations/{locality}/cloud-computing). A locality-specific post pointing
   // at a locality-specific page is a stronger relevance signal than sending
   // it to a city-wide course. aws-devops-multi-cloud-course-dilsukhnagar is
   // deliberately NOT here — it's a DevOps post, not cloud-computing.
-  'cloud-computing-training-institute-in-dilsukhnagar-hyderabad': '/locations/dilsukhnagar/cloud-computing',
-  'join-our-industry-leading-aws-cloud-institute-in-dilsukhnagar-hyderabad': '/locations/dilsukhnagar/cloud-computing',
-  'best-azure-cloud-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution': '/locations/dilsukhnagar/cloud-computing',
-  'best-certification-course-institute-in-ameerpet-hyderabad-coss-cloud-solutions': '/locations/ameerpet/cloud-computing',
+  'cloud-computing-training-institute-in-dilsukhnagar-hyderabad': { kind: 'path', href: '/locations/dilsukhnagar/cloud-computing' },
+  'join-our-industry-leading-aws-cloud-institute-in-dilsukhnagar-hyderabad': { kind: 'path', href: '/locations/dilsukhnagar/cloud-computing' },
+  'best-azure-cloud-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution': { kind: 'path', href: '/locations/dilsukhnagar/cloud-computing' },
+  'best-certification-course-institute-in-ameerpet-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/locations/ameerpet/cloud-computing' },
 
   // Junk posts — no callout
   '77674-2': null,
@@ -234,9 +260,9 @@ export function matchPostToCallout(post: CalloutPostInput, coursePool: CalloutCo
   const coursesBySlug = new Map(coursePool.map((c) => [c.slug, c]))
 
   if (post.slug in OVERRIDES) {
-    const overrideHref = OVERRIDES[post.slug]
-    if (overrideHref === null) return null
-    return resolveOverride(post.slug, overrideHref, coursePool, coursesBySlug)
+    const override = OVERRIDES[post.slug]
+    if (override === null) return null
+    return resolveOverride(post.slug, override, coursesBySlug)
   }
 
   const postTokens = tokenSet([post.slug.replace(/-/g, ' '), post.title, ...post.tags, ...post.categories])
@@ -270,13 +296,7 @@ export function matchPostToCallout(post: CalloutPostInput, coursePool: CalloutCo
 
   function resolveCourse(): CalloutTarget | null {
     if (!bestCourse) return null
-    const course = bestCourse.item
-    return {
-      kind: 'course',
-      title: course.title,
-      description: `Learn more about our ${course.title} course — structured curriculum with placement support.`,
-      href: getCourseUrl(course),
-    }
+    return buildCourseCallout(bestCourse.item)
   }
 
   if (preferFlat) {
