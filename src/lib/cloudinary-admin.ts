@@ -41,7 +41,11 @@ export async function listAssets(options: {
   if (next_cursor) params.set('next_cursor', next_cursor)
   if (prefix)      params.set('prefix', prefix)
 
-  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/${resource_type}?${params}`
+  // The /upload delivery-type segment is required unconditionally: Cloudinary's
+  // Admin API 400s with "Missing required parameter - type" as soon as `prefix`
+  // is present, and every asset this app ever writes goes through uploadAsset(),
+  // which always POSTs to /image/upload — never /private or /authenticated.
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/${resource_type}/upload?${params}`
 
   const res = await fetch(url, {
     headers: { Authorization: authHeader() },
@@ -57,7 +61,7 @@ export async function listAssets(options: {
   return {
     resources:   data.resources ?? [],
     next_cursor: data.next_cursor ?? null,
-    total_count: data.rate_limit_remaining ?? 0,
+    total_count: data.total_count ?? 0,
   }
 }
 

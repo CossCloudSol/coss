@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Trash2, Loader2, Sparkles, RotateCcw, ChevronDown } from 'lucide-react';
+import { ImagePicker } from '@/components/admin/ImagePicker';
 
 interface SyllabusItem {
   week: string;
@@ -450,7 +451,7 @@ export default function NewCoursePage() {
             </div>
             <div>
               <label className={labelCls}>Thumbnail URL</label>
-              <input value={form.thumbnail} onChange={(e) => handleField('thumbnail', e.target.value)} className={inputCls} placeholder="https://…" />
+              <ImagePicker value={form.thumbnail} onChange={(url) => handleField('thumbnail', url)} />
             </div>
             <div>
               <label className={labelCls}>Price (₹)</label>

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
+import { ImagePicker } from '@/components/admin/ImagePicker';
 
 const PLACEHOLDER_RE = /\[[A-Z_]{3,}\]/;
 function hasPlaceholder(val: string): boolean {
@@ -169,7 +170,7 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
             </div>
             <div>
               <label className={labelCls}>Thumbnail URL</label>
-              <input value={form.thumbnail} onChange={(e) => handleField('thumbnail', e.target.value)} className={inputCls} />
+              <ImagePicker value={form.thumbnail} onChange={(url) => handleField('thumbnail', url)} />
             </div>
             <div>
               <label className={labelCls}>Price (₹)</label>

@@ -8,6 +8,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import Link from 'next/link';
 import { ArrowLeft, Loader2, Plus, Trash2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { ImagePicker } from '@/components/admin/ImagePicker';
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false });
 
@@ -135,7 +136,7 @@ export default function EditBlogPostPage({ params }: { params: { id: string } })
             </div>
             <div>
               <label className={labelCls}>Thumbnail URL</label>
-              <input value={form.thumbnail} onChange={(e) => handleField('thumbnail', e.target.value)} className={inputCls} />
+              <ImagePicker value={form.thumbnail} onChange={(url) => handleField('thumbnail', url)} />
             </div>
           </div>
           <div>

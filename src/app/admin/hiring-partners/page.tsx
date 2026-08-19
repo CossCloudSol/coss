@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { ImagePicker } from '@/components/admin/ImagePicker'
 
 interface HiringPartner {
   id: string
@@ -195,11 +196,9 @@ export default function HiringPartnersPage() {
           </div>
           <div className="mb-3">
             <label className="text-xs text-[#475569] dark:text-gray-400 block mb-1">Logo URL (Cloudinary)</label>
-            <input
-              className={inp}
+            <ImagePicker
               value={form.logoUrl}
-              onChange={e => setForm(f => ({ ...f, logoUrl: e.target.value }))}
-              placeholder="https://res.cloudinary.com/dfditihuw/…"
+              onChange={url => setForm(f => ({ ...f, logoUrl: url }))}
             />
           </div>
           <div className="grid grid-cols-2 gap-3 mb-4">
