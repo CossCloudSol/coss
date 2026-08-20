@@ -47,7 +47,7 @@ export type BranchSettings = {
   workingDays: string
   mapEmbedUrl: string
   serviceAreas: string[]
-  aggregateRating: number
+  aggregateRating?: number
   reviewCount: number
   schemaEnabled: boolean
 }
@@ -77,7 +77,7 @@ export const FALLBACK: Record<string, BranchSettings> = {
     workingHoursOpen: '09:00', workingHoursClose: '19:00',
     workingDays: 'Monday-Sunday', mapEmbedUrl: '',
     serviceAreas: ['Dilsukhnagar','LB Nagar','Kothapet','Malakpet','Nagole'],
-    aggregateRating: 4.8, reviewCount: 1250, schemaEnabled: true
+    reviewCount: 0, schemaEnabled: true
   },
   ameerpet: {
     id: 'branch_ameerpet',
@@ -91,7 +91,7 @@ export const FALLBACK: Record<string, BranchSettings> = {
     workingHoursOpen: '09:00', workingHoursClose: '19:00',
     workingDays: 'Monday-Sunday', mapEmbedUrl: '',
     serviceAreas: ['Ameerpet','Punjagutta','SR Nagar','Begumpet','Somajiguda'],
-    aggregateRating: 4.8, reviewCount: 980, schemaEnabled: true
+    reviewCount: 0, schemaEnabled: true
   }
 }
 

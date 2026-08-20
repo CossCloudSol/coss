@@ -38,7 +38,6 @@ export default function CertificationPage() {
           { value: '12+',    label: 'CERTIFICATIONS' },
           { value: '95%',    label: 'PASS RATE' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },
-          { value: '4.8★',   label: 'GOOGLE RATING' },
         ]}
         ctaText="Exam voucher guidance included · Speak to a counsellor today"
         breadcrumb={[{ label: 'Certification', href: '/certification/' }]}

@@ -407,7 +407,6 @@ model BranchSettings {
   workingDays     String   @default("Monday-Sunday")
   mapEmbedUrl     String   @default("")
   serviceAreas    String   @default("[]")
-  aggregateRating Float    @default(4.8)
   reviewCount     Int      @default(0)
   schemaEnabled   Boolean  @default(true)
   createdAt       DateTime @default(now())

@@ -1,17 +1,7 @@
-import { GraduationCap, Mail, MapPin, Phone, Star } from 'lucide-react';
-import { getHomepageSettings } from '@/lib/get-homepage-settings';
-import { getBranchSettings } from '@/lib/get-branch-settings';
+import { GraduationCap, Mail, MapPin, Phone } from 'lucide-react';
 import CallLink from './CallLink';
 
-export default async function TopInfoBar() {
-  const [hpSettings, branch] = await Promise.all([
-    getHomepageSettings(),
-    getBranchSettings('dilsukhnagar'),
-  ]);
-
-  const rating = branch.aggregateRating.toFixed(1);
-  const studentsPlaced = hpSettings.stat2Value;
-
+export default function TopInfoBar() {
   return (
     <div className="header-topbar">
       <div className="header-topbar-inner">
@@ -37,14 +27,9 @@ export default async function TopInfoBar() {
             <span>Dilsukhnagar &amp; Ameerpet</span>
           </span>
           <span className="htb-sep" aria-hidden="true">·</span>
-          <span className="htb-item">
-            <Star className="htb-icon htb-star" aria-hidden="true" />
-            <strong>{rating}/5</strong>&nbsp;Google Rating
-          </span>
-          <span className="htb-sep" aria-hidden="true">·</span>
           <span className="htb-badge">
             <GraduationCap className="htb-icon" style={{ width: 12, height: 12 }} aria-hidden="true" />
-            {studentsPlaced} Placements
+            5,000+ Students Trained
           </span>
         </div>
       </div>

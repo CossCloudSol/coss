@@ -26,7 +26,6 @@ type FormState = {
   workingDays: string
   mapEmbedUrl: string
   serviceAreas: string[]
-  aggregateRating: string
   reviewCount: string
   schemaEnabled: boolean
 }
@@ -55,7 +54,6 @@ const EMPTY_FORM: FormState = {
   workingDays: 'Monday-Sunday',
   mapEmbedUrl: '',
   serviceAreas: [],
-  aggregateRating: '4.8',
   reviewCount: '0',
   schemaEnabled: true,
 }
@@ -91,7 +89,6 @@ function rowToForm(row: Record<string, unknown>): FormState {
     serviceAreas:      Array.isArray(row.serviceAreas)
       ? (row.serviceAreas as string[])
       : JSON.parse(String(row.serviceAreas || '[]')),
-    aggregateRating:   String(row.aggregateRating   ?? '4.8'),
     reviewCount:       String(row.reviewCount       ?? '0'),
     schemaEnabled:     Boolean(row.schemaEnabled    ?? true),
   }
@@ -224,7 +221,6 @@ export default function GeoManagerPage() {
           ...form,
           latitude:        parseFloat(form.latitude)  || 0,
           longitude:       parseFloat(form.longitude) || 0,
-          aggregateRating: parseFloat(form.aggregateRating) || 4.8,
           reviewCount:     parseInt(form.reviewCount)       || 0,
         }),
       })
@@ -559,17 +555,6 @@ export default function GeoManagerPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <Field label="Aggregate Rating (1–5)">
-            <input
-              className={inputCls}
-              type="number"
-              step="0.1"
-              min="1"
-              max="5"
-              value={form.aggregateRating}
-              onChange={e => setField('aggregateRating', e.target.value)}
-            />
-          </Field>
           <Field label="Review Count">
             <input
               className={inputCls}

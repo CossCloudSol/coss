@@ -22,28 +22,17 @@ const reviews = [
   { name: 'Suresh K.', course: 'Python Full Stack', rating: 5, date: 'June 2024', review: 'Coss Cloud Solutions is one of the best institutes for Python training in Hyderabad. The trainer was excellent and patient with all doubts. The Django project we built was a great learning experience. Got placed in 3 weeks!', initials: 'SK' },
 ];
 
-const courseStats = [
-  { course: 'Cloud Computing', students: '800+', rating: 4.9 },
-  { course: 'DevOps', students: '600+', rating: 4.8 },
-  { course: 'Data Science', students: '700+', rating: 4.9 },
-  { course: 'Full Stack Dev', students: '900+', rating: 4.8 },
-  { course: 'Cyber Security', students: '400+', rating: 4.9 },
-  { course: 'Digital Marketing', students: '500+', rating: 4.7 },
-];
-
 export default function StudentReviewsPage() {
   return (
     <>
       <ResponsivePageStyles />
       <HeroBanner
-        badge="1,200+ VERIFIED GOOGLE REVIEWS"
-        titlePre="Rated "
-        accentText="4.9 Stars"
+        badge="VERIFIED GOOGLE REVIEWS"
+        titlePre=""
+        accentText="Real Reviews"
         titleLine2="by 5,000+ Real Students"
         subtitle="Read verified reviews from students who trained at COSS Cloud Solutions — 98% recommend us for IT training, placements & career transformation."
         stats={[
-          { value: '4.9/5',  label: 'OVERALL RATING' },
-          { value: '1,200+', label: 'GOOGLE REVIEWS' },
           { value: '98%',    label: 'RECOMMEND COSS CLOUD SOLUTIONS' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },
         ]}
@@ -51,43 +40,7 @@ export default function StudentReviewsPage() {
         breadcrumb={[{ label: 'About Us', href: '/about-us/' }, { label: 'Student Reviews', href: '/student-reviews/' }]}
       />
 
-      {/* Overall rating */}
-      <div style={{ background: 'var(--bg-alt)', padding: '48px 20px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', background: 'var(--bg-card)', borderRadius: '20px', padding: '36px 48px', boxShadow: 'var(--shadow-md)', marginBottom: '36px' }}>
-            <div style={{ fontFamily: 'Poppins, sans-serif', fontSize: '72px', fontWeight: 900, color: 'var(--primary)', lineHeight: 1 }}>4.9</div>
-            <div style={{ color: '#f5a623', fontSize: '28px', margin: '4px 0' }}>★★★★★</div>
-            <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '6px' }}>Based on 1200+ reviews on Google</div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            {[{ n: '5000+', l: 'Students Trained' }, { n: '4.9/5', l: 'Average Rating' }, { n: '1200+', l: 'Google Reviews' }, { n: '98%', l: 'Recommend Coss Cloud Solutions' }].map(s => (
-              <div key={s.l} style={{ background: 'var(--primary)', color: '#fff', padding: '14px 22px', borderRadius: '12px', textAlign: 'center', minWidth: '130px' }}>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontSize: '22px', fontWeight: 800 }}>{s.n}</div>
-                <div style={{ fontSize: '12px', opacity: 0.88, marginTop: '2px' }}>{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Course ratings */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 20px 0' }}>
-        <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '20px' }}>Ratings by Course</h2>
-        <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '48px' }}>
-          {courseStats.map(c => (
-            <div key={c.course} style={{ background: 'var(--bg-card)', borderRadius: '10px', padding: '16px 18px', boxShadow: 'var(--shadow-sm)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', color: 'var(--text)' }}>{c.course}</div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '2px' }}>{c.students} Students</div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: '18px', color: 'var(--primary)' }}>{c.rating}</div>
-                <div style={{ color: '#f5a623', fontSize: '12px' }}>★★★★★</div>
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Reviews grid */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
           <div style={{ display: 'inline-block', background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Student Testimonials</div>
@@ -118,7 +71,7 @@ export default function StudentReviewsPage() {
         {/* CTA to Google Reviews */}
         <div style={{ textAlign: 'center', margin: '40px 0' }}>
           <a href="https://www.google.com/search?q=Coss+Cloud+Solutions+Hyderabad+reviews" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '12px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
-            📍 Read All 1200+ Reviews on Google
+            📍 Read Our Reviews on Google
           </a>
         </div>
 

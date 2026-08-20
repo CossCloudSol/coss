@@ -65,7 +65,7 @@ export function HeroBanner({ badge, titlePre, accentText, titlePost = '', titleL
           {titleLine2 && <><br />{titleLine2}</>}
         </h1>
         <p className="hero-banner-sub">{subtitle}</p>
-        <div className="hero-banner-stats" aria-label="Key statistics">
+        <div className="hero-banner-stats" data-count={stats.length} aria-label="Key statistics">
           {stats.map(s => (
             <div className="hero-banner-stat" key={s.label}>
               <strong>{s.value}</strong>
@@ -93,7 +93,6 @@ export function CorporateHeroBanner() {
       subtitle="Customised IT corporate training programs — certified trainers, real-world projects, flexible scheduling & globally recognised certifications. Online & on-site delivery."
       stats={[
         { value: '5,000+', label: 'EMPLOYEES TRAINED' },
-        { value: '4.8★',   label: 'GOOGLE RATING' },
         { value: '30+',    label: 'PROGRAMS OFFERED' },
         { value: '15+',    label: 'YEARS OF EXCELLENCE' },
       ]}

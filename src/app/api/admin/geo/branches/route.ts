@@ -46,7 +46,6 @@ export async function POST(req: NextRequest) {
         workingDays: 'Monday-Sunday',
         mapEmbedUrl: '',
         serviceAreas: '[]',
-        aggregateRating: 4.8,
         reviewCount: 0,
         schemaEnabled: true,
       },

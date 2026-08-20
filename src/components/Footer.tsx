@@ -3,7 +3,6 @@ import FooterLogo from './FooterLogo'
 import FooterNavCol from './FooterNavCol'
 import CallLink from './CallLink'
 import WhatsAppLink from './WhatsAppLink'
-import { getTrustStats } from '@/lib/getTrustStats'
 import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
 
 const CATEGORIES = [
@@ -134,7 +133,6 @@ const SOCIALS = [
 ]
 
 export default async function Footer() {
-  const { rating: RATING, reviewDisplay: REVIEW_COUNT } = await getTrustStats()
   const year = new Date().getFullYear()
 
   // getBranchSettings() reads BranchSettings directly via Prisma with no cache
@@ -202,10 +200,6 @@ export default async function Footer() {
             </WhatsAppLink>
           </div>
 
-          <div className="footer-rating">
-            <span style={{ color: '#fbbf24', letterSpacing: '1px' }} aria-label={`${RATING} out of 5 stars`}>★★★★★</span>
-            <span className="footer-rating-text">{RATING} · {REVIEW_COUNT} reviews</span>
-          </div>
           <div className="footer-socials">
             {SOCIALS.map(s => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"

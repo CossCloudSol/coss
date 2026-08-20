@@ -6,7 +6,6 @@ import { prisma } from '@/lib/db';
 import { getHomepageSettings } from '@/lib/get-homepage-settings';
 import { getCourseUrl } from '@/lib/course-url';
 import { excerptDescription } from '@/lib/sanitizeDescription';
-import { getBranchSettings } from '@/lib/get-branch-settings';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import {
@@ -326,14 +325,13 @@ async function getBlogPosts() {
 }
 
 export default async function HomePage() {
-  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners, branch] = await Promise.all([
+  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners] = await Promise.all([
     getCategories(),
     getFeaturedJobs(),
     getUpcomingBatches(),
     getHomepageSettings(),
     getBlogPosts(),
     getHiringPartners(),
-    getBranchSettings('dilsukhnagar'),
   ]);
 
   const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
@@ -1183,17 +1181,6 @@ export default async function HomePage() {
             <div className="section-tag">Student Reviews</div>
             <h2 className="section-title">What Our Students Say</h2>
             <div className="w-24 h-0.5 bg-teal-500 mx-auto mt-3 mb-3" aria-hidden="true" />
-            {/* Aggregate rating — sourced from BranchSettings (Dilsukhnagar) */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '4px' }}>
-              <span className="css-stars" aria-label={`${branch.aggregateRating.toFixed(1)} out of 5 stars`} role="img">★★★★★</span>
-              <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
-                {branch.aggregateRating.toFixed(1)} / 5 —{' '}
-                {branch.reviewCount > 0
-                  ? `${branch.reviewCount.toLocaleString('en-IN')}+`
-                  : '1,200+'
-                } Google Reviews
-              </span>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">

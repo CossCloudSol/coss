@@ -49,7 +49,6 @@ export async function POST(
       workingDays:       body.workingDays       ?? 'Monday-Sunday',
       mapEmbedUrl:       body.mapEmbedUrl       ?? '',
       serviceAreas:      JSON.stringify(Array.isArray(body.serviceAreas) ? body.serviceAreas : []),
-      aggregateRating:   parseFloat(body.aggregateRating) || 4.8,
       reviewCount:       parseInt(body.reviewCount)       || 0,
       schemaEnabled:     body.schemaEnabled     ?? true,
     }

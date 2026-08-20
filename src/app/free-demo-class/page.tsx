@@ -189,10 +189,6 @@ export default function FreeDemoClassPage() {
                   <div className="text-slate-500 text-xs">Students trained</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-white font-bold text-xl">4.8★</div>
-                  <div className="text-slate-500 text-xs">Google rating</div>
-                </div>
-                <div className="text-center">
                   <div className="text-white font-bold text-xl">100%</div>
                   <div className="text-slate-500 text-xs">Free, no catch</div>
                 </div>

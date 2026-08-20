@@ -154,7 +154,6 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
           titlePost={config.h1Post}
           subtitle={config.heroSubtitle}
           stats={[
-            { value: `${branch.aggregateRating}★`, label: 'GOOGLE RATING' },
             config.studentsTrained
               ? { value: `${config.studentsTrained}+`, label: 'STUDENTS TRAINED' }
               : { value: `${branch.reviewCount}+`, label: 'GOOGLE REVIEWS' },

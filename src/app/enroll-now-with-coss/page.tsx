@@ -134,13 +134,6 @@ export default function EnrollPage() {
               {/* Trust stats row */}
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center gap-2">
-                  <span className="text-amber-400 text-lg">★</span>
-                  <div>
-                    <div className="text-white font-bold text-sm">4.8 / 5</div>
-                    <div className="text-slate-500 text-xs">Google Rating</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 flex-shrink-0" style={{ color: '#FF6B2B' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />

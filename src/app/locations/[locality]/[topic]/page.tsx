@@ -221,7 +221,6 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
         accentText=""
         subtitle={config.intro[0]}
         stats={[
-          { value: `${branch.aggregateRating}★`, label: 'GOOGLE RATING' },
           { value: branch.workingDays.replace('-', '–'), label: `${branch.workingHoursOpen}–${branch.workingHoursClose}` },
         ]}
         ctaText={`${branch.addressLine2 || branch.city}, Hyderabad · Free career counselling`}
