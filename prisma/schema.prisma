@@ -27,6 +27,15 @@ model Lead {
   formType  String
   status    String   @default("new")
   message   String?
+
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  referrer    String?
+  landingPage String?
+  submitPath  String?
+  deviceType  String?
+
   createdAt DateTime @default(now())
 
   activities LeadActivity[]
@@ -34,6 +43,8 @@ model Lead {
   @@index([createdAt])
   @@index([status])
   @@index([branch])
+  @@index([formType])
+  @@index([utmSource])
 }
 
 /// Corporate-training leads with company-level info.
