@@ -22,9 +22,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   const [state, setState] = useState<SubmitState>({ kind: 'idle' })
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [branch, setBranch] = useState<'Dilsukhnagar' | 'Ameerpet'>('Dilsukhnagar')
-  const [batch, setBatch] = useState<string>('Weekday Mon-Fri')
+  const [branch, setBranch] = useState<'Dilsukhnagar' | 'Ameerpet' | 'Online'>('Dilsukhnagar')
 
   const waMessage = `Hi Coss Cloud Solutions Team, I just booked a free demo for the ${courseTitle} course. Could you confirm my slot?`
 
@@ -35,11 +33,8 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
     const result = await submitLead({
       name: name.trim(),
       phone: phone.trim(),
-      email: email.trim() || undefined,
       course: courseTitle,
-      inquiryType: 'Demo Class',
       branch: branch as Branch,
-      message: `Batch preference: ${batch}`,
       formType: 'demo',
     })
     setState(result.ok ? { kind: 'success' } : { kind: 'error', message: result.message })
@@ -115,51 +110,21 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
             className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 dark:text-slate-100 text-sm placeholder:text-slate-400 font-medium"
           />
         </div>
-        <div className="flex items-center gap-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 dark:focus-within:border-orange-500 transition-colors duration-200 w-full">
-          <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/>
+        <div className="flex items-center gap-2 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-3 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 transition-colors duration-200">
+          <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
           </svg>
-          <input
-            id="lef-email"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="your@email.com (optional)"
+          <select
+            id="lef-branch"
+            value={branch}
+            onChange={e => setBranch(e.target.value as 'Dilsukhnagar' | 'Ameerpet' | 'Online')}
             disabled={isSubmitting}
-            className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 dark:text-slate-100 text-sm placeholder:text-slate-400 font-medium"
-          />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
-          <div className="flex items-center gap-2 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-3 py-3.5 bg-white dark:bg-slate-800 focus-within:border-orange-400 transition-colors duration-200">
-            <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
-            </svg>
-            <select
-              id="lef-branch"
-              value={branch}
-              onChange={e => setBranch(e.target.value as 'Dilsukhnagar' | 'Ameerpet')}
-              disabled={isSubmitting}
-              className="flex-1 min-w-0 bg-transparent outline-none text-slate-600 dark:text-slate-300 text-sm font-medium cursor-pointer"
-            >
-              <option value="Dilsukhnagar">Dilsukhnagar</option>
-              <option value="Ameerpet">Ameerpet</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-3 py-3.5 bg-white dark:bg-slate-800 focus-within:border-orange-400 transition-colors duration-200">
-            <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
-            </svg>
-            <select
-              id="lef-batch"
-              value={batch}
-              onChange={e => setBatch(e.target.value)}
-              disabled={isSubmitting}
-              className="flex-1 min-w-0 bg-transparent outline-none text-slate-600 dark:text-slate-300 text-sm font-medium cursor-pointer"
-            >
-              <option value="Weekday Mon-Fri">Weekday (Mon–Fri)</option>
-              <option value="Weekend Sat-Sun">Weekend (Sat–Sun)</option>
-            </select>
-          </div>
+            className="flex-1 min-w-0 bg-transparent outline-none text-slate-600 dark:text-slate-300 text-sm font-medium cursor-pointer"
+          >
+            <option value="Dilsukhnagar">Dilsukhnagar</option>
+            <option value="Ameerpet">Ameerpet</option>
+            <option value="Online">Online</option>
+          </select>
         </div>
 
         {state.kind === 'error' && (
@@ -173,7 +138,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           disabled={isSubmitting}
           className="w-full py-4 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-base font-black rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 mb-3 disabled:opacity-70"
         >
-          {isSubmitting ? 'Booking Your Seat…' : 'Reserve My Free Demo Seat →'}
+          {isSubmitting ? 'Booking Your Seat…' : 'Book Free Demo Class'}
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
           </svg>
@@ -186,7 +151,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           <svg className="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10"/>
           </svg>
-          Free · No Obligation
+          No spam. Instant confirmation via WhatsApp.
         </span>
       </div>
     </div>

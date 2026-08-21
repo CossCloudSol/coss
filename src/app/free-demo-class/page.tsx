@@ -204,7 +204,7 @@ export default function FreeDemoClassPage() {
                 Reserve Your Free Demo Slot
               </h2>
               <p className="text-white/70 text-xs mb-4">
-                Fill the form — counsellor calls within 2 hours to schedule.
+                Select your preferred mode &amp; grab your spot instantly.
               </p>
 
               <div className="ef-glass-ctx">

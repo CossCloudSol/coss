@@ -799,12 +799,12 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://www.cosscloudsol.com/free-demo-class"
+            <Link
+              href={`/free-demo-class?course=${course.slug}`}
               className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black text-base rounded-xl transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5"
             >
               Book Free Demo Class
-            </a>
+            </Link>
             <WhatsAppLink
               ctaType="hero"
               pageType="course"
