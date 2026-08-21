@@ -76,6 +76,21 @@ const leadInputSchema = z.object({
     ),
 
   formType: z.enum(FORM_TYPE_VALUES).default('full'),
+
+  // Attribution — populated client-side once first-touch capture ships.
+  // Every field optional so existing callers that send none of them are
+  // unaffected. URL-shaped fields (referrer, landingPage) get a generous
+  // cap since they're attacker-controllable and otherwise unbounded; the
+  // rest match this file's existing 255-char convention for short strings.
+  utmSource: z.string().trim().max(255, 'UTM source must be 255 characters or fewer').optional(),
+  utmMedium: z.string().trim().max(255, 'UTM medium must be 255 characters or fewer').optional(),
+  utmCampaign: z.string().trim().max(255, 'UTM campaign must be 255 characters or fewer').optional(),
+  referrer: z.string().trim().max(2048, 'Referrer must be 2048 characters or fewer').optional(),
+  landingPage: z.string().trim().max(2048, 'Landing page must be 2048 characters or fewer').optional(),
+  submitPath: z.string().trim().max(255, 'Submit path must be 255 characters or fewer').optional(),
+  // Constrained to what detectDeviceType() (src/lib/click-tracking.ts) can
+  // emit — matches WhatsAppClick/CallClick's deviceType. No free text.
+  deviceType: z.enum(['mobile', 'desktop'], { error: 'Device type must be mobile or desktop' }).optional(),
 });
 
 type LeadInput = z.infer<typeof leadInputSchema>;
@@ -186,6 +201,13 @@ export async function POST(req: NextRequest): Promise<Response> {
           formType: data.formType,
           status: 'new',
           message: data.message ?? null,
+          utmSource: data.utmSource ?? null,
+          utmMedium: data.utmMedium ?? null,
+          utmCampaign: data.utmCampaign ?? null,
+          referrer: data.referrer ?? null,
+          landingPage: data.landingPage ?? null,
+          submitPath: data.submitPath ?? null,
+          deviceType: data.deviceType ?? null,
         },
         select: { id: true },
       });

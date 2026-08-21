@@ -36,6 +36,16 @@ const contactSchema = z.object({
     v => (typeof v === 'string' && v.trim() === '' ? undefined : v),
     z.string().trim().max(1000, 'Message must be 1000 characters or fewer').optional(),
   ),
+
+  // Attribution — same shape and caps as /api/leads' leadInputSchema so the
+  // two lead-creating routes stay consistent. All optional.
+  utmSource: z.string().trim().max(255, 'UTM source must be 255 characters or fewer').optional(),
+  utmMedium: z.string().trim().max(255, 'UTM medium must be 255 characters or fewer').optional(),
+  utmCampaign: z.string().trim().max(255, 'UTM campaign must be 255 characters or fewer').optional(),
+  referrer: z.string().trim().max(2048, 'Referrer must be 2048 characters or fewer').optional(),
+  landingPage: z.string().trim().max(2048, 'Landing page must be 2048 characters or fewer').optional(),
+  submitPath: z.string().trim().max(255, 'Submit path must be 255 characters or fewer').optional(),
+  deviceType: z.enum(['mobile', 'desktop'], { error: 'Device type must be mobile or desktop' }).optional(),
 });
 
 // In-memory rate limit: 3 submissions per IP per 10 minutes
@@ -89,6 +99,13 @@ export async function POST(req: NextRequest): Promise<Response> {
           formType: 'contact',
           status: 'new',
           message: d.message ?? null,
+          utmSource: d.utmSource ?? null,
+          utmMedium: d.utmMedium ?? null,
+          utmCampaign: d.utmCampaign ?? null,
+          referrer: d.referrer ?? null,
+          landingPage: d.landingPage ?? null,
+          submitPath: d.submitPath ?? null,
+          deviceType: d.deviceType ?? null,
         },
         select: { id: true },
       });
