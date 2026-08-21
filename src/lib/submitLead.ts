@@ -4,6 +4,9 @@
  * empty-string-as-undefined coercion, and error extraction live in one place.
  */
 
+import { getFirstTouch } from '@/lib/first-touch';
+import { detectDeviceType } from '@/lib/click-tracking';
+
 export type Branch = 'Dilsukhnagar' | 'Ameerpet' | 'Online';
 export type FormType = 'hero' | 'full' | 'demo' | 'whatsapp_widget';
 
@@ -30,6 +33,7 @@ export async function submitLead(
   input: LeadSubmitInput,
 ): Promise<LeadSubmitResult> {
   const phone = canonicalisePhone(input.phone);
+  const firstTouch = getFirstTouch();
 
   const body = {
     name: input.name,
@@ -40,6 +44,13 @@ export async function submitLead(
     branch: input.branch,
     message: emptyToUndefined(input.message),
     formType: input.formType,
+    utmSource: firstTouch?.utmSource,
+    utmMedium: firstTouch?.utmMedium,
+    utmCampaign: firstTouch?.utmCampaign,
+    referrer: firstTouch?.referrer ?? undefined,
+    landingPage: firstTouch?.landingPage,
+    submitPath: window.location.pathname,
+    deviceType: detectDeviceType(),
   };
 
   let res: Response;
@@ -48,6 +59,7 @@ export async function submitLead(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      keepalive: true,
     });
   } catch {
     return {

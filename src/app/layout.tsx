@@ -22,6 +22,7 @@ import AnnouncementBar from '@/components/AnnouncementBar';
 import TopInfoBar from '@/components/TopInfoBar';
 import PublicChrome from '@/components/PublicChrome';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
+import FirstTouchCapture from '@/components/FirstTouchCapture';
 import MobileStickyBar from '@/components/MobileStickyBar';
 import MobileTabBar from '@/components/MobileTabBar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
@@ -216,6 +217,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             to null on /admin/*. The GA component itself renders nothing when
             the admin hasn't set a Measurement ID in /admin/seo. */}
         <GoogleAnalytics gaId={gaId} />
+
+        {/* First-touch attribution capture — public routes only.
+            PublicChrome short-circuits to null on /admin/*. Renders nothing. */}
+        <FirstTouchCapture />
 
         {/* Floating WhatsApp lead-capture widget — public routes only.
             PublicChrome short-circuits to null on /admin/*. */}

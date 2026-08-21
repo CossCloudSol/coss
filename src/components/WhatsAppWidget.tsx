@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { COURSES } from '@/data/courses-data';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
+import { submitLead } from '@/lib/submitLead';
 
 /* ─────────────────────────────────────────────────────────────── */
 /*  Constants                                                      */
@@ -198,22 +199,16 @@ export default function WhatsAppWidget(): JSX.Element | null {
     if (!validate()) return;
 
     setSubmitting(true);
-    try {
-      await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:     form.name.trim(),
-          phone:    form.phone.trim(),
-          course:   form.course || undefined,
-          branch:   form.branch,
-          formType: 'whatsapp_widget',
-        }),
-      });
-    } catch (err) {
-      console.warn('[WhatsAppWidget] Failed to save lead before opening WhatsApp:', err);
-    } finally {
-      setSubmitting(false);
+    const result = await submitLead({
+      name:     form.name.trim(),
+      phone:    form.phone.trim(),
+      course:   form.course || undefined,
+      branch:   form.branch,
+      formType: 'whatsapp_widget',
+    });
+    setSubmitting(false);
+    if (!result.ok) {
+      console.warn('[WhatsAppWidget] Failed to save lead before opening WhatsApp:', result.message);
     }
 
     setSubmitted(true);

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { getFirstTouch } from '@/lib/first-touch';
+import { detectDeviceType } from '@/lib/click-tracking';
 
 const labelStyle: React.CSSProperties = {
   display: 'block', fontSize: '13px', fontFamily: 'Poppins, sans-serif',
@@ -27,10 +29,20 @@ export default function ContactForm() {
     setStatus('loading');
     setErrorMsg('');
     try {
+      const firstTouch = getFirstTouch();
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, email, subject, branch, message }),
+        body: JSON.stringify({
+          name, phone, email, subject, branch, message,
+          utmSource: firstTouch?.utmSource,
+          utmMedium: firstTouch?.utmMedium,
+          utmCampaign: firstTouch?.utmCampaign,
+          referrer: firstTouch?.referrer ?? undefined,
+          landingPage: firstTouch?.landingPage,
+          submitPath: window.location.pathname,
+          deviceType: detectDeviceType(),
+        }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
