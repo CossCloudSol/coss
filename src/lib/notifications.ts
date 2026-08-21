@@ -138,17 +138,32 @@ async function sendUrgentEmails(
     link: notification.link,
   });
 
-  await Promise.allSettled(
+  const results = await Promise.allSettled(
     users.map(async (user) => {
       const enabled = await isEmailEnabled(user.id, notification.type);
       if (!enabled) return;
       try {
-        await sendEmail({ to: user.email, subject: notification.title, html });
+        const { error } = await sendEmail({ to: user.email, subject: notification.title, html });
+        if (error) {
+          console.error(
+            `[notifications] email send failed: type=${notification.type} to=${user.email} error=${JSON.stringify(error)}`,
+          );
+        }
       } catch (err) {
-        console.error(`[notifications] email send failed for ${user.email}:`, err);
+        console.error(
+          `[notifications] email send threw: type=${notification.type} to=${user.email} error=${err}`,
+        );
       }
     }),
   );
+
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      console.error(
+        `[notifications] email task rejected: type=${notification.type} reason=${result.reason}`,
+      );
+    }
+  }
 }
 
 async function sendUrgentPush(

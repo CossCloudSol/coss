@@ -27,9 +27,14 @@ export default function AnnouncementBar({ initialConfig }: Props) {
   const dismissKey = makeDismissKey(initialConfig?.announcementText ?? '');
 
   useEffect(() => {
-    sessionStorage.removeItem(LEGACY_KEY);
-    const stored = sessionStorage.getItem(dismissKey);
-    setVisible(stored !== 'true');
+    try {
+      sessionStorage.removeItem(LEGACY_KEY);
+      const stored = sessionStorage.getItem(dismissKey);
+      setVisible(stored !== 'true');
+    } catch {
+      // storage unavailable — show the bar; dismissal just won't persist
+      setVisible(true);
+    }
   }, [dismissKey, initialConfig]);
 
   if (initialConfig?.isEnabled === false) return null;
