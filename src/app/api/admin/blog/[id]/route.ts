@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { revalidatePaths, getBlogRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -40,7 +41,7 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
 
   const status = (body.status as string) || 'draft';
 
-  const current = await prisma.blogPost.findUnique({ where: { id: params.id }, select: { publishedAt: true, status: true } });
+  const current = await prisma.blogPost.findUnique({ where: { id: params.id }, select: { publishedAt: true, status: true, slug: true } });
   const wasPublished = current?.status === 'published';
   const nowPublished = status === 'published';
 
@@ -65,6 +66,11 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
         publishedAt: nowPublished && !wasPublished ? new Date() : current?.publishedAt,
       },
     });
+
+    const newPaths = getBlogRevalidationPaths(post);
+    const oldPaths = current ? getBlogRevalidationPaths(current) : [];
+    await revalidatePaths(Array.from(new Set([...newPaths, ...oldPaths])));
+
     return NextResponse.json(post);
   } catch (err: unknown) {
     const e = err as { code?: string };
@@ -87,7 +93,8 @@ export async function DELETE(req: NextRequest, { params }: Ctx): Promise<Respons
   }
 
   try {
-    await prisma.blogPost.delete({ where: { id: params.id } });
+    const deleted = await prisma.blogPost.delete({ where: { id: params.id } });
+    await revalidatePaths(getBlogRevalidationPaths(deleted));
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {
     const e = err as { code?: string };

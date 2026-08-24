@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
 import { getSession } from '@/lib/session'
+import { revalidatePaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,12 +29,9 @@ export async function POST(req: NextRequest) {
   }
 
   const paths: string[] = rawPaths
+  const results = await revalidatePaths(paths)
 
-  for (const path of paths) {
-    revalidatePath(path)
-  }
+  console.warn('[revalidate] Purged cache', { paths, caller, results })
 
-  console.warn('[revalidate] Purged cache', { paths, caller })
-
-  return NextResponse.json({ ok: true, revalidated: paths, caller })
+  return NextResponse.json({ ok: true, revalidated: paths, results, caller })
 }

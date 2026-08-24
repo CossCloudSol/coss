@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { revalidatePaths, getCourseRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -117,6 +118,9 @@ export async function POST(req: NextRequest): Promise<Response> {
         ...(body.categoryId ? { categoryId: body.categoryId as string } : {}),
       },
     });
+
+    await revalidatePaths(getCourseRevalidationPaths(course));
+
     return NextResponse.json(course, { status: 201 });
   } catch (err: unknown) {
     const e = err as { code?: string };

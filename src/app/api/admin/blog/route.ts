@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { revalidatePaths, getBlogRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -110,6 +111,9 @@ export async function POST(req: NextRequest): Promise<Response> {
         publishedAt: status === 'published' ? new Date() : null,
       },
     });
+
+    await revalidatePaths(getBlogRevalidationPaths(post));
+
     return NextResponse.json(post, { status: 201 });
   } catch (err: unknown) {
     const e = err as { code?: string };

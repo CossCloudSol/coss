@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { checkPublishRedirectCollision, type RedirectCollision } from '@/lib/redirect-collision';
+import { revalidatePaths, getCourseRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,7 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
   try {
     const existing = await prisma.course.findUnique({
       where: { id: params.id },
-      select: { status: true },
+      select: { status: true, slug: true, categorySlug: true },
     });
 
     const course = await prisma.course.update({
@@ -76,6 +77,10 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
       redirectCollision = await checkPublishRedirectCollision(course);
     }
 
+    const newPaths = getCourseRevalidationPaths(course);
+    const oldPaths = existing ? getCourseRevalidationPaths(existing) : [];
+    await revalidatePaths(Array.from(new Set([...newPaths, ...oldPaths])));
+
     return NextResponse.json({ ...course, redirectCollision });
   } catch (err: unknown) {
     const e = err as { code?: string };
@@ -98,7 +103,8 @@ export async function DELETE(req: NextRequest, { params }: Ctx): Promise<Respons
   }
 
   try {
-    await prisma.course.delete({ where: { id: params.id } });
+    const deleted = await prisma.course.delete({ where: { id: params.id } });
+    await revalidatePaths(getCourseRevalidationPaths(deleted));
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {
     const e = err as { code?: string };

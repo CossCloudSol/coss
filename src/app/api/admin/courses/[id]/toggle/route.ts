@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { createNotification } from '@/lib/notifications';
 import { checkPublishRedirectCollision, type RedirectCollision } from '@/lib/redirect-collision';
+import { revalidatePaths, getCourseRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -43,6 +44,12 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
     if (data.status === 'published' && existing?.status !== 'published') {
       redirectCollision = await checkPublishRedirectCollision(course);
     }
+
+    // Publish and unpublish both need to invalidate — an unpublished course
+    // that stays cached and reachable for the full revalidate window is the
+    // worst case here (a course that no longer exists is worse than one
+    // that's merely stale).
+    await revalidatePaths(getCourseRevalidationPaths(course));
 
     if (data.status === 'published') {
       try {
