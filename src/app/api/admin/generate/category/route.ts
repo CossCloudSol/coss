@@ -8,8 +8,19 @@ export const dynamic = 'force-dynamic'
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 const CATEGORY_PROMPT = `You write short, specific category descriptions for a Hyderabad IT training institute (COSS).
-No generic phrases. Each description must mention: what roles it leads to, Hyderabad job market context.
+No generic phrases. Each description must mention: what roles it leads to.
 Under 120 words. Professional but not corporate.
+
+FACTUAL CLAIMS (non-negotiable):
+Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
+- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
+- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
+- Placement rates or percentages (no "100% placement", no "X% placed")
+- Ratings, review counts, or testimonial counts
+- Hiring-partner counts (no "50+ hiring partners")
+- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
+Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.
+
 Return ONLY valid JSON: {"description":"...","seoTitle":"...","seoDesc":"...","suggestedSlug":"..."}`
 
 export async function POST(req: NextRequest): Promise<Response> {

@@ -27,10 +27,18 @@ VOICE RULES (non-negotiable):
 
 BANNED WORDS: comprehensive, cutting-edge, industry-leading, world-class, robust, leverage, delve, empower, transformative, holistic, synergy, in today's fast-paced world, in conclusion, furthermore, moreover, it is worth noting, seamless, game-changer, innovative
 
+FACTUAL CLAIMS (non-negotiable):
+Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
+- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
+- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
+- Placement rates or percentages (no "100% placement", no "X% placed")
+- Ratings, review counts, or testimonial counts
+- Hiring-partner counts (no "50+ hiring partners")
+- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
+Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.
+
 GEO RULES:
 - One specific opening that mentions Hyderabad or a Hyderabad area naturally
-- One local employer or local job market reference
-- One Hyderabad salary data point if relevant
 - Do NOT force the city name — mention it where it genuinely fits, 2-3 times max
 
 SEO RULES:
@@ -79,8 +87,7 @@ Title: "${title}"
 Category: "${categoryName}"
 Institute: COSS, Hyderabad (Dilsukhnagar & Ameerpet centres)
 
-Write it like a trainer talking to someone who is genuinely considering this career path.
-Include real salary data, real employer names, and genuine Hyderabad job market context.`
+Write it like a trainer talking to someone who is genuinely considering this career path.`
 
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.5-flash',

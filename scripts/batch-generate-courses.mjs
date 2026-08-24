@@ -49,11 +49,20 @@ VOICE RULES (non-negotiable):
 - Use specific numbers over vague claims ("12 hands-on projects" not "many projects")
 - Name real tools with versions where relevant (Kubernetes 1.29, not just "Kubernetes")
 - Name real certifications with exam codes (AWS SAA-C03, CKA, CEH v12, not generic names)
-- Include one specific Hyderabad employer example per description (TCS, Infosys, Wipro, Cognizant, HCL, Tech Mahindra, Amazon Hyderabad, Microsoft IDC Hyderabad, Cyient, Mphasis)
 - Mention one Hyderabad area naturally (HITEC City, Gachibowli, Madhapur, Ameerpet, Dilsukhnagar)
 
 BANNED WORDS (never use any of these):
 comprehensive, cutting-edge, industry-leading, world-class, robust, leverage, delve, empower, transformative, holistic, synergy, equip students, upon completion, in today's fast-paced world, in conclusion, furthermore, moreover, it is worth noting, seamless, streamline, game-changer, innovative, state-of-the-art, best-in-class
+
+FACTUAL CLAIMS (non-negotiable):
+Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
+- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
+- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
+- Placement rates or percentages (no "100% placement", no "X% placed")
+- Ratings, review counts, or testimonial counts
+- Hiring-partner counts (no "50+ hiring partners")
+- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
+Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.
 
 SEO RULES:
 - Slug: 5-8 words, format: [topic]-[intent]-in-hyderabad or [topic]-training-institute-in-hyderabad
@@ -64,14 +73,11 @@ SEO RULES:
 
 GEO RULES:
 - One specific Hyderabad area name in the description
-- One local employer example with context ("Companies like TCS and Wipro in HITEC City...")
-- One Hyderabad salary range data point (research realistic 2025-2026 ranges)
 - Mention weekend batch availability (targets Hyderabad working professionals)
 - Reference "Dilsukhnagar" or "Ameerpet" as COSS centre locations
 
 BATCH & TRAINER RULES:
 - Use real batch timing language: "Weekend batches available", "Weekdays 9AM–1PM", "Monthly batches", "Flexible schedule" — never a bracketed placeholder like [BATCH_DATE]
-- Use real student count language: "500+", "1,200+", "5,000+", "Hundreds of" — never a bracketed placeholder like [STUDENT_COUNT]
 - If a trainer name is needed, write "our expert trainer" or omit it entirely — never a bracketed placeholder like [TRAINER_NAME]
 
 SYLLABUS RULES:
@@ -175,7 +181,7 @@ Institute: COSS, Hyderabad (Dilsukhnagar & Ameerpet centres)
 City focus: Hyderabad, Telangana, India
 
 Make the content feel like it was written by the actual trainer who runs this course.
-Include real tool versions, real certification exam codes, and specific Hyderabad job market context.
+Include real tool versions and real certification exam codes.
 The description should read like a trainer talking to a prospective student, not a marketing brochure.`
 
   const result = await model.generateContent(userPrompt)

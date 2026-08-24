@@ -7,6 +7,16 @@ export const dynamic = 'force-dynamic'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
+const FACTUAL_CLAIMS_BLOCK = `FACTUAL CLAIMS (non-negotiable):
+Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
+- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
+- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
+- Placement rates or percentages (no "100% placement", no "X% placed")
+- Ratings, review counts, or testimonial counts
+- Hiring-partner counts (no "50+ hiring partners")
+- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
+Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.`
+
 const FIELD_PROMPTS: Record<string, string> = {
   slug: 'Return ONLY valid JSON: {"value": "seo-slug-5-8-words-in-hyderabad"}. SEO-friendly slug, 5-8 words, ends with -in-hyderabad.',
   description: 'Return ONLY valid JSON: {"value": "200-300 word course description in human trainer voice with Hyderabad context"}. Direct, second-person, no banned words (comprehensive, cutting-edge, robust, leverage, etc.).',
@@ -53,7 +63,11 @@ Institute: COSS, Hyderabad${body.currentContent ? `\nCurrent content to improve:
 
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
-      systemInstruction: `You are a content writer at COSS Hyderabad training institute. ${fieldPrompt}`,
+      systemInstruction: `You are a content writer at COSS Hyderabad training institute.
+
+${FACTUAL_CLAIMS_BLOCK}
+
+${fieldPrompt}`,
       generationConfig: { responseMimeType: 'application/json' },
     })
 
