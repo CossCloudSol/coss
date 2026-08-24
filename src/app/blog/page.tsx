@@ -5,7 +5,7 @@ import { buildPageMetadata } from '@/lib/get-page-seo';
 import { getAllPosts } from '@/lib/posts';
 import { prisma } from '@/lib/db';
 
-export const revalidate = 600;
+export const revalidate = 86400;
 
 type DBPost = {
   id: string;

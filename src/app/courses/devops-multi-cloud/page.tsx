@@ -7,7 +7,7 @@ import { courseData } from '@/lib/courseData';
 import { prisma } from '@/lib/db';
 import { dbCoursesToCards } from '@/lib/db-courses-to-cards';
 
-export const revalidate = 600;
+export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadataWithFallback('courses/devops-multi-cloud', buildCategoryPageMetadata('courses/devops-multi-cloud'));
 }

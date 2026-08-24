@@ -5,7 +5,7 @@ import { getCourseUrl } from '@/lib/course-url'
 import CoursesTabPage from '@/components/CoursesTabPage'
 import { buildPageMetadata } from '@/lib/get-page-seo'
 
-export const revalidate = 600
+export const revalidate = 86400
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('courses')

@@ -224,7 +224,7 @@ async function getHiringPartners() {
   } catch { return []; }
 }
 
-export const revalidate = 300;
+export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('home');
 }

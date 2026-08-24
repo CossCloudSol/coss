@@ -18,7 +18,7 @@ import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 
-export const revalidate = 300;
+export const revalidate = 86400;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 

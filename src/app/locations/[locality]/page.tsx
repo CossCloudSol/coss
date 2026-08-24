@@ -11,7 +11,7 @@ import { getCourseUrl } from '@/lib/course-url';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 
-export const revalidate = 600;
+export const revalidate = 86400;
 
 /**
  * Batch.centre is free-text and nullable, entered by hand in the admin

@@ -23,7 +23,7 @@ export const NESTED_CANONICAL_OVERRIDES: Record<string, string> = {
     '/courses/digital-design/digital-marketing-training-in-hyderabad',
 }
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 interface Props {
   params: { courseSlug: string }

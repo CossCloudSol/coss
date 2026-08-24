@@ -98,13 +98,13 @@ export const FALLBACK: Record<string, BranchSettings> = {
 const getCachedBranchRow = unstable_cache(
   (branchKey: string) => prisma.branchSettings.findUnique({ where: { branchKey } }),
   ['branch-settings-by-key'],
-  { tags: ['branch-settings'], revalidate: 3600 },
+  { tags: ['branch-settings'], revalidate: 86400 },
 )
 
 const getCachedBranchRows = unstable_cache(
   () => prisma.branchSettings.findMany({ orderBy: { branchKey: 'asc' } }),
   ['branch-settings-all'],
-  { tags: ['branch-settings'], revalidate: 3600 },
+  { tags: ['branch-settings'], revalidate: 86400 },
 )
 
 export async function getBranchSettings(branchKey: string): Promise<BranchSettings> {

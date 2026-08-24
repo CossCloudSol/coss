@@ -13,7 +13,7 @@ import { matchPostToCallout } from '@/lib/blog-course-callout';
 import BlogCourseCallout from '@/components/BlogCourseCallout';
 import CallLink from '@/components/CallLink';
 
-export const revalidate = 600;
+export const revalidate = 86400;
 
 /**
  * Normalises a frontmatter value to a safe display string.

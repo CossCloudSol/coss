@@ -4,7 +4,7 @@ import EnrollFullForm from '@/components/EnrollFullForm';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('free-demo-class');
 }

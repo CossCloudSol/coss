@@ -32,7 +32,7 @@ const getCachedSchemaSiteSettings = unstable_cache(
     },
   }),
   ['global-schemas-site-settings'],
-  { tags: ['site-settings'], revalidate: 3600 },
+  { tags: ['site-settings'], revalidate: 86400 },
 )
 
 function parseOverride(raw: string | null | undefined): object | null {

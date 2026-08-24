@@ -22,10 +22,14 @@ const nextConfig = {
     const isDev = process.env.NODE_ENV === 'development';
     return [
       {
+        // Security headers — every route, public pages included. Cache-Control
+        // is deliberately NOT here: public pages are ISR pages and need Next's
+        // own Cache-Control (s-maxage/stale-while-revalidate) to reach the
+        // browser/CDN, not a blanket no-store. See the admin/api-scoped block
+        // below for where no-store belongs.
         source: '/(.*)',
         headers: [
           // Prevents click-jacking — boosts security trust signals for Google
-          { key: 'Cache-Control', value: 'no-store, must-revalidate' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           // Stops MIME-type sniffing — another security trust signal
           { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -57,6 +61,17 @@ const nextConfig = {
             ].join('; '),
           },
         ],
+      },
+      {
+        // Admin and API responses genuinely should never be cached — session
+        // state and write endpoints, not ISR content. This is additive to the
+        // security headers above, not a replacement for them.
+        source: '/admin/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, must-revalidate' }],
+      },
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, must-revalidate' }],
       },
     ];
   },

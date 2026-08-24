@@ -124,7 +124,7 @@ const getSiteSettings = unstable_cache(
     }
   },
   ['seo-settings'],
-  { tags: ['seo-settings'], revalidate: 3600 },
+  { tags: ['seo-settings'], revalidate: 86400 },
 );
 
 /**
@@ -144,7 +144,7 @@ const getAnnouncementBarConfig = unstable_cache(
     }
   },
   ['announcement-bar'],
-  { tags: ['announcement-bar'], revalidate: 3600 },
+  { tags: ['announcement-bar'], revalidate: 86400 },
 );
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

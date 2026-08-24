@@ -4,7 +4,7 @@ import HeroEnrollForm from '@/components/HeroEnrollForm';
 import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('enroll-now-with-coss');
 }
