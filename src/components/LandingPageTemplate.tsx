@@ -193,12 +193,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           'Capstone: end-to-end enterprise project',
         ]
 
-  const testimonials = [
-    { quote: `I joined Coss's ${course.title} batch in Dilsukhnagar after 4 years in BPO. Got placed at TCS within 2 months of completing the course. The trainers are real industry professionals, not just textbook teachers.`, name: 'Rohit K.', role: 'Engineer, TCS', initials: 'RK', batch: 'Dilsukhnagar', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/b/b1/Tata_Consultancy_Services_Logo.svg', companyName: 'TCS' },
-    { quote: `The ${titleWithoutTraining} training at Coss Ameerpet was exactly what I needed. Got 3 offers within 6 weeks of the placement drives. The practical projects made all the difference in interviews.`, name: 'Priya M.', role: 'Cloud Engineer, Accenture', initials: 'PM', batch: 'Ameerpet', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/c/cd/Accenture.svg', companyName: 'Accenture' },
-    { quote: `I was skeptical about the placement promise but Coss delivered. 3 months after completing ${course.title}, I'm earning 2× my previous salary at Wipro. Best investment I've made in my career.`, name: 'Sai T.', role: 'Senior Engineer, Wipro', initials: 'ST', batch: 'Dilsukhnagar', companyLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Wipro_Primary_Logo_Color_RGB.svg', companyName: 'Wipro' },
-  ]
-
   const locationData = [
     {
       branchObj: dilsukhnagar,
@@ -583,58 +577,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       </section>
 
       <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
-
-      {/* ── SECTION 7: TESTIMONIALS ─────────────────────────────────────── */}
-      <section className="py-10 md:py-16 px-4 md:px-8 bg-slate-50 dark:bg-slate-900">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Student Success Stories</p>
-          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
-          <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">What Our Students Say</h2>
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Hear from students who trained with us at our Dilsukhnagar and Ameerpet centres</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map(t => (
-              <div key={t.name} className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-md border border-slate-100 dark:border-slate-700 flex flex-col gap-4 hover:shadow-xl hover:border-orange-200 dark:hover:border-orange-800 transition-all duration-300">
-
-                {/* Top row — avatar + name + stars */}
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center flex-shrink-0 text-white font-black text-sm shadow-md">
-                    {t.initials}
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-900 dark:text-white text-sm">{t.name}</div>
-                    <div className="flex items-center gap-0.5 mt-0.5">
-                      {[1,2,3,4,5].map(s => (
-                        <svg key={s} className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Quote text */}
-                <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed italic flex-1">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-
-                {/* Bottom row — name/role left, company logo right */}
-                <div className="flex items-end justify-between pt-3 border-t border-slate-100 dark:border-slate-700">
-                  <div>
-                    <div className="font-black text-slate-900 dark:text-white text-sm">{t.name}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Placed Students</div>
-                  </div>
-                  <img
-                    src={t.companyLogo}
-                    alt={t.companyName}
-                    className="h-6 w-auto object-contain opacity-80"
-                  />
-                </div>
-
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── SECTION 8: FAQ ──────────────────────────────────────────────── */}
       <section className="py-10 md:py-16 px-4 md:px-8 bg-slate-50 dark:bg-slate-900">

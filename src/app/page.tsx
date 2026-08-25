@@ -157,56 +157,6 @@ async function getCategories() {
   }
 }
 
-interface Testimonial {
-  name: string;
-  initials: string;
-  role: string;
-  stars: number;
-  review: string;
-  course: string;
-  avatarBg: string;
-  photoUrl?: string;
-}
-
-const testimonials: ReadonlyArray<Testimonial> = [
-  {
-    name: 'Gopi Krishna',
-    initials: 'GK',
-    role: 'DevOps Engineer',
-    stars: 5,
-    review: 'Best institute in Dilsukhnagar with 100% placement assistance. The faculty is experienced and the labs are top-notch. I strongly recommend Coss Cloud Solutions to anyone serious about IT.',
-    course: 'DevOps & Cloud',
-    avatarBg: 'bg-red-500',
-  },
-  {
-    name: 'Jahnavi S.',
-    initials: 'JS',
-    role: 'Linux Administrator',
-    stars: 5,
-    review: 'As someone with minimal Linux exposure, I was hesitant — but Coss Cloud Solutions made everything easy. Well-structured from fundamentals to advanced topics. Practical sessions really solidified my knowledge.',
-    course: 'Linux Administration',
-    avatarBg: 'bg-gray-600',
-  },
-  {
-    name: 'Nagoju Uma',
-    initials: 'NU',
-    role: 'Power BI Analyst',
-    stars: 5,
-    review: 'Excellent institution with quality teaching and a genuinely supportive learning environment. The trainers go above and beyond. Highly recommended for analytics and BI careers.',
-    course: 'Power BI & Analytics',
-    avatarBg: 'bg-green-700',
-  },
-  {
-    name: 'Shiva Rani',
-    initials: 'SR',
-    role: 'Data Science Graduate',
-    stars: 5,
-    review: 'Well experienced faculty, feasible lab timings, and overall completely satisfied. The course structure is clear and industry-relevant. Thank you Coss Cloud Solutions — you changed my career trajectory!',
-    course: 'Data Science & AI',
-    avatarBg: 'bg-purple-500',
-  },
-];
-
 const BLOG_GRADIENTS = [
   'linear-gradient(135deg,#1a3a5c,#1e5799)',
   'linear-gradient(135deg,#0a5260,#0d7a8e)',
@@ -1118,7 +1068,7 @@ export default async function HomePage() {
                 className="inline-flex items-center gap-2 rounded-xl px-6 py-4 font-semibold text-sm transition-all hover:bg-white/10"
                 style={{ color: '#2dd4bf', border: '1px solid rgba(45,212,191,0.3)' }}
               >
-                View Placement Stories →
+                See our placement support →
               </Link>
             </div>
             <p className="text-xs mt-4" style={{ color: '#94a3b8' }}>
@@ -1173,63 +1123,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* ── Testimonials ── */}
-      {hpSettings.showTestimonials && <section className="section section-light" aria-label="Student testimonials">
-        <div className="section-inner">
-          <div className="section-header">
-            <div className="section-tag">Student Reviews</div>
-            <h2 className="section-title">What Our Students Say</h2>
-            <div className="w-24 h-0.5 bg-teal-500 mx-auto mt-3 mb-3" aria-hidden="true" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {testimonials.map((t) => (
-              <article key={t.name} className="testimonial-card-v2" aria-label={`Review by ${t.name}`}>
-                {/* Header */}
-                <div className="testimonial-header">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-                    {t.photoUrl !== undefined ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={t.photoUrl} alt={t.name} width={40} height={40} className="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" />
-                    ) : (
-                      <div className={`${t.avatarBg} w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0`} aria-hidden="true">
-                        {t.initials}
-                      </div>
-                    )}
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</p>
-                      <p style={{ fontSize: '12px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.role}</p>
-                    </div>
-                  </div>
-                  {/* Google G */}
-                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style={{ flexShrink: 0 }}>
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" />
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                  </svg>
-                </div>
-
-                {/* CSS-only star rating */}
-                <div className="css-stars" style={{ marginTop: '12px' }} aria-label={`${t.stars} out of 5 stars`} role="img">
-                  {'★'.repeat(t.stars)}
-                </div>
-
-                <p className="testimonial-text">&quot;{t.review}&quot;</p>
-
-                <span className="testimonial-course-badge">{t.course}</span>
-              </article>
-            ))}
-          </div>
-
-          <div className="center-btn">
-            <Link href="/student-reviews/" style={{ color: 'var(--primary)', fontFamily: 'Poppins,sans-serif', fontWeight: 600, fontSize: '14px', border: '2px solid var(--primary)', padding: '11px 26px', borderRadius: '6px', display: 'inline-block' }}>
-              Read All Reviews →
-            </Link>
-          </div>
-        </div>
-      </section>}
 
       {/* ── Blog / Resources ── */}
       <section className="section section-white" aria-label="Latest blog posts">

@@ -1,80 +1,47 @@
 import type { Metadata } from 'next';
 import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import { GBP_SAME_AS } from '@/lib/get-branch-settings';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('student-reviews');
 }
 
-const reviews = [
-  { name: 'Jahnavi S.', course: 'Linux Administration', rating: 5, date: 'December 2024', review: 'As someone with minimal exposure to Linux, I was hesitant about enrolling, but Coss Cloud Solutions made everything easy to understand. The course was well-structured, starting from fundamental commands to more advanced topics like networking, process management, and security. The practical sessions really solidified my knowledge. This is a fantastic place for both beginners and experienced professionals.', initials: 'JS' },
-  { name: 'Gopi Krishna', course: 'AWS Cloud', rating: 5, date: 'November 2024', review: 'Best institute in Dilsukhnagar with 100% placement. I strongly recommend this is the best institute for cloud training. The faculty is excellent and very knowledgeable. Got placed in a good company within a month of completing the course.', initials: 'GK' },
-  { name: 'Sheshi Rekha', course: 'Linux Training', rating: 5, date: 'November 2024', review: 'Coss Cloud Solutions in Dilsukhnagar provided an excellent Linux training experience. The instructors were knowledgeable and ensured we understood the core concepts, from the basics of file management to advanced topics like shell scripting and server administration. I appreciated the real-world projects and hands-on labs. Highly recommended!', initials: 'SR' },
-  { name: 'HariPrasad P.', course: 'AWS Training', rating: 5, date: 'October 2024', review: 'I have done my training here for AWS. It was very good training with experienced faculty. The practical sessions were very helpful and I learned a lot. I am now confident in working with AWS services.', initials: 'HP' },
-  { name: 'Nagoju Uma', course: 'DevOps', rating: 5, date: 'October 2024', review: 'Excellent institution with quality teaching and a supportive learning environment. The DevOps course content is very relevant to current industry requirements. Highly recommended for anyone looking to upskill in DevOps!', initials: 'NU' },
-  { name: 'Karthik Chary', course: 'Multiple Courses', rating: 5, date: 'September 2024', review: 'Best IT course center in Dilsukhnagar. Coss Cloud Solutions offers excellent courses in AWS, DevOps, Linux, Python, Java, Data Science, and Data Analytics. The quality of teaching is top-notch and the trainers are very experienced.', initials: 'KC' },
-  { name: 'Bekkari Laxmi', course: 'Full Stack Development', rating: 5, date: 'September 2024', review: 'Coss Cloud Solutions at Dilsukhnagar offers a comprehensive full stack development training program tailored for students who want to build strong careers in web development. From a student\'s perspective, the course is well-structured, covering both front-end and back-end technologies. Very happy with the quality of training!', initials: 'BL' },
-  { name: 'Shiva Rani', course: 'Data Analytics', rating: 5, date: 'August 2024', review: 'Well experienced faculty, feasible lab timings, overall satisfied completely. The Data Analytics course covered everything I needed — from basics to advanced analytics. Thank you Coss Cloud Solutions for the excellent training!', initials: 'SR' },
-  { name: 'King Queen', course: 'Cloud Computing', rating: 4, date: 'August 2024', review: 'Nice institute with good learning skills and lab facility. The cloud computing course was practical and the trainer was very knowledgeable. Good experience overall with supportive staff.', initials: 'KQ' },
-  { name: 'Rahul M.', course: 'Cyber Security', rating: 5, date: 'July 2024', review: 'The Ethical Hacking course at Coss Cloud Solutions was absolutely amazing! The trainer explained complex concepts in a very clear and practical way. Got hands-on experience with real tools like Kali Linux and Metasploit. Now working as a Security Analyst. Thank you Coss Cloud Solutions!', initials: 'RM' },
-  { name: 'Priya V.', course: 'Digital Marketing', rating: 5, date: 'July 2024', review: 'Great institute for digital marketing training! Learned SEO, Google Ads, Social Media Marketing and Google Analytics in depth. The practical approach helped me understand real campaigns. Now working at a digital agency!', initials: 'PV' },
-  { name: 'Suresh K.', course: 'Python Full Stack', rating: 5, date: 'June 2024', review: 'Coss Cloud Solutions is one of the best institutes for Python training in Hyderabad. The trainer was excellent and patient with all doubts. The Django project we built was a great learning experience. Got placed in 3 weeks!', initials: 'SK' },
-];
-
 export default function StudentReviewsPage() {
   return (
     <>
       <ResponsivePageStyles />
       <HeroBanner
-        badge="VERIFIED GOOGLE REVIEWS"
+        badge="STUDENT REVIEWS"
         titlePre=""
-        accentText="Real Reviews"
-        titleLine2="by 5,000+ Real Students"
-        subtitle="Read verified reviews from students who trained at COSS Cloud Solutions — 98% recommend us for IT training, placements & career transformation."
+        accentText="Our Reviews"
+        titleLine2="Live on Google"
+        subtitle="We don't publish reviews on this page. Read what our students say directly on our Dilsukhnagar and Ameerpet Google Business Profile listings."
         stats={[
-          { value: '98%',    label: 'RECOMMEND COSS CLOUD SOLUTIONS' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },
         ]}
-        ctaText="Join 5,000+ students who transformed their IT careers"
+        ctaText="Join 5,000+ students who trained with us"
         breadcrumb={[{ label: 'About Us', href: '/about-us/' }, { label: 'Student Reviews', href: '/student-reviews/' }]}
       />
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 20px 0' }}>
-        {/* Reviews grid */}
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <div style={{ display: 'inline-block', background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Student Testimonials</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>What Our Students Say</h2>
-        </div>
-
-        <div className="review-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
-          {reviews.map(r => (
-            <div key={r.name + r.course} style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '24px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', borderLeft: '4px solid var(--primary)', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
-                <div style={{ color: '#f5a623', fontSize: '13px' }}>{'★'.repeat(r.rating)}</div>
-                <span style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '11px', padding: '3px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 500, border: '1px solid var(--border)' }}>{r.course}</span>
-              </div>
-              <p style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.7', fontStyle: 'italic', marginBottom: '14px', flex: 1 }}>&quot;{r.review}&quot;</p>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '36px', height: '36px', background: 'var(--primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', flexShrink: 0 }}>{r.initials}</div>
-                  <div>
-                    <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)' }}>{r.name}</div>
-                  </div>
-                </div>
-                <span style={{ color: 'var(--text-light)', fontSize: '11px' }}>{r.date}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* CTA to Google Reviews */}
-        <div style={{ textAlign: 'center', margin: '40px 0' }}>
-          <a href="https://www.google.com/search?q=Coss+Cloud+Solutions+Hyderabad+reviews" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '12px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
-            📍 Read Our Reviews on Google
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 20px 0', textAlign: 'center' }}>
+        <div style={{ display: 'inline-block', background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Where to find them</div>
+        <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '14px' }}>Our Reviews Live on Google</h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.8', maxWidth: '620px', margin: '0 auto 32px' }}>
+          Every review for Coss Cloud Solutions is posted by students directly on Google, tied to their own Google account — we don&apos;t write, edit, or select which ones appear. Read them on either centre&apos;s listing below.
+        </p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center', marginBottom: '8px' }}>
+          <a href={GBP_SAME_AS.dilsukhnagar} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            📍 Dilsukhnagar Centre Reviews
+          </a>
+          <a href={GBP_SAME_AS.ameerpet} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            📍 Ameerpet Centre Reviews
           </a>
         </div>
+      </div>
 
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 20px 0' }}>
         <CtaBanner />
       </div>
       <div style={{ height: '48px' }} />
