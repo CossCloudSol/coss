@@ -42,8 +42,7 @@ async function generateWithRetry(prompt1: string, prompt2: string, retries = 4):
 }
 
 const SYSTEM_PROMPT = `You are a course content writer for Coss Cloud Solutions, an IT training institute
-in Hyderabad with centres in Dilsukhnagar and Ameerpet. 15+ years experience. Students placed at TCS, Infosys,
-Wipro, HCL, Cognizant and Hyderabad-based startups in HITEC City, Gachibowli, Madhapur.
+in Hyderabad with centres in Dilsukhnagar and Ameerpet. 15+ years experience.
 
 RULES:
 - Write in human voice. No AI-sounding phrases.
@@ -61,10 +60,20 @@ RULES:
 - Tools: 3-6 real tools
 - Price: between 15000 and 35000
 - originalPrice: 20-40% higher than price
-- Use realistic batch schedules (e.g. Every Monday, Weekend batches) and real student counts (500+, 1200+)
+- Use realistic batch schedules (e.g. Every Monday, Weekend batches)
 - seoTitle: "[Course Name] in Hyderabad | Coss Cloud Solutions"
 - seoDesc: under 155 chars, mention Hyderabad + placement
 - excerpt: 1-2 sentence summary under 120 chars
+
+FACTUAL CLAIMS (non-negotiable):
+Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
+- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
+- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
+- Placement rates or percentages (no "100% placement", no "X% placed")
+- Ratings, review counts, or testimonial counts
+- Hiring-partner counts (no "50+ hiring partners")
+- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
+Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.
 
 Return ONLY valid JSON, no markdown fences:
 {
@@ -78,7 +87,6 @@ Return ONLY valid JSON, no markdown fences:
   "highlights": ["","","",""],
   "syllabus": [{"module":"","topics":[""]}],
   "tools": [""],
-  "enrolledCount": "500+ students enrolled",
   "nextBatch": "Every Monday",
   "seoTitle": "",
   "seoDesc": "",

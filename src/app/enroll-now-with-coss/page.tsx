@@ -128,7 +128,7 @@ export default function EnrollPage() {
 
               <p className="text-slate-400 text-base leading-relaxed mb-8 max-w-md">
                 Expert trainers, hands-on labs, and 100% placement support.
-                Join 1,200+ students already placed at top companies.
+                Join 5,000+ students already placed at top companies.
               </p>
 
               {/* Trust stats row */}
@@ -173,7 +173,7 @@ export default function EnrollPage() {
                   <div className="w-8 h-8 rounded-full bg-[#8B5CF6] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">K</div>
                 </div>
                 <p className="text-slate-400 text-sm">
-                  <span className="text-white font-semibold">1,200+ students</span> enrolled this year — join them!
+                  <span className="text-white font-semibold">New students</span> enrolling every week — join them!
                 </p>
               </div>
             </div>
@@ -191,7 +191,7 @@ export default function EnrollPage() {
       <section className="py-16 px-4 bg-[#F0F2F5]">
         <div className="max-w-6xl mx-auto">
           <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
-            Why 1,200+ Students Choose Coss Cloud Solutions
+            Why 5,000+ Students Choose Coss Cloud Solutions
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {enrollFeatures.map((f) => (

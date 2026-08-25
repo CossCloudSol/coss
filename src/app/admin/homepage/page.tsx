@@ -282,7 +282,7 @@ export default function HomepageManagerPage() {
               { v: 'stat1Value', l: 'stat1Label', vp: '15+', lp: 'Expert Trainers' },
               { v: 'stat2Value', l: 'stat2Label', vp: '5000+', lp: 'Industry Recognized' },
               { v: 'stat3Value', l: 'stat3Label', vp: '30+', lp: 'Placement Assistance' },
-              { v: 'stat4Value', l: 'stat4Label', vp: '200+', lp: 'Career Growth' },
+              { v: 'stat4Value', l: 'stat4Label', vp: '50+', lp: 'Career Growth' },
             ] as const).map((s, i) => (
               <div key={i} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                 <input

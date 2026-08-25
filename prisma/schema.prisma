@@ -377,7 +377,7 @@ model HomepageSettings {
   stat2Label             String   @default("Industry Recognized")
   stat3Value             String   @default("30+")
   stat3Label             String   @default("Placement Assistance")
-  stat4Value             String   @default("200+")
+  stat4Value             String   @default("50+")
   stat4Label             String   @default("Career Growth")
 
   // Announcement bar (supplemental — primary bar managed via /admin/topbar)

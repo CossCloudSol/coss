@@ -34,7 +34,7 @@ const DEFAULTS: HomepageSettings = {
   stat1Value: '15+', stat1Label: 'Expert Trainers',
   stat2Value: '5000+', stat2Label: 'Industry Recognized',
   stat3Value: '30+', stat3Label: 'Placement Assistance',
-  stat4Value: '200+', stat4Label: 'Career Growth',
+  stat4Value: '50+', stat4Label: 'Career Growth',
   announcementEnabled: true,
   announcementText: 'Next batch starts 1 Jul 2026 — Limited seats available!',
   announcementUrl: '/enroll-now-with-coss',
