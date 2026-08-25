@@ -37,19 +37,26 @@ type SubmitState =
   | { kind: 'success' }
   | { kind: 'error'; message: string };
 
+interface EnrollFullFormProps {
+  /** Submit button label. Defaults to the site-wide demo-booking copy. */
+  submitLabel?: string;
+  /** Footnote under the submit button. Defaults to the site-wide demo-booking copy. */
+  disclaimer?: string;
+}
+
 // useSearchParams() requires a Suspense boundary around the component that
 // calls it, or Next.js opts the whole page out of static rendering. This
 // keeps that boundary self-contained here instead of pushing it onto every
 // page that renders the form.
-export default function EnrollFullForm(): JSX.Element {
+export default function EnrollFullForm({ submitLabel, disclaimer }: EnrollFullFormProps = {}): JSX.Element {
   return (
     <Suspense fallback={<div className="ef-card" aria-hidden="true" />}>
-      <EnrollFullFormFields />
+      <EnrollFullFormFields submitLabel={submitLabel} disclaimer={disclaimer} />
     </Suspense>
   );
 }
 
-function EnrollFullFormFields(): JSX.Element {
+function EnrollFullFormFields({ submitLabel, disclaimer }: EnrollFullFormProps): JSX.Element {
   const searchParams = useSearchParams();
   const course = sanitizeCourseSlug(searchParams.get('course'));
 
@@ -182,7 +189,7 @@ function EnrollFullFormFields(): JSX.Element {
         ) : (
           <>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12.7 19.79 19.79 0 0 1 1.62 4.08 2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            Book Free Demo Class
+            {submitLabel ?? 'Book Free Demo Class'}
           </>
         )}
       </button>
@@ -193,7 +200,7 @@ function EnrollFullFormFields(): JSX.Element {
       )}
 
       <p className="ef-disclaimer">
-        No spam. Instant confirmation via WhatsApp.
+        {disclaimer ?? 'No spam. Instant confirmation via WhatsApp.'}
       </p>
     </form>
   );
