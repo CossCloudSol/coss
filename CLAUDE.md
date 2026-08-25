@@ -13,6 +13,15 @@ Public marketing site plus an Institute Management System (IMS) admin panel.
 Schema changes are applied by the developer through the Supabase SQL Editor.
 IMPORTANT: never run `prisma migrate` or `prisma db push`. Use `/db-change`.
 
+## Local environment
+
+`@prisma/client` auto-loads the root `.env` on import — any script that imports
+`PrismaClient` targets **production** unless run through
+`npx dotenv-cli -e .env.development.local -- <command>`. That wrapper works
+because dotenv never overrides a `process.env` value that's already set.
+`--env-file` flags and manual env loaders inside a script are not protective —
+`.env` loads first regardless.
+
 ## Conventions
 
 - Import prisma from `@/lib/db`
