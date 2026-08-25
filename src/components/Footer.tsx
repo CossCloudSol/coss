@@ -153,7 +153,7 @@ export default async function Footer() {
         <div className="footer-col">
           <FooterLogo />
           <p className="footer-desc">
-            Leading IT training institute in Hyderabad with expert trainers, practical labs, and 100% placement support.
+            Leading IT training institute in Hyderabad with expert trainers, practical labs, and 50+ hiring partners since 2010.
           </p>
 
           {/* Desktop: full contact links (hidden on mobile via CSS) */}

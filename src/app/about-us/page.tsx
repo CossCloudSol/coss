@@ -45,7 +45,7 @@ export default function AboutUsPage() {
           { value: '2010',   label: 'ESTABLISHED' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },
           { value: '30+',    label: 'COURSES OFFERED' },
-          { value: '200+',   label: 'HIRING PARTNERS' },
+          { value: '50+',    label: 'HIRING PARTNERS' },
         ]}
         ctaText="2 Branches in Hyderabad · Dilsukhnagar & Ameerpet"
         breadcrumb={[{ label: 'About Us', href: '/about-us/' }]}
@@ -69,7 +69,7 @@ export default function AboutUsPage() {
                 Our programs include Artificial Intelligence, Data Science, Cloud Computing, DevOps, Cyber Security, Full Stack Development, SAP, Digital Marketing, and 40+ more courses — all designed to make you job-ready from day one.
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
-                {[{ n: '15+', l: 'Years Experience' }, { n: '5000+', l: 'Students Trained' }, { n: '30+', l: 'Courses Offered' }, { n: '200+', l: 'Hiring Partners' }].map(s => (
+                {[{ n: '15+', l: 'Years Experience' }, { n: '5000+', l: 'Students Trained' }, { n: '30+', l: 'Courses Offered' }, { n: '50+', l: 'Hiring Partners' }].map(s => (
                   <div key={s.l} style={{ background: 'var(--bg-card)', borderRadius: '10px', padding: '16px', textAlign: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid var(--border-card)' }}>
                     <div style={{ fontFamily: 'Poppins, sans-serif', fontSize: '24px', fontWeight: 800, color: '#e8401c' }}>{s.n}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{s.l}</div>

@@ -941,7 +941,7 @@ export default async function HomePage() {
                 { Icon: Calendar,     WaterIcon: Clock,     title: 'Flexible Batches',      desc: 'Weekday, weekend, morning, and evening options — learn without disrupting your current schedule.' },
                 { Icon: IndianRupee,  WaterIcon: Briefcase, title: 'Affordable Fees + EMI', desc: 'Premium-quality training at accessible prices, with easy EMI options available.' },
                 { Icon: Award,        WaterIcon: Shield,    title: 'Industry Certifications', desc: 'Earn globally recognised AWS, Azure, Google Cloud, and other certifications.' },
-                { Icon: Briefcase,    WaterIcon: Users,     title: '100% Placement Support', desc: 'Resume building, mock interviews, and direct connections with 200+ top IT hiring companies.' },
+                { Icon: Briefcase,    WaterIcon: Users,     title: 'Placement Support', desc: 'Resume building, mock interviews, and direct connections with 50+ top IT hiring companies.' },
               ] as const).map(({ Icon, WaterIcon, title, desc }) => (
                 <div key={title} className="wcu-small-card">
                   <div className="wcu-small-icon-wrap" aria-hidden="true">
