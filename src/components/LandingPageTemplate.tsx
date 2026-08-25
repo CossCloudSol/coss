@@ -33,46 +33,6 @@ interface Props {
   siblings: FlatSiblingLink[]
 }
 
-function getSalaryRoles(category: string): Array<{ role: string; salary: string; tiIcon: string; expNote: string }> {
-  const cat = category.toLowerCase()
-  if (cat.includes('devops')) return [
-    { role: 'DevOps Engineer', salary: '₹6–18 LPA', tiIcon: 'ti-settings-automation', expNote: '2–5 yrs exp' },
-    { role: 'Cloud DevOps Architect', salary: '₹12–30 LPA', tiIcon: 'ti-settings-automation', expNote: '5–8 yrs exp' },
-    { role: 'SRE / Platform Engineer', salary: '₹10–25 LPA', tiIcon: 'ti-settings-automation', expNote: '3–6 yrs exp' },
-    { role: 'Release Manager', salary: '₹8–20 LPA', tiIcon: 'ti-briefcase', expNote: '4–7 yrs exp' },
-  ]
-  if (cat.includes('azure') || cat.includes('aws') || cat.includes('cloud')) return [
-    { role: 'Cloud Engineer', salary: '₹6–20 LPA', tiIcon: 'ti-settings-automation', expNote: '2–5 yrs exp' },
-    { role: 'Solutions Architect', salary: '₹15–40 LPA', tiIcon: 'ti-settings-automation', expNote: '6–10 yrs exp' },
-    { role: 'Cloud Consultant', salary: '₹10–25 LPA', tiIcon: 'ti-briefcase', expNote: '4–7 yrs exp' },
-    { role: 'Cloud Administrator', salary: '₹5–15 LPA', tiIcon: 'ti-settings-automation', expNote: '1–3 yrs exp' },
-  ]
-  if (cat.includes('data') || cat.includes('analytics') || cat.includes('bi')) return [
-    { role: 'Data Analyst', salary: '₹5–15 LPA', tiIcon: 'ti-chart-bar', expNote: '1–3 yrs exp' },
-    { role: 'Data Engineer', salary: '₹8–25 LPA', tiIcon: 'ti-chart-bar', expNote: '3–6 yrs exp' },
-    { role: 'BI Developer', salary: '₹6–18 LPA', tiIcon: 'ti-chart-bar', expNote: '2–5 yrs exp' },
-    { role: 'Data Scientist', salary: '₹10–30 LPA', tiIcon: 'ti-brain', expNote: '3–7 yrs exp' },
-  ]
-  if (cat.includes('python') || cat.includes('full stack') || cat.includes('java')) return [
-    { role: 'Backend Developer', salary: '₹5–18 LPA', tiIcon: 'ti-code', expNote: '1–4 yrs exp' },
-    { role: 'Full Stack Developer', salary: '₹6–22 LPA', tiIcon: 'ti-code', expNote: '2–5 yrs exp' },
-    { role: 'Software Engineer', salary: '₹8–25 LPA', tiIcon: 'ti-code', expNote: '3–6 yrs exp' },
-    { role: 'Tech Lead', salary: '₹15–35 LPA', tiIcon: 'ti-code', expNote: '6–10 yrs exp' },
-  ]
-  if (cat.includes('cyber') || cat.includes('security')) return [
-    { role: 'Security Analyst', salary: '₹6–18 LPA', tiIcon: 'ti-shield-lock', expNote: '2–5 yrs exp' },
-    { role: 'Ethical Hacker', salary: '₹8–22 LPA', tiIcon: 'ti-shield-lock', expNote: '3–6 yrs exp' },
-    { role: 'SOC Analyst', salary: '₹5–15 LPA', tiIcon: 'ti-shield-lock', expNote: '1–4 yrs exp' },
-    { role: 'Security Architect', salary: '₹20–50 LPA', tiIcon: 'ti-shield-lock', expNote: '8–12 yrs exp' },
-  ]
-  return [
-    { role: `${category} Analyst`, salary: '₹4–12 LPA', tiIcon: 'ti-briefcase', expNote: '1–3 yrs exp' },
-    { role: `${category} Engineer`, salary: '₹6–18 LPA', tiIcon: 'ti-briefcase', expNote: '2–5 yrs exp' },
-    { role: `Senior ${category}`, salary: '₹12–25 LPA', tiIcon: 'ti-briefcase', expNote: '5–8 yrs exp' },
-    { role: `${category} Consultant`, salary: '₹10–22 LPA', tiIcon: 'ti-briefcase', expNote: '4–7 yrs exp' },
-  ]
-}
-
 const CheckIcon = () => (
   <svg className="h-3.5 w-3.5 text-green-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
     <polyline points="20 6 9 17 4 12" />
@@ -125,7 +85,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
   const titleWithoutTraining = course.title.replace(/\s*Training$/i, '').replace(/\s*Course$/i, '')
   const desc = sanitizeDescription(course.excerpt || course.description)
   const tags = course.tools.slice(0, 5)
-  const salaryRoles = getSalaryRoles(categoryName)
 
   const serviceAreas = [
     ...(dilsukhnagar?.serviceAreas ?? ['Dilsukhnagar', 'LB Nagar', 'Kothapet', 'Nagole']),
@@ -134,15 +93,15 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
   const faqItems = [
     { q: `Who can join the ${course.title} course?`, a: 'This course is open to graduates, working professionals, and career changers. Basic computer knowledge is sufficient for most batches.' },
-    { q: `Do you provide placement support after ${titleWithoutTraining} training?`, a: 'Yes. Coss Cloud Solutions provides 100% placement assistance including resume building, LinkedIn optimization, mock interviews, and job referrals to our partner companies in Hyderabad.' },
+    { q: `Do you provide placement support after ${titleWithoutTraining} training?`, a: 'Yes. Coss Cloud Solutions provides placement assistance including resume building, LinkedIn optimization, mock interviews, and job referrals to our partner companies in Hyderabad.' },
     { q: `Is the ${course.title} course available online and offline in Hyderabad?`, a: 'Yes. We offer both classroom training at our Dilsukhnagar and Ameerpet centres, and live online training. Students can switch between modes as needed.' },
     { q: `What is the duration of the ${course.title} course?`, a: `The course duration is typically ${course.duration || '3 months'}, with weekday and weekend batch options available.` },
     { q: `Will I get a certificate after completing ${titleWithoutTraining} training?`, a: 'Yes. You will receive a Coss Cloud Solutions course completion certificate. We also prepare you for relevant industry certification exams.' },
     { q: `What is the fee for the ${course.title} course?`, a: `We offer flexible payment options including EMI. Contact our counsellors at ${phone1} for the latest fee structure and available scholarships.` },
     { q: `Is there any prior experience needed for ${course.title}?`, a: 'No prior experience is required for most batches. Our curriculum is designed to take you from the fundamentals to advanced concepts with hands-on projects.' },
-    { q: `How many students are placed after ${titleWithoutTraining} training at Coss?`, a: 'We provide 100% placement support to all our graduates. Our students have secured employment at TCS, Infosys, Wipro, Accenture, HCL, and Cognizant.' },
+    { q: `What placement support do you provide after ${titleWithoutTraining} training at Coss?`, a: 'We provide placement support to all our graduates, including resume building, mock interviews, and job referrals through our network of 50+ hiring partners in Hyderabad.' },
     { q: `Do you offer weekend batches for ${course.title} in Hyderabad?`, a: 'Yes. Weekend batches (Sat–Sun) are available at both Dilsukhnagar and Ameerpet, designed specifically for working professionals.' },
-    { q: `Which companies hire ${course.title} professionals in Hyderabad?`, a: 'Top hiring companies include TCS, Infosys, Wipro, Accenture, Capgemini, Tech Mahindra, HCL, Amazon, Microsoft, and numerous MNCs and startups.' },
+    { q: `What kind of companies does Coss Cloud Solutions place ${course.title} graduates with?`, a: 'We connect graduates with our network of 50+ hiring partners across IT services, product companies, and startups in Hyderabad through placement drives and direct referrals.' },
   ]
 
   const courseSchema = {
@@ -212,13 +171,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
     },
   ]
 
-  const salaryIcons = [
-    <svg key="gear" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-    <svg key="cloud" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>,
-    <svg key="server" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>,
-    <svg key="branch" className="text-orange-500" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>,
-  ]
-
   return (
     <div>
       {/* JSON-LD */}
@@ -255,7 +207,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               {[
                 'Live instructor-led classes',
                 'Hands-on real-time projects',
-                '100% placement support',
+                'Placement support',
                 `${course.level || 'All levels'} level`,
                 `${course.duration || '3 months'} duration`,
                 'Lifetime LMS access',
@@ -358,44 +310,6 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
       <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
 
-      {/* ── SECTION 3: SALARY ───────────────────────────────────────────── */}
-      <section className="bg-slate-50 dark:bg-slate-800 py-10 md:py-16 px-4 md:px-8">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">High demand · High paying careers</p>
-            <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3" />
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
-              {categoryName} Professionals Are in High Demand
-            </h2>
-            <p className="mt-4 text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-              India&apos;s top companies are aggressively hiring certified {titleWithoutTraining} professionals.
-              Skilled talent with hands-on experience commands salaries well above the industry average —
-              making this one of the most rewarding career investments you can make in 2025.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {['Banking & BFSI', 'Healthcare IT', 'E-commerce', 'FinTech', 'Telecom', 'SaaS'].map(tag => (
-                <span key={tag} className="rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1 text-xs text-slate-600 dark:text-slate-400">{tag}</span>
-              ))}
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            {salaryRoles.map((role, idx) => (
-              <div key={role.role} className="relative bg-white dark:bg-slate-800 rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-5 text-center overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:border-orange-300 transition-all duration-300">
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-t-2xl" />
-                <div className="w-14 h-14 rounded-xl bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/30 transition-colors">
-                  {salaryIcons[idx % 4]}
-                </div>
-                <div className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight mb-2">{role.role}</div>
-                <div className="inline-block bg-green-50 dark:bg-green-950/30 border-2 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 font-black text-xl px-4 py-2 rounded-xl">{role.salary}</div>
-                <div className="text-xs text-slate-400 mt-2">{role.expNote}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
-
       {/* ── SECTION 4: WHY COSS ─────────────────────────────────────────── */}
       <section className="bg-white dark:bg-slate-900 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
@@ -419,7 +333,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
               },
               {
                 svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z" /></svg>,
-                title: '100% Placement',
+                title: 'Placement Support',
                 body: 'Resume review, mock interviews, LinkedIn optimization, and direct referrals to our partner companies.',
               },
               {
@@ -708,7 +622,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
           <p className="text-sm text-slate-500 text-center max-w-3xl mx-auto mt-8 leading-relaxed">
             Coss Cloud Solutions offers {titleWithoutTraining} training in Hyderabad across multiple locations including
             Dilsukhnagar, Ameerpet, and nearby areas including {serviceAreas.slice(0, 4).join(', ')}.
-            Our certified trainers deliver both classroom and online training with 100% placement support.
+            Our certified trainers deliver both classroom and online training with placement support.
           </p>
         </div>
       </section>
@@ -728,7 +642,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
 
           <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
             {[
-              { icon: '✓', label: '100% Practical Training' },
+              { icon: '✓', label: 'Practical Training' },
               { icon: '✓', label: 'Placement Assistance' },
               { icon: '✓', label: 'Certification Prep' },
               { icon: '✓', label: 'Lifetime LMS Access' },
