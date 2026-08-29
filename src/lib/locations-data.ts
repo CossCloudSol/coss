@@ -19,6 +19,22 @@ export const BRANCH_GEO: Record<BranchKey, { lat: string; lng: string }> = {
   ameerpet: { lat: '17.4369572', lng: '78.4471186' },
 }
 
+/** Google Maps embed iframe src per branch — source of truth, consumed below
+ *  and by LandingPageTemplate.tsx as the fallback when the DB's
+ *  BranchSettings.mapEmbedUrl is unset. */
+export const BRANCH_MAP_EMBED: Record<BranchKey, string> = {
+  dilsukhnagar:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5283118!3d17.3677756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fcaf898051%3A0xa63d61bd6b7fd4e2!2sCoss%20Cloud%20Solutions!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
+  ameerpet:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin',
+}
+
+/** Google Maps directions link per branch, using canonical BRANCH_GEO coordinates. */
+export const BRANCH_DIRECTIONS_HREF: Record<BranchKey, string> = {
+  dilsukhnagar: 'https://maps.google.com/?q=17.3677756,78.5283118',
+  ameerpet: 'https://maps.google.com/?q=17.4369572,78.4471186',
+}
+
 export interface NearestBranchInfo {
   branchKey: BranchKey
   label: string
@@ -112,9 +128,8 @@ export const LOCALITIES: LocalityConfig[] = [
       'Opposite Chai Vaai Cafe, Beside Anjana Function Hall,',
       'Dilsukhnagar, Hyderabad – 500060',
     ],
-    mapEmbed:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5283118!3d17.3677756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fcaf898051%3A0xa63d61bd6b7fd4e2!2sCoss%20Cloud%20Solutions!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
-    directionsHref: 'https://maps.google.com/?q=17.3677756,78.5283118',
+    mapEmbed: BRANCH_MAP_EMBED.dilsukhnagar,
+    directionsHref: BRANCH_DIRECTIONS_HREF.dilsukhnagar,
     nearbyCatchmentSlugs: ['kukatpally'],
     studentsTrained: 3500,
   },
@@ -150,9 +165,8 @@ export const LOCALITIES: LocalityConfig[] = [
       'Besides Aditya Trade Center,',
       'Ameerpet, Hyderabad – 500016',
     ],
-    mapEmbed:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3200.84840352847!2d78.44696155635079!3d17.43712331254024!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb9127c03edcaf%3A0x8415d2ae07b161f8!2sCoss%20Cloud%20Solutions%20-%20Data%20Science%20%7C%20Digital%20Marketing%20%7C%20Cyber%20Security%20Course%20%7C%20Software%20Training%20Institute%20in%20Ameerpet!5e0!3m2!1sen!2sin!4v1779166650074!5m2!1sen!2sin',
-    directionsHref: 'https://maps.google.com/?q=17.436986,78.447128',
+    mapEmbed: BRANCH_MAP_EMBED.ameerpet,
+    directionsHref: BRANCH_DIRECTIONS_HREF.ameerpet,
     nearbyCatchmentSlugs: ['kukatpally', 'madhapur-hitec-city'],
     studentsTrained: 1500,
   },

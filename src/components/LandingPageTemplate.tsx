@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
+import { BRANCH_MAP_EMBED, type BranchKey } from '@/lib/locations-data'
 import { sanitizeDescription } from '@/lib/sanitizeDescription'
 import type { RelatedCourseItem } from '@/lib/related-courses'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
@@ -594,11 +595,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                       <PhoneIcon cls="w-5 h-5 text-orange-400" /> {branchPhone}
                     </CallLink>
                     {(() => {
-                      const isDilsukhnagar = branchName.toLowerCase().includes('dilsukhnagar')
-                      const mapSrc = (branchObj?.mapEmbedUrl || '') ||
-                        (isDilsukhnagar
-                          ? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3808.0!2d78.5262!3d17.3617!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDIxJzQyLjEiTiA3OMKwMzEnMzQuMyJF!5e0!3m2!1sen!2sin!4v1234567890'
-                          : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.5!2d78.4482!3d17.4375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDI2JzE1LjAiTiA3OMKwMjYnNTMuNSJF!5e0!3m2!1sen!2sin!4v1234567890')
+                      const mapSrc = (branchObj?.mapEmbedUrl || '') || BRANCH_MAP_EMBED[branchKey as BranchKey]
                       return (
                         <div className="mt-4 rounded-xl overflow-hidden border border-slate-600 h-[160px]">
                           <iframe
@@ -609,7 +606,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                             allowFullScreen
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            title={`Coss Cloud Solutions ${isDilsukhnagar ? 'Dilsukhnagar' : 'Ameerpet'}`}
+                            title={branchName}
                           />
                         </div>
                       )
