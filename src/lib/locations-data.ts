@@ -15,8 +15,8 @@ export type BranchKey = 'dilsukhnagar' | 'ameerpet'
 
 /** Branch coordinates for per-locality geo meta tags (geo.position / ICBM). */
 export const BRANCH_GEO: Record<BranchKey, { lat: string; lng: string }> = {
-  dilsukhnagar: { lat: '17.367741', lng: '78.528543' },
-  ameerpet: { lat: '17.436986', lng: '78.447128' },
+  dilsukhnagar: { lat: '17.3677756', lng: '78.5283118' },
+  ameerpet: { lat: '17.4369572', lng: '78.4471186' },
 }
 
 export interface NearestBranchInfo {
@@ -113,8 +113,8 @@ export const LOCALITIES: LocalityConfig[] = [
       'Dilsukhnagar, Hyderabad – 500060',
     ],
     mapEmbed:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5285426!3d17.3677401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb98ec55555555%3A0xdd694f49845605aa!2sComplete%20Open%20Source%20Solutions%20(COSS)!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
-    directionsHref: 'https://maps.google.com/?q=17.367741,78.528543',
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5283118!3d17.3677756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fcaf898051%3A0xa63d61bd6b7fd4e2!2sCoss%20Cloud%20Solutions!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin',
+    directionsHref: 'https://maps.google.com/?q=17.3677756,78.5283118',
     nearbyCatchmentSlugs: ['kukatpally'],
     studentsTrained: 3500,
   },

@@ -60,8 +60,8 @@ const BRAND_FULL = 'Coss Cloud Solutions';
 const SHORT_RE = /\bCOSS\b/gi;
 
 const BRANCH_GEO = {
-  dilsukhnagar: { lat: 17.367741, lng: 78.528543 },
-  ameerpet: { lat: 17.436986, lng: 78.447128 },
+  dilsukhnagar: { lat: 17.3677756, lng: 78.5283118 },
+  ameerpet: { lat: 17.4369572, lng: 78.4471186 },
 };
 const GEO_TOLERANCE = 0.0005;
 const TYPE_B_LOCALITIES = ['kukatpally', 'madhapur-hitec-city'];
