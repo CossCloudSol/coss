@@ -53,10 +53,12 @@ function buildBranchCard(branchKey: string, slug: string, branch: BranchSettings
   const lat = hasCoords ? branch.latitude : fallback.latitude
   const lng = hasCoords ? branch.longitude : fallback.longitude
 
+  const addressParts = [branch.addressLine1, branch.addressLine2].filter(Boolean)
+
   return {
     name: branch.branchName.replace(/^Coss Cloud Solutions\s*—\s*/, ''),
     slug,
-    subtitle: `${branch.addressLine1}, ${branch.city} – ${branch.pincode}`,
+    subtitle: `${addressParts.join(', ')}, ${branch.city} – ${branch.pincode}`,
     directionsHref: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
   }
 }

@@ -1075,6 +1075,14 @@ img { max-width: 100%; height: auto; display: block; }
 input:focus, select:focus, textarea:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(228,117,56,0.15) !important; }
 
 /* ══════════════════════════════════════════════════
+   DESKTOP ONLY (≥1025px) — keeps the ≤1024px/≤768px
+   rules below untouched
+══════════════════════════════════════════════════ */
+@media (min-width:1025px) {
+  .footer-col-branches { max-width: 520px; }
+}
+
+/* ══════════════════════════════════════════════════
    RESPONSIVE — TABLET (≤1024px)
 ══════════════════════════════════════════════════ */
 @media (max-width:1024px) {
