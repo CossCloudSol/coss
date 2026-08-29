@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { MapPin } from 'lucide-react'
 import FooterLogo from './FooterLogo'
 import FooterNavCol from './FooterNavCol'
 import CallLink from './CallLink'
@@ -52,20 +53,10 @@ function buildBranchCard(branchKey: string, slug: string, branch: BranchSettings
   const lat = hasCoords ? branch.latitude : fallback.latitude
   const lng = hasCoords ? branch.longitude : fallback.longitude
 
-  const isEmbeddableUrl = /maps\/embed|output=embed/.test(branch.mapEmbedUrl)
-  if (branch.mapEmbedUrl && !isEmbeddableUrl) {
-    console.log(`[Footer] BranchSettings "${branchKey}" mapEmbedUrl is not an embeddable Google Maps URL, ignoring: ${branch.mapEmbedUrl}`)
-  }
-
   return {
     name: branch.branchName.replace(/^Coss Cloud Solutions\s*—\s*/, ''),
     slug,
-    address: [branch.addressLine1, branch.addressLine2, `${branch.city} – ${branch.pincode}`]
-      .filter(Boolean)
-      .join(', '),
-    mapEmbed: isEmbeddableUrl
-      ? branch.mapEmbedUrl
-      : `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`,
+    subtitle: `${branch.addressLine1}, ${branch.city} – ${branch.pincode}`,
     directionsHref: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
   }
 }
@@ -135,11 +126,13 @@ const SOCIALS = [
 export default async function Footer() {
   const year = new Date().getFullYear()
 
-  // getBranchSettings() reads BranchSettings directly via Prisma with no cache
-  // layer of its own (unlike SeoSettings, which has a 5-min in-memory TTL).
-  // Root layout.tsx sets `export const dynamic = 'force-dynamic'`, so this
-  // footer re-fetches on every request — admin edits in /admin/geo are live
-  // immediately, subject only to any upstream CDN/edge cache TTL.
+  // getBranchSettings() is wrapped in unstable_cache (tag 'branch-settings',
+  // revalidate: 86400 — 24h), unlike SeoSettings' 5-min in-memory TTL. Root
+  // layout.tsx sets `export const dynamic = 'force-dynamic'`, but that only
+  // forces this Server Component to re-render per request — it does not
+  // bypass unstable_cache. Admin edits in /admin/geo only show up here once
+  // the 24h tag expires, or immediately if that save path calls
+  // revalidateTag('branch-settings').
   const branchRows = await Promise.all(BRANCH_KEYS.map(b => getBranchSettings(b.branchKey)))
   const BRANCHES = BRANCH_KEYS.map((b, i) => buildBranchCard(b.branchKey, b.slug, branchRows[i]))
 
@@ -226,24 +219,16 @@ export default async function Footer() {
           <div className="footer-branches-flex">
             {BRANCHES.map(b => (
               <div key={b.name} className="footer-branch-card">
-                <div className="footer-branch-map">
-                  <iframe
-                    src={b.mapEmbed}
-                    width="600"
-                    height="400"
-                    loading="lazy"
-                    style={{ border: 0, pointerEvents: 'none', display: 'block' }}
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title={`Map – ${b.name} branch`}
-                  />
+                <div className="footer-branch-icon" aria-hidden="true">
+                  <MapPin size={20} />
                 </div>
                 <div className="footer-branch-info">
                   <Link href={`/locations/${b.slug}/`} className="footer-branch-name">{b.name}</Link>
-                  <p className="footer-branch-address">{b.address}</p>
-                  <a href={b.directionsHref} target="_blank" rel="noopener noreferrer" className="footer-branch-dir">
-                    Get directions →
-                  </a>
+                  <p className="footer-branch-address">{b.subtitle}</p>
                 </div>
+                <a href={b.directionsHref} target="_blank" rel="noopener noreferrer" className="footer-branch-dir">
+                  Directions <span aria-hidden="true">→</span>
+                </a>
               </div>
             ))}
           </div>

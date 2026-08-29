@@ -826,18 +826,16 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-socials { display: flex; gap: 8px; flex-wrap: wrap; }
 .footer-social-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; min-height: 40px; border-radius: 8px; transition: opacity 0.2s; }
 .footer-social-icon:hover { opacity: 0.85; }
-/* Branch cards — stacked inside col-5 on desktop, side-by-side on tablet */
-.footer-branches-flex { display: flex; flex-direction: column; gap: 14px; }
-.footer-branch-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px 12px; }
-.footer-branch-map { width: 100%; height: 140px; overflow: hidden; position: relative; border-radius: 6px; margin-bottom: 8px; }
-/* iframe larger than wrapper; negative offsets crop to show only the clean centre area */
-.footer-branch-map iframe { width: 600px; height: 400px; position: absolute; top: -130px; left: -185px; display: block; }
-.footer-branch-info { }
-.footer-branch-name { display: block; font-size: 13px; font-weight: 600; color: var(--footer-heading); text-decoration: none; margin-bottom: 4px; transition: color 0.2s; }
+/* Branch cards — icon tile, name+address, directions pill, all in one row */
+.footer-branches-flex { display: flex; flex-direction: column; gap: 12px; }
+.footer-branch-card { display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; background: rgba(255,255,255,0.03); }
+.footer-branch-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 10px; background: color-mix(in srgb, var(--secondary) 22%, transparent); color: #5ef0c8; }
+.footer-branch-info { flex: 1; min-width: 0; }
+.footer-branch-name { display: block; font-size: 13px; font-weight: 600; color: var(--footer-heading); text-decoration: none; margin-bottom: 2px; transition: color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .footer-branch-name:hover { color: #5ef0c8; }
-.footer-branch-address { font-size: 11px; color: var(--footer-text); line-height: 1.5; margin-bottom: 6px; }
-.footer-branch-dir { font-size: 12px; color: #5ef0c8; font-weight: 500; display: inline-block; transition: opacity 0.2s; }
-.footer-branch-dir:hover { opacity: 0.8; }
+.footer-branch-address { font-size: 13px; color: var(--footer-text); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.footer-branch-dir { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; padding: 8px 16px; border-radius: 999px; background: var(--primary); color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; text-decoration: none; transition: background 0.2s; }
+.footer-branch-dir:hover { background: var(--primary-dark); }
 .footer-areas-served { font-size: 11px; color: var(--footer-text); line-height: 1.6; margin-top: 12px; }
 .footer-areas-served a { color: #5ef0c8; font-weight: 500; text-decoration: none; }
 .footer-areas-served a:hover { opacity: 0.8; }
@@ -1192,13 +1190,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .footer-nav-summary .footer-acc-chevron { display: flex; }
   .footer-acc-chevron { transition: transform 0.25s ease; flex-shrink: 0; color: var(--footer-text); display: flex; }
   .footer-nav-summary[aria-expanded="true"] .footer-acc-chevron { transform: rotate(180deg); }
-  /* Branch cards: horizontal layout on mobile (small map left, info right) */
+  /* Branch cards: stay a single row (icon, info, directions pill) down to 360px */
   .footer-col-branches { margin-top: 4px; }
   .footer-branches-flex { flex-direction: column; }
-  .footer-branch-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border: none; border-bottom: 1px solid rgba(255,255,255,0.06); border-radius: 0; background: transparent; }
-  .footer-branch-map { width: 80px !important; height: 60px !important; margin-bottom: 0; }
-  .footer-branch-map iframe { width: 240px; height: 160px; top: -50px; left: -80px; }
-  .footer-branch-address { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .footer-branch-card { padding: 12px; gap: 10px; }
+  .footer-branch-dir { padding: 8px 12px; }
   .footer-btm-inner { flex-direction: column; text-align: center; gap: 8px; }
   .footer-btm-links { justify-content: center; }
 
