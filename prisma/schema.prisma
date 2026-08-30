@@ -36,6 +36,11 @@ model Lead {
   submitPath  String?
   deviceType  String?
 
+  jobId       String?
+  jobTitle    String?
+  jobCompany  String?
+  consentAt   DateTime?
+
   createdAt DateTime @default(now())
 
   activities LeadActivity[]
@@ -45,6 +50,7 @@ model Lead {
   @@index([branch])
   @@index([formType])
   @@index([utmSource])
+  @@index([jobId])
 }
 
 /// Corporate-training leads with company-level info.
