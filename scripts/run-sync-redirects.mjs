@@ -45,6 +45,8 @@ const INFRA_REDIRECTS = [
   { source: '/coaching-centres-in-hyderabad/:path*',        destination: '/courses',                        permanent: true },
   { source: '/branches/:path*',                             destination: '/contact-us',                     permanent: true },
   { source: '/sql/mysql/:path*',                            destination: '/sql-training-institute-in-hyderabad', permanent: true },
+  { source: '/feed',                                        destination: '/blog',                           permanent: true },
+  { source: '/:path*/feed',                                 destination: '/blog',                           permanent: true },
 ]
 
 const INFRA_SOURCES = new Set(INFRA_REDIRECTS.map(r => r.source))

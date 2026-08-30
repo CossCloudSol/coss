@@ -106,6 +106,7 @@ const nextConfig = {
       { source: '/oracle-fusion-hcm-training-institute-in-hyderabad', destination: '/courses/erp-crm-enterprise-tools/salesforce-admin-developer-training-in-hyderabad', permanent: true },
       { source: '/java-full-stack-training-institute-in-hyderabad', destination: '/java-training-institute-in-hyderabad', permanent: true },
       { source: '/salesforce-crm-training-institute-in-hyderabad', destination: '/salesforce-training-institute-in-hyderabad', permanent: true },
+      { source: '/feed', destination: '/blog', permanent: true },
       // DB-managed rules,
       { source: '/digital-marketing-course-dilsukhnagar', destination: '/blog/digital-marketing-course-dilsukhnagar', permanent: true },
       { source: '/best-spoken-english-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions', destination: '/blog/best-spoken-english-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions', permanent: true },
@@ -395,6 +396,7 @@ const nextConfig = {
       { source: '/courses/apache-spark-data-engineering-training-hyderabad', destination: '/courses/data-engineering/apache-spark-training-in-hyderabad', permanent: true },
       { source: '/courses/apache-kafka-training-institute-in-hyderabad', destination: '/courses/data-engineering/apache-kafka-training-in-hyderabad', permanent: true },
       { source: '/courses/cloud-computing/aws-cloud-practitioner-training-in-hyderabad', destination: '/courses/aws-cloud-practitioner-certification', permanent: true },
+      { source: '/courses/digital-marketing-training-center-in-hyderabad', destination: '/courses/digital-marketing-training-in-hyderabad', permanent: true },
       // infrastructure redirects — wildcard (must stay after exact-match rules above),
       { source: '/category/:path*', destination: '/courses', permanent: true },
       { source: '/tag/:path*', destination: '/courses', permanent: true },
@@ -403,6 +405,7 @@ const nextConfig = {
       { source: '/coaching-centres-in-hyderabad/:path*', destination: '/courses', permanent: true },
       { source: '/branches/:path*', destination: '/contact-us', permanent: true },
       { source: '/sql/mysql/:path*', destination: '/sql-training-institute-in-hyderabad', permanent: true },
+      { source: '/:path*/feed', destination: '/blog', permanent: true },
     ];
   },
 };
