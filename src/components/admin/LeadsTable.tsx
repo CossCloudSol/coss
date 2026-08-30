@@ -282,6 +282,15 @@ export function LeadsTable(): JSX.Element {
         'Status',
         'Source Form',
         'Created (ISO)',
+        'UTM Source',
+        'UTM Medium',
+        'UTM Campaign',
+        'Referrer',
+        'Landing Page',
+        'Submit Path',
+        'Device',
+        'Job Title',
+        'Job Company',
       ];
       const rows = all.map((l) => [
         l.name,
@@ -292,6 +301,15 @@ export function LeadsTable(): JSX.Element {
         l.status,
         l.formType,
         new Date(l.createdAt).toISOString(),
+        l.utmSource ?? '',
+        l.utmMedium ?? '',
+        l.utmCampaign ?? '',
+        l.referrer ?? '',
+        l.landingPage ?? '',
+        l.submitPath ?? '',
+        l.deviceType ?? '',
+        l.jobTitle ?? '',
+        l.jobCompany ?? '',
       ]);
       const csv = [header, ...rows]
         .map((row) => row.map(csvEscape).join(','))
@@ -452,7 +470,10 @@ export function LeadsTable(): JSX.Element {
                 Status
               </th>
               <th scope="col" className="px-4 py-2.5">
-                Source Form
+                Source
+              </th>
+              <th scope="col" className="px-4 py-2.5">
+                Form
               </th>
               <th scope="col" className="px-4 py-2.5">
                 Date
@@ -466,7 +487,7 @@ export function LeadsTable(): JSX.Element {
             {loading && leads.length === 0 ? (
               <tr>
                 <td
-                  colSpan={9}
+                  colSpan={10}
                   className="px-4 py-14 text-center text-sm text-gray-500"
                 >
                   <Loader2 className="mx-auto h-5 w-5 animate-spin text-gray-400" />
@@ -475,7 +496,7 @@ export function LeadsTable(): JSX.Element {
             ) : error ? (
               <tr>
                 <td
-                  colSpan={9}
+                  colSpan={10}
                   className="px-4 py-14 text-center text-sm text-red-600"
                 >
                   {error}
@@ -483,7 +504,7 @@ export function LeadsTable(): JSX.Element {
               </tr>
             ) : leads.length === 0 ? (
               <tr>
-                <td colSpan={9} className="px-4 py-14">
+                <td colSpan={10} className="px-4 py-14">
                   <EmptyState
                     onClear={clearFilters}
                     hasActiveFilters={hasActiveFilters}
@@ -655,6 +676,12 @@ function LeadRow({
 
       <td className="px-4 py-3">
         <StatusBadgeMenu lead={lead} onStatusChange={onStatusChange} />
+      </td>
+
+      <td className="px-4 py-3">
+        <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+          {lead.utmSource || 'direct'}
+        </span>
       </td>
 
       <td className="px-4 py-3">
@@ -970,9 +997,14 @@ function MobileLeadCard({
 
       {/* Row 3: form source tag + action buttons */}
       <div className="mt-3 flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-2.5">
-        <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          {lead.formType}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            {lead.utmSource || 'direct'}
+          </span>
+          <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            {lead.formType}
+          </span>
+        </div>
         <div className="flex items-center gap-1">
           <button
             type="button"

@@ -32,6 +32,17 @@ export interface LeadDetail {
   status: string;
   message: string | null;
   createdAt: string;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  referrer: string | null;
+  landingPage: string | null;
+  submitPath: string | null;
+  deviceType: string | null;
+  jobId: string | null;
+  jobTitle: string | null;
+  jobCompany: string | null;
+  consentAt: string | null;
   activities: LeadActivityItem[];
 }
 
@@ -511,6 +522,20 @@ function DetailsGrid({ lead }: { lead: LeadDetail }): JSX.Element {
     minute: '2-digit',
   });
   const inquiryType = lead.course ? 'Course Inquiry' : 'General';
+  const consentAt = lead.consentAt
+    ? new Date(lead.consentAt).toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : null;
+  const jobLabel = lead.jobTitle
+    ? lead.jobCompany
+      ? `${lead.jobTitle} (${lead.jobCompany})`
+      : lead.jobTitle
+    : null;
 
   return (
     <section className="mt-5">
@@ -524,6 +549,14 @@ function DetailsGrid({ lead }: { lead: LeadDetail }): JSX.Element {
         <DetailItem label="Inquiry Type" value={inquiryType} />
         <DetailItem label="Form Source" value={lead.formType} capitalize />
         <DetailItem label="Submitted" value={submitted} />
+        <DetailItem label="Source" value={lead.utmSource ?? 'direct'} />
+        <DetailItem label="Medium" value={lead.utmMedium ?? '—'} />
+        <DetailItem label="Campaign" value={lead.utmCampaign ?? '—'} />
+        <DetailItem label="Landing page" value={lead.landingPage ?? '—'} />
+        <DetailItem label="Referrer" value={lead.referrer ?? '—'} />
+        <DetailItem label="Device" value={lead.deviceType ?? '—'} />
+        {jobLabel ? <DetailItem label="Job" value={jobLabel} /> : null}
+        {consentAt ? <DetailItem label="Consent" value={consentAt} /> : null}
       </dl>
     </section>
   );

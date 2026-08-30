@@ -22,6 +22,16 @@ export interface AdminLeadListItem {
   formType: string;
   status: string;
   createdAt: string; // ISO
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  referrer: string | null;
+  landingPage: string | null;
+  submitPath: string | null;
+  deviceType: string | null;
+  jobId: string | null;
+  jobTitle: string | null;
+  jobCompany: string | null;
   _count: {
     activities: number;
   };
@@ -125,6 +135,16 @@ export async function GET(req: NextRequest): Promise<Response> {
           formType: true,
           status: true,
           createdAt: true,
+          utmSource: true,
+          utmMedium: true,
+          utmCampaign: true,
+          referrer: true,
+          landingPage: true,
+          submitPath: true,
+          deviceType: true,
+          jobId: true,
+          jobTitle: true,
+          jobCompany: true,
           _count: { select: { activities: true } },
         },
       }),
@@ -141,6 +161,16 @@ export async function GET(req: NextRequest): Promise<Response> {
         formType: lead.formType,
         status: lead.status,
         createdAt: lead.createdAt.toISOString(),
+        utmSource: lead.utmSource,
+        utmMedium: lead.utmMedium,
+        utmCampaign: lead.utmCampaign,
+        referrer: lead.referrer,
+        landingPage: lead.landingPage,
+        submitPath: lead.submitPath,
+        deviceType: lead.deviceType,
+        jobId: lead.jobId,
+        jobTitle: lead.jobTitle,
+        jobCompany: lead.jobCompany,
         _count: { activities: lead._count.activities },
       })),
       total,

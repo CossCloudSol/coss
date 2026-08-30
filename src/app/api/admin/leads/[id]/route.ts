@@ -30,6 +30,17 @@ export interface LeadDetailResponse {
   status: string;
   message: string | null;
   createdAt: string; // ISO
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  referrer: string | null;
+  landingPage: string | null;
+  submitPath: string | null;
+  deviceType: string | null;
+  jobId: string | null;
+  jobTitle: string | null;
+  jobCompany: string | null;
+  consentAt: string | null; // ISO
   activities: LeadActivityResponseItem[];
 }
 
@@ -64,6 +75,17 @@ function serializeLead(
     formType: string;
     status: string;
     createdAt: Date;
+    utmSource: string | null;
+    utmMedium: string | null;
+    utmCampaign: string | null;
+    referrer: string | null;
+    landingPage: string | null;
+    submitPath: string | null;
+    deviceType: string | null;
+    jobId: string | null;
+    jobTitle: string | null;
+    jobCompany: string | null;
+    consentAt: Date | null;
     activities?: Array<{
       id: string;
       action: string;
@@ -84,6 +106,17 @@ function serializeLead(
     status: lead.status,
     message,
     createdAt: lead.createdAt.toISOString(),
+    utmSource: lead.utmSource,
+    utmMedium: lead.utmMedium,
+    utmCampaign: lead.utmCampaign,
+    referrer: lead.referrer,
+    landingPage: lead.landingPage,
+    submitPath: lead.submitPath,
+    deviceType: lead.deviceType,
+    jobId: lead.jobId,
+    jobTitle: lead.jobTitle,
+    jobCompany: lead.jobCompany,
+    consentAt: lead.consentAt ? lead.consentAt.toISOString() : null,
     activities: (lead.activities ?? []).map((activity) => ({
       id: activity.id,
       action: activity.action,
