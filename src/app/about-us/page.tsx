@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const milestones = [
   { year: '2010', event: 'Founded in Dilsukhnagar, Hyderabad with a mission to make quality IT education accessible.' },
   { year: '2016', event: 'Opened the Ameerpet branch to serve more students across Hyderabad.' },
-  { year: '2018', event: 'Crossed 1,000 students placed milestone. Launched Cloud Computing programs.' },
+  { year: '2018', event: 'Crossed 1,000 students trained. Launched Cloud Computing programs.' },
   { year: '2020', event: 'Launched online training platform to serve students across India during COVID-19.' },
   { year: '2022', event: 'Introduced AI, Machine Learning and Data Science programs. 3,000+ students milestone.' },
   { year: '2024', event: 'Expanded to 30+ courses. 5,000+ students trained, 50+ hiring partners.' },
