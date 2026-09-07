@@ -26,6 +26,39 @@ export type LeadSubmitResult =
   | { ok: false; message: string };
 
 /* -------------------------------------------------------------------------- */
+/*  GA4                                                                       */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Fires GA4's generate_lead event on successful submission. Best-effort only:
+ * gtag may not have loaded yet (Script strategy="afterInteractive"), so a
+ * missing gtag is a no-op rather than an error, and any failure here must
+ * never affect the caller's return path.
+ */
+function trackLeadEvent(params: {
+  formType: FormType;
+  submitPath: string;
+  leadId: string;
+  utmSource?: string;
+  landingPage?: string;
+}): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    const eventParams: Record<string, string> = {
+      form_type: params.formType,
+      submit_path: params.submitPath,
+    };
+    if (params.leadId) eventParams.lead_id = params.leadId;
+    if (params.utmSource) eventParams.utm_source = params.utmSource;
+    if (params.landingPage) eventParams.landing_page = params.landingPage;
+    (window as any).gtag('event', 'generate_lead', eventParams);
+  } catch {
+    /* best-effort — never let tracking affect the caller */
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Submit                                                                    */
 /* -------------------------------------------------------------------------- */
 
@@ -79,6 +112,13 @@ export async function submitLead(
     } catch {
       /* missing / unparsable body — still treat as success */
     }
+    trackLeadEvent({
+      formType: input.formType,
+      submitPath: body.submitPath,
+      leadId: id,
+      utmSource: firstTouch?.utmSource,
+      landingPage: firstTouch?.landingPage,
+    });
     return { ok: true, id };
   }
 
