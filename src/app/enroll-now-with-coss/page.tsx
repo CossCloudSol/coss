@@ -78,27 +78,6 @@ const enrollFeatures = [
   },
 ];
 
-const enrollTestimonials = [
-  {
-    stars: 5,
-    text: '"Got placed at TCS in 3 months. The hands-on approach made all the difference."',
-    name: 'Rahul M.',
-    course: 'AWS DevOps Batch',
-  },
-  {
-    stars: 5,
-    text: '"Trainers are industry professionals — real projects from day one. Worth every rupee."',
-    name: 'Sneha P.',
-    course: 'Data Science Batch',
-  },
-  {
-    stars: 5,
-    text: '"The free demo alone was better than paid classes I tried elsewhere."',
-    name: 'Kiran T.',
-    course: 'Full Stack Power BI Batch',
-  },
-];
-
 export default function EnrollPage() {
   return (
     <>
@@ -205,27 +184,6 @@ export default function EnrollPage() {
                 <div>
                   <h3 className="font-semibold text-[#0D1B2A] text-sm mb-1">{f.title}</h3>
                   <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ── */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
-            What Our Students Say
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {enrollTestimonials.map((t) => (
-              <div key={t.name} className="bg-[#F8FAFC] rounded-2xl border border-black/[0.06] p-6">
-                <div className="text-amber-400 text-base mb-3">{'★'.repeat(t.stars)}</div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-4 italic">{t.text}</p>
-                <div>
-                  <div className="font-semibold text-[#0D1B2A] text-sm">{t.name}</div>
-                  <div className="text-slate-400 text-xs">{t.course}</div>
                 </div>
               </div>
             ))}

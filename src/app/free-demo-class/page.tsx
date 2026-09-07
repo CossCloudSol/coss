@@ -90,27 +90,6 @@ const whatYouGet = [
   },
 ];
 
-const reviews = [
-  {
-    name: 'Rahul M.',
-    course: 'AWS DevOps',
-    text: 'The free demo alone was better than paid classes I tried elsewhere. Got placed in 4 months!',
-    rating: 5,
-  },
-  {
-    name: 'Sneha P.',
-    course: 'Data Science',
-    text: 'I was skeptical about "free demo" but the trainer spent 45 minutes walking through real AWS projects. Enrolled the next day.',
-    rating: 5,
-  },
-  {
-    name: 'Kiran T.',
-    course: 'Full Stack',
-    text: 'The counsellor helped me choose between two courses. No sales pitch — just honest guidance. Great experience.',
-    rating: 5,
-  },
-];
-
 const faqs = [
   {
     q: 'Is the demo class really free?',
@@ -270,27 +249,6 @@ export default function FreeDemoClassPage() {
                 <div>
                   <h3 className="font-semibold text-[#0D1B2A] text-sm mb-1">{f.title}</h3>
                   <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ── */}
-      <section className="py-16 px-4 bg-[#F8FAFC]">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
-            What Students Say After Their Demo
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {reviews.map((r) => (
-              <div key={r.name} className="bg-white rounded-2xl border border-black/[0.06] p-6">
-                <div className="text-amber-400 text-base mb-3">{'★'.repeat(r.rating)}</div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-4 italic">&quot;{r.text}&quot;</p>
-                <div>
-                  <div className="font-semibold text-[#0D1B2A] text-sm">{r.name}</div>
-                  <div className="text-slate-400 text-xs">{r.course} Batch</div>
                 </div>
               </div>
             ))}
