@@ -220,7 +220,7 @@ export default function FreeDemoClassPage() {
                   <div className="w-7 h-7 rounded-full bg-[#8B5CF6] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">K</div>
                 </div>
                 <p className="text-slate-400 text-xs">
-                  <span className="text-white font-semibold">5,000+</span> attended this year
+                  <span className="text-white font-semibold">5,000+</span> students trained since 2010
                 </p>
               </div>
             </div>

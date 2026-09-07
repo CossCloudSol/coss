@@ -40,7 +40,7 @@ export default function AboutUsPage() {
         titlePre="15+ Years of Building "
         accentText="IT Careers"
         titleLine2="in Hyderabad"
-        subtitle="COSS Cloud Solutions has trained 5,000+ students across Cloud, DevOps, Data Science & more — with industry-certified trainers & guaranteed placement support."
+        subtitle="COSS Cloud Solutions has trained 5,000+ students across Cloud, DevOps, Data Science & more — with industry-certified trainers & dedicated placement support."
         stats={[
           { value: '2010',   label: 'ESTABLISHED' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },

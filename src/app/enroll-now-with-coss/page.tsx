@@ -35,8 +35,8 @@ const enrollFeatures = [
   {
     bg: '#ECFDF5',
     color: '#059669',
-    title: '100% Placement Support',
-    desc: 'Resume, mock interviews, job portal access until placed.',
+    title: 'Placement Support',
+    desc: 'Resume building, mock interviews and job portal access.',
     svg: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
@@ -127,8 +127,8 @@ export default function EnrollPage() {
               </h1>
 
               <p className="text-slate-400 text-base leading-relaxed mb-8 max-w-md">
-                Expert trainers, hands-on labs, and 100% placement support.
-                Join 5,000+ students already placed at top companies.
+                Expert trainers, hands-on labs, and placement support.
+                Join 5,000+ students trained at Coss Cloud Solutions since 2010.
               </p>
 
               {/* Trust stats row */}
@@ -140,7 +140,7 @@ export default function EnrollPage() {
                   </svg>
                   <div>
                     <div className="text-white font-bold text-sm">5,000+</div>
-                    <div className="text-slate-500 text-xs">Students Placed</div>
+                    <div className="text-slate-500 text-xs">Students Trained</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

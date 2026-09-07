@@ -13,7 +13,7 @@ const reasons = [
   { icon: '📅', title: 'Flexible Batch Options', desc: 'We offer morning, evening, weekend and online batches to accommodate working professionals, students and career changers. You choose the schedule that works for you.', highlight: 'Weekday, Weekend & Online Options' },
   { icon: '💰', title: 'Affordable, Quality Training', desc: 'Premium IT education shouldn\'t break the bank. Our course fees are among the most competitive in Hyderabad, with EMI options and group discounts available.', highlight: 'Lowest Fees, Highest Quality' },
   { icon: '🏆', title: 'Industry-Recognized Certifications', desc: 'Our courses are aligned with globally recognized certifications from AWS, Microsoft, Google, CompTIA, and more — giving your resume a competitive edge.', highlight: 'AWS, Azure, Google & More' },
-  { icon: '🚀', title: '100% Placement Assistance', desc: 'We take your career seriously. Our dedicated placement team provides resume building, mock interviews, company referrals, and interview coaching until you land your dream job.', highlight: '5000+ Students Placed' },
+  { icon: '🚀', title: 'Dedicated Placement Assistance', desc: 'We take your career seriously. Our dedicated placement team provides resume building, mock interviews, company referrals, and interview coaching through to your job search.', highlight: '5,000+ Students Trained' },
   { icon: '🔄', title: 'Updated Curriculum', desc: 'The IT industry evolves fast. Our curriculum is updated every quarter to include the latest technologies, tools, and industry best practices — so you always learn what\'s in demand.', highlight: 'Always Up-to-Date Content' },
   { icon: '👥', title: 'Small Batch Sizes', desc: 'We maintain small batch sizes (10–20 students) to ensure every student gets personal attention from the trainer and can ask questions freely without feeling lost in a crowd.', highlight: 'Personal Attention for Every Student' },
   { icon: '🌐', title: 'Online & Offline Training', desc: 'Can\'t attend in person? Join our live online sessions from anywhere in India. All online sessions are interactive with real-time Q&A and recorded for review.', highlight: 'Learn from Anywhere in India' },
@@ -22,7 +22,7 @@ const reasons = [
 const comparisons = [
   { feature: 'Industry Expert Trainers', coss: true, others: false },
   { feature: 'Hands-on Lab Access', coss: true, others: 'Partial' },
-  { feature: '100% Placement Support', coss: true, others: false },
+  { feature: 'Placement Support', coss: true, others: false },
   { feature: 'Flexible Batch Schedules', coss: true, others: 'Partial' },
   { feature: 'Updated Curriculum', coss: true, others: false },
   { feature: 'Small Batch Sizes', coss: true, others: false },
