@@ -41,7 +41,7 @@ export default function WhyUsPage() {
         titlePre="The "
         accentText="Smarter Choice"
         titleLine2="for IT Training in Hyderabad"
-        subtitle="Small batches, real-project training, certified trainers with 10+ years of experience & 100% placement support — see what sets Coss Cloud Solutions apart."
+        subtitle="Small batches, real-project training, certified trainers with 10+ years of experience and dedicated placement support — see what sets Coss Cloud Solutions apart."
         stats={[
           { value: '5,000+', label: 'STUDENTS TRAINED' },
           { value: '15+',    label: 'YEARS EXPERIENCE' },
