@@ -28,7 +28,7 @@ export function buildCategoryPageMetadata(slug: string): Metadata {
     return {
       title: 'IT Training in Hyderabad',
       description:
-        'Best IT Training Institute in Hyderabad with 100% placement support.',
+        'IT training courses in Hyderabad at Coss Cloud Solutions.',
     };
   }
 
