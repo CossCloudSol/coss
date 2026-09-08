@@ -488,7 +488,7 @@ export const COURSES: ReadonlyArray<Course> = [
     category: 'Cyber Security & Networking',
     metaTitle: 'Cyber Security Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best cyber security training institute in Hyderabad. Ethical hacking, SOC, VAPT, CEH certification with hands-on labs and 100% placement at Dilsukhnagar & Ameerpet.',
+      'Best cyber security training institute in Hyderabad. Ethical hacking, SOC, VAPT, CEH certification with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
     keywords:
       'cyber security training in hyderabad, ethical hacking course, soc analyst training dilsukhnagar, vapt training ameerpet, ceh certification hyderabad, network security course',
     topics: [
@@ -706,7 +706,7 @@ export const COURSES: ReadonlyArray<Course> = [
     level: 'Intermediate to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'Big Data Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Big Data training institute in Hyderabad. Hadoop, Spark, Hive & Kafka with hands-on labs and 100% placement support at Dilsukhnagar & Ameerpet.',
+    metaDescription: 'Best Big Data training institute in Hyderabad. Hadoop, Spark, Hive & Kafka with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
     keywords: 'big data training in hyderabad, hadoop training hyderabad, apache spark course, big data certification hyderabad, hive training dilsukhnagar',
     topics: [
       'Hadoop Architecture & HDFS',
@@ -870,7 +870,7 @@ export const COURSES: ReadonlyArray<Course> = [
     level: 'Beginner to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'SQL Training in Hyderabad | MySQL & PostgreSQL | COSS Cloud Solutions',
-    metaDescription: 'Best SQL training institute in Hyderabad. MySQL, PostgreSQL & database design with hands-on labs and 100% placement support at Dilsukhnagar & Ameerpet.',
+    metaDescription: 'Best SQL training institute in Hyderabad. MySQL, PostgreSQL & database design with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
     keywords: 'sql training in hyderabad, mysql training hyderabad, postgresql course hyderabad, database training, sql certification dilsukhnagar',
     topics: [
       'SQL Fundamentals & DDL',

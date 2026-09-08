@@ -366,7 +366,7 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
     courseDataKey: 'cyber-security-networking',
     title: 'Cyber Security Training in Hyderabad',
     metaDescription:
-      'Ethical Hacking, Cyber Security & Networking courses in Hyderabad. CEH exam prep & placement at Coss Cloud Solutions.',
+      'Ethical Hacking, Cyber Security & Networking courses in Hyderabad. CEH exam prep & placement support at Coss Cloud Solutions.',
     keywords:
       'cyber security training in Hyderabad, networking course Hyderabad, ethical hacking training, CCNA certification Hyderabad',
     category: 'Cyber Security & Networking',
@@ -443,7 +443,7 @@ export const CATEGORY_PAGES: ReadonlyArray<CategoryPage> = [
     courseDataKey: 'data-analytics-bi',
     title: 'Data Analytics & BI Training in Hyderabad',
     metaDescription:
-      'Join Data Analytics & Business Intelligence training in Hyderabad at Coss Cloud Solutions. Learn Power BI, Tableau, SQL, Python & ML with expert trainers, live projects, and 100% placement support.',
+      'Join Data Analytics & Business Intelligence training in Hyderabad at Coss Cloud Solutions. Learn Power BI, Tableau, SQL, Python & ML with expert trainers, live projects and placement support.',
     keywords:
       'data analytics training in Hyderabad, BI training Hyderabad, Power BI course, data science certification Hyderabad',
     category: 'Data, Analytics & BI',
