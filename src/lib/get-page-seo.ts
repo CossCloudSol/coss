@@ -210,7 +210,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
     return {
       title: { absolute: 'Coss Cloud Solutions — IT Training in Hyderabad' },
       description:
-        'Best IT Training Institute in Hyderabad with 100% placement support.',
+        'IT training courses in Hyderabad at Coss Cloud Solutions.',
     };
   }
 }
