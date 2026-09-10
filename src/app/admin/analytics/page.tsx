@@ -469,6 +469,7 @@ function BranchTable({
 
 const FORM_LABEL: Record<string, string> = {
   hero: 'Hero card',
+  hero_demo: 'Homepage demo form',
   full: 'Full enrollment',
   demo: 'Demo / sidebar',
   whatsapp_widget: 'WhatsApp widget',

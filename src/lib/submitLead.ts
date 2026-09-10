@@ -8,7 +8,7 @@ import { getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
 
 export type Branch = 'Dilsukhnagar' | 'Ameerpet' | 'Online';
-export type FormType = 'hero' | 'full' | 'demo' | 'whatsapp_widget';
+export type FormType = 'hero' | 'hero_demo' | 'full' | 'demo' | 'whatsapp_widget';
 
 export interface LeadSubmitInput {
   name: string;

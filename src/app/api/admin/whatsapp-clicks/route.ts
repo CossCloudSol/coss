@@ -176,7 +176,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         },
       }),
       prisma.lead.findMany({
-        where: { formType: { in: ['hero', 'full', 'demo'] }, createdAt: { gte: twelveMonthsAgo } },
+        where: { formType: { in: ['hero', 'hero_demo', 'full', 'demo'] }, createdAt: { gte: twelveMonthsAgo } },
         select: { createdAt: true },
       }),
       prisma.lead.findMany({

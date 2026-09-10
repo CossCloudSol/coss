@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 const PHONE_REGEX = /^(\+91)?[6-9]\d{9}$/;
 
 const BRANCH_VALUES = ['Dilsukhnagar', 'Ameerpet', 'Online'] as const;
-const FORM_TYPE_VALUES = ['hero', 'full', 'demo', 'whatsapp_widget'] as const;
+const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget'] as const;
 
 /**
  * Public lead-capture body. Permissive about email shape (`""` is treated as

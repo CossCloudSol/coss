@@ -78,7 +78,7 @@ export default function HeroEnrollForm(): JSX.Element {
       phone: values.phone,
       inquiryType: values.inquiryType,
       branch: BRANCH_API_VALUE[values.branch],
-      formType: 'hero',
+      formType: 'hero_demo',
     });
     if (result.ok) {
       setState({ kind: 'success' });
@@ -123,8 +123,8 @@ export default function HeroEnrollForm(): JSX.Element {
       noValidate
       aria-busy={isSubmitting}
     >
-      <h3>Enroll Now with Coss Cloud Solutions</h3>
-      <p>Start your IT career journey today</p>
+      <h3>Reserve your free demo class</h3>
+      <p>See the class, meet the trainer, then decide your course</p>
 
       <div className="flex items-stretch gap-0" style={{ marginBottom: 11 }}>
         <div className="flex items-center justify-center w-12 bg-orange-500 rounded-l-lg flex-shrink-0">
@@ -257,7 +257,7 @@ export default function HeroEnrollForm(): JSX.Element {
             Submitting…
           </>
         ) : (
-          <>ENROLL NOW →</>
+          <>Reserve my seat</>
         )}
       </button>
 
