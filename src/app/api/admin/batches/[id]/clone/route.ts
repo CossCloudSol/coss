@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { revalidatePaths, getBatchRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       include: { course: { select: { title: true, category: true, categorySlug: true } } },
     });
 
+    await revalidatePaths(await getBatchRevalidationPaths(cloned));
     return NextResponse.json(cloned, { status: 201 });
   } catch (err) {
     console.error('[POST /api/admin/batches/[id]/clone]', err);

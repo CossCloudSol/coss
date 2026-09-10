@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { revalidatePaths, getBatchRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -92,6 +93,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       },
       include: { course: { select: { title: true, category: true, categorySlug: true } } },
     });
+    await revalidatePaths(await getBatchRevalidationPaths(batch));
     return NextResponse.json(batch, { status: 201 });
   } catch (err) {
     console.error('[POST /api/admin/batches]', err);

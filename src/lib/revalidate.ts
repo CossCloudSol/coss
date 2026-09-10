@@ -1,4 +1,5 @@
 import { revalidatePath as nextRevalidatePath } from 'next/cache';
+import { prisma } from '@/lib/db';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
 
 export interface RevalidateResult {
@@ -60,6 +61,40 @@ export function getCourseRevalidationPaths(course: CourseRevalidationInput): str
   const landingSlug = Object.entries(SLUG_MAP).find(([, dbSlug]) => dbSlug === course.slug)?.[0];
   if (landingSlug) {
     paths.push('/' + landingSlug);
+  }
+
+  return paths;
+}
+
+interface BatchRevalidationInput {
+  courseId: string | null;
+}
+
+/**
+ * All public paths a single batch occupies: the homepage upcoming-batches
+ * widget, the placements page, and every path its course occupies (resolved
+ * via getCourseRevalidationPaths). /batches is deliberately excluded — that
+ * page fetches client-side and is already always fresh.
+ *
+ * Never throws: a null courseId, a courseId pointing at a since-deleted
+ * course, or a DB error while resolving it all just fall back to the base
+ * paths. A revalidation failure must not fail the caller's write.
+ */
+export async function getBatchRevalidationPaths(batch: BatchRevalidationInput): Promise<string[]> {
+  const paths = ['/', '/placements'];
+
+  if (!batch.courseId) return paths;
+
+  try {
+    const course = await prisma.course.findUnique({
+      where: { id: batch.courseId },
+      select: { slug: true, categorySlug: true },
+    });
+    if (course) {
+      paths.push(...getCourseRevalidationPaths(course));
+    }
+  } catch (err) {
+    console.error(`[revalidate] Failed to resolve course for batch revalidation (courseId="${batch.courseId}")`, err);
   }
 
   return paths;

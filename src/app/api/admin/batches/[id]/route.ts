@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { revalidatePaths, getBatchRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -56,6 +57,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       },
       include: { course: { select: { title: true, category: true, categorySlug: true } } },
     });
+    await revalidatePaths(await getBatchRevalidationPaths(batch));
     return NextResponse.json(batch);
   } catch (err) {
     console.error('[PUT /api/admin/batches/[id]]', err);
@@ -69,7 +71,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   try {
-    await prisma.batch.delete({ where: { id: params.id } });
+    const deleted = await prisma.batch.delete({ where: { id: params.id } });
+    await revalidatePaths(await getBatchRevalidationPaths(deleted));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[DELETE /api/admin/batches/[id]]', err);
