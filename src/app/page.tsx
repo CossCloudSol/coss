@@ -383,16 +383,19 @@ export default async function HomePage() {
               {hpSettings.heroSubtext}
             </p>
 
-            {/* Trust indicators — labels are admin-editable (stat1-4Label), icons/colors are fixed */}
+            {/* Trust indicators — value + label are admin-editable (stat1-4Value/Label),
+                icons/colors are fixed. A stat with no value is withheld pending
+                verification, so the whole item is dropped rather than showing a bare label. */}
             <div className="hero-trust-row" aria-label="Why choose us">
               {([
-                { Icon: Users,       color: 'orange',  label: hpSettings.stat1Label },
-                { Icon: BadgeCheck,  color: 'purple',  label: hpSettings.stat2Label },
-                { Icon: Briefcase,   color: 'blue',    label: hpSettings.stat3Label },
-                { Icon: TrendingUp,  color: 'emerald', label: hpSettings.stat4Label },
-              ]).map(({ Icon, color, label }) => (
+                { Icon: Users,       color: 'orange',  value: hpSettings.stat1Value, label: hpSettings.stat1Label },
+                { Icon: BadgeCheck,  color: 'purple',  value: hpSettings.stat2Value, label: hpSettings.stat2Label },
+                { Icon: Briefcase,   color: 'blue',    value: hpSettings.stat3Value, label: hpSettings.stat3Label },
+                { Icon: TrendingUp,  color: 'emerald', value: hpSettings.stat4Value, label: hpSettings.stat4Label },
+              ]).filter(({ value }) => value).map(({ Icon, color, value, label }) => (
                 <div key={label} className={`hero-trust-item hero-trust-item-${color}`}>
                   <Icon className="hero-trust-icon" aria-hidden="true" />
+                  <span className="hero-trust-value">{value}</span>
                   <span className="hero-trust-label">{label}</span>
                 </div>
               ))}
