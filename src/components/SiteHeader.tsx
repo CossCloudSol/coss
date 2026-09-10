@@ -189,7 +189,7 @@ export default function SiteHeader() {
           <div className="nav-cta-group" role="group" aria-label="Quick actions">
             <Link href="/free-demo-class/" className="nav-demo" onClick={closeAll}>
               <CalendarCheck className="w-3.5 h-3.5" aria-hidden="true" />
-              Free Demo Class
+              Reserve Demo
             </Link>
             <Link href="/enroll-now-with-coss/" className="nav-enroll" onClick={closeAll}>
               <PenLine className="w-3.5 h-3.5" aria-hidden="true" />
@@ -214,12 +214,12 @@ export default function SiteHeader() {
 
           {/* Enroll Now */}
           <Link
-            href="/enroll-now-with-coss/"
+            href="/free-demo-class/"
             onClick={closeAll}
             className="flex items-center gap-1.5 bg-[#024c57] dark:bg-[#03798a] text-white rounded-[10px] px-3 py-2 text-xs font-medium flex-shrink-0"
           >
             <PenLine className="w-3.5 h-3.5" aria-hidden="true" />
-            Enroll now
+            Reserve demo
           </Link>
 
           {/* Theme toggle */}
@@ -367,7 +367,7 @@ export default function SiteHeader() {
             href="/free-demo-class"
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-white text-white font-semibold text-base"
           >
-            📅 Book Free Demo Class
+            📅 Reserve Free Demo Class
           </a>
           <a
             href="/enroll-now-with-coss"

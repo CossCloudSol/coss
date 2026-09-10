@@ -171,7 +171,7 @@ export function CtaBanner() {
       <p style={{ opacity: 0.9, marginBottom: '22px', fontSize: '15px', color: 'rgba(255,255,255,0.9)' }}>Book a free demo class today. No commitment required.</p>
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
         <Link href="/free-demo-class/" style={{ background: '#fff', color: 'var(--primary)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
-          Book Free Demo Class
+          Reserve Free Demo Class
         </Link>
         <Link href="/contact-us/" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
           Contact Us

@@ -293,7 +293,7 @@ export default function FreeDemoClassPage() {
               href="#top"
               className="bg-white text-[#FF6B2B] font-bold px-8 py-4 rounded-xl text-base hover:bg-orange-50 transition-colors"
             >
-              Book My Free Demo Class
+              Reserve my free demo class
             </a>
             <WhatsAppLink
               ctaType="free_demo"

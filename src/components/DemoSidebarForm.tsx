@@ -208,7 +208,7 @@ export default function DemoSidebarForm(): JSX.Element {
           color: '#fff',
         }}
       >
-        Enroll Now
+        Reserve your free demo class
       </h3>
       <p
         style={{
@@ -350,7 +350,7 @@ export default function DemoSidebarForm(): JSX.Element {
             Submitting...
           </>
         ) : (
-          <>Book Free Demo &rarr;</>
+          <>Reserve my seat</>
         )}
       </button>
 
