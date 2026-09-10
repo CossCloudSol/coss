@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 
@@ -71,6 +72,7 @@ export async function PUT(req: NextRequest): Promise<Response> {
         showStats: showStats as boolean,
       },
     })
+    revalidatePath('/')
     return NextResponse.json(settings)
   } catch (error) {
     console.error('[homepage PUT]', error)
