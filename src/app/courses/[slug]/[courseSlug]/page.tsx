@@ -14,6 +14,7 @@ import { getRelatedCourses } from '@/lib/related-courses';
 import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
+import DemoSidebarForm from '@/components/DemoSidebarForm';
 
 export const revalidate = 86400;
 
@@ -262,14 +263,13 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
           <div style={{ position: 'sticky', top: '80px' }}>
             <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '24px', color: '#fff', marginBottom: '16px' }}>
               <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>
-                {course.price != null ? `₹${course.price.toLocaleString()}` : 'Enrol Now'}
+                {course.price != null ? `₹${course.price.toLocaleString()}` : 'Enroll Now'}
               </h3>
               {course.originalPrice && course.price && (
                 <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{course.originalPrice.toLocaleString()}</p>
               )}
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
-              <input type="text" placeholder="Full Name" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', marginBottom: '10px', outline: 'none', boxSizing: 'border-box' }} />
-              <input type="tel" placeholder="Mobile Number" style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.1)', color: '#fff', fontSize: '13px', marginBottom: '14px', outline: 'none', boxSizing: 'border-box' }} />
+              <DemoSidebarForm />
               <Link href={`/free-demo-class/?course=${course.slug}`} style={{ display: 'block', textAlign: 'center', background: '#e47538', color: '#fff', padding: '12px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none' }}>
                 Book Free Demo Class
               </Link>
