@@ -269,10 +269,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                 <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{course.originalPrice.toLocaleString()}</p>
               )}
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
-              <DemoSidebarForm />
-              <Link href={`/free-demo-class/?course=${course.slug}`} style={{ display: 'block', textAlign: 'center', background: '#e47538', color: '#fff', padding: '12px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none' }}>
-                Book Free Demo Class
-              </Link>
+              <DemoSidebarForm course={course.title} subtitle={`${course.title} · see a class before you decide`} />
             </div>
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>

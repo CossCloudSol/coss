@@ -36,7 +36,7 @@ const demoFormSchema = z.object({
     .trim()
     .regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit number'),
   course: z.string().optional(),
-  branch: z.enum(['dilsukhnagar', 'ameerpet'] as const, 'Please select a branch'),
+  branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, 'Please select a branch'),
 });
 
 type DemoFormValues = z.infer<typeof demoFormSchema>;
@@ -44,6 +44,7 @@ type DemoFormValues = z.infer<typeof demoFormSchema>;
 const BRANCH_API_VALUE: Record<DemoFormValues['branch'], Branch> = {
   dilsukhnagar: 'Dilsukhnagar',
   ameerpet: 'Ameerpet',
+  online: 'Online',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -130,11 +131,19 @@ type SubmitState =
 /*  Component                                                                 */
 /* -------------------------------------------------------------------------- */
 
-export default function DemoSidebarForm(): JSX.Element {
+interface DemoSidebarFormProps {
+  /** Prefills the course field and hides the course select entirely. */
+  course?: string;
+  /** Overrides the subtitle under the "Book a free demo class" heading. */
+  subtitle?: string;
+}
+
+export default function DemoSidebarForm({ course, subtitle }: DemoSidebarFormProps = {}): JSX.Element {
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<DemoFormValues>({
     resolver: zodResolver(demoFormSchema),
@@ -142,13 +151,14 @@ export default function DemoSidebarForm(): JSX.Element {
   });
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
+  const selectedBranch = watch('branch');
 
   async function onSubmit(values: DemoFormValues): Promise<void> {
     setState({ kind: 'submitting' });
     const result = await submitLead({
       name: values.name,
       phone: values.phone,
-      course: values.course,
+      course: course ?? values.course,
       branch: BRANCH_API_VALUE[values.branch],
       formType: 'demo',
     });
@@ -208,7 +218,7 @@ export default function DemoSidebarForm(): JSX.Element {
           color: '#fff',
         }}
       >
-        Reserve your free demo class
+        Book a free demo class
       </h3>
       <p
         style={{
@@ -217,7 +227,7 @@ export default function DemoSidebarForm(): JSX.Element {
           marginBottom: '16px',
         }}
       >
-        Start your IT career with Coss Cloud Solutions
+        {subtitle ?? 'Start your IT career with Coss Cloud Solutions'}
       </p>
 
       <input
@@ -250,71 +260,88 @@ export default function DemoSidebarForm(): JSX.Element {
         </p>
       ) : null}
 
-      <select
-        style={selectStyle}
-        aria-label="Select a course"
-        defaultValue=""
-        disabled={isSubmitting}
-        {...register('course')}
-      >
-        <option value="" style={optionStyle}>— Select a Course —</option>
-        {COURSES_BY_CATEGORY.map(({ category, courses }) => (
-          <optgroup key={category} label={category}>
-            {courses.map(({ shortTitle, slug }) => (
-              <option key={slug} value={shortTitle} style={optionStyle}>
-                {shortTitle}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </select>
+      {!course && (
+        <select
+          style={selectStyle}
+          aria-label="Select a course"
+          defaultValue=""
+          disabled={isSubmitting}
+          {...register('course')}
+        >
+          <option value="" style={optionStyle}>— Select a Course —</option>
+          {COURSES_BY_CATEGORY.map(({ category, courses }) => (
+            <optgroup key={category} label={category}>
+              {courses.map(({ shortTitle, slug }) => (
+                <option key={slug} value={shortTitle} style={optionStyle}>
+                  {shortTitle}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      )}
 
-      <div
+      <label
+        id="demo-branch-label"
         style={{
-          display: 'flex',
-          gap: '12px',
-          marginBottom: '14px',
-          flexWrap: 'wrap',
+          display: 'block',
+          color: 'rgba(255,255,255,0.85)',
+          fontSize: '12px',
+          fontWeight: 600,
+          marginBottom: '8px',
         }}
       >
-        <label
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            cursor: 'pointer',
-            color: 'rgba(255,255,255,0.8)',
-            fontSize: '12px',
-          }}
-        >
-          <input
-            type="radio"
-            value="dilsukhnagar"
-            style={{ accentColor: 'var(--primary)' }}
-            disabled={isSubmitting}
-            {...register('branch')}
-          />{' '}
-          Dilsukhnagar
-        </label>
-        <label
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '5px',
-            cursor: 'pointer',
-            color: 'rgba(255,255,255,0.8)',
-            fontSize: '12px',
-          }}
-        >
-          <input
-            type="radio"
-            value="ameerpet"
-            style={{ accentColor: 'var(--primary)' }}
-            disabled={isSubmitting}
-            {...register('branch')}
-          />{' '}
-          Ameerpet
-        </label>
+        Which centre suits you?
+      </label>
+      <div
+        role="radiogroup"
+        aria-labelledby="demo-branch-label"
+        style={{
+          display: 'flex',
+          gap: '8px',
+          marginBottom: '14px',
+        }}
+      >
+        {(
+          [
+            { value: 'dilsukhnagar', label: 'Dilsukhnagar' },
+            { value: 'ameerpet', label: 'Ameerpet' },
+            { value: 'online', label: 'Online' },
+          ] as const
+        ).map(({ value, label }) => {
+          const isSelected = selectedBranch === value;
+          return (
+            <label
+              key={value}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                padding: '8px 4px',
+                borderRadius: '6px',
+                border: `1px solid ${isSelected ? 'var(--primary)' : 'rgba(255,255,255,0.15)'}`,
+                background: isSelected ? 'rgba(228,117,56,0.18)' : 'rgba(255,255,255,0.06)',
+                color: isSelected ? '#fff' : 'rgba(255,255,255,0.8)',
+                fontSize: '12px',
+                fontWeight: isSelected ? 700 : 400,
+                transition: 'border-color 0.15s, background 0.15s, color 0.15s',
+              }}
+            >
+              <input
+                type="radio"
+                value={value}
+                style={{ accentColor: 'var(--primary)' }}
+                disabled={isSubmitting}
+                {...register('branch')}
+              />
+              {label}
+            </label>
+          );
+        })}
       </div>
       {errors.branch ? (
         <p style={{ ...fieldErrorStyle, margin: '-6px 0 10px' }} role="alert">
@@ -350,7 +377,7 @@ export default function DemoSidebarForm(): JSX.Element {
             Submitting...
           </>
         ) : (
-          <>Reserve my seat</>
+          <>Book my free demo</>
         )}
       </button>
 

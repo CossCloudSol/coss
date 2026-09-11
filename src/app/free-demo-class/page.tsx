@@ -180,7 +180,7 @@ export default function FreeDemoClassPage() {
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)' }}
             >
               <h2 className="font-heading text-lg font-bold text-white mb-1">
-                Reserve Your Free Demo Slot
+                Book a free demo class and start your IT career
               </h2>
               <p className="text-white/70 text-xs mb-4">
                 Select your preferred mode &amp; grab your spot instantly.
@@ -293,7 +293,7 @@ export default function FreeDemoClassPage() {
               href="#top"
               className="bg-white text-[#FF6B2B] font-bold px-8 py-4 rounded-xl text-base hover:bg-orange-50 transition-colors"
             >
-              Reserve my free demo class
+              Book my free demo
             </a>
             <WhatsAppLink
               ctaType="free_demo"

@@ -301,7 +301,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>
-            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} courseSlug={course.slug} />
+            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} courseSlug={course.slug} courseTitle={course.title} />
           </div>
         </div>
       </div>
@@ -380,7 +380,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
   );
 }
 
-function EnquirySidebar({ price, originalPrice, courseSlug }: { price: number | null; originalPrice: number | null; courseSlug: string }) {
+function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle }: { price: number | null; originalPrice: number | null; courseSlug: string; courseTitle: string }) {
   return (
     <>
       <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '24px', color: '#fff', marginBottom: '16px' }}>
@@ -391,10 +391,7 @@ function EnquirySidebar({ price, originalPrice, courseSlug }: { price: number | 
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{originalPrice.toLocaleString()}</p>
         )}
         <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
-        <DemoSidebarForm />
-        <Link href="/free-demo-class/" style={{ display: 'block', textAlign: 'center', background: '#e47538', color: '#fff', padding: '12px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none' }}>
-          Book Free Demo Class
-        </Link>
+        <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} />
       </div>
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>

@@ -11,8 +11,8 @@ import { submitLead, type Branch } from '@/lib/submitLead';
 /* -------------------------------------------------------------------------- */
 
 // Schema mirrors the unified spec — strict 10-digit phone (we strip & prefix
-// `+91` at submit time inside submitLead). The radios on this card only
-// surface two branches; we map their lower-case values to the API's enum.
+// `+91` at submit time inside submitLead). We map the radios' lower-case
+// values to the API's enum.
 const heroFormSchema = z.object({
   name: z.string().trim().min(2, 'Please enter your full name'),
   phone: z
@@ -20,7 +20,7 @@ const heroFormSchema = z.object({
     .trim()
     .regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit number'),
   inquiryType: z.string().optional(),
-  branch: z.enum(['dilsukhnagar', 'ameerpet'] as const, { error: 'Please select a branch' }),
+  branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, { error: 'Please select a branch' }),
 });
 
 type HeroFormValues = z.infer<typeof heroFormSchema>;
@@ -28,6 +28,7 @@ type HeroFormValues = z.infer<typeof heroFormSchema>;
 const BRANCH_API_VALUE: Record<HeroFormValues['branch'], Branch> = {
   dilsukhnagar: 'Dilsukhnagar',
   ameerpet: 'Ameerpet',
+  online: 'Online',
 };
 
 /* -------------------------------------------------------------------------- */
@@ -63,6 +64,7 @@ export default function HeroEnrollForm(): JSX.Element {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<HeroFormValues>({
     resolver: zodResolver(heroFormSchema),
@@ -70,6 +72,7 @@ export default function HeroEnrollForm(): JSX.Element {
   });
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
+  const selectedBranch = watch('branch');
 
   async function onSubmit(values: HeroFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -123,7 +126,7 @@ export default function HeroEnrollForm(): JSX.Element {
       noValidate
       aria-busy={isSubmitting}
     >
-      <h3>Reserve your free demo class</h3>
+      <h3>Book a free demo class and start your IT career</h3>
       <p>See the class, meet the trainer, then decide your course</p>
 
       <div className="flex items-stretch gap-0" style={{ marginBottom: 11 }}>
@@ -198,27 +201,52 @@ export default function HeroEnrollForm(): JSX.Element {
         </select>
       </div>
 
-      <div className="form-radio-row">
-        <label className="form-radio-label">
-          <input
-            type="radio"
-            value="dilsukhnagar"
-            style={{ accentColor: '#e8401c' }}
-            disabled={isSubmitting}
-            {...register('branch')}
-          />{' '}
-          Dilsukhnagar
-        </label>
-        <label className="form-radio-label">
-          <input
-            type="radio"
-            value="ameerpet"
-            style={{ accentColor: '#e8401c' }}
-            disabled={isSubmitting}
-            {...register('branch')}
-          />{' '}
-          Ameerpet
-        </label>
+      <p
+        id="hero-branch-label"
+        style={{
+          color: 'rgba(255,255,255,0.7)',
+          fontSize: '12px',
+          fontWeight: 600,
+          margin: '0 0 8px',
+        }}
+      >
+        Which centre suits you?
+      </p>
+      <div className="form-radio-row" role="radiogroup" aria-labelledby="hero-branch-label">
+        {(
+          [
+            { value: 'dilsukhnagar', label: 'Dilsukhnagar' },
+            { value: 'ameerpet', label: 'Ameerpet' },
+            { value: 'online', label: 'Online' },
+          ] as const
+        ).map(({ value, label }) => {
+          const isSelected = selectedBranch === value;
+          return (
+            <label
+              key={value}
+              className="form-radio-label"
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                padding: '8px 6px',
+                borderRadius: '6px',
+                border: `1px solid ${isSelected ? '#e8401c' : 'rgba(255,255,255,0.18)'}`,
+                background: isSelected ? 'rgba(232,64,28,0.18)' : 'rgba(255,255,255,0.06)',
+                color: isSelected ? '#fff' : 'rgba(255,255,255,0.85)',
+                fontWeight: isSelected ? 700 : 400,
+              }}
+            >
+              <input
+                type="radio"
+                value={value}
+                style={{ accentColor: '#e8401c' }}
+                disabled={isSubmitting}
+                {...register('branch')}
+              />{' '}
+              {label}
+            </label>
+          );
+        })}
       </div>
       {errors.branch ? (
         <p style={branchErrorStyle} role="alert">
@@ -257,7 +285,7 @@ export default function HeroEnrollForm(): JSX.Element {
             Submitting…
           </>
         ) : (
-          <>Reserve my seat</>
+          <>Book my free demo</>
         )}
       </button>
 

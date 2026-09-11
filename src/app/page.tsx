@@ -453,11 +453,6 @@ export default async function HomePage() {
       {/* ── Book Your Free Demo Class (relocated hero enroll form) ── */}
       <section id="enroll-form" className="enroll-form-section" aria-label="Book your free demo class">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <span className="text-orange-400 text-xs font-bold uppercase tracking-widest">Get Started</span>
-            <h2 className="text-3xl font-bold text-white mt-2">Book Your Free Demo Class</h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-          </div>
           <HeroEnrollForm />
         </div>
       </section>

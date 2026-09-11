@@ -417,12 +417,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           {/* Sidebar */}
           <div>
             <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '24px', color: '#fff', marginBottom: '20px' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Enroll Now</h3>
-              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '16px' }}>Start your IT career with Coss Cloud Solutions</p>
               <DemoSidebarForm />
-              <Link href="/free-demo-class/" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
-                Book Free Demo Class
-              </Link>
             </div>
 
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', marginBottom: '20px' }}>
