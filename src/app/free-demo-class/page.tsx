@@ -2,11 +2,35 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import EnrollFullForm from '@/components/EnrollFullForm';
 import WhatsAppLink from '@/components/WhatsAppLink';
+import BatchCard, { type BatchCardBatch } from '@/components/BatchCard';
+import { findBatches } from '@/lib/batch-queries';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('free-demo-class');
+}
+
+async function getDemoPageBatches(): Promise<BatchCardBatch[]> {
+  const batches = await findBatches();
+  return batches.slice(0, 3).map((b) => ({
+    id: b.id,
+    batchName: b.batchName,
+    mode: b.mode,
+    centre: b.centre,
+    startDate: b.startDate.toISOString(),
+    endDate: b.endDate ? b.endDate.toISOString() : null,
+    schedule: b.schedule,
+    totalSeats: b.totalSeats,
+    seatsAvailable: b.seatsAvailable,
+    status: b.status,
+    featured: b.featured,
+    course: {
+      title: b.course.title,
+      category: b.course.category,
+      categorySlug: b.course.categorySlug,
+    },
+  }));
 }
 
 const howItWorks = [
@@ -113,7 +137,9 @@ const faqs = [
   },
 ];
 
-export default function FreeDemoClassPage() {
+export default async function FreeDemoClassPage() {
+  const batches = await getDemoPageBatches();
+
   return (
     <>
       {/* ── HERO ── */}
@@ -207,6 +233,22 @@ export default function FreeDemoClassPage() {
           </div>
         </div>
       </section>
+
+      {/* ── BATCHES STARTING SOON ── */}
+      {batches.length > 0 && (
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="font-heading text-2xl font-bold text-[#0D1B2A] text-center mb-10">
+              Batches starting soon
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {batches.map((batch) => (
+                <BatchCard key={batch.id} batch={batch} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── HOW IT WORKS ── */}
       <section className="py-16 px-4 bg-[#F0F2F5]">

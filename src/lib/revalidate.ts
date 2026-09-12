@@ -72,16 +72,17 @@ interface BatchRevalidationInput {
 
 /**
  * All public paths a single batch occupies: the homepage upcoming-batches
- * widget, the placements page, and every path its course occupies (resolved
- * via getCourseRevalidationPaths). /batches is deliberately excluded — that
- * page fetches client-side and is already always fresh.
+ * widget, the placements page, the free demo class page, and every path its
+ * course occupies (resolved via getCourseRevalidationPaths). /batches is
+ * deliberately excluded — that page fetches client-side and is already
+ * always fresh.
  *
  * Never throws: a null courseId, a courseId pointing at a since-deleted
  * course, or a DB error while resolving it all just fall back to the base
  * paths. A revalidation failure must not fail the caller's write.
  */
 export async function getBatchRevalidationPaths(batch: BatchRevalidationInput): Promise<string[]> {
-  const paths = ['/', '/placements'];
+  const paths = ['/', '/placements', '/free-demo-class'];
 
   if (!batch.courseId) return paths;
 
