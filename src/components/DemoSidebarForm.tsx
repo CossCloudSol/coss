@@ -298,6 +298,7 @@ export default function DemoSidebarForm({ course, subtitle }: DemoSidebarFormPro
         aria-labelledby="demo-branch-label"
         style={{
           display: 'flex',
+          flexWrap: 'wrap',
           gap: '8px',
           marginBottom: '14px',
         }}
@@ -315,6 +316,7 @@ export default function DemoSidebarForm({ course, subtitle }: DemoSidebarFormPro
               key={value}
               style={{
                 flex: 1,
+                flexBasis: 'min(45%, 120px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
