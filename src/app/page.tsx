@@ -294,6 +294,13 @@ export default async function HomePage() {
       )
     : [];
 
+  const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
+  const secondaryCtaUrl = hpSettings.heroCTASecondaryUrl?.trim();
+  const secondaryCtaHref = secondaryCtaUrl?.startsWith(siteOrigin)
+    ? secondaryCtaUrl.slice(siteOrigin.length) || '/'
+    : secondaryCtaUrl;
+  const secondaryCtaIsExternal = !!secondaryCtaUrl && secondaryCtaHref === secondaryCtaUrl && /^https?:\/\//i.test(secondaryCtaUrl);
+
   return (
     <>
       {/* ── Hero ── */}
@@ -401,15 +408,28 @@ export default async function HomePage() {
               ))}
             </div>
 
-            {/* Primary + Secondary CTAs — min 48px tap targets. Scroll to the
-                relocated enroll form rather than navigating away from the hero. */}
+            {/* Primary + Secondary CTAs — min 48px tap targets. Primary always
+                scrolls to the relocated enroll form; secondary navigates to
+                the admin-configured URL, falling back to the form when unset. */}
             <div className="hero-btns">
               <a href="#enroll-form" className="btn-primary hero-cta-primary">
                 {hpSettings.heroCTAPrimaryText}
               </a>
-              <a href="#enroll-form" className="btn-outline-dark hero-cta-secondary">
-                {hpSettings.heroCTASecondaryText}
-              </a>
+              {secondaryCtaHref ? (
+                secondaryCtaIsExternal ? (
+                  <a href={secondaryCtaHref} className="btn-outline-dark hero-cta-secondary">
+                    {hpSettings.heroCTASecondaryText}
+                  </a>
+                ) : (
+                  <Link href={secondaryCtaHref} className="btn-outline-dark hero-cta-secondary">
+                    {hpSettings.heroCTASecondaryText}
+                  </Link>
+                )
+              ) : (
+                <a href="#enroll-form" className="btn-outline-dark hero-cta-secondary">
+                  {hpSettings.heroCTASecondaryText}
+                </a>
+              )}
             </div>
           </div>
 

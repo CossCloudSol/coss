@@ -251,8 +251,9 @@ export default function HomepageManagerPage() {
           <Textarea value={settings.heroSubtext} onChange={(v) => update('heroSubtext', v)} rows={2} maxLength={200} />
         </Field>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-          Button text below is live on the hero. The URL fields are currently unused there — both hero
-          buttons scroll down to the on-page &quot;Book Your Free Demo Class&quot; form instead of navigating away.
+          Button text below is live on the hero. The primary button always scrolls down to the on-page
+          &quot;Book Your Free Demo Class&quot; form — its URL field is unused. The secondary button navigates
+          to its URL field instead; leave that URL blank to fall back to the same scroll-to-form behaviour.
         </p>
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div>
@@ -263,7 +264,7 @@ export default function HomepageManagerPage() {
           <div>
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Secondary CTA</p>
             <Field label="Button text"><Input value={settings.heroCTASecondaryText} onChange={(v) => update('heroCTASecondaryText', v)} placeholder="Free Demo Class" /></Field>
-            <Field label="URL (unused on hero — see note above)"><Input value={settings.heroCTASecondaryUrl} onChange={(v) => update('heroCTASecondaryUrl', v)} placeholder="/free-demo-class" /></Field>
+            <Field label="URL — navigates here when set"><Input value={settings.heroCTASecondaryUrl} onChange={(v) => update('heroCTASecondaryUrl', v)} placeholder="/free-demo-class" /></Field>
           </div>
         </div>
       </SectionCard>
