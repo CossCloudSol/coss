@@ -7,7 +7,8 @@ import { getHomepageSettings } from '@/lib/get-homepage-settings';
 import { getCourseUrl } from '@/lib/course-url';
 import { excerptDescription } from '@/lib/sanitizeDescription';
 import WhatsAppLink from '@/components/WhatsAppLink';
-import { WA_NUMBER } from '@/lib/whatsapp';
+import { WA_NUMBER, batchBookingMessage } from '@/lib/whatsapp';
+import { formatBatchDate } from '@/lib/batch-utils';
 import {
   Award,
   BadgeCheck,
@@ -639,24 +640,63 @@ export default async function HomePage() {
               const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
               const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
               const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
+              const formattedDate = formatBatchDate(batch.startDate);
+              const bookMsg = batchBookingMessage({
+                courseName: batch.course.title,
+                mode: batch.mode,
+                startDate: formattedDate,
+                centre: batch.centre,
+                schedule: batch.schedule,
+              });
+              const enrollMsg = batchBookingMessage({
+                courseName: batch.course.title,
+                mode: 'Online',
+                startDate: formattedDate,
+                centre: null,
+                schedule: batch.schedule,
+              });
               return (
-                <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex gap-4 items-start">
-                  <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
-                    <span className="text-base font-extrabold leading-none">{day}</span>
-                    <span className="text-[10px] font-bold leading-none">{mon}</span>
+                <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex flex-col gap-4">
+                  <div className="flex gap-4 items-start">
+                    <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
+                      <span className="text-base font-extrabold leading-none">{day}</span>
+                      <span className="text-[10px] font-bold leading-none">{mon}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
+                      {batch.mode === 'Online' ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
+                          <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
+                        </span>
+                      ) : seatsOk ? (
+                        <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
+                          {batch.seatsAvailable} seats left
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
-                    {batch.mode === 'Online' ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
-                        <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
-                      </span>
-                    ) : seatsOk ? (
-                      <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
-                        {batch.seatsAvailable} seats left
-                      </span>
-                    ) : null}
+                  <div className="flex flex-col gap-2">
+                    {(batch.mode === 'Classroom' || batch.mode === 'Hybrid') && (
+                      <WhatsAppLink
+                        ctaType="batch"
+                        message={bookMsg}
+                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+                        style={{ background: '#25D366' }}
+                      >
+                        Book Seat on WhatsApp
+                      </WhatsAppLink>
+                    )}
+                    {(batch.mode === 'Online' || batch.mode === 'Hybrid') && (
+                      <WhatsAppLink
+                        ctaType="batch"
+                        message={enrollMsg}
+                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+                        style={{ background: '#e47538' }}
+                      >
+                        Enroll Online Class
+                      </WhatsAppLink>
+                    )}
                   </div>
                 </div>
               );
