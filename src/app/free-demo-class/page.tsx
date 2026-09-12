@@ -129,7 +129,7 @@ export default function FreeDemoClassPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
 
             {/* LEFT */}
-            <div className="pt-2">
+            <div className="pt-2 order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 live-dot-pulse inline-block"></span>
                 Live sessions available — Book yours today
@@ -176,7 +176,7 @@ export default function FreeDemoClassPage() {
 
             {/* RIGHT — Form card */}
             <div
-              className="border border-white/25 rounded-2xl p-6 backdrop-blur-sm"
+              className="border border-white/25 rounded-2xl p-6 backdrop-blur-sm order-1 lg:order-2"
               style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)' }}
             >
               <h2 className="font-heading text-lg font-bold text-white mb-1">

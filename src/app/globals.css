@@ -1517,11 +1517,72 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   box-shadow: 0 4px 32px rgba(0,0,0,0.10);
   border: 1px solid var(--border-card);
 }
+
+/* Header: eyebrow pill + status pill */
+.ef-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.ef-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.ef-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(22,163,74,0.1);
+  color: #16a34a;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  margin-left: auto;
+}
+.ef-status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  flex-shrink: 0;
+}
+
+.ef-heading {
+  font-family: var(--font-raleway, 'Raleway'), sans-serif;
+  font-size: clamp(18px, 2.4vw, 21px);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+.ef-subtext {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
 .ef-row-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 14px;
   margin-bottom: 14px;
+}
+@media (min-width: 1024px) {
+  .ef-row-2 { grid-template-columns: 1fr 1fr; }
 }
 .ef-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
 .ef-field:last-of-type { margin-bottom: 0; }
@@ -1556,47 +1617,107 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .ef-select { cursor: pointer; }
 .ef-textarea { resize: vertical; min-height: 80px; }
 
-/* Phone with prefix */
-.ef-phone-wrap { display: flex; align-items: stretch; }
+/* Icon block + prefix + input group */
+.ef-input-group { display: flex; align-items: stretch; }
+.ef-input-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 42px;
+  flex-shrink: 0;
+  border-radius: 8px 0 0 8px;
+  color: #fff;
+}
+.ef-input-icon-name { background: var(--primary); }
+.ef-input-icon-phone { background: var(--secondary); }
+.ef-input-grouped { border-radius: 0 8px 8px 0 !important; border-left: none; }
 .ef-phone-prefix {
   display: flex; align-items: center;
-  padding: 0 12px;
+  padding: 0 10px;
   background: var(--surface);
   border: 1.5px solid var(--border);
+  border-left: none;
   border-right: none;
-  border-radius: 8px 0 0 8px;
   font-size: 13px; font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
 }
 .ef-phone-input { border-radius: 0 8px 8px 0 !important; }
 
-/* Branch radio */
+/* Branch cards */
 .ef-branch-group {
-  display: flex; gap: 10px; flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
-.ef-branch-option {
-  display: flex; align-items: center; gap: 7px;
-  cursor: pointer;
-  padding: 8px 14px;
-  border-radius: 8px;
+.ef-branch-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 14px 6px 12px;
+  min-width: 0;
+  border-radius: 12px;
   border: 1.5px solid var(--border);
-  font-size: 13px; font-family: var(--font-roboto, 'Roboto'), sans-serif;
-  color: var(--text);
+  background: var(--bg-alt);
+  cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
-  flex: 1; min-width: 100px; justify-content: center;
 }
-.ef-branch-option:has(input:checked) {
+.ef-branch-card:has(.ef-branch-input:checked) {
   border-color: var(--primary);
   background: var(--primary-light);
-  color: var(--primary);
-  font-weight: 600;
 }
-.ef-branch-option input[type="radio"] {
-  accent-color: var(--primary);
-  width: 15px; height: 15px; cursor: pointer;
+.ef-branch-card:has(.ef-branch-input:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
-.ef-branch-label-text { font-size: 13px; }
+.ef-branch-input {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+.ef-branch-check {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.15s, transform 0.15s;
+}
+.ef-branch-card:has(.ef-branch-input:checked) .ef-branch-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.ef-branch-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  background: var(--surface);
+  color: var(--secondary);
+  transition: background 0.15s, color 0.15s;
+}
+.ef-branch-card:has(.ef-branch-input:checked) .ef-branch-icon {
+  background: var(--primary);
+  color: #fff;
+}
+.ef-branch-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.ef-branch-sub {
+  font-size: 10.5px;
+  color: var(--text-light);
+}
 
 /* Error text */
 .ef-error {
@@ -1650,6 +1771,26 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   margin-top: 10px;
   line-height: 1.5;
 }
+
+/* Trust strip */
+.ef-trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: 14px;
+}
+.ef-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .ef-disclaimer {
   font-size: 11.5px;
   color: var(--text-light);
@@ -1708,12 +1849,15 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .enroll-body { padding: 40px 0 56px; }
   .enroll-body-inner { padding: 0 16px; gap: 28px; }
   .ef-card { padding: 20px 16px; }
-  .ef-row-2 { grid-template-columns: 1fr; gap: 0; }
   .enroll-why-grid { grid-template-columns: 1fr; }
   .enroll-trust-row { gap: 8px; }
   .enroll-trust-pill { font-size: 12px; padding: 6px 12px; }
-  .ef-branch-group { gap: 8px; }
-  .ef-branch-option { flex: none; }
+}
+@media (max-width: 360px) {
+  .ef-branch-group { gap: 6px; }
+  .ef-branch-card { padding: 10px 4px 9px; }
+  .ef-branch-icon { width: 28px; height: 28px; }
+  .ef-branch-name { font-size: 11.5px; }
 }
 @media (max-width: 400px) {
   .enroll-hero-title { font-size: 24px; }
@@ -1727,6 +1871,17 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   box-shadow: none;
   padding: 0;
 }
+.ef-glass-ctx .ef-eyebrow {
+  background: rgba(255,255,255,0.12);
+  color: #fb923c;
+}
+.ef-glass-ctx .ef-status-pill {
+  background: rgba(34,197,94,0.16);
+  color: #4ade80;
+}
+.ef-glass-ctx .ef-status-dot { background: #4ade80; }
+.ef-glass-ctx .ef-heading { color: #fff; }
+.ef-glass-ctx .ef-subtext { color: rgba(255,255,255,0.65); }
 .ef-glass-ctx .ef-label {
   color: rgba(255, 255, 255, 0.8);
   font-size: 12px;
@@ -1759,12 +1914,20 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.6);
 }
-.ef-glass-ctx .ef-branch-option {
+.ef-glass-ctx .ef-branch-card {
   border-color: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.06);
 }
+.ef-glass-ctx .ef-branch-card:has(.ef-branch-input:checked) {
+  border-color: #fb923c;
+  background: rgba(251,146,60,0.16);
+}
+.ef-glass-ctx .ef-branch-name { color: rgba(255,255,255,0.92); }
+.ef-glass-ctx .ef-branch-sub { color: rgba(255,255,255,0.5); }
+.ef-glass-ctx .ef-branch-icon { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); }
+.ef-glass-ctx .ef-branch-card:has(.ef-branch-input:checked) .ef-branch-icon { background: #fb923c; color: #fff; }
 .ef-glass-ctx .ef-submit-btn { padding: 12px 20px; min-height: 44px; }
+.ef-glass-ctx .ef-trust-item { color: rgba(255,255,255,0.55); }
 .ef-glass-ctx .ef-disclaimer { color: rgba(255, 255, 255, 0.45); }
 .ef-glass-ctx .ef-error { color: #fca5a5; }
 .ef-glass-ctx .ef-submit-error { color: #fca5a5; }

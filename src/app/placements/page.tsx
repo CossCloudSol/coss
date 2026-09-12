@@ -207,7 +207,14 @@ export default async function PlacementsPage() {
             Tell us where you are and what you&apos;re aiming for. We&apos;ll tell you honestly whether we can help.
           </p>
         </div>
-        <EnrollFullForm submitLabel="Request a callback" disclaimer="No spam. We'll reply on WhatsApp." />
+        <EnrollFullForm
+          eyebrow={null}
+          statusPill={null}
+          heading="Tell us where you are and what you're aiming for"
+          subtext="We'll tell you honestly whether we can help."
+          submitLabel="Request a callback"
+          disclaimer="No spam. We'll reply on WhatsApp."
+        />
       </div>
 
       {/* Section 5 — Close */}
