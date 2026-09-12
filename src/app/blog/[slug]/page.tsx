@@ -416,9 +416,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
           {/* Sidebar */}
           <div>
-            <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '24px', color: '#fff', marginBottom: '20px' }}>
-              <DemoSidebarForm />
-            </div>
+            <DemoSidebarForm />
 
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', marginBottom: '20px' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>

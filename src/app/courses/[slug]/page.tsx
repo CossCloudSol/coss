@@ -383,7 +383,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
 function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle }: { price: number | null; originalPrice: number | null; courseSlug: string; courseTitle: string }) {
   return (
     <>
-      <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '24px', color: '#fff', marginBottom: '16px' }}>
+      <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '16px', color: '#fff', marginBottom: '16px' }}>
         <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>
           {price != null ? `₹${price.toLocaleString()}` : 'Enroll Now'}
         </h3>
@@ -391,7 +391,7 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle }: { pri
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{originalPrice.toLocaleString()}</p>
         )}
         <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
-        <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} />
+        <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} embedded />
       </div>
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>

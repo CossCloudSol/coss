@@ -82,7 +82,7 @@ const enrollBtn: React.CSSProperties = {
 const cardStyle: React.CSSProperties = {
   background: 'var(--secondary)',
   borderRadius: '12px',
-  padding: '24px',
+  padding: '16px',
   color: '#fff',
   marginBottom: '20px',
 };
@@ -136,9 +136,11 @@ interface DemoSidebarFormProps {
   course?: string;
   /** Overrides the subtitle under the "Book a free demo class" heading. */
   subtitle?: string;
+  /** Skips the card background/padding/radius — use when a parent element already provides the card chrome. */
+  embedded?: boolean;
 }
 
-export default function DemoSidebarForm({ course, subtitle }: DemoSidebarFormProps = {}): JSX.Element {
+export default function DemoSidebarForm({ course, subtitle, embedded }: DemoSidebarFormProps = {}): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -172,7 +174,7 @@ export default function DemoSidebarForm({ course, subtitle }: DemoSidebarFormPro
 
   if (state.kind === 'success') {
     return (
-      <div style={cardStyle}>
+      <div style={embedded ? undefined : cardStyle}>
         <h3
           style={{
             fontFamily: 'Poppins, sans-serif',
@@ -208,7 +210,7 @@ export default function DemoSidebarForm({ course, subtitle }: DemoSidebarFormPro
   const isSubmitting = state.kind === 'submitting';
 
   return (
-    <form style={cardStyle} onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form style={embedded ? undefined : cardStyle} onSubmit={handleSubmit(onSubmit)} noValidate>
       <h3
         style={{
           fontFamily: 'Poppins, sans-serif',
