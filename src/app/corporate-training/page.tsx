@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const features = [
-  { icon: '👨‍🏫', title: 'Certified Expert Trainers', desc: 'Industry professionals with 10+ years of real-world experience delivering corporate training.' },
+  { icon: '👨‍🏫', title: 'Certified Expert Trainers', desc: 'Industry professionals with 15+ years of real-world experience delivering corporate training.' },
   { icon: '🎯', title: 'Customized Curriculum', desc: 'Training programs tailored to your organization\'s specific technology stack and business needs.' },
   { icon: '📅', title: 'Flexible Scheduling', desc: 'Weekday, weekend, morning, and evening batches. Online and offline options available.' },
   { icon: '🏢', title: 'On-site & Online', desc: 'We deliver training at your office premises or through our virtual classroom platform.' },
