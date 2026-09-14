@@ -109,3 +109,8 @@ interface BlogRevalidationInput {
 export function getBlogRevalidationPaths(post: BlogRevalidationInput): string[] {
   return ['/blog/' + post.slug, '/blog', '/'];
 }
+
+/** The faculty roster has no per-trainer detail page — every write invalidates the same two listing pages. */
+export function getTrainerRevalidationPaths(): string[] {
+  return ['/faculty', '/about-us'];
+}
