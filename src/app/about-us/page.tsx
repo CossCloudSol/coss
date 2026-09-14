@@ -17,13 +17,6 @@ const milestones = [
   { year: '2024', event: 'Expanded to 30+ courses. 5,000+ students trained, 50+ hiring partners.' },
 ];
 
-const team = [
-  { name: 'Mr. Naresh K.', role: 'Founder & CEO', exp: '15+ years in IT Training', initials: 'NK' },
-  { name: 'Ms. Kavitha R.', role: 'Head of Training', exp: 'AWS & Azure Certified', initials: 'KR' },
-  { name: 'Mr. Srinivas M.', role: 'Lead Trainer – DevOps', exp: '12+ years in DevOps', initials: 'SM' },
-  { name: 'Ms. Preethi L.', role: 'Placement Coordinator', exp: '8+ years in HR & Placement', initials: 'PL' },
-];
-
 const values = [
   { icon: '🎯', title: 'Excellence', desc: 'We maintain the highest standards in training quality, curriculum design and student outcomes.' },
   { icon: '🤝', title: 'Commitment', desc: 'We are committed to every student\'s success — from enrollment to placement.' },
@@ -133,22 +126,7 @@ export default function AboutUsPage() {
         </div>
       </div>
 
-      {/* Team */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Team</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Meet Our Experts</h2>
-        </div>
-        <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
-          {team.map(t => (
-            <div key={t.name} style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px 20px', boxShadow: '0 3px 18px rgba(0,0,0,0.08)', textAlign: 'center', border: '1px solid var(--border-card)' }}>
-              <div style={{ width: '72px', height: '72px', background: 'linear-gradient(135deg, #e8401c, #c93415)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: '22px', margin: '0 auto 14px' }}>{t.initials}</div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '4px' }}>{t.name}</h4>
-              <div style={{ color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', marginBottom: '6px' }}>{t.role}</div>
-              <div style={{ color: 'var(--text-light)', fontSize: '12px' }}>{t.exp}</div>
-            </div>
-          ))}
-        </div>
         <CtaBanner />
       </div>
     </>
