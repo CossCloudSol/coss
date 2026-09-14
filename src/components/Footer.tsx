@@ -251,8 +251,9 @@ export default async function Footer() {
         <div className="footer-btm-inner">
           <span>© {year} Coss Cloud Solutions. All rights reserved.</span>
           <div className="footer-btm-links">
-            <Link href="/privacy-policy/">Privacy Policy</Link>
-            <Link href="/terms-conditions/">Terms</Link>
+            <Link href="/privacy-policy">Privacy Policy</Link>
+            <Link href="/terms-conditions">Terms</Link>
+            <Link href="/refund-cancellation-policy">Refund Policy</Link>
             <Link href="/sitemap.xml">Sitemap</Link>
           </div>
         </div>
