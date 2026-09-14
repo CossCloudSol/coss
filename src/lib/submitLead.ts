@@ -35,7 +35,7 @@ export type LeadSubmitResult =
  * missing gtag is a no-op rather than an error, and any failure here must
  * never affect the caller's return path.
  */
-function trackLeadEvent(params: {
+export function trackLeadEvent(params: {
   formType: FormType;
   submitPath: string;
   leadId: string;

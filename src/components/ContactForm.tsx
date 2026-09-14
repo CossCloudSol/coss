@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
+import { trackLeadEvent } from '@/lib/submitLead';
 
 const labelStyle: React.CSSProperties = {
   display: 'block', fontSize: '13px', fontFamily: 'Poppins, sans-serif',
@@ -25,11 +26,13 @@ export default function ContactForm() {
   const [status, setStatus]   = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
-  async function handleSubmit() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setStatus('loading');
     setErrorMsg('');
     try {
       const firstTouch = getFirstTouch();
+      const submitPath = window.location.pathname;
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,13 +43,20 @@ export default function ContactForm() {
           utmCampaign: firstTouch?.utmCampaign,
           referrer: firstTouch?.referrer ?? undefined,
           landingPage: firstTouch?.landingPage,
-          submitPath: window.location.pathname,
+          submitPath,
           deviceType: detectDeviceType(),
         }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
         setStatus('success');
+        trackLeadEvent({
+          formType: 'contact',
+          submitPath,
+          leadId: '',
+          utmSource: firstTouch?.utmSource,
+          landingPage: firstTouch?.landingPage,
+        });
       } else {
         const errs = data.errors
           ? (Object.values(data.errors) as string[][]).flat().join(', ')
@@ -71,7 +81,7 @@ export default function ContactForm() {
   }
 
   return (
-    <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)' }}>
+    <form onSubmit={handleSubmit} style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
         <div>
           <label style={labelStyle}>Full Name *</label>
@@ -118,13 +128,12 @@ export default function ContactForm() {
         </div>
       )}
       <button
-        type="button"
-        onClick={handleSubmit}
+        type="submit"
         disabled={status === 'loading'}
         style={{ display: 'block', width: '100%', textAlign: 'center', background: status === 'loading' ? '#aaa' : '#e8401c', color: '#fff', padding: '14px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', border: 'none', cursor: status === 'loading' ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}
       >
         {status === 'loading' ? '⏳ Sending…' : 'Send Message →'}
       </button>
-    </div>
+    </form>
   );
 }
