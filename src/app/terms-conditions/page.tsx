@@ -19,11 +19,11 @@ const sections = [
   },
   {
     title: '3. Course Fees & Payment',
-    content: 'Course fees must be paid as agreed at the time of enrollment. Fees are non-refundable once the course has commenced unless otherwise stated in writing. We accept payment via cash, bank transfer, UPI, and online payment gateways. EMI options are available for select courses — please inquire at the time of enrollment.',
+    content: 'Course fees must be paid as agreed at the time of enrollment. Fees are non-refundable once the course has commenced, except as set out in our Refund and Cancellation Policy. We accept payment via cash, bank transfer, UPI, and online payment gateways. EMI options are available for select courses — please inquire at the time of enrollment.',
   },
   {
     title: '4. Refund Policy',
-    content: 'Refund requests made before the course commencement date (within 7 days of enrollment) will be considered on a case-by-case basis with a processing fee deduction. No refunds will be issued once the course has started. In the event that Coss Cloud Solutions cancels a course, a full refund or course transfer will be offered.',
+    content: 'Refunds and cancellations are governed by our Refund and Cancellation Policy, which forms part of these Terms. In summary: a cancellation request may be considered where it is made within seven calendar days of enrolment and before the course or batch has commenced; fees are not refundable once the course has commenced; and where Coss Cloud Solutions cancels a batch and cannot offer a suitable alternative, you may choose a transfer to another batch or a refund of the eligible fee paid. Please read the full Refund and Cancellation Policy for definitions, exclusions, non-refundable charges and the request process.',
   },
   {
     title: '5. Course Content & Curriculum',
@@ -67,7 +67,7 @@ const sections = [
   },
   {
     title: '15. Contact Information',
-    content: 'For questions regarding these Terms and Conditions, please contact: Coss Cloud Solutions, Flat No. 109, C.B Eastern Homes, Srinagar Colony, Dilsukhnagar, Hyderabad – 500060. Email: info@cosscloudsol.com | Phone: +91 88851 66007',
+    content: 'For questions regarding these Terms and Conditions, please contact: Coss Cloud Solutions, Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar, Dilsukhnagar, Hyderabad, Telangana 500060. Email: info@cosscloudsol.com | Phone: +91 88851 66007',
   },
 ];
 
@@ -81,7 +81,7 @@ export default function TermsPage() {
         {/* Intro box */}
         <div style={{ background: '#fff3f0', borderRadius: '12px', padding: '18px 22px', marginBottom: '36px', borderLeft: '4px solid #e8401c' }}>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.7' }}>
-            <strong style={{ color: '#e8401c' }}>Last Updated: January 2025.</strong> Please read these Terms and Conditions carefully before enrolling in any course or using the services of Coss Cloud Solutions. These terms constitute a legally binding agreement between you and Coss Cloud Solutions.
+            <strong style={{ color: '#e8401c' }}>Last Updated: September 2026.</strong> Please read these Terms and Conditions carefully before enrolling in any course or using the services of Coss Cloud Solutions. These terms constitute a legally binding agreement between you and Coss Cloud Solutions.
           </p>
         </div>
 
@@ -89,7 +89,7 @@ export default function TermsPage() {
         {sections.map((s, i) => (
           <div key={s.title} style={{ marginBottom: '30px', paddingBottom: '28px', borderBottom: i < sections.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
             <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '17px', color: 'var(--text)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ background: '#e8401c', color: '#fff', width: '28px', height: '28px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>
+              <span aria-hidden="true" style={{ background: '#e8401c', color: '#fff', width: '28px', height: '28px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>{' '}
               {s.title.replace(/^\d+\.\s/, '')}
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.85', paddingLeft: '38px' }}>{s.content}</p>
