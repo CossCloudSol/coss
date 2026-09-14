@@ -123,9 +123,7 @@ export const LOCALITIES: LocalityConfig[] = [
       'Landmark directions: above Bank of Maharashtra in Srinagar Colony, opposite Chai Vaai Cafe and beside Anjana Function Hall.',
     ],
     addressLines: [
-      'Flat No. 109, C.B Eastern Homes,',
-      'Above Bank of Maharashtra, Srinagar Colony,',
-      'Opposite Chai Vaai Cafe, Beside Anjana Function Hall,',
+      'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar,',
       'Dilsukhnagar, Hyderabad – 500060',
     ],
     mapEmbed: BRANCH_MAP_EMBED.dilsukhnagar,
