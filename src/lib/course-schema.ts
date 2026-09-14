@@ -15,38 +15,33 @@
  * rule applied to branch LocalBusiness schema.
  */
 
+import { getAllBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings';
+
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
 const LOGO_URL = `${SITE_URL}/logo.png`;
 
-const PROVIDER = {
-  '@type': 'EducationalOrganization',
-  '@id': `${SITE_URL}/#organization`,
-  name: 'COSS Cloud Solutions',
-  url: SITE_URL,
-  logo: LOGO_URL,
-  address: [
-    {
-      '@type': 'PostalAddress',
-      streetAddress: 'Flat 109, C.B Eastern Homes, Srinagar Colony',
-      addressLocality: 'Dilsukhnagar, Hyderabad',
-      addressRegion: 'Telangana',
-      postalCode: '500060',
-      addressCountry: 'IN',
-    },
-    {
-      '@type': 'PostalAddress',
-      streetAddress: '#502, Sree Swathi Ankur Building',
-      addressLocality: 'Ameerpet, Hyderabad',
-      addressRegion: 'Telangana',
-      postalCode: '500016',
-      addressCountry: 'IN',
-    },
-  ],
-  telephone: '+918885166007',
-  email: 'info@cosscloudsol.com',
+const BRANCH_AREA_LABEL: Record<string, string> = {
+  dilsukhnagar: 'Dilsukhnagar',
+  ameerpet: 'Ameerpet',
 };
+
+/** Resolves a live BranchSettings row by key, falling back to the known-correct NAP constants only when that branch's row is missing from the DB result. */
+function resolveBranch(branches: BranchSettings[], branchKey: 'dilsukhnagar' | 'ameerpet'): BranchSettings {
+  return branches.find((b) => b.branchKey === branchKey) ?? FALLBACK[branchKey];
+}
+
+function toPostalAddress(branch: BranchSettings) {
+  return {
+    '@type': 'PostalAddress',
+    streetAddress: branch.addressLine1,
+    addressLocality: `${BRANCH_AREA_LABEL[branch.branchKey] ?? branch.branchKey}, ${branch.city}`,
+    addressRegion: branch.state,
+    postalCode: branch.pincode,
+    addressCountry: 'IN',
+  };
+}
 
 export interface FaqItem {
   q: string;
@@ -83,10 +78,26 @@ const CATEGORY_SLUG_MAP: Record<string, string> = {
 /**
  * Returns an array of JSON-LD objects ready to be serialised into <script> tags.
  */
-export function buildCourseSchemas(input: CourseSchemaInput): object[] {
+export async function buildCourseSchemas(input: CourseSchemaInput): Promise<object[]> {
   const pageUrl = `${SITE_URL}/${input.slug}`;
   const pageId  = `${pageUrl}/#webpage`;
   const schemas: object[] = [];
+
+  const branches = await getAllBranchSettings();
+  const dilsukhnagar = resolveBranch(branches, 'dilsukhnagar');
+  const ameerpet = resolveBranch(branches, 'ameerpet');
+  const branchAddresses = [dilsukhnagar, ameerpet].map(toPostalAddress);
+
+  const provider = {
+    '@type': 'EducationalOrganization',
+    '@id': `${SITE_URL}/#organization`,
+    name: 'COSS Cloud Solutions',
+    url: SITE_URL,
+    logo: LOGO_URL,
+    address: branchAddresses,
+    telephone: dilsukhnagar.phone,
+    email: dilsukhnagar.email,
+  };
 
   // ── 1. Course schema ────────────────────────────────────────────────────────
   schemas.push({
@@ -97,7 +108,7 @@ export function buildCourseSchemas(input: CourseSchemaInput): object[] {
     description: input.description,
     url: pageUrl,
     image: LOGO_URL,
-    provider: PROVIDER,
+    provider,
     courseMode: ['online', 'onsite'],
     educationalLevel: 'Beginner to Advanced',
     inLanguage: 'en-IN',
@@ -113,32 +124,11 @@ export function buildCourseSchemas(input: CourseSchemaInput): object[] {
       '@type': 'CourseInstance',
       courseMode: ['online', 'onsite'],
       inLanguage: 'en-IN',
-      location: [
-        {
-          '@type': 'Place',
-          name: 'COSS Cloud Solutions — Dilsukhnagar',
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: 'Flat 109, C.B Eastern Homes, Srinagar Colony',
-            addressLocality: 'Dilsukhnagar',
-            addressRegion: 'Telangana',
-            postalCode: '500060',
-            addressCountry: 'IN',
-          },
-        },
-        {
-          '@type': 'Place',
-          name: 'COSS Cloud Solutions — Ameerpet',
-          address: {
-            '@type': 'PostalAddress',
-            streetAddress: '#502, Sree Swathi Ankur Building',
-            addressLocality: 'Ameerpet',
-            addressRegion: 'Telangana',
-            postalCode: '500016',
-            addressCountry: 'IN',
-          },
-        },
-      ],
+      location: [dilsukhnagar, ameerpet].map((b) => ({
+        '@type': 'Place',
+        name: `COSS Cloud Solutions — ${BRANCH_AREA_LABEL[b.branchKey] ?? b.branchKey}`,
+        address: toPostalAddress(b),
+      })),
     },
   });
 

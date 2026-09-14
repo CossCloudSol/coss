@@ -37,14 +37,14 @@ interface CoursePageSeoProps {
   faqs?: ReadonlyArray<FaqItem>;
 }
 
-export default function CoursePageSeo({
+export default async function CoursePageSeo({
   slug,
   title,
   description,
   category,
   faqs,
 }: CoursePageSeoProps) {
-  const schemas = buildCourseSchemas({ slug, title, description, category, faqs });
+  const schemas = await buildCourseSchemas({ slug, title, description, category, faqs });
 
   return (
     <>
