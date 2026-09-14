@@ -42,6 +42,25 @@ function logCallClick(payload: Record<string, string>): void {
   }
 }
 
+/**
+ * GA4 contact_click event. Best-effort only: gtag may not have loaded yet
+ * (Script strategy="afterInteractive"), so a missing gtag is a no-op rather
+ * than an error, and any failure here must never affect the call.
+ */
+function trackContactClick(params: { pageType: string; path: string }): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    (window as any).gtag('event', 'contact_click', {
+      method: 'call',
+      pageType: params.pageType,
+      path: params.path,
+    });
+  } catch {
+    /* best-effort — never let tracking affect the call */
+  }
+}
+
 export interface CallLinkProps {
   /** Raw phone number in any spacing/format — normalized to +91XXXXXXXXXX for both the href and the logged event. */
   number: string;
@@ -70,9 +89,10 @@ export default function CallLink({
 
   const handleClick = useCallback(() => {
     const resolvedPath = pathname || '/';
+    const resolvedPageType = pageType ?? classifyPageType(resolvedPath);
     const payload: Record<string, string> = {
       path: resolvedPath,
-      pageType: pageType ?? classifyPageType(resolvedPath),
+      pageType: resolvedPageType,
       phoneNumber: normalized,
       deviceType: detectDeviceType(),
     };
@@ -82,6 +102,7 @@ export default function CallLink({
     Object.assign(payload, extractUtmParams());
 
     logCallClick(payload);
+    trackContactClick({ pageType: resolvedPageType, path: resolvedPath });
   }, [pathname, pageType, courseSlug, branchKey, normalized]);
 
   return (

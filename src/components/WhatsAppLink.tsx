@@ -86,6 +86,25 @@ export function logWhatsAppClick(payload: WhatsAppClickPayload): void {
   }
 }
 
+/**
+ * GA4 contact_click event. Best-effort only: gtag may not have loaded yet
+ * (Script strategy="afterInteractive"), so a missing gtag is a no-op rather
+ * than an error, and any failure here must never affect the click.
+ */
+function trackContactClick(params: { ctaType: WhatsAppCtaType; path: string }): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    (window as any).gtag('event', 'contact_click', {
+      method: 'whatsapp',
+      ctaType: params.ctaType,
+      path: params.path,
+    });
+  } catch {
+    /* best-effort — never let tracking affect the click */
+  }
+}
+
 export interface WhatsAppLinkProps {
   /** Prebuilt message text (batchBookingMessage(), jobApplyMessage(), etc.). Omit for a bare wa.me link with no text= param. */
   message?: string;
@@ -135,6 +154,7 @@ export default function WhatsAppLink({
       courseSlug,
       branchKey,
     }));
+    trackContactClick({ ctaType, path: pathname || '/' });
   }, [pathname, pageType, ctaType, courseSlug, branchKey, digits, hadPrefill, message]);
 
   return (
