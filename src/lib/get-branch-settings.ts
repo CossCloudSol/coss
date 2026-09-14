@@ -69,7 +69,7 @@ export const FALLBACK: Record<string, BranchSettings> = {
     id: 'branch_dilsukhnagar',
     branchKey: 'dilsukhnagar',
     branchName: 'Coss Cloud Solutions — Dilsukhnagar',
-    addressLine1: 'Flat 109, CB Eastern Homes, Kamala Nagar',
+    addressLine1: 'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar',
     addressLine2: 'Dilsukhnagar',
     city: 'Hyderabad', state: 'Telangana', pincode: '500060',
     phone: '+91 88851 66007', email: 'info@cosscloudsol.com',

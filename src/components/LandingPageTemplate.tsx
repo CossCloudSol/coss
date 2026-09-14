@@ -118,7 +118,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
         location: {
           '@type': 'Place',
           name: 'Coss Cloud Solutions Dilsukhnagar',
-          address: { '@type': 'PostalAddress', streetAddress: dilsukhnagar?.addressLine1 ?? 'Flat 109, CB Eastern Homes, Kamala Nagar', addressLocality: 'Dilsukhnagar', addressRegion: 'Telangana', postalCode: dilsukhnagar?.pincode ?? '500060', addressCountry: 'IN' },
+          address: { '@type': 'PostalAddress', streetAddress: dilsukhnagar?.addressLine1 ?? 'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar', addressLocality: 'Dilsukhnagar', addressRegion: 'Telangana', postalCode: dilsukhnagar?.pincode ?? '500060', addressCountry: 'IN' },
         },
       },
       {
@@ -158,7 +158,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
       branchObj: dilsukhnagar,
       branchKey: 'dilsukhnagar',
       fallbackName: 'Coss Cloud Solutions — Dilsukhnagar',
-      fallbackAddr1: 'Flat 109, CB Eastern Homes, Kamala Nagar',
+      fallbackAddr1: 'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar',
       fallbackAddr2: 'Dilsukhnagar, Hyderabad – 500060',
       fallbackPhone: phone1,
     },
