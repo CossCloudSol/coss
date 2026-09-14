@@ -29,6 +29,7 @@ import {
   Search,
   Settings,
   Star,
+  UserCog,
   Users,
   type LucideIcon,
 } from 'lucide-react';
@@ -71,6 +72,7 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
       { href: '/admin/blog',           label: 'Blog Posts',       icon: BookOpen,      permissionKey: 'dashboard:view' },
       { href: '/admin/jobs',           label: 'Jobs',             icon: Briefcase,     permissionKey: 'dashboard:view' },
       { href: '/admin/batches',        label: 'Batches',          icon: Calendar,      permissionKey: 'dashboard:view' },
+      { href: '/admin/trainers',       label: 'Trainers',         icon: UserCog,       permissionKey: 'dashboard:view' },
       { href: '/admin/testimonials',   label: 'Testimonials',     icon: Star,          permissionKey: 'dashboard:view' },
       { href: '/admin/hiring-partners',label: 'Hiring Partners',  icon: Building,      permissionKey: 'dashboard:view' },
     ],
