@@ -53,7 +53,7 @@ export interface AnalyticsResponse {
 
 const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 const STATUSES = ['new', 'contacted', 'enrolled', 'lost'] as const;
-const FORM_TYPES = ['hero', 'full', 'demo', 'whatsapp_widget'] as const;
+const FORM_TYPES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget'] as const;
 
 function startOfDay(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());

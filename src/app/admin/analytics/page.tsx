@@ -473,6 +473,7 @@ const FORM_LABEL: Record<string, string> = {
   full: 'Full enrollment',
   demo: 'Demo / sidebar',
   whatsapp_widget: 'WhatsApp widget',
+  contact: 'Contact page',
 };
 
 function FormSourceTable({
