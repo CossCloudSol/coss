@@ -292,6 +292,27 @@ model Batch {
   @@index([courseId])
 }
 
+/// Faculty member shown in the admin roster and the public /faculty section.
+model Trainer {
+  id        String   @id @default(cuid())
+  name      String
+  title     String
+  category  String?
+  /// Comma-separated; split at render.
+  skills    String?
+  /// Comma-separated; split at render.
+  teaches   String?
+  startYear Int?
+  bio       String?
+  photoUrl  String?
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isVisible, sortOrder])
+}
+
 /// Timeline entries against a Lead. Cascades on Lead delete.
 model LeadActivity {
   id        String   @id @default(cuid())
