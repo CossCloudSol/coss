@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const reasons = [
-  { icon: '👨‍🏫', title: 'Industry Expert Trainers', desc: 'All our trainers are certified professionals with 15+ years of real-world IT experience. They don\'t just teach — they mentor you through the same challenges you\'ll face in the industry.', highlight: '15+ Years of Industry Experience' },
+  { icon: '👨‍🏫', title: 'Industry Expert Trainers', desc: 'All our trainers are certified professionals with 7 to 20+ years of real-world IT experience. They don\'t just teach — they mentor you through the same challenges you\'ll face in the industry.', highlight: '7 to 20+ Years of Industry Experience' },
   { icon: '🛠️', title: 'Practical & Hands-on Learning', desc: 'Theory alone won\'t get you hired. Every course includes extensive lab sessions, real-world projects, and case studies on actual industry tools and platforms.', highlight: 'Real Labs. Real Projects. Real Tools.' },
   { icon: '📅', title: 'Flexible Batch Options', desc: 'We offer morning, evening, weekend and online batches to accommodate working professionals, students and career changers. You choose the schedule that works for you.', highlight: 'Weekday, Weekend & Online Options' },
   { icon: '💰', title: 'Affordable, Quality Training', desc: 'Premium IT education shouldn\'t break the bank. Our course fees are among the most competitive in Hyderabad, with EMI options and group discounts available.', highlight: 'Lowest Fees, Highest Quality' },
@@ -41,10 +41,10 @@ export default function WhyUsPage() {
         titlePre="The "
         accentText="Smarter Choice"
         titleLine2="for IT Training in Hyderabad"
-        subtitle="Small batches, real-project training, certified trainers with 15+ years of experience and dedicated placement support — see what sets Coss Cloud Solutions apart."
+        subtitle="Small batches, real-project training, certified trainers with 7 to 20+ years of experience and dedicated placement support — see what sets Coss Cloud Solutions apart."
         stats={[
           { value: '5,000+', label: 'STUDENTS TRAINED' },
-          { value: '15+',    label: 'YEARS EXPERIENCE' },
+          { value: '7-20+',  label: 'YEARS EXPERIENCE' },
           { value: '50+',    label: 'HIRING PARTNERS' },
           { value: '100%',   label: 'PLACEMENT SUPPORT' },
         ]}
