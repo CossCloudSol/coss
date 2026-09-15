@@ -87,8 +87,8 @@ export default function AdminBatchesPage() {
 
   async function toggleFeatured(id: string, current: boolean) {
     try {
-      await fetch(`/api/admin/batches/${id}`, {
-        method: 'PUT',
+      await fetch(`/api/admin/batches/${id}/toggle`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ featured: !current }),
       });
