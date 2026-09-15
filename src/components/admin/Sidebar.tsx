@@ -27,6 +27,7 @@ import {
   MessageCircle,
   Phone,
   Search,
+  Send,
   Settings,
   Star,
   UserCog,
@@ -75,6 +76,7 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
       { href: '/admin/trainers',       label: 'Trainers',         icon: UserCog,       permissionKey: 'dashboard:view' },
       { href: '/admin/testimonials',   label: 'Testimonials',     icon: Star,          permissionKey: 'dashboard:view' },
       { href: '/admin/hiring-partners',label: 'Hiring Partners',  icon: Building,      permissionKey: 'dashboard:view' },
+      { href: '/admin/social-posts',   label: 'Social Posts',     icon: Send,          permissionKey: 'dashboard:view' },
     ],
   },
   {

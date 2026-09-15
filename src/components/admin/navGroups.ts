@@ -24,6 +24,7 @@ import {
   Settings,
   LayoutGrid,
   UserCog,
+  Send,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -74,6 +75,7 @@ export const NAV_GROUPS: ReadonlyArray<NavGroup> = [
       { label: 'Trainers',        icon: UserCog,       href: '/admin/trainers',       desc: 'Faculty roster' },
       { label: 'Testimonials',    icon: Star,          href: '/admin/testimonials',   desc: 'Student reviews' },
       { label: 'Hiring partners', icon: Building,      href: '/admin/hiring-partners',desc: 'Company logos' },
+      { label: 'Social posts',    icon: Send,          href: '/admin/social-posts',   desc: 'Scheduled Buffer posts' },
     ],
   },
   {
@@ -115,7 +117,7 @@ export const NAV_GROUPS: ReadonlyArray<NavGroup> = [
 
 export function getActiveGroup(pathname: string): string {
   if (['/admin/leads', '/admin/corporate', '/admin/whatsapp', '/admin/call-clicks', '/admin/whatsapp-clicks', '/admin/analytics'].some(p => pathname.startsWith(p))) return 'leads';
-  if (['/admin/categories', '/admin/courses', '/admin/blog', '/admin/jobs', '/admin/batches', '/admin/trainers', '/admin/testimonials', '/admin/hiring-partners'].some(p => pathname.startsWith(p))) return 'content';
+  if (['/admin/categories', '/admin/courses', '/admin/blog', '/admin/jobs', '/admin/batches', '/admin/trainers', '/admin/testimonials', '/admin/hiring-partners', '/admin/social-posts'].some(p => pathname.startsWith(p))) return 'content';
   if (['/admin/homepage', '/admin/topbar', '/admin/content-blocks', '/admin/media', '/admin/redirects'].some(p => pathname.startsWith(p))) return 'site';
   if (['/admin/seo', '/admin/geo', '/admin/sitemap', '/admin/schema'].some(p => pathname.startsWith(p))) return 'seo';
   if (['/admin/settings'].some(p => pathname.startsWith(p))) return 'settings';
