@@ -479,6 +479,7 @@ export const STATIC_PAGES: ReadonlyArray<StaticPage> = [
   { slug: 'student-reviews',     priority: 0.7, changeFrequency: 'monthly' },
   { slug: 'enroll-now-with-coss',priority: 0.8, changeFrequency: 'weekly'  },
   { slug: 'free-demo-class',     priority: 0.8, changeFrequency: 'weekly'  },
+  { slug: 'faculty',             priority: 0.7, changeFrequency: 'monthly' },
   { slug: 'privacy-policy',      priority: 0.3, changeFrequency: 'yearly'  },
   { slug: 'terms-conditions',    priority: 0.3, changeFrequency: 'yearly'  },
   { slug: 'refund-cancellation-policy', priority: 0.3, changeFrequency: 'yearly'  },

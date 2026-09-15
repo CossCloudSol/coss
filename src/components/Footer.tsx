@@ -27,6 +27,7 @@ const COMPANY = [
   { label: 'Corporate Training', href: '/corporate-training/' },
   { label: 'Placements',        href: '/placements/' },
   { label: 'Student Reviews',   href: '/student-reviews/' },
+  { label: 'Faculty',           href: '/faculty' },
   { label: 'Contact Us',        href: '/contact-us/' },
 ]
 
