@@ -103,7 +103,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
     .replace(/^-+|-+$/g, '');
 
   const postedDate = new Date(job.postedAt).toLocaleDateString('en-IN', {
-    day: 'numeric', month: 'long', year: 'numeric',
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata',
   });
 
   return (

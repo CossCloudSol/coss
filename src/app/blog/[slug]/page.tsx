@@ -227,7 +227,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>
             <article>
               <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '24px', padding: '12px 18px', background: 'var(--bg-alt)', borderRadius: '10px', fontSize: '13px', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
-                {dbPost.publishedAt && <span>{new Date(dbPost.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</span>}
+                {dbPost.publishedAt && <span>{new Date(dbPost.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' })}</span>}
                 {dbPost.readTime && <span>{dbPost.readTime}</span>}
                 <span style={{ background: 'var(--primary)', color: '#fff', padding: '2px 10px', borderRadius: '12px', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{dbPost.category}</span>
                 <span style={{ marginLeft: 'auto', fontSize: '12px' }}>by {dbPost.author}</span>

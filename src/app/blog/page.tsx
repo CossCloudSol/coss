@@ -298,7 +298,7 @@ export default async function BlogPage({
                           excerpt={post.excerpt}
                           category={post.category}
                           dateLabel={new Date(post.publishedAt ?? post.createdAt).toLocaleDateString('en-IN', {
-                            day: 'numeric', month: 'short', year: 'numeric',
+                            day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata',
                           })}
                           badgeColor="orange"
                           cardIndex={idx}

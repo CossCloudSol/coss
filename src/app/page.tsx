@@ -1198,7 +1198,7 @@ export default async function HomePage() {
             {blogPosts.map((post, i) => {
               const d = new Date(post.createdAt);
               const day = d.getDate().toString().padStart(2, '0');
-              const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
+              const mon = d.toLocaleDateString('en-IN', { month: 'short', timeZone: 'Asia/Kolkata' }).toUpperCase();
               const gradient = BLOG_GRADIENTS[i % BLOG_GRADIENTS.length];
               return (
                 <Link key={post.id} href={`/blog/${post.slug}`} className="blog-card">
