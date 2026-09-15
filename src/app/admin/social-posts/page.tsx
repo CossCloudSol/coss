@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { Plus, Pencil, Trash2, Loader2, Image as ImageIcon, Link2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Image as ImageIcon, Link2, Send, RotateCcw } from 'lucide-react';
 
 interface SocialPostItem {
   id: string;
@@ -70,6 +70,23 @@ export default function AdminSocialPostsPage() {
     } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to delete', 'error'); }
   }
 
+  async function toggleQueueStatus(id: string, currentStatus: string) {
+    const nextStatus = currentStatus === 'draft' ? 'queued' : 'draft';
+    try {
+      const res = await fetch(`/api/admin/social-posts/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error || 'Failed to update status');
+      }
+      showToast(nextStatus === 'queued' ? 'Post queued' : 'Post reverted to draft');
+      void load();
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update status', 'error'); }
+  }
+
   const queued = posts.filter((p) => p.status === 'queued').length;
   const failed = posts.filter((p) => p.status === 'failed').length;
 
@@ -134,6 +151,14 @@ export default function AdminSocialPostsPage() {
                   <p className="text-xs text-red-600 dark:text-red-400 mb-2 line-clamp-2">{post.lastError}</p>
                 )}
                 <div className="flex gap-2">
+                  {(post.status === 'draft' || post.status === 'queued') && (
+                    <button
+                      onClick={() => toggleQueueStatus(post.id, post.status)}
+                      className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#1d4ed8]"
+                    >
+                      {post.status === 'draft' ? 'Queue' : 'To Draft'}
+                    </button>
+                  )}
                   <Link
                     href={`/admin/social-posts/${post.id}/edit`}
                     className="flex-1 rounded-lg py-1.5 text-center text-xs font-medium text-white bg-[#024c57]"
@@ -188,6 +213,13 @@ export default function AdminSocialPostsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
+                        {(post.status === 'draft' || post.status === 'queued') && (
+                          <button onClick={() => toggleQueueStatus(post.id, post.status)}
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            title={post.status === 'draft' ? 'Queue' : 'Revert to draft'}>
+                            {post.status === 'draft' ? <Send className="w-3.5 h-3.5" /> : <RotateCcw className="w-3.5 h-3.5" />}
+                          </button>
+                        )}
                         <Link href={`/admin/social-posts/${post.id}/edit`}
                           className="p-1.5 rounded-lg text-gray-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" title="Edit">
                           <Pencil className="w-3.5 h-3.5" />
