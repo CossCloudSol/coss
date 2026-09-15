@@ -163,6 +163,9 @@ export default function TestimonialsAdminPage() {
   const [importMsg, setImportMsg] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  /* Tab 1 action error */
+  const [actionError, setActionError] = useState<string | null>(null)
+
   /* ── Fetch list ─────────────────────────────────────────────────────────── */
 
   const fetchItems = useCallback(async () => {
@@ -192,20 +195,38 @@ export default function TestimonialsAdminPage() {
   /* ── Toggle visible ──────────────────────────────────────────────────────── */
 
   async function toggleVisible(item: Testimonial) {
-    await fetch(`/api/admin/testimonials/${item.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ visible: !item.visible }),
-    })
-    fetchItems()
+    setActionError(null)
+    try {
+      const res = await fetch(`/api/admin/testimonials/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visible: !item.visible }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to update testimonial')
+      }
+      fetchItems()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to update testimonial')
+    }
   }
 
   /* ── Delete ──────────────────────────────────────────────────────────────── */
 
   async function deleteItem(item: Testimonial) {
     if (!confirm(`Delete testimonial from "${item.name}"?`)) return
-    await fetch(`/api/admin/testimonials/${item.id}`, { method: 'DELETE' })
-    fetchItems()
+    setActionError(null)
+    try {
+      const res = await fetch(`/api/admin/testimonials/${item.id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to delete testimonial')
+      }
+      fetchItems()
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to delete testimonial')
+    }
   }
 
   /* ── Open edit ───────────────────────────────────────────────────────────── */
@@ -368,6 +389,10 @@ export default function TestimonialsAdminPage() {
       {/* ── TAB 1: ALL ─────────────────────────────────────────────────────── */}
       {tab === 'all' && (
         <div>
+          {actionError && (
+            <p className="text-sm mb-4 text-red-600 dark:text-red-400">{actionError}</p>
+          )}
+
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {[

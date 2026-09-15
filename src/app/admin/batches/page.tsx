@@ -69,32 +69,46 @@ export default function AdminBatchesPage() {
   async function deleteBatch(id: string, name: string) {
     if (!confirm(`Delete "${name}"?`)) return;
     try {
-      await fetch(`/api/admin/batches/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/batches/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to delete');
+      }
       showToast('Batch deleted');
       void load();
-    } catch { showToast('Failed to delete', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to delete', 'error'); }
   }
 
   async function cloneBatch(id: string) {
     try {
       const res = await fetch(`/api/admin/batches/${id}/clone`, { method: 'POST' });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error || 'Failed to clone');
+      }
+      if (!data?.id) {
+        throw new Error('Clone succeeded but no batch id was returned');
+      }
       showToast('Batch cloned! Edit to set start date.');
       void load();
       setTimeout(() => window.location.href = `/admin/batches/${data.id}/edit`, 1500);
-    } catch { showToast('Failed to clone', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to clone', 'error'); }
   }
 
   async function toggleFeatured(id: string, current: boolean) {
     try {
-      await fetch(`/api/admin/batches/${id}/toggle`, {
+      const res = await fetch(`/api/admin/batches/${id}/toggle`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ featured: !current }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update');
+      }
       showToast(current ? 'Removed from featured' : 'Marked as featured');
       void load();
-    } catch { showToast('Failed to update', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update', 'error'); }
   }
 
   const upcoming  = batches.filter((b) => b.status === 'upcoming').length;

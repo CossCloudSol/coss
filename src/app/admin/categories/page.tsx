@@ -61,13 +61,19 @@ export default function CategoriesPage() {
     const num = parseInt(value, 10);
     if (isNaN(num)) return;
     try {
-      await fetch(`/api/admin/categories/${cat.id}`, {
+      const res = await fetch(`/api/admin/categories/${cat.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sortOrder: num }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update sort order');
+      }
       setCategories((prev) => prev.map((c) => c.id === cat.id ? { ...c, sortOrder: num } : c));
-    } catch { /* ignore */ }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to update sort order', 'error');
+    }
   }
 
   async function handleDelete(cat: Category) {

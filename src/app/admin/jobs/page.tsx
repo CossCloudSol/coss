@@ -63,35 +63,47 @@ export default function AdminJobsPage() {
   async function toggleStatus(id: string, current: string) {
     const next = current === 'active' ? 'closed' : 'active';
     try {
-      await fetch(`/api/admin/jobs/${id}/toggle`, {
+      const res = await fetch(`/api/admin/jobs/${id}/toggle`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ field: 'status', value: next }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update status');
+      }
       showToast(`Status set to ${next}`);
       void load();
-    } catch { showToast('Failed to update status', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update status', 'error'); }
   }
 
   async function toggleFeatured(id: string, current: boolean) {
     try {
-      await fetch(`/api/admin/jobs/${id}/toggle`, {
+      const res = await fetch(`/api/admin/jobs/${id}/toggle`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ field: 'featured', value: !current }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update featured');
+      }
       showToast(current ? 'Removed from featured' : 'Marked as featured');
       void load();
-    } catch { showToast('Failed to update featured', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update featured', 'error'); }
   }
 
   async function deleteJob(id: string, title: string) {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
     try {
-      await fetch(`/api/admin/jobs/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/jobs/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to delete job');
+      }
       showToast('Job deleted');
       void load();
-    } catch { showToast('Failed to delete job', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to delete job', 'error'); }
   }
 
   const now = new Date();

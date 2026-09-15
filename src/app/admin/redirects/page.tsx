@@ -25,6 +25,7 @@ export default function RedirectsPage() {
   const [deploying, setDeploying]   = useState(false)
   const [deployMsg, setDeployMsg]   = useState('')
   const [hasUnsynced, setHasUnsynced] = useState(false)
+  const [rowError, setRowError]     = useState('')
 
   const [source, setSource]           = useState('')
   const [destination, setDestination] = useState('')
@@ -77,20 +78,38 @@ export default function RedirectsPage() {
   }
 
   async function toggleActive(r: Redirect) {
-    await fetch(`/api/admin/redirects/${r.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ isActive: !r.isActive }),
-    })
-    setRedirects(prev => prev.map(x => x.id === r.id ? { ...x, isActive: !x.isActive } : x))
-    setHasUnsynced(true)
+    setRowError('')
+    try {
+      const res = await fetch(`/api/admin/redirects/${r.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive: !r.isActive }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to update redirect')
+      }
+      setRedirects(prev => prev.map(x => x.id === r.id ? { ...x, isActive: !x.isActive } : x))
+      setHasUnsynced(true)
+    } catch (err) {
+      setRowError(`✗ ${err instanceof Error ? err.message : 'Failed to update redirect'}`)
+    }
   }
 
   async function deleteRedirect(id: string, source: string) {
     if (!confirm(`Delete redirect "${source}"?`)) return
-    await fetch(`/api/admin/redirects/${id}`, { method: 'DELETE' })
-    setRedirects(prev => prev.filter(x => x.id !== id))
-    setHasUnsynced(true)
+    setRowError('')
+    try {
+      const res = await fetch(`/api/admin/redirects/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to delete redirect')
+      }
+      setRedirects(prev => prev.filter(x => x.id !== id))
+      setHasUnsynced(true)
+    } catch (err) {
+      setRowError(`✗ ${err instanceof Error ? err.message : 'Failed to delete redirect'}`)
+    }
   }
 
   async function triggerDeploy() {
@@ -199,6 +218,13 @@ export default function RedirectsPage() {
             : 'bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-500/20'
         }`}>
           {deployMsg}
+        </div>
+      )}
+
+      {/* Row action error */}
+      {rowError && (
+        <div className="rounded-lg px-4 py-3 text-sm mb-5 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-500/20">
+          {rowError}
         </div>
       )}
 

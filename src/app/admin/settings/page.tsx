@@ -128,22 +128,30 @@ function SiteSettingsPanel() {
     setSaving(true)
     setSaveMsg('')
     try {
-      await fetch('/api/admin/settings', {
+      const res = await fetch('/api/admin/settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(siteSettings),
       })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save settings')
+      }
       for (const branch of branches) {
-        await fetch(`/api/admin/geo/${branch.branchKey}`, {
+        const branchRes = await fetch(`/api/admin/geo/${branch.branchKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(branch),
         })
+        if (!branchRes.ok) {
+          const data = await branchRes.json().catch(() => null)
+          throw new Error(data?.error || `Failed to save branch ${branch.branchKey}`)
+        }
       }
       setSaveMsg('✓ All changes saved')
       setTimeout(() => setSaveMsg(''), 3000)
-    } catch {
-      setSaveMsg('✗ Save failed — check console')
+    } catch (err) {
+      setSaveMsg(err instanceof Error ? `✗ ${err.message}` : '✗ Save failed — check console')
     } finally {
       setSaving(false)
     }

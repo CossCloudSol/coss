@@ -817,11 +817,19 @@ export default function ContentBlocksPage() {
     const newBlocks = [...blocks]
     ;[newBlocks[index - 1], newBlocks[index]] = [newBlocks[index], newBlocks[index - 1]]
     setBlocks(newBlocks)
-    await fetch('/api/admin/content-blocks/reorder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids: newBlocks.map(b => b.id) }),
-    })
+    try {
+      const res = await fetch('/api/admin/content-blocks/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: newBlocks.map(b => b.id) }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save order')
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to save order')
+    }
   }
 
   const handleMoveDown = async (index: number) => {
@@ -829,21 +837,37 @@ export default function ContentBlocksPage() {
     const newBlocks = [...blocks]
     ;[newBlocks[index], newBlocks[index + 1]] = [newBlocks[index + 1], newBlocks[index]]
     setBlocks(newBlocks)
-    await fetch('/api/admin/content-blocks/reorder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids: newBlocks.map(b => b.id) }),
-    })
+    try {
+      const res = await fetch('/api/admin/content-blocks/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: newBlocks.map(b => b.id) }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save order')
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to save order')
+    }
   }
 
   const handlePublish = async () => {
-    await fetch('/api/admin/content-blocks/reorder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids: blocks.map(b => b.id) }),
-    })
-    setDraftChanges(false)
-    showToast('Published — order saved')
+    try {
+      const res = await fetch('/api/admin/content-blocks/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: blocks.map(b => b.id) }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to publish')
+      }
+      setDraftChanges(false)
+      showToast('Published — order saved')
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to publish')
+    }
   }
 
   return (

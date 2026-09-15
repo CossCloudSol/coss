@@ -108,10 +108,12 @@ export default function EditBatchPage({ params }: { params: { id: string } }) {
   async function handleClone() {
     try {
       const res = await fetch(`/api/admin/batches/${params.id}/clone`, { method: 'POST' });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || 'Failed to clone');
+      if (!data?.id) throw new Error('Clone succeeded but no batch id was returned');
       showToast('Batch cloned! Redirecting to new batch...');
       setTimeout(() => router.push(`/admin/batches/${data.id}/edit`), 1000);
-    } catch { showToast('Failed to clone', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to clone', 'error'); }
   }
 
   if (loading) return <div className="p-6 text-center text-gray-500 dark:text-gray-400">Loading...</div>;

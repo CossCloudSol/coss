@@ -42,22 +42,30 @@ export default function AdminTrainersPage() {
   async function deleteTrainer(id: string, name: string) {
     if (!confirm(`Delete "${name}"?`)) return;
     try {
-      await fetch(`/api/admin/trainers/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/trainers/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to delete');
+      }
       showToast('Trainer deleted');
       void load();
-    } catch { showToast('Failed to delete', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to delete', 'error'); }
   }
 
   async function toggleVisible(id: string, current: boolean) {
     try {
-      await fetch(`/api/admin/trainers/${id}/toggle`, {
+      const res = await fetch(`/api/admin/trainers/${id}/toggle`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isVisible: !current }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update');
+      }
       showToast(current ? 'Hidden from faculty page' : 'Shown on faculty page');
       void load();
-    } catch { showToast('Failed to update', 'error'); }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update', 'error'); }
   }
 
   function handleDragStart(index: number) { dragItem.current = index; }
@@ -72,12 +80,16 @@ export default function AdminTrainersPage() {
     dragOver.current = null;
     setTrainers(reordered);
     try {
-      await fetch('/api/admin/trainers/reorder', {
+      const res = await fetch('/api/admin/trainers/reorder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ids: reordered.map((t) => t.id) }),
       });
-    } catch { showToast('Failed to save order', 'error'); }
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to save order');
+      }
+    } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to save order', 'error'); }
   }
 
   const loader = (

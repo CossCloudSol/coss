@@ -69,12 +69,14 @@ export default function SitemapManagerPage() {
   const [previewCount, setPreviewCount] = useState(0)
   const [loadingPreview, setLoadingPreview] = useState(false)
   const [saving, setSaving]             = useState<string | null>(null)
+  const [saveErrors, setSaveErrors]     = useState<Record<string, string>>({})
   const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({})
 
   // ── Tab 2 state ────────────────────────────────────────────────────────────
   const [rules, setRules]             = useState<RobotRule[]>(DEFAULT_RULES)
   const [savingRobots, setSavingRobots] = useState(false)
   const [robotsSaved, setRobotsSaved] = useState(false)
+  const [robotsError, setRobotsError] = useState('')
 
   // ── Load sitemap pages ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -111,12 +113,19 @@ export default function SitemapManagerPage() {
     clearTimeout(saveTimers.current[slug])
     saveTimers.current[slug] = setTimeout(async () => {
       setSaving(slug)
+      setSaveErrors(prev => { const next = { ...prev }; delete next[slug]; return next })
       try {
-        await fetch(`/api/admin/sitemap/pages/${encodeURIComponent(slug)}`, {
+        const res = await fetch(`/api/admin/sitemap/pages/${encodeURIComponent(slug)}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ [field]: value }),
         })
+        if (!res.ok) {
+          const data = await res.json().catch(() => null)
+          throw new Error(data?.error || 'Save failed')
+        }
+      } catch (err) {
+        setSaveErrors(prev => ({ ...prev, [slug]: err instanceof Error ? err.message : 'Save failed' }))
       } finally {
         setSaving(null)
       }
@@ -139,14 +148,22 @@ export default function SitemapManagerPage() {
   // ── Save robots ────────────────────────────────────────────────────────────
   async function saveRobots() {
     setSavingRobots(true)
+    setRobotsError('')
     try {
-      await fetch('/api/admin/sitemap/robots', {
+      const res = await fetch('/api/admin/sitemap/robots', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rules }),
       })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Could not write robots.ts')
+      }
       setRobotsSaved(true)
       setTimeout(() => setRobotsSaved(false), 2000)
+    } catch (err) {
+      setRobotsError(err instanceof Error ? err.message : 'Could not write robots.ts')
+      setTimeout(() => setRobotsError(''), 3000)
     } finally {
       setSavingRobots(false)
     }
@@ -259,6 +276,9 @@ export default function SitemapManagerPage() {
                       </span>
                       {isSavingThis && (
                         <span className="shrink-0 inline-block h-3 w-3 animate-spin rounded-full border-2 border-teal-500 border-t-transparent" />
+                      )}
+                      {saveErrors[page.slug] && (
+                        <span className="shrink-0 text-red-600 dark:text-red-400 text-xs" title={saveErrors[page.slug]}>⚠ save failed</span>
                       )}
                     </div>
 
@@ -407,6 +427,9 @@ export default function SitemapManagerPage() {
                           <td className="px-2 py-2.5">
                             {isSavingThis && (
                               <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-teal-500 border-t-transparent" />
+                            )}
+                            {saveErrors[page.slug] && (
+                              <span className="text-red-600 dark:text-red-400 text-xs" title={saveErrors[page.slug]}>⚠</span>
                             )}
                           </td>
                         </tr>
@@ -560,6 +583,10 @@ export default function SitemapManagerPage() {
             >
               Reset to defaults
             </button>
+
+            {robotsError && (
+              <span className="inline-flex items-center text-red-600 dark:text-red-400 text-sm">{robotsError}</span>
+            )}
           </div>
         </div>
       )}

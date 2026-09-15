@@ -68,6 +68,7 @@ export default function SchemaPage() {
   const [jsonError, setJsonError]     = useState('')
   const [saving, setSaving]           = useState(false)
   const [globalMsg, setGlobalMsg]     = useState('')
+  const [globalErr, setGlobalErr]     = useState('')
 
   // ── Tab 2: Pages state ───────────────────────────────────────────────────
   const [pages, setPages]               = useState<SchemaPage[]>([])
@@ -78,6 +79,7 @@ export default function SchemaPage() {
   const [viewingSlug, setViewingSlug]         = useState<string | null>(null)
   const [pageSaving, setPageSaving]           = useState<string | null>(null)
   const [pageMsg, setPageMsg]                 = useState('')
+  const [pageErr, setPageErr]                 = useState('')
 
   // ── Tab 3: Validate state ─────────────────────────────────────────────────
   const [validateUrl, setValidateUrl]       = useState('https://www.cosscloudsol.com')
@@ -119,15 +121,26 @@ export default function SchemaPage() {
   async function toggleSchema(enabledKey: string, value: boolean) {
     setSaving(true)
     setGlobalMsg('')
-    await fetch('/api/admin/schema/global', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ [enabledKey]: value }),
-    })
-    setSettings(prev => prev ? { ...prev, [enabledKey]: value } : prev)
-    setSaving(false)
-    setGlobalMsg(value ? 'Schema enabled.' : 'Schema disabled.')
-    setTimeout(() => setGlobalMsg(''), 2500)
+    setGlobalErr('')
+    try {
+      const res = await fetch('/api/admin/schema/global', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [enabledKey]: value }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save')
+      }
+      setSettings(prev => prev ? { ...prev, [enabledKey]: value } : prev)
+      setGlobalMsg(value ? 'Schema enabled.' : 'Schema disabled.')
+      setTimeout(() => setGlobalMsg(''), 2500)
+    } catch (err) {
+      setGlobalErr(err instanceof Error ? err.message : 'Failed to save')
+      setTimeout(() => setGlobalErr(''), 2500)
+    } finally {
+      setSaving(false)
+    }
   }
 
   function startEdit(overrideKey: string, currentVal: string | null) {
@@ -143,44 +156,77 @@ export default function SchemaPage() {
       return
     }
     setSaving(true)
-    await fetch('/api/admin/schema/global', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ [overrideKey]: editJson }),
-    })
-    setSettings(prev => prev ? { ...prev, [overrideKey]: editJson } : prev)
-    setEditingKey(null)
-    setSaving(false)
-    setGlobalMsg('Override saved.')
-    setTimeout(() => setGlobalMsg(''), 2500)
+    setGlobalErr('')
+    try {
+      const res = await fetch('/api/admin/schema/global', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [overrideKey]: editJson }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save')
+      }
+      setSettings(prev => prev ? { ...prev, [overrideKey]: editJson } : prev)
+      setEditingKey(null)
+      setGlobalMsg('Override saved.')
+      setTimeout(() => setGlobalMsg(''), 2500)
+    } catch (err) {
+      setGlobalErr(err instanceof Error ? err.message : 'Failed to save')
+      setTimeout(() => setGlobalErr(''), 2500)
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function clearOverride(overrideKey: string) {
     setSaving(true)
-    await fetch('/api/admin/schema/global', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ [overrideKey]: null }),
-    })
-    setSettings(prev => prev ? { ...prev, [overrideKey]: null } : prev)
-    setEditingKey(null)
-    setSaving(false)
-    setGlobalMsg('Override cleared — using auto-generated schema.')
-    setTimeout(() => setGlobalMsg(''), 2500)
+    setGlobalErr('')
+    try {
+      const res = await fetch('/api/admin/schema/global', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [overrideKey]: null }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save')
+      }
+      setSettings(prev => prev ? { ...prev, [overrideKey]: null } : prev)
+      setEditingKey(null)
+      setGlobalMsg('Override cleared — using auto-generated schema.')
+      setTimeout(() => setGlobalMsg(''), 2500)
+    } catch (err) {
+      setGlobalErr(err instanceof Error ? err.message : 'Failed to save')
+      setTimeout(() => setGlobalErr(''), 2500)
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function togglePageSchema(slug: string, value: boolean) {
     setPageSaving(slug)
     setPageMsg('')
-    await fetch(`/api/admin/schema/pages/${encodeURIComponent(slug)}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ schemaEnabled: value }),
-    })
-    setPages(prev => prev.map(p => p.slug === slug ? { ...p, schemaEnabled: value } : p))
-    setPageSaving(null)
-    setPageMsg(value ? 'Schema enabled.' : 'Schema disabled.')
-    setTimeout(() => setPageMsg(''), 2500)
+    setPageErr('')
+    try {
+      const res = await fetch(`/api/admin/schema/pages/${encodeURIComponent(slug)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ schemaEnabled: value }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save')
+      }
+      setPages(prev => prev.map(p => p.slug === slug ? { ...p, schemaEnabled: value } : p))
+      setPageMsg(value ? 'Schema enabled.' : 'Schema disabled.')
+      setTimeout(() => setPageMsg(''), 2500)
+    } catch (err) {
+      setPageErr(err instanceof Error ? err.message : 'Failed to save')
+      setTimeout(() => setPageErr(''), 2500)
+    } finally {
+      setPageSaving(null)
+    }
   }
 
   function startPageEdit(slug: string, override: string | null) {
@@ -197,30 +243,52 @@ export default function SchemaPage() {
       return
     }
     setPageSaving(slug)
-    await fetch(`/api/admin/schema/pages/${encodeURIComponent(slug)}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ schemaOverride: editingOverride }),
-    })
-    setPages(prev => prev.map(p => p.slug === slug ? { ...p, schemaOverride: editingOverride } : p))
-    setEditingSlug(null)
-    setPageSaving(null)
-    setPageMsg('Override saved.')
-    setTimeout(() => setPageMsg(''), 2500)
+    setPageErr('')
+    try {
+      const res = await fetch(`/api/admin/schema/pages/${encodeURIComponent(slug)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ schemaOverride: editingOverride }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save')
+      }
+      setPages(prev => prev.map(p => p.slug === slug ? { ...p, schemaOverride: editingOverride } : p))
+      setEditingSlug(null)
+      setPageMsg('Override saved.')
+      setTimeout(() => setPageMsg(''), 2500)
+    } catch (err) {
+      setPageErr(err instanceof Error ? err.message : 'Failed to save')
+      setTimeout(() => setPageErr(''), 2500)
+    } finally {
+      setPageSaving(null)
+    }
   }
 
   async function clearPageOverride(slug: string) {
     setPageSaving(slug)
-    await fetch(`/api/admin/schema/pages/${encodeURIComponent(slug)}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ schemaOverride: null }),
-    })
-    setPages(prev => prev.map(p => p.slug === slug ? { ...p, schemaOverride: null } : p))
-    setEditingSlug(null)
-    setPageSaving(null)
-    setPageMsg('Override cleared.')
-    setTimeout(() => setPageMsg(''), 2500)
+    setPageErr('')
+    try {
+      const res = await fetch(`/api/admin/schema/pages/${encodeURIComponent(slug)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ schemaOverride: null }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save')
+      }
+      setPages(prev => prev.map(p => p.slug === slug ? { ...p, schemaOverride: null } : p))
+      setEditingSlug(null)
+      setPageMsg('Override cleared.')
+      setTimeout(() => setPageMsg(''), 2500)
+    } catch (err) {
+      setPageErr(err instanceof Error ? err.message : 'Failed to save')
+      setTimeout(() => setPageErr(''), 2500)
+    } finally {
+      setPageSaving(null)
+    }
   }
 
   async function validateSchema() {
@@ -334,6 +402,11 @@ ALTER TABLE "SiteSettings"
           {globalMsg && (
             <div className="mb-4 px-4 py-2 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded text-teal-700 dark:text-teal-300 text-sm">
               {globalMsg}
+            </div>
+          )}
+          {globalErr && (
+            <div className="mb-4 px-4 py-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-500/30 rounded text-red-700 dark:text-red-300 text-sm">
+              {globalErr}
             </div>
           )}
           <div className="grid gap-4">
@@ -494,6 +567,11 @@ ALTER TABLE "SiteSettings"
           {pageMsg && (
             <div className="mb-4 px-4 py-2 bg-teal-50 dark:bg-teal-900/30 border border-teal-200 dark:border-teal-500/30 rounded text-teal-700 dark:text-teal-300 text-sm">
               {pageMsg}
+            </div>
+          )}
+          {pageErr && (
+            <div className="mb-4 px-4 py-2 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-500/30 rounded text-red-700 dark:text-red-300 text-sm">
+              {pageErr}
             </div>
           )}
           {!pagesLoaded ? (

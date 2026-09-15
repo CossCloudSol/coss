@@ -29,6 +29,7 @@ export default function HiringPartnersPage() {
   const [showForm, setShowForm]       = useState(false)
   const [editingId, setEditingId]     = useState<string | null>(null)
   const [saving, setSaving]           = useState(false)
+  const [toast, setToast]             = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
 
   const [form, setForm] = useState({
     name: '', logoUrl: '', altText: '', website: '', isVisible: true, sortOrder: 0,
@@ -36,6 +37,11 @@ export default function HiringPartnersPage() {
 
   const dragItem = useRef<number | null>(null)
   const dragOver = useRef<number | null>(null)
+
+  const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
+    setToast({ msg, type })
+    setTimeout(() => setToast(null), 3000)
+  }
 
   useEffect(() => { fetchPartners() }, [])
 
@@ -48,37 +54,61 @@ export default function HiringPartnersPage() {
   }
 
   async function toggleVisible(p: HiringPartner) {
-    await fetch(`/api/admin/hiring-partners/${p.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ isVisible: !p.isVisible }),
-    })
-    setPartners(prev => prev.map(x => x.id === p.id ? { ...x, isVisible: !x.isVisible } : x))
+    try {
+      const res = await fetch(`/api/admin/hiring-partners/${p.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isVisible: !p.isVisible }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to update')
+      }
+      setPartners(prev => prev.map(x => x.id === p.id ? { ...x, isVisible: !x.isVisible } : x))
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to update', 'error')
+    }
   }
 
   async function deletePartner(id: string, name: string) {
     if (!confirm(`Delete "${name}"?`)) return
-    await fetch(`/api/admin/hiring-partners/${id}`, { method: 'DELETE' })
-    setPartners(prev => prev.filter(x => x.id !== id))
+    try {
+      const res = await fetch(`/api/admin/hiring-partners/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to delete')
+      }
+      setPartners(prev => prev.filter(x => x.id !== id))
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to delete', 'error')
+    }
   }
 
   async function savePartner() {
     setSaving(true)
-    const url    = editingId ? `/api/admin/hiring-partners/${editingId}` : '/api/admin/hiring-partners'
-    const method = editingId ? 'PATCH' : 'POST'
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
-    const data = await res.json()
-    if (editingId) {
-      setPartners(prev => prev.map(x => x.id === editingId ? data : x))
-    } else {
-      setPartners(prev => [...prev, data].sort((a, b) => a.sortOrder - b.sortOrder))
+    try {
+      const url    = editingId ? `/api/admin/hiring-partners/${editingId}` : '/api/admin/hiring-partners'
+      const method = editingId ? 'PATCH' : 'POST'
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json().catch(() => null)
+      if (!res.ok) {
+        throw new Error(data?.error || 'Failed to save partner')
+      }
+      if (editingId) {
+        setPartners(prev => prev.map(x => x.id === editingId ? data : x))
+      } else {
+        setPartners(prev => [...prev, data].sort((a, b) => a.sortOrder - b.sortOrder))
+      }
+      resetForm()
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to save partner', 'error')
+    } finally {
+      setSaving(false)
     }
-    resetForm()
-    setSaving(false)
   }
 
   function resetForm() {
@@ -105,19 +135,35 @@ export default function HiringPartnersPage() {
     dragItem.current = null
     dragOver.current = null
     setPartners(reordered)
-    await fetch('/api/admin/hiring-partners/reorder', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ids: reordered.map(p => p.id) }),
-    })
+    try {
+      const res = await fetch('/api/admin/hiring-partners/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: reordered.map(p => p.id) }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error || 'Failed to save order')
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to save order', 'error')
+    }
   }
 
   async function runScan() {
     setScanning(true)
-    const res = await fetch('/api/admin/hiring-partners/scan', { method: 'POST' })
-    const data = await res.json()
-    setScanResults(data)
-    setScanning(false)
+    try {
+      const res = await fetch('/api/admin/hiring-partners/scan', { method: 'POST' })
+      const data = await res.json().catch(() => null)
+      if (!res.ok) {
+        throw new Error(data?.error || 'Scan failed')
+      }
+      setScanResults(data)
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Scan failed', 'error')
+    } finally {
+      setScanning(false)
+    }
   }
 
   const visible = partners.filter(p => p.isVisible).length
@@ -128,6 +174,11 @@ export default function HiringPartnersPage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto overflow-x-hidden">
+      {toast && (
+        <div className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-lg text-sm font-medium shadow-lg ${toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'}`}>
+          {toast.msg}
+        </div>
+      )}
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

@@ -64,50 +64,69 @@ export default function AdminCoursesPage() {
   async function toggleStatus(id: string, current: string) {
     const next = current === 'published' ? 'draft' : 'published';
     try {
-      await fetch(`/api/admin/courses/${id}/toggle`, {
+      const res = await fetch(`/api/admin/courses/${id}/toggle`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: next }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update status');
+      }
       showToast(`Status set to ${next}`);
       void load();
-    } catch {
-      showToast('Failed to update status', 'error');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to update status', 'error');
     }
   }
 
   async function toggleFeatured(id: string, current: boolean) {
     try {
-      await fetch(`/api/admin/courses/${id}/toggle`, {
+      const res = await fetch(`/api/admin/courses/${id}/toggle`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ featured: !current }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to update');
+      }
       showToast(`Featured ${!current ? 'enabled' : 'disabled'}`);
       void load();
-    } catch {
-      showToast('Failed to update', 'error');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to update', 'error');
     }
   }
 
   async function handleDelete(id: string, title: string) {
     if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
     try {
-      await fetch(`/api/admin/courses/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/courses/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to delete');
+      }
       showToast('Course deleted');
       void load();
-    } catch {
-      showToast('Failed to delete', 'error');
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to delete', 'error');
     }
   }
 
   async function bulkDelete() {
     if (selectedIds.size === 0) return;
     if (!confirm(`Delete ${selectedIds.size} course(s)? This cannot be undone.`)) return;
-    await Promise.all([...selectedIds].map((id) => fetch(`/api/admin/courses/${id}`, { method: 'DELETE' })));
-    setSelectedIds(new Set());
-    showToast(`${selectedIds.size} course(s) deleted`);
-    void load();
+    const ids = [...selectedIds];
+    try {
+      const results = await Promise.all(ids.map((id) => fetch(`/api/admin/courses/${id}`, { method: 'DELETE' })));
+      const failed = results.filter((res) => !res.ok).length;
+      if (failed > 0) throw new Error(`Failed to delete ${failed} of ${ids.length} course(s)`);
+      setSelectedIds(new Set());
+      showToast(`${ids.length} course(s) deleted`);
+      void load();
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to delete courses', 'error');
+    }
   }
 
   function toggleSelect(id: string) {
