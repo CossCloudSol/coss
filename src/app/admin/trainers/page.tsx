@@ -50,8 +50,8 @@ export default function AdminTrainersPage() {
 
   async function toggleVisible(id: string, current: boolean) {
     try {
-      await fetch(`/api/admin/trainers/${id}`, {
-        method: 'PUT',
+      await fetch(`/api/admin/trainers/${id}/toggle`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isVisible: !current }),
       });
