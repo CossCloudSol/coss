@@ -174,7 +174,13 @@ export default function MediaManagerPage() {
       if (res.ok) {
         setAssets(prev => prev.filter(a => a.public_id !== publicId))
       } else {
-        alert('Delete failed')
+        const data = await res.json().catch(() => null)
+        const references: string[] | undefined = data?.references
+        alert(
+          references?.length
+            ? `Cannot delete — still in use by: ${references.join(', ')}`
+            : data?.error ?? 'Delete failed'
+        )
       }
     } catch {
       alert('Network error')
