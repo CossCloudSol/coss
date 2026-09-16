@@ -104,7 +104,7 @@ export const LOCALITIES: LocalityConfig[] = [
     name: 'Dilsukhnagar',
     metaTitle: 'IT Training Institute in Dilsukhnagar, Hyderabad',
     metaDescription:
-      'Coss Cloud Solutions Dilsukhnagar branch — classroom IT training in Cloud, DevOps, Data Science & more. 5 mins from Dilsukhnagar Metro. Free demo class, 100% placement support.',
+      'Coss Cloud Solutions Dilsukhnagar branch — classroom IT training in Cloud, DevOps, Data Science & more. 5 mins from Dilsukhnagar Metro. Free demo class, placement support.',
     keywords: 'IT training institute Dilsukhnagar, software training Dilsukhnagar Hyderabad, Coss Cloud Solutions Dilsukhnagar, computer courses near Dilsukhnagar metro',
     badge: 'DILSUKHNAGAR BRANCH — LB NAGAR SIDE OF HYDERABAD',
     h1Pre: 'IT Training Institute in ',

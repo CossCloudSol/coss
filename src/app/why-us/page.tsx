@@ -46,7 +46,7 @@ export default function WhyUsPage() {
           { value: '5,000+', label: 'STUDENTS TRAINED' },
           { value: '7-20+',  label: 'YEARS EXPERIENCE' },
           { value: '50+',    label: 'HIRING PARTNERS' },
-          { value: '100%',   label: 'PLACEMENT SUPPORT' },
+          { value: '50+',    label: 'HIRING PARTNERS' },
         ]}
         ctaText="Book a free demo class · No fees, no pressure"
         breadcrumb={[{ label: 'About Us', href: '/about-us/' }, { label: 'Why Us', href: '/why-us/' }]}

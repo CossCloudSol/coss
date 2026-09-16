@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       course?.excerpt ??
       course?.description ??
-      'Best IT training institute in Hyderabad. Hands-on courses with 100% placement support at Dilsukhnagar & Ameerpet.',
+      'Best IT training institute in Hyderabad. Hands-on courses with placement support at Dilsukhnagar & Ameerpet.',
     openGraph: course?.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
   }
 

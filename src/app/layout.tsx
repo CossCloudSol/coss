@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     template: '%s | Coss Cloud Solutions',
   },
   description:
-    'Best IT training institute in Hyderabad with expert trainers, hands-on labs, and 100% placement support. Courses in Data Science, AWS, DevOps, SAP, Full Stack & more.',
+    'Best IT training institute in Hyderabad with expert trainers, hands-on labs, and placement support. Courses in Data Science, AWS, DevOps, SAP, Full Stack & more.',
   keywords: ['IT training Hyderabad', 'software training Hyderabad', 'data science course Hyderabad', 'AWS training Hyderabad', 'DevOps training Hyderabad', 'Coss Cloud Solutions'],
   authors: [{ name: 'Coss Cloud Solutions' }],
   creator: 'Coss Cloud Solutions',
