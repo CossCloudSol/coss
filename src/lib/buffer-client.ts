@@ -10,6 +10,13 @@
  * BUFFER_API_KEY expires 2027-09-13. Auth failures are detected and surface
  * expiry as the likely cause so this reads as a clear admin message instead
  * of posts silently failing to schedule.
+ *
+ * Shapes below were confirmed by introspecting the live schema at
+ * https://api.buffer.com (root Query/Mutation fields have no "organization"
+ * field — channels are read via `channels(input: ChannelsInput!)` — and
+ * createPost/deletePost return result unions with typed error members
+ * rather than only surfacing failures via the top-level GraphQL `errors`
+ * array).
  */
 
 const BUFFER_API_URL = 'https://api.buffer.com';
@@ -22,6 +29,8 @@ const ORGANIZATION_ID = '6aa6b591da36a3ea4daa5ce9';
 export type BufferError = {
   message: string;
   authFailure?: boolean;
+  /** LimitReachedError — the channel's scheduled-post queue is full (free plan: 10/channel). */
+  limitReached?: boolean;
 };
 
 export type BufferResult<T> =
@@ -158,22 +167,20 @@ export type BufferChannel = {
 export async function getChannels(): Promise<BufferResult<BufferChannel[]>> {
   const query = `
     query GetChannels($organizationId: OrganizationId!) {
-      organization(id: $organizationId) {
-        channels {
-          id
-          displayName
-          service
-        }
+      channels(input: { organizationId: $organizationId }) {
+        id
+        displayName
+        service
       }
     }
   `;
 
-  const result = await bufferRequest<{
-    organization: { channels: BufferChannel[] };
-  }>(query, { organizationId: ORGANIZATION_ID });
+  const result = await bufferRequest<{ channels: BufferChannel[] }>(query, {
+    organizationId: ORGANIZATION_ID,
+  });
 
   if (!result.ok) return result;
-  return { ok: true, data: result.data.organization.channels };
+  return { ok: true, data: result.data.channels };
 }
 
 export type CreatePostInput = {
@@ -188,6 +195,19 @@ export type CreatePostInput = {
 export type CreatePostResult = {
   id: string;
 };
+
+// createPost's result union, as returned by Buffer — a business-logic
+// failure (bad channel, queue full, validation, upstream LinkedIn error)
+// comes back as one of these typed members inside `data`, not as a
+// top-level GraphQL `errors` entry.
+type CreatePostPayload =
+  | { __typename: 'PostActionSuccess'; post: { id: string } }
+  | { __typename: 'NotFoundError'; message: string }
+  | { __typename: 'UnauthorizedError'; message: string }
+  | { __typename: 'UnexpectedError'; message: string }
+  | { __typename: 'RestProxyError'; message: string; code: number | null; link: string | null }
+  | { __typename: 'LimitReachedError'; message: string }
+  | { __typename: 'InvalidInputError'; message: string };
 
 /** Creates a scheduled post on Buffer. */
 export async function createPost(
@@ -216,9 +236,16 @@ export async function createPost(
   const query = `
     mutation CreatePost($input: CreatePostInput!) {
       createPost(input: $input) {
-        post {
-          id
+        __typename
+        ... on PostActionSuccess {
+          post { id }
         }
+        ... on NotFoundError { message }
+        ... on UnauthorizedError { message }
+        ... on UnexpectedError { message }
+        ... on RestProxyError { message code link }
+        ... on LimitReachedError { message }
+        ... on InvalidInputError { message }
       }
     }
   `;
@@ -227,36 +254,71 @@ export async function createPost(
     input: {
       text,
       channelId,
-      schedulingType: 'SCHEDULED',
-      mode: 'SCHEDULE',
-      dueAt: Math.floor(dueAt.getTime() / 1000),
+      schedulingType: 'automatic',
+      mode: 'customScheduled',
+      dueAt: dueAt.toISOString(),
       ...(assets ? { assets } : {}),
       ...(metadata ? { metadata } : {}),
     },
   };
 
-  const result = await bufferRequest<{
-    createPost: { post: { id: string } };
-  }>(query, variables);
-
+  const result = await bufferRequest<{ createPost: CreatePostPayload }>(query, variables);
   if (!result.ok) return result;
-  return { ok: true, data: { id: result.data.createPost.post.id } };
+
+  const payload = result.data.createPost;
+  switch (payload.__typename) {
+    case 'PostActionSuccess':
+      return { ok: true, data: { id: payload.post.id } };
+    case 'UnauthorizedError':
+      return {
+        ok: false,
+        error: {
+          message: `Buffer authorization failed: ${payload.message}. BUFFER_API_KEY expires 2027-09-13 — if that date has passed, this is likely why.`,
+          authFailure: true,
+        },
+        retryable: false,
+      };
+    case 'UnexpectedError':
+      return { ok: false, error: { message: payload.message }, retryable: true };
+    case 'RestProxyError': {
+      const retryable = payload.code != null && payload.code >= 500;
+      return { ok: false, error: { message: payload.message }, retryable };
+    }
+    case 'LimitReachedError':
+      return { ok: false, error: { message: payload.message, limitReached: true }, retryable: false };
+    case 'NotFoundError':
+    case 'InvalidInputError':
+      return { ok: false, error: { message: payload.message }, retryable: false };
+  }
 }
+
+// deletePost's result union.
+type DeletePostPayload =
+  | { __typename: 'DeletePostSuccess'; id: string }
+  | { __typename: 'VoidMutationError'; message: string };
 
 /** Deletes a scheduled post from Buffer. */
 export async function deletePost(id: string): Promise<BufferResult<{ id: string }>> {
   const query = `
-    mutation DeletePost($id: PostId!) {
-      deletePost(id: $id) {
-        id
+    mutation DeletePost($input: DeletePostInput!) {
+      deletePost(input: $input) {
+        __typename
+        ... on DeletePostSuccess { id }
+        ... on VoidMutationError { message }
       }
     }
   `;
 
-  const result = await bufferRequest<{ deletePost: { id: string } }>(query, { id });
-
+  const result = await bufferRequest<{ deletePost: DeletePostPayload }>(query, {
+    input: { id },
+  });
   if (!result.ok) return result;
-  return { ok: true, data: { id: result.data.deletePost.id } };
+
+  const payload = result.data.deletePost;
+  if (payload.__typename === 'DeletePostSuccess') {
+    return { ok: true, data: { id: payload.id } };
+  }
+  return { ok: false, error: { message: payload.message }, retryable: false };
 }
 
 export { LINKEDIN_CHANNEL_ID, ORGANIZATION_ID };
