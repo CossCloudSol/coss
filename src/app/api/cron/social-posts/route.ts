@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 
 const MAX_POSTS_PER_RUN = 10;
 const MAX_ATTEMPTS = 5;
+const PAST_DUE_SEND_BUFFER_MS = 5 * 60 * 1000;
 
 const CHANNEL_IDS: Record<string, string> = {
   linkedin: LINKEDIN_CHANNEL_ID,
@@ -49,6 +50,16 @@ export async function GET(req: NextRequest): Promise<Response> {
         errors.push('no channels configured on this post');
       }
 
+      // The cron only ever selects posts where scheduledFor <= now, so
+      // scheduledFor itself always fails Buffer's "must be in the future"
+      // check. Send a few minutes out instead; scheduledFor stays untouched
+      // in the DB since it records intent, not the actual send time.
+      const now = Date.now();
+      const dueAt =
+        post.scheduledFor.getTime() <= now
+          ? new Date(now + PAST_DUE_SEND_BUFFER_MS)
+          : post.scheduledFor;
+
       for (const channel of channels) {
         const channelId = CHANNEL_IDS[channel];
         if (!channelId) {
@@ -59,7 +70,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         const result = await createPost({
           text: post.content,
           channelId,
-          dueAt: post.scheduledFor,
+          dueAt,
           imageUrl: post.imageUrl ?? undefined,
           imageAltText: post.imageAltText ?? undefined,
           linkUrl: post.linkUrl ?? undefined,
