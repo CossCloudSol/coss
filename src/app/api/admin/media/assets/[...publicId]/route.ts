@@ -11,14 +11,22 @@ const KEY_ASSET_FIELDS = [
   'faviconUrl', 'appleTouchUrl', 'courseOgDefault',
 ] as const
 
+// SocialPost has no title field — identify it by the start of its content.
+function excerpt(text: string, wordCount = 6): string {
+  const words = text.trim().split(/\s+/)
+  const truncated = words.slice(0, wordCount).join(' ')
+  return words.length > wordCount ? `${truncated}…` : truncated
+}
+
 // Find every DB record whose stored URL resolves to this Cloudinary
 // publicId, so a delete never orphans a still-referenced image.
 async function findReferences(publicId: string): Promise<string[]> {
-  const [courses, blogPosts, trainers, hiringPartners, siteSettings] = await Promise.all([
+  const [courses, blogPosts, trainers, hiringPartners, socialPosts, siteSettings] = await Promise.all([
     prisma.course.findMany({ where: { thumbnail: { not: null } }, select: { title: true, thumbnail: true } }),
     prisma.blogPost.findMany({ where: { thumbnail: { not: null } }, select: { title: true, thumbnail: true } }),
     prisma.trainer.findMany({ where: { photoUrl: { not: null } }, select: { name: true, photoUrl: true } }),
     prisma.hiringPartner.findMany({ where: { logoUrl: { not: '' } }, select: { name: true, logoUrl: true } }),
+    prisma.socialPost.findMany({ where: { imageUrl: { not: null } }, select: { content: true, imageUrl: true } }),
     prisma.siteSettings.findFirst({
       select: {
         ogImageUrl: true, logoUrl: true, logoLightUrl: true,
@@ -47,6 +55,11 @@ async function findReferences(publicId: string): Promise<string[]> {
   for (const h of hiringPartners) {
     if (h.logoUrl && publicIdFromUrl(h.logoUrl) === publicId) {
       references.push(`HiringPartner "${h.name}"`)
+    }
+  }
+  for (const s of socialPosts) {
+    if (s.imageUrl && publicIdFromUrl(s.imageUrl) === publicId) {
+      references.push(`SocialPost "${excerpt(s.content)}"`)
     }
   }
   if (siteSettings) {
