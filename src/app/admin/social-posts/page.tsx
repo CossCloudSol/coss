@@ -70,19 +70,27 @@ export default function AdminSocialPostsPage() {
     } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to delete', 'error'); }
   }
 
+  function getQueueAction(status: string): { next: 'draft' | 'queued'; label: string } | null {
+    if (status === 'draft') return { next: 'queued', label: 'Queue' };
+    if (status === 'queued') return { next: 'draft', label: 'To Draft' };
+    if (status === 'failed') return { next: 'queued', label: 'Requeue' };
+    return null;
+  }
+
   async function toggleQueueStatus(id: string, currentStatus: string) {
-    const nextStatus = currentStatus === 'draft' ? 'queued' : 'draft';
+    const action = getQueueAction(currentStatus);
+    if (!action) return;
     try {
       const res = await fetch(`/api/admin/social-posts/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: nextStatus }),
+        body: JSON.stringify({ status: action.next }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
         throw new Error(data?.error || 'Failed to update status');
       }
-      showToast(nextStatus === 'queued' ? 'Post queued' : 'Post reverted to draft');
+      showToast(action.next === 'queued' ? 'Post queued' : 'Post reverted to draft');
       void load();
     } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update status', 'error'); }
   }
@@ -151,12 +159,12 @@ export default function AdminSocialPostsPage() {
                   <p className="text-xs text-red-600 dark:text-red-400 mb-2 line-clamp-2">{post.lastError}</p>
                 )}
                 <div className="flex gap-2">
-                  {(post.status === 'draft' || post.status === 'queued') && (
+                  {getQueueAction(post.status) && (
                     <button
                       onClick={() => toggleQueueStatus(post.id, post.status)}
                       className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#1d4ed8]"
                     >
-                      {post.status === 'draft' ? 'Queue' : 'To Draft'}
+                      {getQueueAction(post.status)?.label}
                     </button>
                   )}
                   <Link
@@ -213,10 +221,10 @@ export default function AdminSocialPostsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        {(post.status === 'draft' || post.status === 'queued') && (
+                        {getQueueAction(post.status) && (
                           <button onClick={() => toggleQueueStatus(post.id, post.status)}
                             className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-                            title={post.status === 'draft' ? 'Queue' : 'Revert to draft'}>
+                            title={getQueueAction(post.status)?.label}>
                             {post.status === 'draft' ? <Send className="w-3.5 h-3.5" /> : <RotateCcw className="w-3.5 h-3.5" />}
                           </button>
                         )}

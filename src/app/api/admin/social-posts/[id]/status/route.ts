@@ -43,7 +43,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const data: { status?: string } = {};
+  const data: { status?: string; lastError?: null; sentAt?: null } = {};
   if (typeof body.status === 'string' && (body.status === 'draft' || body.status === 'queued')) {
     data.status = body.status;
   }
@@ -61,6 +61,10 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
     const validationError = validateQueueReadiness(existing);
     if (validationError) {
       return NextResponse.json({ error: validationError }, { status: 400 });
+    }
+    if (existing.status === 'failed') {
+      data.lastError = null;
+      data.sentAt = null;
     }
   }
 
