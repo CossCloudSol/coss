@@ -7,6 +7,8 @@ interface WpImgProps {
   alt: string;
   style?: React.CSSProperties;
   className?: string;
+  width?: number;
+  height?: number;
 }
 
 /**
@@ -14,7 +16,7 @@ interface WpImgProps {
  * Falls back to the alt text when the image cannot load so
  * containing boxes (e.g. company logo cards) don't appear empty.
  */
-export default function WpImg({ src, alt, style, className }: WpImgProps) {
+export default function WpImg({ src, alt, style, className, width, height }: WpImgProps) {
   const [broken, setBroken] = useState(false);
 
   if (broken) {
@@ -45,6 +47,8 @@ export default function WpImg({ src, alt, style, className }: WpImgProps) {
     <img
       src={src}
       alt={alt}
+      width={width}
+      height={height}
       style={{ display: 'block', ...style }}
       className={className}
       loading="lazy"

@@ -19,17 +19,10 @@ export interface CldOptions {
   gravity?: 'auto' | 'face' | 'center';
 }
 
-/**
- * Build a Cloudinary delivery URL with optional transformations.
- * @param publicId  The Cloudinary public ID (e.g. "coss/courses/cloud-computing")
- * @param options   Optional transformation parameters
- */
-export function getCldUrl(publicId: string, options: CldOptions = {}): string {
-  if (!CLOUD_NAME) {
-    // Fallback: return a placeholder if Cloudinary is not configured
-    return `https://res.cloudinary.com/demo/image/upload/sample`;
-  }
-
+// Cloudinary rejects gravity on crop modes that don't crop (fit/scale/pad
+// resize without discarding any of the frame, so there's nothing for
+// gravity to aim at) — only fill/thumb accept it.
+function buildTransformString(options: CldOptions): string {
   const {
     width,
     height,
@@ -48,10 +41,24 @@ export function getCldUrl(publicId: string, options: CldOptions = {}): string {
   if (height)  transforms.push(`h_${height}`);
   if (width || height) {
     transforms.push(`c_${crop}`);
-    transforms.push(`g_${gravity}`);
+    if (crop === 'fill' || crop === 'thumb') transforms.push(`g_${gravity}`);
   }
 
-  const t = transforms.join(',');
+  return transforms.join(',');
+}
+
+/**
+ * Build a Cloudinary delivery URL with optional transformations.
+ * @param publicId  The Cloudinary public ID (e.g. "coss/courses/cloud-computing")
+ * @param options   Optional transformation parameters
+ */
+export function getCldUrl(publicId: string, options: CldOptions = {}): string {
+  if (!CLOUD_NAME) {
+    // Fallback: return a placeholder if Cloudinary is not configured
+    return `https://res.cloudinary.com/demo/image/upload/sample`;
+  }
+
+  const t = buildTransformString(options);
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${t}/${publicId}`;
 }
 
@@ -127,5 +134,52 @@ export function publicIdFromUrl(input: string): string | null {
 
   const publicId = [...remainder.slice(0, -1), lastSegmentNoExt].join('/');
   return publicId || null;
+}
+
+/**
+ * Insert (or replace) a transform segment directly after /upload/ in an
+ * existing Cloudinary delivery URL, leaving everything else — version,
+ * public ID, and extension — byte-for-byte as stored. Rebuilding the URL
+ * from a parsed public ID (as publicIdFromUrl does) is lossy for the
+ * WordPress-imported assets, whose stored public ID includes what looks
+ * like a file extension (e.g. "google-jpg"); stripping it 404s the asset.
+ * Falls back to the original URL unchanged when it isn't a recognizable
+ * res.cloudinary.com upload URL.
+ */
+export function optimizeCldUrl(url: string, options: CldOptions = {}): string {
+  if (!url || !url.trim()) return url;
+  const trimmed = url.trim();
+  if (!trimmed.startsWith('http') || trimmed.includes('localhost')) return url;
+
+  let u: URL;
+  try {
+    u = new URL(trimmed);
+  } catch {
+    return url;
+  }
+  if (u.host !== 'res.cloudinary.com') return url;
+
+  const parts = u.pathname.split('/').filter(Boolean);
+  if (parts.length < 4) return url;
+
+  const resourceType = parts[1];
+  if (!(RESOURCE_TYPES as readonly string[]).includes(resourceType)) return url;
+
+  const deliveryType = parts[2];
+  if (!(DELIVERY_TYPES as readonly string[]).includes(deliveryType)) return url;
+
+  let cursor = 3;
+  while (cursor < parts.length) {
+    const components = parts[cursor].split(',');
+    if (!components.every(c => TRANSFORM_COMPONENT_RE.test(c))) break;
+    cursor++;
+  }
+  const rest = parts.slice(cursor);
+  if (rest.length === 0) return url;
+
+  const t = buildTransformString(options);
+
+  const newPath = '/' + [...parts.slice(0, 3), t, ...rest].join('/');
+  return `${u.protocol}//${u.host}${newPath}${u.search}`;
 }
 

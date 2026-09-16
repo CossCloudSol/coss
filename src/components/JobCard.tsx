@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { jobApplyMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
+import { optimizeCldUrl } from '@/lib/cloudinary';
 
 export interface JobCardJob {
   id: string;
@@ -67,7 +68,13 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
         >
           {job.companyLogo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={job.companyLogo} alt={job.company} className="w-full h-full object-contain rounded-xl" />
+            <img
+              src={optimizeCldUrl(job.companyLogo, { width: 88, height: 88, crop: 'fit' })}
+              alt={job.company}
+              width={44}
+              height={44}
+              className="w-full h-full object-contain rounded-xl"
+            />
           ) : (
             initial
           )}

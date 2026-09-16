@@ -11,6 +11,7 @@ import LandingEnrollForm from '@/components/LandingEnrollForm'
 import RelatedCourses from '@/components/RelatedCourses'
 import CallLink from '@/components/CallLink'
 import WhatsAppLink from '@/components/WhatsAppLink'
+import { optimizeCldUrl } from '@/lib/cloudinary'
 
 interface HiringPartner {
   id: string
@@ -292,8 +293,10 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                 >
                   {p.logoUrl ? (
                     <img
-                      src={p.logoUrl}
+                      src={optimizeCldUrl(p.logoUrl, { width: 200, height: 80, crop: 'fit' })}
                       alt={p.altText || p.name}
+                      width={200}
+                      height={80}
                       className="max-h-10 max-w-full object-contain"
                       loading="lazy"
                     />

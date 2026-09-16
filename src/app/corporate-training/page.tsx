@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CorporateHeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import CorporateForm from '@/components/CorporateForm';
 import { prisma } from '@/lib/db';
+import { optimizeCldUrl } from '@/lib/cloudinary';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 
@@ -186,8 +187,10 @@ export default async function CorporateTrainingPage() {
                 >
                   {p.logoUrl ? (
                     <img
-                      src={p.logoUrl}
+                      src={optimizeCldUrl(p.logoUrl, { width: 200, height: 80, crop: 'fit' })}
                       alt={p.altText || p.name}
+                      width={200}
+                      height={80}
                       className="max-h-10 max-w-full object-contain"
                       loading="lazy"
                     />

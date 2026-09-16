@@ -40,6 +40,7 @@ import HeroLaptopComposition from '@/components/HeroLaptopComposition';
 import CategoryGrid from '@/components/CategoryGrid';
 import { siteImages } from '@/lib/wpImages';
 import { getCategoryIllustration } from '@/lib/category-illustrations';
+import { optimizeCldUrl } from '@/lib/cloudinary';
 
 // Swap this URL to change the category section background
 const CATEGORY_SECTION_BG =
@@ -1089,8 +1090,10 @@ export default async function HomePage() {
               >
                 {partner.logoUrl ? (
                   <WpImg
-                    src={partner.logoUrl}
+                    src={optimizeCldUrl(partner.logoUrl, { width: 200, height: 80, crop: 'fit' })}
                     alt={partner.altText || partner.name}
+                    width={200}
+                    height={80}
                     style={{
                       maxHeight: '40px',
                       width: 'auto',

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { findTrainers, getYearsOfExperience, splitCommaList } from '@/lib/trainer-queries';
+import { optimizeCldUrl } from '@/lib/cloudinary';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -87,7 +88,13 @@ export default async function FacultyPage() {
                 }}>
                   {trainer.photoUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={trainer.photoUrl} alt={trainer.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img
+                      src={optimizeCldUrl(trainer.photoUrl, { width: 128, height: 128, crop: 'fill', gravity: 'face' })}
+                      alt={trainer.name}
+                      width={64}
+                      height={64}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                   ) : (
                     getInitials(trainer.name)
                   )}

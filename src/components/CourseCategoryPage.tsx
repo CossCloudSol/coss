@@ -5,6 +5,7 @@ import { PageBanner, EnrollSidebar, CourseSidebarNav, CtaBanner, ResponsivePageS
 import type { CourseCategoryData } from '@/lib/courseData';
 import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
+import { optimizeCldUrl } from '@/lib/cloudinary';
 import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { prisma } from '@/lib/db';
@@ -261,7 +262,13 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                             isLastRowDesktop ? 'md:border-b-0' : 'md:border-b',
                           ].filter(Boolean).join(' ')}
                         >
-                          <WpImg src={logo} alt={getCompanyAlt(logo)} style={{ maxHeight: '40px', maxWidth: '100%', objectFit: 'contain' }} />
+                          <WpImg
+                            src={optimizeCldUrl(logo, { width: 200, height: 80, crop: 'fit' })}
+                            alt={getCompanyAlt(logo)}
+                            width={200}
+                            height={80}
+                            style={{ maxHeight: '40px', maxWidth: '100%', objectFit: 'contain' }}
+                          />
                         </div>
                       )
                     })}
@@ -295,8 +302,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                         >
                           {p.logoUrl ? (
                             <img
-                              src={p.logoUrl}
+                              src={optimizeCldUrl(p.logoUrl, { width: 200, height: 80, crop: 'fit' })}
                               alt={p.altText || p.name}
+                              width={200}
+                              height={80}
                               className="max-h-10 max-w-full object-contain"
                               loading="lazy"
                             />
