@@ -60,9 +60,9 @@ export default function NewSocialPostPage() {
       const body = {
         content: form.content,
         channels: 'linkedin',
-        imageUrl: form.imageUrl || null,
-        imageAltText: form.imageAltText || null,
-        linkUrl: form.linkUrl || null,
+        imageUrl: form.imageUrl,
+        imageAltText: form.imageAltText,
+        linkUrl: form.linkUrl,
         scheduledFor: istLocalToUtcIso(form.scheduledFor),
       };
       const res = await fetch('/api/admin/social-posts', {
