@@ -290,6 +290,7 @@ model Batch {
 
   @@index([status])
   @@index([courseId])
+  @@index([status, centre])
 }
 
 /// Faculty member shown in the admin roster and the public /faculty section.

@@ -44,15 +44,28 @@ const BATCH_DISPLAY_CAP = 12;
 async function getBranchBatches(branchKey: BranchKey): Promise<{ batches: BatchCardBatch[]; courses: CourseLite[] }> {
   try {
     const aliases = BRANCH_CENTRE_ALIASES[branchKey];
+    // Filter by centre in SQL (case-insensitive per alias) instead of pulling
+    // every upcoming/ongoing batch nationwide. The JS re-check below stays as
+    // a cheap safety net for stray whitespace in the free-text centre field —
+    // ILIKE won't tolerate that the way the old .trim() comparison did — but
+    // now it runs over a handful of already-scoped rows, not the whole table.
     const candidates = await prisma.batch.findMany({
-      where: { status: { in: ['upcoming', 'ongoing'] } },
+      where: {
+        status: { in: ['upcoming', 'ongoing'] },
+        OR: aliases.map((a) => ({ centre: { equals: a, mode: 'insensitive' as const } })),
+      },
       include: { course: { select: { title: true, slug: true, category: true, categorySlug: true, urlType: true } } },
       orderBy: { startDate: 'asc' },
     });
     const matched = candidates.filter((b) => aliases.includes(normalizeCentre(b.centre)));
 
     if (matched.length === 0) {
-      const distinctCentres = Array.from(new Set(candidates.map((b) => b.centre ?? '(null)')));
+      const distinctRows = await prisma.batch.findMany({
+        where: { status: { in: ['upcoming', 'ongoing'] } },
+        select: { centre: true },
+        distinct: ['centre'],
+      });
+      const distinctCentres = distinctRows.map((r) => r.centre ?? '(null)');
       console.warn(`[getBranchBatches] branch "${branchKey}" resolved 0 batches. Distinct centre values in DB: ${JSON.stringify(distinctCentres)}`);
     }
 
