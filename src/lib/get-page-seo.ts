@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { Metadata } from 'next';
 import type { SeoSettings } from '@prisma/client';
 import { prisma } from './db';
@@ -123,8 +124,14 @@ async function getSeoSettings(): Promise<SeoSettings | null> {
 /**
  * Fetch the per-page SEO row plus the singleton site settings in parallel.
  * Returns nulls on DB timeout — callers fall back to safe defaults.
+ *
+ * Wrapped in React's cache() so generateMetadata and the page body — which
+ * both call this (directly or via buildPageMetadataWithFallback /
+ * getPageSchemaMarkup) with the same slug — share one PageSeo fetch per
+ * request instead of two. Request-scoped only; does not persist across
+ * requests or interact with the route's ISR revalidate window.
  */
-export async function getPageSeo(slug: string): Promise<PageSeoBundle> {
+export const getPageSeo = cache(async (slug: string): Promise<PageSeoBundle> => {
   try {
     const [seo, settings] = await Promise.all([
       prisma.pageSeo.findUnique({ where: { pageSlug: slug } }),
@@ -135,7 +142,7 @@ export async function getPageSeo(slug: string): Promise<PageSeoBundle> {
     console.warn(`[SEO] DB unavailable for slug "${slug}":`, error);
     return { seo: null, settings: cachedSettings ?? null };
   }
-}
+});
 
 /**
  * Parses a PageSeo row's admin-authored custom schemaMarkup JSON, if any.

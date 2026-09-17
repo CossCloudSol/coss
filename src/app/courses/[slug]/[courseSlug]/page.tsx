@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -59,10 +60,14 @@ interface CourseDetail {
   categorySlug: string | null;
 }
 
-async function getCourse(categorySlug: string, slug: string): Promise<CourseDetail | null> {
+// cache() dedupes within a single render pass — generateMetadata and the page
+// body both call this with the same (params.slug, params.courseSlug), so this
+// turns two Prisma fetches per request into one. Request-scoped only: doesn't
+// persist across requests or affect the route's ISR revalidate window.
+const getCourse = cache(async (categorySlug: string, slug: string): Promise<CourseDetail | null> => {
   const course = await getCourseInCategory(categorySlug, slug);
   return course as unknown as CourseDetail | null;
-}
+});
 
 interface BatchItem2 {
   id: string; batchName: string; mode: string; centre: string | null;
