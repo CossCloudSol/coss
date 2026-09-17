@@ -51,7 +51,6 @@ interface CategoryItem {
   accentSolid: string;
   accentDark: string;
   iconBg: string;
-  illustration: string;
 }
 
 interface CategoryGridProps {

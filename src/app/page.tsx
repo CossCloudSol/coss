@@ -39,7 +39,6 @@ import HeroEnrollForm from '@/components/HeroEnrollForm';
 import HeroLaptopComposition from '@/components/HeroLaptopComposition';
 import CategoryGrid from '@/components/CategoryGrid';
 import { siteImages } from '@/lib/wpImages';
-import { getCategoryIllustration } from '@/lib/category-illustrations';
 import { optimizeCldUrl } from '@/lib/cloudinary';
 
 // Swap this URL to change the category section background
@@ -611,7 +610,6 @@ export default async function HomePage() {
               accentSolid: getCategoryAccentSolid(cat.slug),
               accentDark: getCategoryAccentDark(cat.slug),
               iconBg: getCategoryIconBg(cat.slug),
-              illustration: getCategoryIllustration(cat.slug),
             }))}
           />
 
