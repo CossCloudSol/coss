@@ -1,4 +1,5 @@
 import webPush from 'web-push';
+import { waitUntil } from '@vercel/functions';
 import { AdminRole } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { sendEmail, buildInstantEmail } from '@/lib/email';
@@ -101,22 +102,24 @@ export async function createNotification(input: CreateNotificationInput) {
   });
 
   if (URGENT_TYPES.has(input.type)) {
-    try {
-      await sendUrgentEmails(
-        { title: input.title, body: input.body, link: input.link ?? null, type: input.type },
-        targetRole,
-      );
-    } catch (err) {
-      console.error('[notifications] urgent email error:', err);
-    }
-    try {
-      await sendUrgentPush(
-        { title: input.title, body: input.body, link: input.link ?? null, type: input.type },
-        targetRole,
-      );
-    } catch (err) {
-      console.error('[notifications] urgent push error:', err);
-    }
+    const notificationCtx = {
+      title: input.title,
+      body: input.body,
+      link: input.link ?? null,
+      type: input.type,
+    };
+
+    // Deferred so the lead-capture response doesn't wait on Resend/web-push round-trips.
+    waitUntil(
+      sendUrgentEmails(notificationCtx, targetRole).catch((err) => {
+        console.error(`[notifications] urgent email error for lead notification "${input.title}":`, err);
+      }),
+    );
+    waitUntil(
+      sendUrgentPush(notificationCtx, targetRole).catch((err) => {
+        console.error(`[notifications] urgent push error for lead notification "${input.title}":`, err);
+      }),
+    );
   }
 
   return notification;
