@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getLandingPageCourse, SLUG_MAP } from '@/lib/get-landing-page-data'
@@ -33,9 +34,14 @@ export async function generateStaticParams() {
   return Object.keys(SLUG_MAP).map((courseSlug) => ({ courseSlug }))
 }
 
+// cache() dedupes within a single render pass — generateMetadata and the page
+// body both call this with the same params.courseSlug, so this turns two
+// Prisma fetches per request into one, matching the other course-URL shapes.
+const getCourse = cache(getLandingPageCourse)
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = params.courseSlug
-  const course = await getLandingPageCourse(slug)
+  const course = await getCourse(slug)
 
   const fallback: Metadata = {
     title: course
@@ -58,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CourseSlugPage({ params }: Props) {
   const [course, branches] = await Promise.all([
-    getLandingPageCourse(params.courseSlug),
+    getCourse(params.courseSlug),
     getAllBranchSettings(),
   ])
 

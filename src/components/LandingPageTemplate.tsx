@@ -1,7 +1,6 @@
-'use client'
-
-import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
+import { prisma } from '@/lib/db'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
 import { BranchSettings } from '@/lib/get-branch-settings'
 import { BRANCH_MAP_EMBED, type BranchKey } from '@/lib/locations-data'
@@ -53,15 +52,12 @@ const WaIcon = ({ cls }: { cls?: string }) => (
   </svg>
 )
 
-export default function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related, siblings }: Props) {
-  const [hiringPartners, setHiringPartners] = useState<HiringPartner[]>([])
-
-  useEffect(() => {
-    fetch('/api/hiring-partners')
-      .then(r => r.json())
-      .then(setHiringPartners)
-      .catch(console.error)
-  }, [])
+export default async function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related, siblings }: Props) {
+  const hiringPartners: HiringPartner[] = await prisma.hiringPartner.findMany({
+    where: { isVisible: true },
+    orderBy: { sortOrder: 'asc' },
+    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+  })
 
   type ModuleRaw = { module?: string; title?: string; topics?: string[] }
   const syllabusRaw = safeParseJson<ModuleRaw[]>(course.syllabus, [])
@@ -292,7 +288,7 @@ export default function LandingPageTemplate({ course, branches, pageSlug: _pageS
                   ].filter(Boolean).join(' ')}
                 >
                   {p.logoUrl ? (
-                    <img
+                    <Image
                       src={optimizeCldUrl(p.logoUrl, { width: 200, height: 80, crop: 'fit' })}
                       alt={p.altText || p.name}
                       width={200}
