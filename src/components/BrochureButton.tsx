@@ -21,6 +21,7 @@ interface BrochureButtonProps {
 
 export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }: BrochureButtonProps): JSX.Element {
   const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -38,6 +39,7 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
 
   function close() {
     setOpen(false);
+    setName('');
     setPhone('');
     setError(null);
     setSent(false);
@@ -45,6 +47,10 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
 
   async function handleWhatsAppSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!name.trim()) {
+      setError('Enter your name');
+      return;
+    }
     const delivery = buildBrochureDelivery(phone, courseTitle);
     if (!delivery.ok) {
       setError(delivery.error);
@@ -54,7 +60,7 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
     setSubmitting(true);
     setError(null);
     const result = await submitLead({
-      name: 'Brochure Request',
+      name: name.trim(),
       phone: delivery.normalizedPhone,
       course: courseTitle,
       branch: 'Online',
@@ -127,7 +133,21 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
                   Share your WhatsApp number and we&apos;ll send the syllabus PDF there — or just download it now.
                 </p>
                 <form onSubmit={(e) => void handleWhatsAppSubmit(e)} noValidate>
-                  <label htmlFor="brochure-phone" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <label htmlFor="brochure-name" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                    Your Name
+                  </label>
+                  <input
+                    id="brochure-name"
+                    type="text"
+                    placeholder="Full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    autoComplete="name"
+                    autoFocus
+                    className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+
+                  <label htmlFor="brochure-phone" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 mt-3">
                     WhatsApp Number
                   </label>
                   <input
@@ -139,7 +159,6 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     autoComplete="tel"
-                    autoFocus
                     className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500"
                   />
                   {error && <p className="text-xs text-red-600 dark:text-red-400 mt-1.5" role="alert">{error}</p>}
