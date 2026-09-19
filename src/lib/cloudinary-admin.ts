@@ -81,7 +81,8 @@ export async function uploadAsset(
   fileBuffer: Buffer,
   mimeType: string,
   folder: string,
-  publicId: string
+  publicId: string,
+  resourceType: 'image' | 'raw' = 'image'
 ): Promise<{
   secure_url:    string
   public_id:     string
@@ -110,7 +111,7 @@ export async function uploadAsset(
   signedForm.append('signature', signature)
 
   const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`,
     { method: 'POST', body: signedForm }
   )
 

@@ -7,6 +7,7 @@ import { BRANCH_MAP_EMBED, type BranchKey } from '@/lib/locations-data'
 import { sanitizeDescription } from '@/lib/sanitizeDescription'
 import type { RelatedCourseItem } from '@/lib/related-courses'
 import LandingEnrollForm from '@/components/LandingEnrollForm'
+import BrochureButton from '@/components/BrochureButton'
 import RelatedCourses from '@/components/RelatedCourses'
 import CallLink from '@/components/CallLink'
 import WhatsAppLink from '@/components/WhatsAppLink'
@@ -223,6 +224,11 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
           </div>
           <div className="w-full lg:sticky lg:top-20 self-start">
             <LandingEnrollForm courseTitle={course.title} duration={course.duration} level={course.level} phone1={phone1} courseSlug={course.slug} />
+            {course.brochureUrl && (
+              <div className="mt-4">
+                <BrochureButton courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
+              </div>
+            )}
           </div>
         </div>
         <div className="max-w-[1280px] mx-auto px-6 mt-8 pb-8 relative z-10">

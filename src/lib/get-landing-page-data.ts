@@ -12,6 +12,7 @@ export type LandingPageCourse = {
   price: number | null
   originalPrice: number | null
   thumbnail: string | null
+  brochureUrl: string | null
   highlights: string[]
   syllabus: unknown       // Json — may already be parsed object or stringified
   tools: string[]
@@ -100,6 +101,7 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
           price: true,
           originalPrice: true,
           thumbnail: true,
+          brochureUrl: true,
           highlights: true,
           syllabus: true,
           tools: true,

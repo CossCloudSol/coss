@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Trash2, Loader2 } from 'lucide-react';
 import { ImagePicker } from '@/components/admin/ImagePicker';
+import { BrochureUploadField } from '@/components/admin/BrochureUploadField';
 
 const PLACEHOLDER_RE = /\[[A-Z_]{3,}\]/;
 function hasPlaceholder(val: string): boolean {
@@ -26,7 +27,7 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
   const [form, setForm] = useState({
     title: '', slug: '', description: '', excerpt: '', category: '',
     duration: '', mode: 'Classroom', level: 'Beginner to Advanced',
-    price: '', originalPrice: '', badge: '', thumbnail: '',
+    price: '', originalPrice: '', badge: '', thumbnail: '', brochureUrl: '',
     status: 'draft', featured: false, sortOrder: '0', seoTitle: '', seoDesc: '',
   });
   const [highlights, setHighlights] = useState<string[]>(['']);
@@ -55,6 +56,7 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
           originalPrice: data.originalPrice != null ? String(data.originalPrice) : '',
           badge: data.badge ?? '',
           thumbnail: data.thumbnail ?? '',
+          brochureUrl: data.brochureUrl ?? '',
           status: data.status ?? 'draft',
           featured: Boolean(data.featured),
           sortOrder: String(data.sortOrder ?? 0),
@@ -171,6 +173,10 @@ export default function EditCoursePage({ params }: { params: { id: string } }) {
             <div>
               <label className={labelCls}>Thumbnail URL</label>
               <ImagePicker value={form.thumbnail} onChange={(url) => handleField('thumbnail', url)} />
+            </div>
+            <div>
+              <label className={labelCls}>Brochure / Syllabus PDF</label>
+              <BrochureUploadField value={form.brochureUrl} onChange={(url) => handleField('brochureUrl', url)} />
             </div>
             <div>
               <label className={labelCls}>Price (₹)</label>

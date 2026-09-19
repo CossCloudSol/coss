@@ -19,6 +19,7 @@ import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
+import BrochureButton from '@/components/BrochureButton';
 
 export const revalidate = 86400;
 
@@ -110,6 +111,7 @@ interface CourseDetail {
   originalPrice: number | null;
   badge: string | null;
   thumbnail: string | null;
+  brochureUrl: string | null;
   syllabus: SyllabusItem[];
   highlights: string[];
   tools: string[];
@@ -306,7 +308,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>
-            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} courseSlug={course.slug} courseTitle={course.title} />
+            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
           </div>
         </div>
       </div>
@@ -385,7 +387,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
   );
 }
 
-function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle }: { price: number | null; originalPrice: number | null; courseSlug: string; courseTitle: string }) {
+function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochureUrl }: { price: number | null; originalPrice: number | null; courseSlug: string; courseTitle: string; brochureUrl: string | null }) {
   return (
     <>
       <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '16px', color: '#fff', marginBottom: '16px' }}>
@@ -398,6 +400,11 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle }: { pri
         <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
         <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} embedded />
       </div>
+      {brochureUrl && (
+        <div style={{ marginBottom: '16px' }}>
+          <BrochureButton courseSlug={courseSlug} courseTitle={courseTitle} brochureUrl={brochureUrl} />
+        </div>
+      )}
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>

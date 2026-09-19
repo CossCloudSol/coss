@@ -49,6 +49,25 @@ export function detectDeviceType(): 'mobile' | 'desktop' {
   return window.matchMedia(MOBILE_BREAKPOINT_QUERY).matches ? 'mobile' : 'desktop';
 }
 
+/**
+ * GA4 event for the brochure popup's skip path (direct PDF download, no lead
+ * created). Best-effort only, mirroring trackContactClick/trackLeadEvent: a
+ * missing gtag is a no-op, and any failure here must never affect the
+ * download.
+ */
+export function trackBrochureDownload(courseSlug: string, courseTitle: string): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    (window as any).gtag('event', 'brochure_download', {
+      course_slug: courseSlug,
+      course_title: courseTitle,
+    });
+  } catch {
+    /* best-effort — never let tracking affect the download */
+  }
+}
+
 /** Reads utm_source/utm_medium/utm_campaign from the current URL. Only present keys are truthy — matches the omit-if-empty behaviour callers relied on before extraction. */
 export function extractUtmParams(): { utmSource?: string; utmMedium?: string; utmCampaign?: string } {
   const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;

@@ -192,6 +192,7 @@ model Course {
   originalPrice Float?
   badge         String?
   thumbnail     String?
+  brochureUrl   String?
   syllabus      Json            @default("[]")
   highlights    String[]
   tools         String[]

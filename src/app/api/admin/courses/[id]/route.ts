@@ -61,6 +61,7 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
         originalPrice: body.originalPrice != null ? Number(body.originalPrice) : null,
         badge: (body.badge as string) || null,
         thumbnail: (body.thumbnail as string) || null,
+        brochureUrl: (body.brochureUrl as string) || null,
         syllabus: (body.syllabus as object) ?? [],
         highlights: Array.isArray(body.highlights) ? (body.highlights as string[]) : [],
         tools: Array.isArray(body.tools) ? (body.tools as string[]) : [],

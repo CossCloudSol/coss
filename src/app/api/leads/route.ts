@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 const PHONE_REGEX = /^(\+91)?[6-9]\d{9}$/;
 
 const BRANCH_VALUES = ['Dilsukhnagar', 'Ameerpet', 'Online'] as const;
-const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget', 'contact'] as const;
+const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget', 'contact', 'brochure_request'] as const;
 
 /**
  * Public lead-capture body. Permissive about email shape (`""` is treated as
@@ -224,13 +224,18 @@ export async function POST(req: NextRequest): Promise<Response> {
     });
 
     try {
-      const isWhatsApp = data.formType === 'whatsapp_widget';
+      const isBrochure = data.formType === 'brochure_request';
+      const isWhatsApp = data.formType === 'whatsapp_widget' || isBrochure;
       await createNotification({
         type: isWhatsApp ? 'whatsapp_lead' : 'new_lead',
-        title: isWhatsApp
-          ? `WhatsApp lead — ${data.name}`
-          : `New lead — ${data.name}`,
-        body: `${data.course ?? 'No course specified'} · ${data.branch}`,
+        title: isBrochure
+          ? `Brochure request (WhatsApp) — ${data.name}`
+          : isWhatsApp
+            ? `WhatsApp lead — ${data.name}`
+            : `New lead — ${data.name}`,
+        body: isBrochure
+          ? `Send the ${data.course ?? 'course'} brochure PDF via WhatsApp to this lead · ${data.branch}`
+          : `${data.course ?? 'No course specified'} · ${data.branch}`,
         link: '/admin/leads',
       });
     } catch (notifErr) {

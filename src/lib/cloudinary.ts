@@ -183,3 +183,37 @@ export function optimizeCldUrl(url: string, options: CldOptions = {}): string {
   return `${u.protocol}//${u.host}${newPath}${u.search}`;
 }
 
+/**
+ * Forces a real download (Content-Disposition: attachment) instead of an
+ * in-browser preview, by inserting Cloudinary's fl_attachment flag right
+ * after the delivery-type segment. Needed for browser-renderable formats
+ * like PDF, where the `download` attribute on an <a> tag is ignored for
+ * cross-origin URLs. Falls back to the original URL unchanged when it isn't
+ * a recognizable res.cloudinary.com upload URL.
+ */
+export function attachmentUrl(url: string): string {
+  if (!url || !url.trim()) return url;
+  const trimmed = url.trim();
+  if (!trimmed.startsWith('http') || trimmed.includes('localhost')) return url;
+
+  let u: URL;
+  try {
+    u = new URL(trimmed);
+  } catch {
+    return url;
+  }
+  if (u.host !== 'res.cloudinary.com') return url;
+
+  const parts = u.pathname.split('/').filter(Boolean);
+  if (parts.length < 4) return url;
+
+  const resourceType = parts[1];
+  if (!(RESOURCE_TYPES as readonly string[]).includes(resourceType)) return url;
+
+  const deliveryType = parts[2];
+  if (!(DELIVERY_TYPES as readonly string[]).includes(deliveryType)) return url;
+
+  const newPath = '/' + [...parts.slice(0, 3), 'fl_attachment', ...parts.slice(3)].join('/');
+  return `${u.protocol}//${u.host}${newPath}${u.search}`;
+}
+
