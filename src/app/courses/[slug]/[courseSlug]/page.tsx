@@ -16,7 +16,7 @@ import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
-import BrochureButton from '@/components/BrochureButton';
+import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 
 export const revalidate = 86400;
 
@@ -268,6 +268,11 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>
+            {course.brochureUrl && (
+              <div style={{ marginBottom: '16px' }}>
+                <BrochureButton courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
+              </div>
+            )}
             <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '16px', color: '#fff', marginBottom: '16px' }}>
               <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>
                 {course.price != null ? `₹${course.price.toLocaleString()}` : 'Enroll Now'}
@@ -278,11 +283,6 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
               <DemoSidebarForm course={course.title} subtitle={`${course.title} · see a class before you decide`} embedded />
             </div>
-            {course.brochureUrl && (
-              <div style={{ marginBottom: '16px' }}>
-                <BrochureButton courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
-              </div>
-            )}
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
@@ -293,6 +293,10 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
           </div>
         </div>
       </div>
+
+      {course.brochureUrl && (
+        <BrochureMobileTab courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
+      )}
     </>
   );
 }
