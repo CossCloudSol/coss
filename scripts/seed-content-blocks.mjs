@@ -7,7 +7,7 @@ async function main() {
   // ── FAQ blocks (from LandingPageTemplate faqItems) ──
   const faqItems = [
     { q: 'Who can join this course?', a: 'This course is open to graduates, working professionals, and career changers. Basic computer knowledge is sufficient for most batches.' },
-    { q: 'Do you provide placement support after training?', a: 'Yes. Coss Cloud Solutions provides 100% placement assistance including resume building, LinkedIn optimization, mock interviews, and job referrals to our partner companies in Hyderabad.' },
+    { q: 'Do you provide placement support after training?', a: 'Yes. Coss Cloud Solutions provides placement assistance including resume building, LinkedIn optimization, mock interviews, and job referrals to our partner companies in Hyderabad.' },
     { q: 'Is the course available online and offline in Hyderabad?', a: 'Yes. We offer both classroom training at our Dilsukhnagar and Ameerpet centres, and live online training. Students can switch between modes as needed.' },
     { q: 'What is the batch size for each training program?', a: 'We maintain small batch sizes of 10–15 students to ensure personalised attention and hands-on practice time for every student.' },
     { q: 'Do you provide study materials and recorded sessions?', a: 'Yes. All students receive comprehensive study materials, recorded class sessions, and access to our student portal for the full duration of the course.' },
@@ -36,7 +36,7 @@ async function main() {
   const milestones = [
     { year: '2010', event: 'Founded in Dilsukhnagar, Hyderabad with a mission to make quality IT education accessible.' },
     { year: '2016', event: 'Opened the Ameerpet branch to serve more students across Hyderabad.' },
-    { year: '2018', event: 'Crossed 1,000 students placed milestone. Launched Cloud Computing programs.' },
+    { year: '2018', event: 'Launched Cloud Computing programs, growing our training footprint across Hyderabad.' },
     { year: '2020', event: 'Launched online training platform to serve students across India during COVID-19.' },
     { year: '2022', event: 'Introduced AI, Machine Learning and Data Science programs. 3,000+ students milestone.' },
     { year: '2024', event: 'Expanded to 30+ courses. 5,000+ students trained, 50+ hiring partners.' },
