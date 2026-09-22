@@ -1,0 +1,910 @@
+[
+  {
+    "path": "/big-data-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/machine-learning-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/artificial-intelligence-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/power-bi-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/sql-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/azure-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/google-cloud-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/devops-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/aws-devops-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/azure-devops-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/python-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/java-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/python-full-stack-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/data-engineering-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/azure-data-engineer-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/cyber-security-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/ethical-hacking-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/ccna-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/salesforce-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/tally-erp-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/linux-administration-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/software-testing-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/digital-marketing-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/ui-ux-design-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/seo-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/spoken-english-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/ms-office-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/courses/cloud-computing",
+    "type": "course"
+  },
+  {
+    "path": "/courses/cyber-security",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-engineering",
+    "type": "course"
+  },
+  {
+    "path": "/courses/devops-multi-cloud",
+    "type": "course"
+  },
+  {
+    "path": "/courses/digital-design",
+    "type": "course"
+  },
+  {
+    "path": "/courses/erp-crm-enterprise-tools",
+    "type": "course"
+  },
+  {
+    "path": "/courses/professional-soft-skills",
+    "type": "course"
+  },
+  {
+    "path": "/courses/programming-full-stack",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-analytics-bi",
+    "type": "course"
+  },
+  {
+    "path": "/courses/software-testing-os",
+    "type": "course"
+  },
+  {
+    "path": "/aws-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/soft-skills-training-institute-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/communication-skills-training-in-hyderabad",
+    "type": "static"
+  },
+  {
+    "path": "/",
+    "type": "home"
+  },
+  {
+    "path": "/courses",
+    "type": "static"
+  },
+  {
+    "path": "/about-us",
+    "type": "static"
+  },
+  {
+    "path": "/why-us",
+    "type": "static"
+  },
+  {
+    "path": "/contact-us",
+    "type": "static"
+  },
+  {
+    "path": "/blog",
+    "type": "static"
+  },
+  {
+    "path": "/certification",
+    "type": "static"
+  },
+  {
+    "path": "/corporate-training",
+    "type": "static"
+  },
+  {
+    "path": "/placements",
+    "type": "static"
+  },
+  {
+    "path": "/student-reviews",
+    "type": "static"
+  },
+  {
+    "path": "/enroll-now-with-coss",
+    "type": "static"
+  },
+  {
+    "path": "/free-demo-class",
+    "type": "static"
+  },
+  {
+    "path": "/faculty",
+    "type": "static"
+  },
+  {
+    "path": "/privacy-policy",
+    "type": "static"
+  },
+  {
+    "path": "/terms-conditions",
+    "type": "static"
+  },
+  {
+    "path": "/refund-cancellation-policy",
+    "type": "static"
+  },
+  {
+    "path": "/locations/dilsukhnagar",
+    "type": "location"
+  },
+  {
+    "path": "/locations/ameerpet",
+    "type": "location"
+  },
+  {
+    "path": "/locations/kukatpally",
+    "type": "location"
+  },
+  {
+    "path": "/locations/madhapur-hitec-city",
+    "type": "location"
+  },
+  {
+    "path": "/blog/top-rated-digital-marketing-institute-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/sql-mysql-postgresql-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/sql-mysql-postgresql-training-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/spoken-english-institute-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/soc-analyst-training-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/sap-fico-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/machine-learning-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/machine-learning-training-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learning-tally-with-coss-cloud-solutions-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-tally-in-dilsukhnagar-hyderabad-by-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-ms-office-in-dilsukhnagar-hyderabad-by-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-linux-with-coss-cloud-solutions-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-ethical-hacking-in-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-digital-marketing-in-dilsukhnagar-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-azure-devops-in-dilsukhnagar-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-azure-cloud-with-coss-cloud-solutions-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-aws-devops-in-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/learn-aws-devops-from-industry-experts-at-coss-cloud-solutions-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/join-our-industry-leading-aws-cloud-institute-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/job-opportunities-for-devops-professionals-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/how-to-learn-aws-cloud-for-beginners",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/grow-your-skills-with-cloud-computing-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/get-placed-with-coss-cloud-solutions-corporate-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/full-stack-power-bi-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/full-stack-power-bi-training-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-training-in-dilsukhnagar-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-training-in-dilsukhnagar",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-institute-in-kukatpally-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-course-training-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-course-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-course-dilsukhnagar",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/digital-marketing-classes-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/devops-training-in-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/devops-training-in-dilsukhnagar",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/devops-institute-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-science-training-institute-in-dilsukhnagar-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-science-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-science-training-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-engineer-course-training-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-analytics-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-analytics-institute-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/cyber-security-training-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/coss-cloud-solutions-best-linux-training-institute-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/cloud-computing-training-institute-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/cloud-computing-training-in-hyderabad-the-best-career-move-in-2025",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/cloud-computing-future-in-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/cloud-computing-classes-with-coss-cloud-solutions-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-tally-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-tally-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-spoken-english-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-salesforce-institute-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-python-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-python-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-ms-office-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-ms-office-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-microsoft-office-training-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-linux-training-institute-in-dilsukhnagarhyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-linux-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-java-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-institute-for-devops-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-google-cloud-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-full-stack-java-training-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-ethical-hacking-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-ethical-hacking-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-digital-marketing-institute-in-hyderabad-coss-cloud-solutions-2",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-digital-marketing-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-digital-marketing-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-digital-marketing-institute-in-ameerpet-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-digital-marketing-course-in-dilsukhnagar-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-cyber-security-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-cyber-security-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-communication-skills-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-communication-skills-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-certification-course-institute-in-kukatpally-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-certification-course-institute-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-certification-course-institute-in-dilsukhnagar-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-certification-course-institute-in-ameerpet-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-azure-devops-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-azure-cloud-institute-in-dilsukhnagar-hyderabad-coss-cloud-solution",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-aws-institutes-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/best-aws-course-provider-in-hyderabad-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/azure-devops-training-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/azure-data-engineer-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/azure-data-engineer-training-in-dilsukhnagar-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/aws-devops-multi-cloud-course-dilsukhnagar",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/aws-cloud-training-advantages-with-coss-cloud-solutions-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/aws-cloud-course-training-in-hyderabad-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/artificial-intelligence-training-in-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/artificial-intelligence-training-in-dilsukhnagar-with-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/advance-your-career-at-the-top-devops-institute-in-dilsukhnagar-coss-cloud-solutions",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/77674-2",
+    "type": "blog"
+  },
+  {
+    "path": "/courses/data-analytics-training-institute-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-science-training-institute-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/full-stack-java-developer-bootcamp",
+    "type": "course"
+  },
+  {
+    "path": "/courses/react-nodejs-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/ethical-hacking-cyber-security-professional",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-analytics-bi/sql-data-analytics-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/hr-operations-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/hr-business-partner-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/hr-recruitment",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/hr-recruitment-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/business-development-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/hr-management-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/quantum-computing/quantum-computing-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/hr-learning-development-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/medical-coding/medical-coding-certification-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/software-testing-os/linux-shell-scripting-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/full-stack-python-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/azure-devops-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/software-testing-os/api-testing-postman-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/social-media-marketing-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/personality-development-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/python-programming-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/jenkins-cicd-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource/hr-leadership-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-analytics-bi/tableau-data-visualization-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/network-security-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/cyber-security/ethical-hacking-ceh-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/devops-multi-cloud/terraform-ansible-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/cloud-computing/azure-administrator-certification-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/aws-cloud-practitioner-certification",
+    "type": "course"
+  },
+  {
+    "path": "/courses/resume-building-career-guidance-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/artificial-intelligence-training/ai-foundation-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/azure-administrator-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/software-testing-os/manual-testing-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/software-testing-os/linux-shell-scripting-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-analytics-bi/power-bi-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/interview-preparation-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-engineering/apache-spark-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/artificial-intelligence-ai-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/software-testing-os/selenium-automation-testing-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/digital-design/digital-marketing-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/comptia-security-plus-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-analytics-bi/python-data-analysis-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/programming-full-stack/mern-stack-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-engineering-python-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/tally-erp-prime-accounting",
+    "type": "course"
+  },
+  {
+    "path": "/courses/soft-skills-personality-development",
+    "type": "course"
+  },
+  {
+    "path": "/courses/ms-office-advanced-excel",
+    "type": "course"
+  },
+  {
+    "path": "/courses/spoken-english-communication",
+    "type": "course"
+  },
+  {
+    "path": "/courses/full-stack-java-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/professional-soft-skills/interview-prep-resume-building-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/professional-soft-skills/business-communication-english-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/aws-solutions-architect-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/data-engineering/azure-data-factory-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/multi-cloud-architecture-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/professional-soft-skills/interview-prep-resume-building-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/cloud-computing/google-cloud-engineer-training-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/professional-soft-skills/leadership-management-skills-training-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/digital-design/digital-marketing-training-institute-in-hyderabad",
+    "type": "course"
+  },
+  {
+    "path": "/courses/medical-coding",
+    "type": "course"
+  },
+  {
+    "path": "/courses/human-resource",
+    "type": "course"
+  },
+  {
+    "path": "/courses/quantum-computing",
+    "type": "course"
+  },
+  {
+    "path": "/courses/artificial-intelligence-training",
+    "type": "course"
+  },
+  {
+    "path": "/courses/aws-devops",
+    "type": "course"
+  },
+  {
+    "path": "/blog/ai-career-growth-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/why-choose-coss-cloud-solutions-for-placement-assistance",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/aws-cloud-certification-career-2025",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/artificial-intelligence-course-hyderabad-career-guide",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-analytics-course-hyderabad-beginners",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/devops-engineer-roadmap-beginner-to-job-ready",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/quantum-computing-career-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/top-10-reasons-cyber-security-career-hyderabad",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/data-science-course-hyderabad-choosing-institute",
+    "type": "blog"
+  },
+  {
+    "path": "/blog/multi-cloud-devops-course-hyderabad-career-guide",
+    "type": "blog"
+  }
+]
