@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 
@@ -63,6 +64,8 @@ export async function PUT(req: NextRequest, { params }: RouteContext): Promise<R
         seoDesc: (body.seoDesc as string) ?? existing.seoDesc,
       },
     })
+    // Header Courses menu is rendered from cached data tagged 'categories'.
+    revalidateTag('categories')
     return NextResponse.json(updated)
   } catch (err) {
     console.error('[PUT /api/admin/categories/:id]', err)
@@ -87,6 +90,7 @@ export async function DELETE(req: NextRequest, { params }: RouteContext): Promis
 
   try {
     await prisma.courseCategory.delete({ where: { id: params.id } })
+    revalidateTag('categories')
     return NextResponse.json({ ok: true })
   } catch (err) {
     console.error('[DELETE /api/admin/categories/:id]', err)

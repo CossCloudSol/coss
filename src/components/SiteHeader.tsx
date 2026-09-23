@@ -32,12 +32,17 @@ const aboutLinks = [
   { label: 'Blogs',          href: '/blog/' },
 ];
 
-export default function SiteHeader() {
+interface SiteHeaderProps {
+  /** Published course categories, fetched (cached) by the root layout. */
+  categories: Array<{ name: string; slug: string }>;
+}
+
+export default function SiteHeader({ categories }: SiteHeaderProps) {
   const [mobileOpen,  setMobileOpen]  = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [aboutOpen,   setAboutOpen]   = useState(false);
   const [scrolled,    setScrolled]    = useState(false);
-  const [courses, setCourses] = useState<Array<{ label: string; href: string }>>([]);
+  const courses = categories.map((c) => ({ label: c.name, href: `/courses/${c.slug}/` }));
 
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
@@ -49,17 +54,6 @@ export default function SiteHeader() {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  /* ── Fetch categories from DB ── */
-  useEffect(() => {
-    fetch('/api/categories')
-      .then((r) => (r.ok ? r.json() : { categories: [] }))
-      .then((data: { categories?: Array<{ name: string; slug: string }> }) => {
-        const cats = data.categories ?? [];
-        setCourses(cats.map((c) => ({ label: c.name, href: `/courses/${c.slug}/` })));
-      })
-      .catch(() => {});
   }, []);
 
   /* ── Close on outside click ── */

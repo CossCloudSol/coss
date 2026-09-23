@@ -35,6 +35,7 @@ import {
 } from '@/lib/validations/announcement-bar';
 import { buildGlobalSchemas } from '@/lib/global-schemas';
 import { sanitizeGscVerificationId } from '@/lib/get-page-seo';
+import { CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 const SITE_URL =
@@ -147,10 +148,46 @@ const getAnnouncementBarConfig = unstable_cache(
   { tags: ['announcement-bar'], revalidate: 86400 },
 );
 
+interface NavCategory {
+  name: string;
+  slug: string;
+}
+
+/**
+ * Published course categories for the header's Courses menu. Rendered into
+ * the cached page HTML so the menu no longer depends on a client-side
+ * /api/categories call (an uncached serverless + DB hit on every page view).
+ * Admin category writes call revalidateTag('categories').
+ *
+ * No try/catch inside the cached function: a thrown error is not cached, so a
+ * transient DB failure can't pin an empty menu into the data cache for a day.
+ */
+const getNavCategoriesCached = unstable_cache(
+  async (): Promise<NavCategory[]> =>
+    prisma.courseCategory.findMany({
+      where: { status: 'published' },
+      orderBy: { sortOrder: 'asc' },
+      select: { name: true, slug: true },
+    }),
+  ['nav-categories'],
+  { tags: ['categories'], revalidate: 86400 },
+);
+
+async function getNavCategories(): Promise<NavCategory[]> {
+  try {
+    return await getNavCategoriesCached();
+  } catch {
+    // DB unreachable: fall back to the 10 fixed legacy categories rather than
+    // rendering an empty Courses menu.
+    return Object.entries(CATEGORY_SLUG_MAP).map(([name, slug]) => ({ name, slug }));
+  }
+}
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [{ gaId, gscId }, announcementConfig] = await Promise.all([
+  const [{ gaId, gscId }, announcementConfig, navCategories] = await Promise.all([
     getSiteSettings(),
     getAnnouncementBarConfig(),
+    getNavCategories(),
   ]);
 
   const globalSchemas = await buildGlobalSchemas();
@@ -201,7 +238,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <TopInfoBar />
         {/* Sticky chrome — only the white navbar pins to top while scrolling */}
         <div className="sticky-chrome">
-          <SiteHeader />
+          <SiteHeader categories={navCategories} />
         </div>
         <MobileTabBar />
         </PublicChrome>
