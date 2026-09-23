@@ -108,7 +108,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
       <ResponsivePageStyles />
       <PageBanner
         title={`${data.name} Training in Hyderabad`}
-        breadcrumb={[{ label: 'Courses', href: '/courses/' }, { label: data.name, href: '#' }]}
+        breadcrumb={[{ label: 'Courses', href: '/courses' }, { label: data.name, href: '#' }]}
       />
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 20px' }}>

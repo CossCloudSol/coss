@@ -40,7 +40,7 @@ export default function CertificationPage() {
           { value: '5,000+', label: 'STUDENTS TRAINED' },
         ]}
         ctaText="Exam voucher guidance included · Speak to a counsellor today"
-        breadcrumb={[{ label: 'Certification', href: '/certification/' }]}
+        breadcrumb={[{ label: 'Certification', href: '/certification' }]}
       />
 
       <div style={{ background: 'var(--bg-alt)', padding: '48px 20px' }}>
@@ -66,7 +66,7 @@ export default function CertificationPage() {
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px', lineHeight: '1.35' }}>{c.name}</h4>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '12px', color: 'var(--text-light)' }}>Level: {c.level}</span>
-                <Link href="/enroll-now-with-coss/" style={{ color: '#e8401c', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Enroll →</Link>
+                <Link href="/enroll-now-with-coss" style={{ color: '#e8401c', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Enroll →</Link>
               </div>
             </div>
           ))}

@@ -74,8 +74,8 @@ export default async function CorporateTrainingPage() {
                 ))}
               </ul>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Link href="/enroll-now-with-coss/" style={{ background: '#e8401c', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>Get a Quote</Link>
-                <Link href="/contact-us/" style={{ background: '#1a1a2e', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>Contact Us</Link>
+                <Link href="/enroll-now-with-coss" style={{ background: '#e8401c', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>Get a Quote</Link>
+                <Link href="/contact-us" style={{ background: '#1a1a2e', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>Contact Us</Link>
               </div>
             </div>
 

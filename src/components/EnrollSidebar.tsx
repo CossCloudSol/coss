@@ -26,7 +26,7 @@ export default function EnrollSidebar() {
         </p>
         <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
           <p style={{ fontSize: '12px', color: 'var(--text-light)', marginBottom: '8px' }}>📍 Dilsukhnagar &amp; Ameerpet, Hyderabad</p>
-          <Link href="/contact-us/" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>Get Directions →</Link>
+          <Link href="/contact-us" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>Get Directions →</Link>
         </div>
       </div>
     </div>

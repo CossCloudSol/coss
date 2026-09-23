@@ -56,7 +56,7 @@ export default async function PlacementsPage() {
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
             <Link
-              href="/free-demo-class/"
+              href="/free-demo-class"
               style={{ background: '#e47538', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
             >
               Book a free demo class
@@ -227,7 +227,7 @@ export default async function PlacementsPage() {
             Sit in on a class before you decide anything. Sixty minutes, a real trainer, real tools, no cost and no commitment. Then ask us anything you like about placement support.
           </p>
           <Link
-            href="/free-demo-class/"
+            href="/free-demo-class"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff', color: 'var(--primary)', padding: '13px 30px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
           >
             Book a free demo class <ArrowRight size={16} aria-hidden="true" />

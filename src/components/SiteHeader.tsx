@@ -26,10 +26,10 @@ import ThemeToggle from '@/components/ThemeToggle';
 import { useTheme } from '@/components/ThemeProvider';
 
 const aboutLinks = [
-  { label: 'About Us',       href: '/about-us/' },
-  { label: 'Why Us',         href: '/why-us/' },
-  { label: 'Student Reviews', href: '/student-reviews/' },
-  { label: 'Blogs',          href: '/blog/' },
+  { label: 'About Us',       href: '/about-us' },
+  { label: 'Why Us',         href: '/why-us' },
+  { label: 'Student Reviews', href: '/student-reviews' },
+  { label: 'Blogs',          href: '/blog' },
 ];
 
 interface SiteHeaderProps {
@@ -42,7 +42,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
   const [coursesOpen, setCoursesOpen] = useState(false);
   const [aboutOpen,   setAboutOpen]   = useState(false);
   const [scrolled,    setScrolled]    = useState(false);
-  const courses = categories.map((c) => ({ label: c.name, href: `/courses/${c.slug}/` }));
+  const courses = categories.map((c) => ({ label: c.name, href: `/courses/${c.slug}` }));
 
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
@@ -131,7 +131,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
           </Link>
 
           <div className="nav-dropdown-wrap">
-            <Link href="/courses/" className="nav-item nav-has-dropdown">
+            <Link href="/courses" className="nav-item nav-has-dropdown">
               <LayoutGrid className="nav-item-icon" aria-hidden="true" />
               Courses <ChevronDown className="nav-chevron" aria-hidden="true" />
             </Link>
@@ -145,15 +145,15 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
             </div>
           </div>
 
-          <Link href="/certification/" className="nav-item" onClick={closeAll}>
+          <Link href="/certification" className="nav-item" onClick={closeAll}>
             <Award className="nav-item-icon" aria-hidden="true" />Certification
           </Link>
 
-          <Link href="/corporate-training/" className="nav-item" onClick={closeAll}>
+          <Link href="/corporate-training" className="nav-item" onClick={closeAll}>
             <Building2 className="nav-item-icon" aria-hidden="true" />Corporate
           </Link>
 
-          <Link href="/placements/" className="nav-item" onClick={closeAll}>
+          <Link href="/placements" className="nav-item" onClick={closeAll}>
             <Briefcase className="nav-item-icon" aria-hidden="true" />Placements
           </Link>
 
@@ -166,7 +166,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
           </Link>
 
           <div className="nav-dropdown-wrap">
-            <Link href="/about-us/" className="nav-item nav-has-dropdown">
+            <Link href="/about-us" className="nav-item nav-has-dropdown">
               <Users className="nav-item-icon" aria-hidden="true" />
               About <ChevronDown className="nav-chevron" aria-hidden="true" />
             </Link>
@@ -181,11 +181,11 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
 
           {/* ── Conversion CTAs ── */}
           <div className="nav-cta-group" role="group" aria-label="Quick actions">
-            <Link href="/free-demo-class/" className="nav-demo" onClick={closeAll}>
+            <Link href="/free-demo-class" className="nav-demo" onClick={closeAll}>
               <CalendarCheck className="w-3.5 h-3.5" aria-hidden="true" />
               Free Demo Class
             </Link>
-            <Link href="/enroll-now-with-coss/" className="nav-enroll" onClick={closeAll}>
+            <Link href="/enroll-now-with-coss" className="nav-enroll" onClick={closeAll}>
               <PenLine className="w-3.5 h-3.5" aria-hidden="true" />
               Enroll Now
             </Link>
@@ -208,7 +208,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
 
           {/* Enroll Now */}
           <Link
-            href="/free-demo-class/"
+            href="/free-demo-class"
             onClick={closeAll}
             className="flex items-center gap-1.5 bg-[#024c57] dark:bg-[#03798a] text-white rounded-[10px] px-3 py-2 text-xs font-medium flex-shrink-0"
           >
@@ -287,21 +287,21 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
         </div>
 
         {/* Certification */}
-        <Link href="/certification/" className="mobile-nav-item" onClick={closeAll}>
+        <Link href="/certification" className="mobile-nav-item" onClick={closeAll}>
           <span className="mobile-nav-item-inner">
             <Award className="w-4 h-4 shrink-0" aria-hidden="true" />Certification
           </span>
         </Link>
 
         {/* Corporate Training */}
-        <Link href="/corporate-training/" className="mobile-nav-item" onClick={closeAll}>
+        <Link href="/corporate-training" className="mobile-nav-item" onClick={closeAll}>
           <span className="mobile-nav-item-inner">
             <Building2 className="w-4 h-4 shrink-0" aria-hidden="true" />Corporate Training
           </span>
         </Link>
 
         {/* Placements */}
-        <Link href="/placements/" className="mobile-nav-item" onClick={closeAll}>
+        <Link href="/placements" className="mobile-nav-item" onClick={closeAll}>
           <span className="mobile-nav-item-inner">
             <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />Placements
           </span>

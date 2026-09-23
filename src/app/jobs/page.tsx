@@ -110,7 +110,7 @@ export default function JobsPage() {
             <p className="text-gray-500 dark:text-gray-400 text-base">
               No jobs in this category right now — check back soon
             </p>
-            <Link href="/courses/" className="inline-block mt-4 text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline">
+            <Link href="/courses" className="inline-block mt-4 text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline">
               Browse our courses to get job-ready →
             </Link>
           </div>

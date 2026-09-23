@@ -123,7 +123,7 @@ export const ANNOUNCEMENT_BAR_DEFAULTS: AnnouncementBarInput = {
   isEnabled:        true,
   announcementText: '\u{1F393} New batch starting soon \u2014 Limited seats available!',
   ctaLabel:         'Enroll Now',
-  ctaUrl:           '/enroll-now-with-coss/',
+  ctaUrl:           '/enroll-now-with-coss',
   backgroundColor:  '#0f766e',
   textColor:        '#ffffff',
 };

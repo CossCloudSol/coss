@@ -49,7 +49,7 @@ export default function WhyUsPage() {
           { value: '50+',    label: 'HIRING PARTNERS' },
         ]}
         ctaText="Book a free demo class · No fees, no pressure"
-        breadcrumb={[{ label: 'About Us', href: '/about-us/' }, { label: 'Why Us', href: '/why-us/' }]}
+        breadcrumb={[{ label: 'About Us', href: '/about-us' }, { label: 'Why Us', href: '/why-us' }]}
       />
 
       {/* Reasons */}

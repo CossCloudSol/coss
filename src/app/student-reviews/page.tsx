@@ -22,7 +22,7 @@ export default function StudentReviewsPage() {
           { value: '5,000+', label: 'STUDENTS TRAINED' },
         ]}
         ctaText="Join 5,000+ students who trained with us"
-        breadcrumb={[{ label: 'About Us', href: '/about-us/' }, { label: 'Student Reviews', href: '/student-reviews/' }]}
+        breadcrumb={[{ label: 'About Us', href: '/about-us' }, { label: 'Student Reviews', href: '/student-reviews' }]}
       />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 20px 0', textAlign: 'center' }}>

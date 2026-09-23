@@ -209,7 +209,7 @@ export default async function BlogPage({
           { value: '30+',   label: 'COURSES COVERED' },
         ]}
         ctaText="New articles published weekly · Bookmark your favourites"
-        breadcrumb={[{ label: 'Blog', href: '/blog/' }]}
+        breadcrumb={[{ label: 'Blog', href: '/blog' }]}
       />
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 20px' }}>
@@ -387,7 +387,7 @@ export default async function BlogPage({
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
                 Leading IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad.
               </p>
-              <Link href="/about-us/" style={{ color: 'var(--primary)', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
+              <Link href="/about-us" style={{ color: 'var(--primary)', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
             </div>
 
             <div style={{ background: 'var(--primary-light)', borderRadius: '12px', padding: '22px', border: '1px solid rgba(228,117,56,0.2)', marginBottom: '20px' }}>
@@ -395,7 +395,7 @@ export default async function BlogPage({
                 {'🎓'} Enroll Now
               </h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', marginBottom: '14px' }}>Book a free demo class and start your IT career today.</p>
-              <Link href="/free-demo-class/" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+              <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
                 Book Free Demo Class
               </Link>
             </div>

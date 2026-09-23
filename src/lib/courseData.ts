@@ -291,7 +291,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹28,000',
     discountedPrice: '₹20,000',
     emi: 'EMI from ₹1,700/mo',
-    href: '/machine-learning-training-institute-in-hyderabad/',
+    href: '/machine-learning-training-institute-in-hyderabad',
   },
   {
     title: 'Artificial Intelligence (AI) Training',
@@ -307,7 +307,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹40,000',
     discountedPrice: '₹28,000',
     emi: 'EMI from ₹2,350/mo',
-    href: '/artificial-intelligence-ai-training-institute-in-hyderabad/',
+    href: '/artificial-intelligence-ai-training-institute-in-hyderabad',
   },
   {
     title: 'Power BI Training in Hyderabad',
@@ -323,7 +323,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    href: '/full-stack-power-bi-training-institute-in-hyderabad/',
+    href: '/full-stack-power-bi-training-institute-in-hyderabad',
   },
   {
     title: 'Full Stack Power BI Training',
@@ -339,7 +339,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     originalPrice: '₹32,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    href: '/full-stack-power-bi-training-institute-in-hyderabad/',
+    href: '/full-stack-power-bi-training-institute-in-hyderabad',
   },
   {
     title: 'Azure Data Analyst Training',
@@ -374,7 +374,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    href: '/aws-cloud-training-in-hyderabad/',
+    href: '/aws-cloud-training-in-hyderabad',
   },
   {
     title: 'Microsoft Azure Training in Hyderabad',
@@ -390,7 +390,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    href: '/azure-training-institute-in-hyderabad/',
+    href: '/azure-training-institute-in-hyderabad',
   },
   {
     title: 'Google Cloud Training in Hyderabad',
@@ -406,7 +406,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹16,000',
     emi: 'EMI from ₹1,350/mo',
-    href: '/google-cloud-training-institute-in-hyderabad/',
+    href: '/google-cloud-training-institute-in-hyderabad',
   },
   {
     title: 'Multi-Cloud Engineer Training',
@@ -438,7 +438,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
     originalPrice: '₹38,000',
     discountedPrice: '₹26,000',
     emi: 'EMI from ₹2,200/mo',
-    href: '/courses/cloud-computing/',
+    href: '/courses/cloud-computing',
   },
 ];
 
@@ -457,7 +457,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    href: '/aws-devops-course-in-hyderabad-by-coss-cloud-solutions/',
+    href: '/aws-devops-course-in-hyderabad-by-coss-cloud-solutions',
   },
   {
     title: 'Azure DevOps Training in Hyderabad',
@@ -473,7 +473,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    href: '/azure-devops-courses-in-hyderabad-by-coss-cloud-solutions/',
+    href: '/azure-devops-courses-in-hyderabad-by-coss-cloud-solutions',
   },
   {
     title: 'Docker and Kubernetes Training',
@@ -489,7 +489,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    href: '/devops-training-institute-in-hyderabad/',
+    href: '/devops-training-institute-in-hyderabad',
   },
   {
     title: 'Terraform & Infrastructure as Code',
@@ -505,7 +505,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    href: '/devops-training-in-hyderabad/',
+    href: '/devops-training-in-hyderabad',
   },
   {
     title: 'Jenkins & CI/CD Training',
@@ -521,7 +521,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    href: '/devops-training-in-hyderabad/',
+    href: '/devops-training-in-hyderabad',
   },
   {
     title: 'Full DevOps Bootcamp',
@@ -537,7 +537,7 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     originalPrice: '₹55,000',
     discountedPrice: '₹38,000',
     emi: 'EMI from ₹3,200/mo',
-    href: '/devops-training-in-hyderabad/',
+    href: '/devops-training-in-hyderabad',
   },
 ];
 
@@ -556,7 +556,7 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹48,000',
     discountedPrice: '₹34,000',
     emi: 'EMI from ₹2,850/mo',
-    href: '/java-training-institute-in-hyderabad/',
+    href: '/java-training-institute-in-hyderabad',
   },
   {
     title: 'Python Full Stack Training in Hyderabad',
@@ -572,7 +572,7 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹42,000',
     discountedPrice: '₹30,000',
     emi: 'EMI from ₹2,500/mo',
-    href: '/python-training-institute-in-hyderabad/',
+    href: '/python-training-institute-in-hyderabad',
   },
   {
     title: 'MERN Stack Training in Hyderabad',
@@ -620,7 +620,7 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    href: '/java-training-institute-in-hyderabad/',
+    href: '/java-training-institute-in-hyderabad',
   },
 ];
 
@@ -655,7 +655,7 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹26,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    href: '/data-engineering-training-institute-in-hyderabad/',
+    href: '/data-engineering-training-institute-in-hyderabad',
   },
   {
     title: 'Hadoop Ecosystem Training',
@@ -671,7 +671,7 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    href: '/data-engineering-training-institute-in-hyderabad/',
+    href: '/data-engineering-training-institute-in-hyderabad',
   },
   {
     title: 'ETL & Data Pipelines Training',
@@ -687,7 +687,7 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹13,000',
     emi: 'EMI from ₹1,100/mo',
-    href: '/data-engineering-training-institute-in-hyderabad/',
+    href: '/data-engineering-training-institute-in-hyderabad',
   },
 ];
 
@@ -706,7 +706,7 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions/',
+    href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions',
   },
   {
     title: 'SOC Analyst Training in Hyderabad',
@@ -722,7 +722,7 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹17,000',
     emi: 'EMI from ₹1,450/mo',
-    href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions/',
+    href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions',
   },
   {
     title: 'CCNA Networking Training in Hyderabad',
@@ -738,7 +738,7 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    href: '/ccna-networking-training-in-hyderabad/',
+    href: '/ccna-networking-training-in-hyderabad',
   },
   {
     title: 'Network Security Training in Hyderabad',
@@ -754,7 +754,7 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹16,000',
     emi: 'EMI from ₹1,350/mo',
-    href: '/ccna-networking-training-in-hyderabad/',
+    href: '/ccna-networking-training-in-hyderabad',
   },
 ];
 
@@ -773,7 +773,7 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹38,000',
     discountedPrice: '₹28,000',
     emi: 'EMI from ₹2,350/mo',
-    href: '/sap-fico-training-institute-in-hyderabad/',
+    href: '/sap-fico-training-institute-in-hyderabad',
   },
   {
     title: 'Salesforce CRM Training in Hyderabad',
@@ -789,7 +789,7 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹26,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    href: '/salesforce-training-center-in-hyderabad/',
+    href: '/salesforce-training-center-in-hyderabad',
   },
   {
     title: 'Oracle Fusion Cloud HCM Training',
@@ -805,7 +805,7 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹32,000',
     discountedPrice: '₹24,000',
     emi: 'EMI from ₹2,000/mo',
-    href: '/oracle-fusion-cloud-hcm-training-in-hyderabad/',
+    href: '/oracle-fusion-cloud-hcm-training-in-hyderabad',
   },
   {
     title: 'SAP HR Training in Hyderabad',
@@ -821,7 +821,7 @@ export const erpCrmCourses: CourseCardProps[] = [
     originalPrice: '₹26,000',
     discountedPrice: '₹19,000',
     emi: 'EMI from ₹1,600/mo',
-    href: '/sap-fico-training-institute-in-hyderabad/',
+    href: '/sap-fico-training-institute-in-hyderabad',
   },
 ];
 
@@ -840,7 +840,7 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    href: '/software-testing-training-institute-in-hyderabad/',
+    href: '/software-testing-training-institute-in-hyderabad',
   },
   {
     title: 'Selenium Automation Testing Training',
@@ -856,7 +856,7 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    href: '/software-testing-training-institute-in-hyderabad/',
+    href: '/software-testing-training-institute-in-hyderabad',
   },
   {
     title: 'Linux Administration Training',
@@ -872,7 +872,7 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    href: '/linux-training-in-hyderabad/',
+    href: '/linux-training-in-hyderabad',
   },
   {
     title: 'API Testing Training in Hyderabad',
@@ -888,7 +888,7 @@ export const softwareTestingCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    href: '/software-testing-training-institute-in-hyderabad/',
+    href: '/software-testing-training-institute-in-hyderabad',
   },
 ];
 
@@ -907,7 +907,7 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹25,000',
     discountedPrice: '₹18,000',
     emi: 'EMI from ₹1,500/mo',
-    href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions/',
+    href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions',
   },
   {
     title: 'UI/UX Design Training in Hyderabad',
@@ -923,7 +923,7 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    href: '/ui-ux-design-training-institute-in-hyderabad/',
+    href: '/ui-ux-design-training-institute-in-hyderabad',
   },
   {
     title: 'Graphic Design Training in Hyderabad',
@@ -939,7 +939,7 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions/',
+    href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions',
   },
   {
     title: 'SEO & Content Marketing Training',
@@ -955,7 +955,7 @@ export const digitalDesignCourses: CourseCardProps[] = [
     originalPrice: '₹18,000',
     discountedPrice: '₹12,000',
     emi: 'EMI from ₹1,000/mo',
-    href: '/digital-marketing-training-institute-in-dilsukhnagar-hyderabad/',
+    href: '/digital-marketing-training-institute-in-dilsukhnagar-hyderabad',
   },
 ];
 
@@ -974,7 +974,7 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    href: '/ms-office-course-near-me-in-hyderabad-coss-cloud-solutions/',
+    href: '/ms-office-course-near-me-in-hyderabad-coss-cloud-solutions',
   },
   {
     title: 'Spoken English Training in Hyderabad',
@@ -990,7 +990,7 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹15,000',
     discountedPrice: '₹10,000',
     emi: 'EMI from ₹850/mo',
-    href: '/spoken-english-institute-in-hyderabad-coss-cloud-solutions/',
+    href: '/spoken-english-institute-in-hyderabad-coss-cloud-solutions',
   },
   {
     title: 'Communication Skills Training',
@@ -1006,7 +1006,7 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹12,000',
     discountedPrice: '₹8,000',
     emi: 'EMI from ₹680/mo',
-    href: '/communication-skills-training-in-hyderabad-coss-cloud-solutions/',
+    href: '/communication-skills-training-in-hyderabad-coss-cloud-solutions',
   },
   {
     title: 'Tally ERP Training in Hyderabad',
@@ -1022,7 +1022,7 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     originalPrice: '₹12,000',
     discountedPrice: '₹8,000',
     emi: 'EMI from ₹680/mo',
-    href: '/tally-classes-in-hyderabad/',
+    href: '/tally-classes-in-hyderabad',
   },
 ];
 
@@ -1041,7 +1041,7 @@ export const humanResourceCourses: CourseCardProps[] = [
     originalPrice: '₹35,000',
     discountedPrice: '₹25,000',
     emi: 'EMI from ₹2,100/mo',
-    href: '/enroll-now-with-coss/',
+    href: '/enroll-now-with-coss',
   },
   {
     title: 'HR Analytics Training in Hyderabad',
@@ -1057,7 +1057,7 @@ export const humanResourceCourses: CourseCardProps[] = [
     originalPrice: '₹24,000',
     discountedPrice: '₹17,000',
     emi: 'EMI from ₹1,450/mo',
-    href: '/enroll-now-with-coss/',
+    href: '/enroll-now-with-coss',
   },
   {
     title: 'HR Operations Training in Hyderabad',
@@ -1073,7 +1073,7 @@ export const humanResourceCourses: CourseCardProps[] = [
     originalPrice: '₹20,000',
     discountedPrice: '₹14,000',
     emi: 'EMI from ₹1,200/mo',
-    href: '/enroll-now-with-coss/',
+    href: '/enroll-now-with-coss',
   },
 ];
 
@@ -1092,7 +1092,7 @@ export const quantumComputingCourses: CourseCardProps[] = [
     originalPrice: '₹22,000',
     discountedPrice: '₹15,000',
     emi: 'EMI from ₹1,250/mo',
-    href: '/enroll-now-with-coss/',
+    href: '/enroll-now-with-coss',
   },
   {
     title: 'Qiskit & Python Quantum Training',
@@ -1108,7 +1108,7 @@ export const quantumComputingCourses: CourseCardProps[] = [
     originalPrice: '₹28,000',
     discountedPrice: '₹20,000',
     emi: 'EMI from ₹1,700/mo',
-    href: '/enroll-now-with-coss/',
+    href: '/enroll-now-with-coss',
   },
   {
     title: 'Quantum Algorithms Training',
@@ -1124,7 +1124,7 @@ export const quantumComputingCourses: CourseCardProps[] = [
     originalPrice: '₹30,000',
     discountedPrice: '₹22,000',
     emi: 'EMI from ₹1,850/mo',
-    href: '/enroll-now-with-coss/',
+    href: '/enroll-now-with-coss',
   },
 ];
 

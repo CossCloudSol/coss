@@ -74,7 +74,7 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
           return (
             <Link
               key={cat.slug}
-              href={`/courses/${cat.slug}/`}
+              href={`/courses/${cat.slug}`}
               aria-label={`${cat.name} — ${cat.courseCount} ${cat.courseCount === 1 ? 'course' : 'courses'}`}
               className={`cat-card cat-card-shimmer group relative flex flex-col [-webkit-tap-highlight-color:transparent] rounded-[20px] border bg-[rgba(16,24,40,0.88)] border-white/[0.06] backdrop-blur-[8px] shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:border-white/[0.12] hover:shadow-[0_16px_48px_rgba(0,0,0,0.8)] hover:-translate-y-1.5 motion-reduce:hover:translate-y-0 transition-[transform,box-shadow,border-color] duration-300 ease-out focus-visible:outline-none focus-visible:-translate-y-1.5 motion-reduce:focus-visible:translate-y-0 focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a]${hiddenOnMobile ? ' hidden sm:flex' : ''}`}
             >

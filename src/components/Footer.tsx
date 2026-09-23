@@ -7,34 +7,34 @@ import WhatsAppLink from './WhatsAppLink'
 import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
 
 const CATEGORIES = [
-  { label: 'Data, Analytics & BI',               href: '/courses/data-analytics-bi/' },
-  { label: 'Cloud Computing',                    href: '/courses/cloud-computing/' },
-  { label: 'DevOps & Multi-Cloud',               href: '/courses/devops-multi-cloud/' },
-  { label: 'Programming & Full Stack Development', href: '/courses/programming-full-stack/' },
-  { label: 'Data Engineering',                   href: '/courses/data-engineering/' },
-  { label: 'Cyber Security & Networking',        href: '/courses/cyber-security/' },
-  { label: 'ERP, CRM & Enterprise Tools',        href: '/courses/erp-crm-enterprise-tools/' },
-  { label: 'Software Testing & OS',              href: '/courses/software-testing-os/' },
-  { label: 'Digital & Design',                   href: '/courses/digital-design/' },
-  { label: 'Professional & Soft Skills',         href: '/courses/professional-soft-skills/' },
-  { label: 'Human Resource',                     href: '/courses/human-resource/' },
-  { label: 'Quantum Computing',                  href: '/courses/quantum-computing/' },
+  { label: 'Data, Analytics & BI',               href: '/courses/data-analytics-bi' },
+  { label: 'Cloud Computing',                    href: '/courses/cloud-computing' },
+  { label: 'DevOps & Multi-Cloud',               href: '/courses/devops-multi-cloud' },
+  { label: 'Programming & Full Stack Development', href: '/courses/programming-full-stack' },
+  { label: 'Data Engineering',                   href: '/courses/data-engineering' },
+  { label: 'Cyber Security & Networking',        href: '/courses/cyber-security' },
+  { label: 'ERP, CRM & Enterprise Tools',        href: '/courses/erp-crm-enterprise-tools' },
+  { label: 'Software Testing & OS',              href: '/courses/software-testing-os' },
+  { label: 'Digital & Design',                   href: '/courses/digital-design' },
+  { label: 'Professional & Soft Skills',         href: '/courses/professional-soft-skills' },
+  { label: 'Human Resource',                     href: '/courses/human-resource' },
+  { label: 'Quantum Computing',                  href: '/courses/quantum-computing' },
 ]
 
 const COMPANY = [
-  { label: 'About Us',          href: '/about-us/' },
-  { label: 'Why Us',            href: '/why-us/' },
-  { label: 'Corporate Training', href: '/corporate-training/' },
-  { label: 'Placements',        href: '/placements/' },
-  { label: 'Student Reviews',   href: '/student-reviews/' },
+  { label: 'About Us',          href: '/about-us' },
+  { label: 'Why Us',            href: '/why-us' },
+  { label: 'Corporate Training', href: '/corporate-training' },
+  { label: 'Placements',        href: '/placements' },
+  { label: 'Student Reviews',   href: '/student-reviews' },
   { label: 'Faculty',           href: '/faculty' },
-  { label: 'Contact Us',        href: '/contact-us/' },
+  { label: 'Contact Us',        href: '/contact-us' },
 ]
 
 const RESOURCES = [
-  { label: 'Job Openings',      href: '/jobs/' },
-  { label: 'Upcoming Batches',  href: '/batches/' },
-  { label: 'Blog',              href: '/blog/' },
+  { label: 'Job Openings',      href: '/jobs' },
+  { label: 'Upcoming Batches',  href: '/batches' },
+  { label: 'Blog',              href: '/blog' },
 ]
 
 // Branch cards render from BranchSettings (DB), the same table the admin
@@ -65,8 +65,8 @@ function buildBranchCard(branchKey: string, slug: string, branch: BranchSettings
 }
 
 const CATCHMENT_AREAS = [
-  { label: 'Kukatpally',            href: '/locations/kukatpally/' },
-  { label: 'Madhapur & HITEC City', href: '/locations/madhapur-hitec-city/' },
+  { label: 'Kukatpally',            href: '/locations/kukatpally' },
+  { label: 'Madhapur & HITEC City', href: '/locations/madhapur-hitec-city' },
 ]
 
 const SOCIALS = [
@@ -226,7 +226,7 @@ export default async function Footer() {
                   <MapPin size={20} />
                 </div>
                 <div className="footer-branch-info">
-                  <Link href={`/locations/${b.slug}/`} className="footer-branch-name">{b.name}</Link>
+                  <Link href={`/locations/${b.slug}`} className="footer-branch-name">{b.name}</Link>
                   <p className="footer-branch-address">{b.subtitle}</p>
                 </div>
                 <a href={b.directionsHref} target="_blank" rel="noopener noreferrer" className="footer-branch-dir">

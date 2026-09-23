@@ -180,7 +180,7 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       <ResponsivePageStyles />
-      <PageBanner title="Privacy Policy" breadcrumb={[{ label: 'Privacy Policy', href: '/privacy-policy/' }]} />
+      <PageBanner title="Privacy Policy" breadcrumb={[{ label: 'Privacy Policy', href: '/privacy-policy' }]} />
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ background: '#fff3f0', borderRadius: '12px', padding: '18px 22px', marginBottom: '36px', borderLeft: '4px solid #e8401c' }}>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.7' }}>

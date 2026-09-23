@@ -100,7 +100,7 @@ export function CorporateHeroBanner() {
         { value: '15+',    label: 'YEARS OF EXCELLENCE' },
       ]}
       ctaText="Free training proposal · Counsellor responds within 2 hours · Mon–Sat 9 am–7 pm"
-      breadcrumb={[{ label: 'Corporate Training', href: '/corporate-training/' }]}
+      breadcrumb={[{ label: 'Corporate Training', href: '/corporate-training' }]}
       ariaLabel="Corporate Training Hero"
     />
   );
@@ -109,18 +109,18 @@ export function CorporateHeroBanner() {
 /* ── Course Sidebar Nav ── */
 export function CourseSidebarNav({ active }: { active?: string }) {
   const links = [
-    { label: 'Data, Analytics & BI',         href: '/courses/data-analytics-bi/' },
-    { label: 'Cloud Computing',               href: '/courses/cloud-computing/' },
-    { label: 'DevOps & Multi-Cloud',          href: '/courses/devops-multi-cloud/' },
-    { label: 'Programming & Full Stack',       href: '/courses/programming-full-stack/' },
-    { label: 'Data Engineering',              href: '/courses/data-engineering/' },
-    { label: 'Cyber Security & Networking',   href: '/courses/cyber-security/' },
-    { label: 'ERP, CRM & Enterprise Tools',   href: '/courses/erp-crm-enterprise-tools/' },
-    { label: 'Software Testing & OS',         href: '/courses/software-testing-os/' },
-    { label: 'Digital & Design',              href: '/courses/digital-design/' },
-    { label: 'Professional & Soft Skills',    href: '/courses/professional-soft-skills/' },
-    { label: 'Human Resource',                href: '/courses/human-resource/' },
-    { label: 'Quantum Computing',             href: '/courses/quantum-computing/' },
+    { label: 'Data, Analytics & BI',         href: '/courses/data-analytics-bi' },
+    { label: 'Cloud Computing',               href: '/courses/cloud-computing' },
+    { label: 'DevOps & Multi-Cloud',          href: '/courses/devops-multi-cloud' },
+    { label: 'Programming & Full Stack',       href: '/courses/programming-full-stack' },
+    { label: 'Data Engineering',              href: '/courses/data-engineering' },
+    { label: 'Cyber Security & Networking',   href: '/courses/cyber-security' },
+    { label: 'ERP, CRM & Enterprise Tools',   href: '/courses/erp-crm-enterprise-tools' },
+    { label: 'Software Testing & OS',         href: '/courses/software-testing-os' },
+    { label: 'Digital & Design',              href: '/courses/digital-design' },
+    { label: 'Professional & Soft Skills',    href: '/courses/professional-soft-skills' },
+    { label: 'Human Resource',                href: '/courses/human-resource' },
+    { label: 'Quantum Computing',             href: '/courses/quantum-computing' },
   ];
 
   return (
@@ -151,10 +151,10 @@ export function CtaBanner() {
       <h3 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(18px,4vw,26px)', fontWeight: 800, marginBottom: '10px', color: '#fff' }}>Ready to Start Your Journey?</h3>
       <p style={{ opacity: 0.9, marginBottom: '22px', fontSize: '15px', color: 'rgba(255,255,255,0.9)' }}>Book a free demo class today. No commitment required.</p>
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/free-demo-class/" style={{ background: '#fff', color: 'var(--primary)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+        <Link href="/free-demo-class" style={{ background: '#fff', color: 'var(--primary)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
           Book a free demo class
         </Link>
-        <Link href="/contact-us/" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
+        <Link href="/contact-us" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
           Contact Us
         </Link>
       </div>
