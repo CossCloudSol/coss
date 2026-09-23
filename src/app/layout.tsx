@@ -54,12 +54,17 @@ export const metadata: Metadata = {
   authors: [{ name: 'Coss Cloud Solutions' }],
   creator: 'Coss Cloud Solutions',
   publisher: 'Coss Cloud Solutions',
+  // Square, right-sized icons generated from /logo.png (which is 547×456,
+  // 120 KB — not square, and heavy for a tab icon). Google requires a square
+  // favicon for search results; 96×96 is a recommended multiple of 48.
   icons: {
     icon: [
-      { url: '/logo.png', type: 'image/png' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
     ],
-    apple: '/logo.png',
-    shortcut: '/logo.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon-96x96.png',
   },
   openGraph: {
     type: 'website',

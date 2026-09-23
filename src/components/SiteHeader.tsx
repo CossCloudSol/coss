@@ -102,11 +102,13 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
       <div className="header-inner">
         {/* Logo */}
         <Link href="/" className="logo-link" onClick={closeAll} aria-label="Coss Cloud Solutions — Home">
+          {/* width/height match the rendered size (62px tall, 547:456 aspect) so
+              next/image's srcset is 96w/256w — it was 640w/1200w for a ~74px logo. */}
           <Image
             src="/logo.png"
             alt="Coss Cloud Solutions"
-            width={547}
-            height={456}
+            width={74}
+            height={62}
             style={{ height: '62px', width: 'auto', objectFit: 'contain', display: 'block' }}
             onError={(e) => {
               e.currentTarget.style.display = 'none';

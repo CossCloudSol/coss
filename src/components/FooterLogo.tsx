@@ -1,12 +1,19 @@
 'use client';
 
+import Image from 'next/image';
+
 export default function FooterLogo() {
   return (
     <div className="footer-logo">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      {/* next/image instead of a raw <img src="/logo.png">: the raw tag pulled
+          the full 547×456, 120 KB PNG on every page to show it 90px tall.
+          width/height match that rendered size (547:456 aspect), so the
+          srcset is 128w/256w and served as AVIF/WebP. */}
+      <Image
         src="/logo.png"
         alt="Coss Cloud Solutions"
+        width={108}
+        height={90}
         style={{
           height: '90px',
           width: 'auto',
