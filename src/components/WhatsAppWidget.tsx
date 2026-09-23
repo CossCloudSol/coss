@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { COURSES } from '@/data/courses-data';
+import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
 import { submitLead } from '@/lib/submitLead';
@@ -17,24 +17,6 @@ type Branch = (typeof BRANCHES)[number];
 
 const FOCUSABLE_SELECTORS =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-/* ─────────────────────────────────────────────────────────────── */
-/*  Course list — grouped by category, alphabetical within        */
-/* ─────────────────────────────────────────────────────────────── */
-
-const coursesByCategory: Array<{ category: string; courses: string[] }> = (() => {
-  const map = new Map<string, string[]>();
-  for (const c of COURSES) {
-    if (!map.has(c.category)) map.set(c.category, []);
-    map.get(c.category)!.push(c.shortTitle);
-  }
-  return Array.from(map.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([category, courses]) => ({
-      category,
-      courses: [...courses].sort((a, b) => a.localeCompare(b)),
-    }));
-})();
 
 /* ─────────────────────────────────────────────────────────────── */
 /*  Helpers                                                        */
@@ -91,7 +73,12 @@ const defaultForm: FormState = {
 /*  Component                                                      */
 /* ─────────────────────────────────────────────────────────────── */
 
-export default function WhatsAppWidget(): JSX.Element | null {
+interface WhatsAppWidgetProps {
+  /** Course select options, grouped by category — from server-only course-options. */
+  courseGroups: CourseGroup[];
+}
+
+export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): JSX.Element | null {
   const pathname = usePathname();
   const [mounted, setMounted]     = useState(false);
   const [visible, setVisible]     = useState(false);
@@ -342,10 +329,10 @@ export default function WhatsAppWidget(): JSX.Element | null {
                   onChange={(e) => setForm((f) => ({ ...f, course: e.target.value }))}
                 >
                   <option value="">— Select a Course —</option>
-                  {coursesByCategory.map(({ category, courses }) => (
+                  {courseGroups.map(({ category, courses }) => (
                     <optgroup key={category} label={category}>
-                      {courses.map((title) => (
-                        <option key={title} value={title}>{title}</option>
+                      {courses.map(({ shortTitle }) => (
+                        <option key={shortTitle} value={shortTitle}>{shortTitle}</option>
                       ))}
                     </optgroup>
                   ))}

@@ -1,6 +1,7 @@
 ﻿import Link from 'next/link';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
 import CallLink from '@/components/CallLink';
+import { COURSE_GROUPS } from '@/data/course-options';
 
 /* ── Page Banner ── */
 export function PageBanner({ title, breadcrumb }: { title: string; breadcrumb?: { label: string; href: string }[] }) {
@@ -107,7 +108,7 @@ export function CorporateHeroBanner() {
 export function EnrollSidebar() {
   return (
     <div style={{ position: 'sticky', top: '80px' }}>
-      <DemoSidebarForm />
+      <DemoSidebarForm courseGroups={COURSE_GROUPS} />
 
       <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '12px' }}>📞 Talk to Us</h4>

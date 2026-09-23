@@ -13,6 +13,7 @@ import { matchPostToCallout } from '@/lib/blog-course-callout';
 import BlogCourseCallout from '@/components/BlogCourseCallout';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
+import { COURSE_GROUPS } from '@/data/course-options';
 
 export const revalidate = 86400;
 
@@ -416,7 +417,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
           {/* Sidebar */}
           <div>
-            <DemoSidebarForm />
+            <DemoSidebarForm courseGroups={COURSE_GROUPS} />
 
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', marginBottom: '20px' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>

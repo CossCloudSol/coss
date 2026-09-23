@@ -36,6 +36,7 @@ import {
 import { buildGlobalSchemas } from '@/lib/global-schemas';
 import { sanitizeGscVerificationId } from '@/lib/get-page-seo';
 import { CATEGORY_SLUG_MAP } from '@/lib/course-url';
+import { COURSE_GROUPS } from '@/data/course-options';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 const SITE_URL =
@@ -261,7 +262,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         {/* Floating WhatsApp lead-capture widget — public routes only.
             PublicChrome short-circuits to null on /admin/*. */}
-        <WhatsAppWidget />
+        <WhatsAppWidget courseGroups={COURSE_GROUPS} />
         <MobileStickyBar />
         </PublicChrome>
         </ThemeProvider>
