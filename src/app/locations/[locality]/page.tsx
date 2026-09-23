@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { HeroBanner, CtaBanner, EnrollSidebar, ResponsivePageStyles } from '@/components/shared';
+import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
+import EnrollSidebar from '@/components/EnrollSidebar';
 import BatchCard, { type BatchCardBatch } from '@/components/BatchCard';
 import { LOCALITIES, getLocalityBySlug, BRANCH_GEO, LOCALITY_TOPIC_PAGES, TOPIC_LABELS, type BranchKey } from '@/lib/locations-data';
 import { getBranchSettings } from '@/lib/get-branch-settings';

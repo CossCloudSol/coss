@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import WpImg from '@/components/WpImg';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
-import { PageBanner, EnrollSidebar, CourseSidebarNav, CtaBanner, ResponsivePageStyles } from '@/components/shared';
+import { PageBanner, CourseSidebarNav, CtaBanner, ResponsivePageStyles } from '@/components/shared';
+import EnrollSidebar from '@/components/EnrollSidebar';
 import type { CourseCategoryData } from '@/lib/courseData';
 import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
