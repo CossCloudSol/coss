@@ -1,32 +1,22 @@
 import { formatDistanceToNow } from 'date-fns';
-import { headers } from 'next/headers';
-import type { AdminStatsResponse } from '@/app/api/admin/stats/route';
+import { redirect } from 'next/navigation';
+import { getAdminStats, type AdminStatsResponse } from '@/lib/admin-stats';
+import { getServerSession } from '@/lib/session';
 
 export const dynamic = 'force-dynamic';
 
 /**
- * Fetch the stats API using the current request's cookie so the server-side
- * fetch carries the admin session. We resolve an absolute URL from the
- * incoming request headers (server-side fetch can't use relative URLs).
+ * Query the stats directly. This page used to HTTP-fetch its own
+ * /api/admin/stats route, which put a second serverless invocation (and a
+ * possible second cold start) behind every dashboard load.
  */
 async function getStats(): Promise<AdminStatsResponse> {
-  const headerList = headers();
-  const host = headerList.get('host') ?? 'localhost:3000';
-  const proto =
-    headerList.get('x-forwarded-proto') ??
-    (host.startsWith('localhost') ? 'http' : 'https');
-  const cookie = headerList.get('cookie') ?? '';
-
-  const response = await fetch(`${proto}://${host}/api/admin/stats`, {
-    cache: 'no-store',
-    headers: cookie ? { cookie } : undefined,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Stats API returned ${response.status}`);
+  try {
+    return await getAdminStats();
+  } catch (err) {
+    console.error('[admin overview] stats query failed:', err);
+    throw new Error('Failed to load stats');
   }
-
-  return (await response.json()) as AdminStatsResponse;
 }
 
 type CardVariant = 'leads' | 'newToday' | 'enrolled' | 'corporate';
@@ -283,6 +273,12 @@ function ErrorState({ message }: { message: string }): JSX.Element {
 }
 
 export default async function AdminOverviewPage(): Promise<JSX.Element> {
+  // Middleware already gates /admin/*; this keeps the isAdmin check the stats
+  // API route performed now that the page queries directly. Outside the
+  // try/catch below on purpose — redirect() throws and must not be swallowed.
+  const session = await getServerSession();
+  if (!session.isAdmin) redirect('/admin/login');
+
   let stats: AdminStatsResponse | null = null;
   let errorMessage: string | null = null;
 
