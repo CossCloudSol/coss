@@ -147,7 +147,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     ? buildExcerptDescription(rawExcerpt, titleTaglineFallback)
     : titleTaglineFallback;
 
-  const canonicalUrl = `${SITE_URL}/blog/${params.slug}/`;
+  const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
 
   const fallback: Metadata = {
     title: titleStr,
@@ -211,7 +211,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               dateModified: dbDateIso,
               author: { '@type': 'Organization', name: 'COSS Cloud Solutions' },
               publisher: { '@type': 'Organization', name: 'COSS Cloud Solutions', url: SITE_URL },
-              url: `${SITE_URL}/blog/${params.slug}/`,
+              url: `${SITE_URL}/blog/${params.slug}`,
             }),
           }}
         />
@@ -313,7 +313,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             dateModified: mdxMeta?.frontmatter.date ?? '',
             author: { '@type': 'Organization', name: 'COSS Cloud Solutions' },
             publisher: { '@type': 'Organization', name: 'COSS Cloud Solutions', url: SITE_URL },
-            url: `${SITE_URL}/blog/${params.slug}/`,
+            url: `${SITE_URL}/blog/${params.slug}`,
           }),
         }}
       />
