@@ -32,3 +32,9 @@ because dotenv never overrides a `process.env` value that's already set.
 
 - Review the UI mockup before writing component code
 - Verify production with `/verify-prod`, not by hand
+
+## Standing rules
+- Stage files by name; never `git add -A`. Commit, push, deploy are separate steps: always ask before any push; never push to `main` or force-push.
+- Write SQL for the developer to run in the Supabase SQL Editor; never execute SQL or PrismaClient scripts yourself.
+- Verify at the layer the claim is about (live HTML/headers beat source). Show raw command output, not summaries.
+- Allowed claims only: "5,000+ students trained", "50+ hiring partners", "since 2010". No placement percentages, counts or guarantees (CCPA).
