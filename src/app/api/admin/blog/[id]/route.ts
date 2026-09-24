@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
-import { revalidatePaths, getBlogRevalidationPaths } from '@/lib/revalidate';
+import { revalidateTag } from 'next/cache';
+import { revalidatePaths, getBlogRevalidationPaths, BLOG_POSTS_TAG } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -70,6 +71,7 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
     const newPaths = getBlogRevalidationPaths(post);
     const oldPaths = current ? getBlogRevalidationPaths(current) : [];
     await revalidatePaths(Array.from(new Set([...newPaths, ...oldPaths])));
+    revalidateTag(BLOG_POSTS_TAG);
 
     return NextResponse.json(post);
   } catch (err: unknown) {
@@ -95,6 +97,7 @@ export async function DELETE(req: NextRequest, { params }: Ctx): Promise<Respons
   try {
     const deleted = await prisma.blogPost.delete({ where: { id: params.id } });
     await revalidatePaths(getBlogRevalidationPaths(deleted));
+    revalidateTag(BLOG_POSTS_TAG);
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {
     const e = err as { code?: string };

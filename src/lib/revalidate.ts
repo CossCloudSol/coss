@@ -105,6 +105,14 @@ interface BlogRevalidationInput {
   slug: string;
 }
 
+/**
+ * Data-cache tag on the DB post list used by the /blog index and its
+ * prerendered filter/pagination views (src/app/blog/blog-index.tsx). Those
+ * views are not individually revalidated by path, so every admin blog write
+ * must also call revalidateTag(BLOG_POSTS_TAG).
+ */
+export const BLOG_POSTS_TAG = 'blog-posts';
+
 /** All public paths a single DB-backed blog post occupies. Filesystem MDX posts are not admin-editable and are out of scope. */
 export function getBlogRevalidationPaths(post: BlogRevalidationInput): string[] {
   return ['/blog/' + post.slug, '/blog', '/'];

@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
-import { revalidatePaths, getBlogRevalidationPaths } from '@/lib/revalidate';
+import { revalidateTag } from 'next/cache';
+import { revalidatePaths, getBlogRevalidationPaths, BLOG_POSTS_TAG } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -113,6 +114,7 @@ export async function POST(req: NextRequest): Promise<Response> {
     });
 
     await revalidatePaths(getBlogRevalidationPaths(post));
+    revalidateTag(BLOG_POSTS_TAG);
 
     return NextResponse.json(post, { status: 201 });
   } catch (err: unknown) {
