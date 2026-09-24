@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -25,16 +27,44 @@ export const revalidate = 86400;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
-// Category slugs are NOT included — they're covered by the static /courses/<category>
-// folder routes. Dynamic categories not yet known at build time render on first
-// request and are cached thereafter under the revalidate window above.
+// Prerender every published course AND every published category that has no
+// static folder of its own under src/app/courses/ (those folders win routing,
+// e.g. /courses/cloud-computing). Before, DB-only categories such as
+// /courses/human-resource (linked from the footer) were left out, so the first
+// visitor after every deploy paid a full server render + DB round-trip.
+// generateStaticParams runs at build time only, where cwd is the project root.
+function staticCourseFolders(): Set<string> {
+  try {
+    const dir = path.join(process.cwd(), 'src', 'app', 'courses');
+    return new Set(
+      fs
+        .readdirSync(dir, { withFileTypes: true })
+        .filter((d) => d.isDirectory() && !d.name.startsWith('['))
+        .map((d) => d.name),
+    );
+  } catch {
+    return new Set();
+  }
+}
+
 export async function generateStaticParams() {
   try {
-    const courses = await prisma.course.findMany({
-      where: { status: 'published' },
-      select: { slug: true },
-    });
-    return courses.map((c) => ({ slug: c.slug }));
+    const [courses, categories] = await Promise.all([
+      prisma.course.findMany({
+        where: { status: 'published' },
+        select: { slug: true },
+      }),
+      prisma.courseCategory.findMany({
+        where: { status: 'published' },
+        select: { slug: true },
+      }),
+    ]);
+    const folders = staticCourseFolders();
+    const slugs = new Set<string>();
+    for (const { slug } of [...courses, ...categories]) {
+      if (slug && !folders.has(slug)) slugs.add(slug);
+    }
+    return Array.from(slugs, (slug) => ({ slug }));
   } catch {
     return [];
   }
