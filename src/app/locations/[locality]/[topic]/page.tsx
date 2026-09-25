@@ -20,6 +20,7 @@ import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate } from '@/lib/batch-utils';
 import { prisma } from '@/lib/db';
 import WhatsAppLink from '@/components/WhatsAppLink';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 export const revalidate = 86400;
 
@@ -209,11 +210,11 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
     <>
       <ResponsivePageStyles />
       {localBusinessSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(localBusinessSchema) }} />
       )}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }} />
       {itemListSchema && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(itemListSchema) }} />
       )}
 
       <HeroBanner

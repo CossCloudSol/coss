@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSession } from '@/lib/session';
+import { ALL_PERMISSIONS } from '@/lib/permissions';
 
 /**
  * Maps an admin route prefix to the permission key that grants access.
@@ -18,6 +19,59 @@ const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, string | null]> = [
   ['/admin/users',     null],   // null = superadmin only (no standalone permission key)
 ];
 
+const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+
+/**
+ * /api/admin/* write routes any signed-in admin may call: they act on the
+ * caller's own notifications, notification preferences and push devices.
+ */
+const SELF_SERVICE_API = [
+  '/api/admin/notifications',
+  '/api/admin/notification-preferences',
+  '/api/admin/push',
+];
+
+/**
+ * Permission required to write to an /api/admin/* route, derived from
+ * ROUTE_PERMISSIONS: /api/admin/<area> maps onto the /admin/<area> page, whose
+ * '<area>:view' key becomes '<area>:delete' for DELETE (when that key exists)
+ * or '<area>:edit' otherwise. Returns null (superadmin only) when the area has
+ * no entry or no matching key, so new routes are closed by default.
+ */
+function apiWritePermission(pathname: string, method: string): string | null {
+  const adminPath = pathname.slice('/api'.length);
+  const match = ROUTE_PERMISSIONS.find(([prefix]) => adminPath.startsWith(prefix));
+  if (!match || match[1] === null) return null;
+  const area = match[1].split(':')[0];
+  const candidates = method === 'DELETE' ? [`${area}:delete`, `${area}:edit`] : [`${area}:edit`];
+  return candidates.find((key) => (ALL_PERMISSIONS as string[]).includes(key)) ?? null;
+}
+
+/**
+ * Role/permission gate for /api/admin/* writes. Reads are left to each
+ * handler's own session check. Login (POST /api/admin/auth) needs no session.
+ */
+async function guardAdminApi(req: NextRequest, pathname: string): Promise<NextResponse> {
+  if (!WRITE_METHODS.has(req.method) || pathname === '/api/admin/auth') {
+    return NextResponse.next();
+  }
+
+  const res = NextResponse.next();
+  const session = await getSession(req, res);
+  if (!session.isAdmin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (session.role === 'SUPER_ADMIN' || SELF_SERVICE_API.some((p) => pathname.startsWith(p))) {
+    return res;
+  }
+
+  const required = apiWritePermission(pathname, req.method);
+  if (required && (session.permissions ?? []).includes(required)) {
+    return res;
+  }
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+}
+
 /**
  * Gate every /admin/* route behind a valid admin session.
  *
@@ -30,9 +84,15 @@ const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, string | null]> = [
  *   After session is confirmed, non-superadmin users are further checked
  *   against ROUTE_PERMISSIONS. Accessing a route without the required
  *   permission redirects to /admin/unauthorized.
+ *
+ * /api/admin/* writes are checked by guardAdminApi (JSON 401/403, no redirect).
  */
 export async function middleware(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
+
+  if (pathname.startsWith('/api/admin')) {
+    return guardAdminApi(req, pathname);
+  }
 
   const PUBLIC_ADMIN = ['/admin/login', '/admin/forgot-password', '/admin/unauthorized'];
   if (PUBLIC_ADMIN.some((p) => pathname.startsWith(p))) {
@@ -77,8 +137,8 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 
 export const config = {
   /**
-   * Run on every /admin/* path. Static assets served by Next under
-   * /_next/* are excluded automatically by the App Router.
+   * Run on every /admin/* page and /api/admin/* route. Static assets served
+   * by Next under /_next/* are excluded automatically by the App Router.
    */
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*'],
 };

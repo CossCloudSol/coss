@@ -38,6 +38,7 @@ import { sanitizeGscVerificationId } from '@/lib/get-page-seo';
 import { CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { COURSE_GROUPS } from '@/data/course-options';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -232,7 +233,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <script
             key={i}
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
           />
         ))}
       </head>

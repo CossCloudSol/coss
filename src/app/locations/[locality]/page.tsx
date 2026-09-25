@@ -11,6 +11,7 @@ import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getCourseUrl } from '@/lib/course-url';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 export const revalidate = 86400;
 
@@ -158,7 +159,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
         {schema && (
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
           />
         )}
         <HeroBanner
@@ -331,7 +332,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'WebPage',
             name: config.metaTitle,

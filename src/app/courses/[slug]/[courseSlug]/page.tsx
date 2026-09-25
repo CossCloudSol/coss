@@ -17,6 +17,7 @@ import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
 import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 export const revalidate = 86400;
 
@@ -110,7 +111,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
       {customSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(customSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(customSchema) }}
         />
       )}
       <ResponsivePageStyles />

@@ -47,6 +47,22 @@ const INFRA_REDIRECTS = [
 
 const INFRA_SOURCES = new Set(INFRA_REDIRECTS.map(r => r.source))
 
+/**
+ * Serialises a value as a JS string literal for next.config.mjs, which runs at
+ * build time with every secret in scope. JSON.stringify escapes quotes,
+ * backslashes and newlines, so a DB value can't end the literal early.
+ * Brackets and braces are also \u-escaped: the regexes above re-read this
+ * array on the next sync and would otherwise treat a "]}" inside a value as
+ * the end of the array, leaving the rest of the value outside the string.
+ */
+function jsString(value: string): string {
+  return JSON.stringify(value).replace(/[[\]{}]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))
+}
+
+function redirectLine(r: { source: string; destination: string; permanent: boolean }): string {
+  return `      { source: ${jsString(r.source)}, destination: ${jsString(r.destination)}, permanent: ${r.permanent} }`
+}
+
 /** Returns everything between the outer `[` and `]` of `async redirects() { return [...] }` */
 function extractRedirectsArrayContent(source: string): string | null {
   const match = source.match(/async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[/)
@@ -127,20 +143,20 @@ export async function syncRedirectsToConfig(): Promise<void> {
 
   lines.push('      // infrastructure redirects — exact-match (always preserved by sync-redirects)')
   for (const r of exactInfraRedirects) {
-    lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
+    lines.push(redirectLine(r))
   }
 
   if (dbRedirects.length > 0) {
     lines.push('      // DB-managed rules')
     for (const r of dbRedirects) {
-      lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.statusCode === 301} }`)
+      lines.push(redirectLine({ source: r.source, destination: r.destination, permanent: r.statusCode === 301 }))
     }
   }
 
   // Wildcard infra rules go last so they never shadow a more specific exact-match rule above.
   lines.push('      // infrastructure redirects — wildcard (must stay after exact-match rules above)')
   for (const r of wildcardInfraRedirects) {
-    lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
+    lines.push(redirectLine(r))
   }
 
   const redirectsArray = lines.length === 0
