@@ -32,6 +32,7 @@ const PREF_EXCLUDED: ReadonlySet<NotificationType> = new Set(['test']);
 export type TargetRole =
   | 'admissions_sales'
   | 'support_helpdesk'
+  | 'content_seo_manager'
   | null;
 
 interface CreateNotificationInput {

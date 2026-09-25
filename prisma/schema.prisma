@@ -126,6 +126,7 @@ enum AdminRole {
   SUPER_ADMIN
   ADMISSIONS_SALES
   SUPPORT_HELPDESK
+  CONTENT_SEO_MANAGER
 }
 
 model AdminUser {

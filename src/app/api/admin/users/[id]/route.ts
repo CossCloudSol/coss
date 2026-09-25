@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { withAdminAuth, getSession } from '@/lib/session';
 import { prisma as db } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
-import { ROLE_PERMISSIONS } from '@/lib/permissions';
+import { ROLE_PERMISSIONS, isAdminRole } from '@/lib/permissions';
 
 type Ctx = { params: { id: string } };
 
@@ -40,13 +40,13 @@ export const PATCH = withAdminAuth<{ id: string }>(async (req, ctx) => {
   if (typeof b.isActive === 'boolean') data.isActive = b.isActive;
 
   if (typeof b.role === 'string') {
-    if (!['SUPER_ADMIN', 'ADMISSIONS_SALES', 'SUPPORT_HELPDESK'].includes(b.role)) {
+    if (!isAdminRole(b.role)) {
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
     data.role = b.role;
     // Auto-set permissions when role changes and no custom permissions provided
     if (!Array.isArray(b.permissions)) {
-      data.permissions = ROLE_PERMISSIONS[b.role] ?? [];
+      data.permissions = [...ROLE_PERMISSIONS[b.role]];
     }
   }
 

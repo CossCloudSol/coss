@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect, type ReactNode } from 'react';
+import type { AdminRole } from '@/lib/permissions';
 import BottomNav from './BottomNav';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
@@ -40,7 +41,7 @@ function titleForPath(pathname: string): string {
 type AdminShellProps = {
   children: ReactNode;
   permissions: string[];
-  role?: 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
+  role?: AdminRole;
 };
 
 export default function AdminShell({ children, permissions, role }: AdminShellProps): JSX.Element {

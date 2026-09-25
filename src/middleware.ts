@@ -1,22 +1,47 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSession } from '@/lib/session';
-import { ALL_PERMISSIONS } from '@/lib/permissions';
+import { ALL_PERMISSIONS, type Permission } from '@/lib/permissions';
 
 /**
  * Maps an admin route prefix to the permission key that grants access.
- * Longest-prefix match wins (entries are checked in order).
+ * First match wins (entries are checked in order), so a prefix that another
+ * entry starts with must come after it (whatsapp-clicks before whatsapp).
  * Routes NOT listed here are accessible to any authenticated admin.
+ * null = superadmin only, for the page and all of its /api/admin routes.
+ * Keep the admin Sidebar's permissionKey / superAdminOnly in step with this.
  */
-const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, string | null]> = [
-  ['/admin/leads',     'leads:view'],
-  ['/admin/corporate', 'corporate:view'],
-  ['/admin/whatsapp',  'whatsapp:view'],
-  ['/admin/seo',       'seo:view'],
-  ['/admin/analytics', 'analytics:view'],
-  ['/admin/topbar',    'topbar:view'],
+const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, Permission | null]> = [
+  ['/admin/leads',            'leads:view'],
+  ['/admin/corporate',        'corporate:view'],
+  ['/admin/whatsapp-clicks',  'whatsappclicks:view'],
+  ['/admin/whatsapp',         'whatsapp:view'],
+  ['/admin/call-clicks',      'callclicks:view'],
+  ['/admin/seo',              'seo:view'],
+  ['/admin/geo',              'seo:view'],
+  ['/admin/analytics',        'analytics:view'],
+  ['/admin/topbar',           'topbar:view'],
   ['/admin/announcement-bar', 'topbar:view'],
-  ['/admin/settings',  'settings:view'],
-  ['/admin/users',     null],   // null = superadmin only (no standalone permission key)
+  ['/admin/settings',         'settings:view'],
+
+  ['/admin/courses',          'content:view'],
+  ['/admin/categories',       'content:view'],
+  ['/admin/blog',             'content:view'],
+  ['/admin/jobs',             'content:view'],
+  ['/admin/trainers',         'content:view'],
+  ['/admin/testimonials',     'content:view'],
+  ['/admin/hiring-partners',  'content:view'],
+  ['/admin/social-posts',     'content:view'],
+  ['/admin/homepage',         'content:view'],
+  ['/admin/content-blocks',   'content:view'],
+  ['/admin/media',            'content:view'],
+  ['/admin/generate',         'content:view'],   // API only (/api/admin/generate/*)
+
+  ['/admin/users',            null],
+  ['/admin/redirects',        null],
+  ['/admin/batches',          null],
+  ['/admin/schema',           null],
+  ['/admin/sitemap',          null],
+  ['/admin/revalidate',       null],   // API only (/api/admin/revalidate)
 ];
 
 const WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
@@ -48,11 +73,19 @@ function apiWritePermission(pathname: string, method: string): string | null {
 }
 
 /**
- * Role/permission gate for /api/admin/* writes. Reads are left to each
- * handler's own session check. Login (POST /api/admin/auth) needs no session.
+ * Role/permission gate for /api/admin/*. Writes need the area's edit/delete
+ * key; reads of a superadmin-only (null) area need SUPER_ADMIN; other reads
+ * are left to each handler's own session check. /api/admin/auth (login and
+ * logout) needs no session.
  */
 async function guardAdminApi(req: NextRequest, pathname: string): Promise<NextResponse> {
-  if (!WRITE_METHODS.has(req.method) || pathname === '/api/admin/auth') {
+  if (pathname === '/api/admin/auth') {
+    return NextResponse.next();
+  }
+  const isWrite = WRITE_METHODS.has(req.method);
+  const adminPath = pathname.slice('/api'.length);
+  const superAdminOnly = ROUTE_PERMISSIONS.find(([prefix]) => adminPath.startsWith(prefix))?.[1] === null;
+  if (!isWrite && !superAdminOnly) {
     return NextResponse.next();
   }
 
@@ -61,7 +94,13 @@ async function guardAdminApi(req: NextRequest, pathname: string): Promise<NextRe
   if (!session.isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  if (session.role === 'SUPER_ADMIN' || SELF_SERVICE_API.some((p) => pathname.startsWith(p))) {
+  if (session.role === 'SUPER_ADMIN') {
+    return res;
+  }
+  if (!isWrite) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+  if (SELF_SERVICE_API.some((p) => pathname.startsWith(p))) {
     return res;
   }
 

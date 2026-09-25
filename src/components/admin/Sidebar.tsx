@@ -34,13 +34,17 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react';
-import type { Permission } from '@/lib/permissions';
+import type { AdminRole, Permission } from '@/lib/permissions';
 
+// permissionKey and superAdminOnly must mirror ROUTE_PERMISSIONS in
+// src/middleware.ts: a null entry there is superAdminOnly here.
 type NavItem = {
   href: string;
   label: string;
   icon: LucideIcon;
   permissionKey: Permission | null;
+  /** Hidden from everyone but SUPER_ADMIN, whatever their permissions. */
+  superAdminOnly?: true;
 };
 
 type SidebarGroup = {
@@ -68,25 +72,25 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
   {
     header: 'Content',
     items: [
-      { href: '/admin/categories',     label: 'Categories',      icon: FolderOpen,    permissionKey: 'dashboard:view' },
-      { href: '/admin/courses',        label: 'Courses',          icon: GraduationCap, permissionKey: 'dashboard:view' },
-      { href: '/admin/blog',           label: 'Blog Posts',       icon: BookOpen,      permissionKey: 'dashboard:view' },
-      { href: '/admin/jobs',           label: 'Jobs',             icon: Briefcase,     permissionKey: 'dashboard:view' },
-      { href: '/admin/batches',        label: 'Batches',          icon: Calendar,      permissionKey: 'dashboard:view' },
-      { href: '/admin/trainers',       label: 'Trainers',         icon: UserCog,       permissionKey: 'dashboard:view' },
-      { href: '/admin/testimonials',   label: 'Testimonials',     icon: Star,          permissionKey: 'dashboard:view' },
-      { href: '/admin/hiring-partners',label: 'Hiring Partners',  icon: Building,      permissionKey: 'dashboard:view' },
-      { href: '/admin/social-posts',   label: 'Social Posts',     icon: Send,          permissionKey: 'dashboard:view' },
+      { href: '/admin/categories',     label: 'Categories',      icon: FolderOpen,    permissionKey: 'content:view' },
+      { href: '/admin/courses',        label: 'Courses',          icon: GraduationCap, permissionKey: 'content:view' },
+      { href: '/admin/blog',           label: 'Blog Posts',       icon: BookOpen,      permissionKey: 'content:view' },
+      { href: '/admin/jobs',           label: 'Jobs',             icon: Briefcase,     permissionKey: 'content:view' },
+      { href: '/admin/batches',        label: 'Batches',          icon: Calendar,      permissionKey: null, superAdminOnly: true },
+      { href: '/admin/trainers',       label: 'Trainers',         icon: UserCog,       permissionKey: 'content:view' },
+      { href: '/admin/testimonials',   label: 'Testimonials',     icon: Star,          permissionKey: 'content:view' },
+      { href: '/admin/hiring-partners',label: 'Hiring Partners',  icon: Building,      permissionKey: 'content:view' },
+      { href: '/admin/social-posts',   label: 'Social Posts',     icon: Send,          permissionKey: 'content:view' },
     ],
   },
   {
     header: 'Site',
     items: [
-      { href: '/admin/homepage',       label: 'Homepage',          icon: Home,           permissionKey: 'dashboard:view' },
+      { href: '/admin/homepage',       label: 'Homepage',          icon: Home,           permissionKey: 'content:view' },
       { href: '/admin/topbar',         label: 'Topbar / Ann. Bar', icon: Megaphone,      permissionKey: 'topbar:view' },
-      { href: '/admin/content-blocks', label: 'Content Blocks',    icon: Layers,         permissionKey: 'dashboard:view' },
-      { href: '/admin/media',          label: 'Media Manager',     icon: Image,          permissionKey: 'seo:view' },
-      { href: '/admin/redirects',      label: 'Redirects',         icon: ArrowLeftRight, permissionKey: 'dashboard:view' },
+      { href: '/admin/content-blocks', label: 'Content Blocks',    icon: Layers,         permissionKey: 'content:view' },
+      { href: '/admin/media',          label: 'Media Manager',     icon: Image,          permissionKey: 'content:view' },
+      { href: '/admin/redirects',      label: 'Redirects',         icon: ArrowLeftRight, permissionKey: null, superAdminOnly: true },
     ],
   },
   {
@@ -94,8 +98,8 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
     items: [
       { href: '/admin/seo',     label: 'SEO Manager', icon: Search, permissionKey: 'seo:view' },
       { href: '/admin/geo',     label: 'GEO Manager', icon: MapPin, permissionKey: 'seo:view' },
-      { href: '/admin/sitemap', label: 'Sitemap',      icon: Globe,  permissionKey: 'seo:view' },
-      { href: '/admin/schema',  label: 'Schema',       icon: Braces, permissionKey: 'seo:view' },
+      { href: '/admin/sitemap', label: 'Sitemap',      icon: Globe,  permissionKey: null, superAdminOnly: true },
+      { href: '/admin/schema',  label: 'Schema',       icon: Braces, permissionKey: null, superAdminOnly: true },
     ],
   },
   {
@@ -109,7 +113,7 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
 type SidebarProps = {
   onNavigate?: () => void;
   permissions: string[];
-  role?: 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
+  role?: AdminRole;
 };
 
 function isRouteActive(pathname: string, href: string): boolean {
@@ -128,6 +132,7 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
 
   function canSee(item: NavItem): boolean {
     if (isSuperAdmin) return true;
+    if (item.superAdminOnly) return false;
     if (item.permissionKey === null) return true;
     return permissions.includes(item.permissionKey);
   }
