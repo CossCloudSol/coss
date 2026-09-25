@@ -51,6 +51,17 @@ const INFRA_REDIRECTS = [
 
 const INFRA_SOURCES = new Set(INFRA_REDIRECTS.map(r => r.source))
 
+// Keep in sync with jsString()/redirectLine() in src/lib/sync-redirects.ts:
+// DB values are written as JSON string literals, with brackets and braces
+// \u-escaped so the next sync's regexes can't mistake them for array ends.
+function jsString(value) {
+  return JSON.stringify(value).replace(/[[\]{}]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))
+}
+
+function redirectLine(r) {
+  return `      { source: ${jsString(r.source)}, destination: ${jsString(r.destination)}, permanent: ${r.permanent} }`
+}
+
 function extractRedirectsArrayContent(source) {
   const match = source.match(/async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[/)
   if (!match) return null
@@ -126,19 +137,19 @@ async function main() {
 
   lines.push('      // infrastructure redirects — exact-match (always preserved by sync-redirects)')
   for (const r of exactInfraRedirects) {
-    lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
+    lines.push(redirectLine(r))
   }
 
   if (dbRedirects.length > 0) {
     lines.push('      // DB-managed rules')
     for (const r of dbRedirects) {
-      lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.statusCode === 301} }`)
+      lines.push(redirectLine({ source: r.source, destination: r.destination, permanent: r.statusCode === 301 }))
     }
   }
 
   lines.push('      // infrastructure redirects — wildcard (must stay after exact-match rules above)')
   for (const r of wildcardInfraRedirects) {
-    lines.push(`      { source: '${r.source}', destination: '${r.destination}', permanent: ${r.permanent} }`)
+    lines.push(redirectLine(r))
   }
 
   const redirectsArray = lines.length === 0
