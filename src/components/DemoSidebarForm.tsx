@@ -5,25 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
-import { COURSES } from '@/data/courses-data';
-
-/* -------------------------------------------------------------------------- */
-/*  Course options — grouped by category, both sorted alphabetically          */
-/* -------------------------------------------------------------------------- */
-
-const COURSES_BY_CATEGORY: Array<{ category: string; courses: Array<{ shortTitle: string; slug: string }> }> = (() => {
-  const map = new Map<string, Array<{ shortTitle: string; slug: string }>>();
-  for (const c of COURSES) {
-    if (!map.has(c.category)) map.set(c.category, []);
-    map.get(c.category)!.push({ shortTitle: c.shortTitle, slug: c.slug });
-  }
-  return [...map.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([category, courses]) => ({
-      category,
-      courses: [...courses].sort((a, b) => a.shortTitle.localeCompare(b.shortTitle)),
-    }));
-})();
+import type { CourseGroup } from '@/data/course-options';
 
 /* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
@@ -131,16 +113,25 @@ type SubmitState =
 /*  Component                                                                 */
 /* -------------------------------------------------------------------------- */
 
-interface DemoSidebarFormProps {
-  /** Prefills the course field and hides the course select entirely. */
-  course?: string;
+type DemoSidebarFormProps = {
   /** Overrides the subtitle under the "Book a free demo class" heading. */
   subtitle?: string;
   /** Skips the card background/padding/radius — use when a parent element already provides the card chrome. */
   embedded?: boolean;
-}
+} & (
+  | {
+      /** Prefills the course field and hides the course select entirely. */
+      course: string;
+      courseGroups?: undefined;
+    }
+  | {
+      course?: undefined;
+      /** Options for the course select — pass COURSE_GROUPS from a server component. */
+      courseGroups: CourseGroup[];
+    }
+);
 
-export default function DemoSidebarForm({ course, subtitle, embedded }: DemoSidebarFormProps = {}): JSX.Element {
+export default function DemoSidebarForm({ course, courseGroups, subtitle, embedded }: DemoSidebarFormProps): JSX.Element {
   const {
     register,
     handleSubmit,
@@ -271,7 +262,7 @@ export default function DemoSidebarForm({ course, subtitle, embedded }: DemoSide
           {...register('course')}
         >
           <option value="" style={optionStyle}>— Select a Course —</option>
-          {COURSES_BY_CATEGORY.map(({ category, courses }) => (
+          {(courseGroups ?? []).map(({ category, courses }) => (
             <optgroup key={category} label={category}>
               {courses.map(({ shortTitle, slug }) => (
                 <option key={slug} value={shortTitle} style={optionStyle}>

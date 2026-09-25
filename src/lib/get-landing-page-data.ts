@@ -82,33 +82,37 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
       slug.replace(/-in-hyderabad$/, ''),
     ]))
 
-    // Query variants in priority order (explicit SLUG_MAP entry first) — a single
-    // findFirst({ slug: { in: variants } }) would lose that order since SQL IN
-    // doesn't preserve array order, letting a regex-fallback variant that
-    // happens to match a different (possibly unpublished) course win instead.
+    // One round trip for all variants, then pick in priority order (explicit
+    // SLUG_MAP entry first). A single findFirst({ slug: { in: variants } })
+    // would lose that order since SQL IN doesn't preserve array order, letting
+    // a regex-fallback variant that matches a different course win instead —
+    // so fetch every published match and choose here. This replaces up to 8
+    // sequential findFirst calls (all 8 ran for every unknown slug, e.g. bot
+    // probes hitting the /[courseSlug] catch-all).
+    const matches = await prisma.course.findMany({
+      where: { slug: { in: variants }, status: 'published' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        categorySlug: true,
+        description: true,
+        excerpt: true,
+        duration: true,
+        level: true,
+        price: true,
+        originalPrice: true,
+        thumbnail: true,
+        brochureUrl: true,
+        highlights: true,
+        syllabus: true,
+        tools: true,
+        category: true,
+        courseCategory: { select: { name: true, slug: true } },
+      },
+    })
     for (const variant of variants) {
-      const course = await prisma.course.findFirst({
-        where: { slug: variant, status: 'published' },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          categorySlug: true,
-          description: true,
-          excerpt: true,
-          duration: true,
-          level: true,
-          price: true,
-          originalPrice: true,
-          thumbnail: true,
-          brochureUrl: true,
-          highlights: true,
-          syllabus: true,
-          tools: true,
-          category: true,
-          courseCategory: { select: { name: true, slug: true } },
-        },
-      })
+      const course = matches.find((c) => c.slug === variant)
       if (course) return course
     }
     return null

@@ -458,7 +458,7 @@ export default async function HomePage() {
                 data-depth={tile.depth}
               >
                 <Link
-                  href={`/courses/${tile.slug}/`}
+                  href={`/courses/${tile.slug}`}
                   className={`hero-cat-tile flex flex-col items-center gap-1${tile.mobileHidden ? ' hidden lg:flex' : ''}`}
                   style={{ '--tile-accent': tile.accent, animationDelay: `${tile.entranceDelay}, ${tile.delay}` } as React.CSSProperties}
                 >
@@ -615,7 +615,7 @@ export default async function HomePage() {
 
           <div className="mt-12 text-center">
             <Link
-              href="/courses/"
+              href="/courses"
               className="inline-flex items-center gap-2 px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-orange-500/25"
             >
               View All 30+ Courses
@@ -924,7 +924,7 @@ export default async function HomePage() {
 
               {/* CTA Button */}
               <Link
-                href="/corporate-training/"
+                href="/corporate-training"
                 className="inline-flex items-center justify-center font-bold uppercase tracking-wide rounded-xl mt-7 px-7 py-3 transition-opacity hover:opacity-90"
                 style={{ background: '#f5a623', color: '#1a1a2e', width: 'fit-content' }}
               >
@@ -986,7 +986,7 @@ export default async function HomePage() {
               <p className="wcu-feat-desc">
                 Learn from certified professionals with real-world experience in top IT companies.
               </p>
-              <Link href="/courses/" className="wcu-feat-cta">
+              <Link href="/courses" className="wcu-feat-cta">
                 Learn from the Best →
               </Link>
             </div>
@@ -1027,10 +1027,10 @@ export default async function HomePage() {
               </div>
             </div>
             <div className="wcu-banner-btns">
-              <Link href="/courses/" className="wcu-banner-btn-primary">
+              <Link href="/courses" className="wcu-banner-btn-primary">
                 Explore Courses →
               </Link>
-              <Link href="/contact-us/" className="wcu-banner-btn-outline">
+              <Link href="/contact-us" className="wcu-banner-btn-outline">
                 <MessageSquare className="w-4 h-4" aria-hidden="true" />
                 Talk to Counselor
               </Link>
@@ -1115,7 +1115,7 @@ export default async function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
-                href="/free-demo-class/"
+                href="/free-demo-class"
                 className="inline-flex items-center gap-2 rounded-xl px-8 py-4 font-bold text-sm transition-all hover:opacity-90 hover:-translate-y-0.5"
                 style={{ background: 'linear-gradient(135deg, #e47538 0%, #f5a623 100%)', color: '#fff', boxShadow: '0 4px 20px rgba(228,117,56,0.4)' }}
               >
@@ -1123,7 +1123,7 @@ export default async function HomePage() {
                 Start Your IT Career — Book Free Demo Class
               </Link>
               <Link
-                href="/placements/"
+                href="/placements"
                 className="inline-flex items-center gap-2 rounded-xl px-6 py-4 font-semibold text-sm transition-all hover:bg-white/10"
                 style={{ color: '#2dd4bf', border: '1px solid rgba(45,212,191,0.3)' }}
               >
@@ -1221,7 +1221,7 @@ export default async function HomePage() {
           </div>
 
           <div className="center-btn">
-            <Link href="/blog/" className="btn-primary" style={{ display: 'inline-flex' }}>
+            <Link href="/blog" className="btn-primary" style={{ display: 'inline-flex' }}>
               View All Posts
             </Link>
           </div>

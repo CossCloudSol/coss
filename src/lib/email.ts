@@ -1,6 +1,15 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Created on first send, not at import: `new Resend()` throws when
+// RESEND_API_KEY is unset, and a module-level throw fails `next build`
+// ("Failed to collect page data") for every route that imports this file
+// indirectly, e.g. via lib/notifications. Both callers already catch a
+// throw from sendEmail, so a missing key now only fails the email itself.
+let resendClient: Resend | null = null;
+function getResend(): Resend {
+  resendClient ??= new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
 const FROM = 'noreply@cosscloudsol.com';
 const BASE_URL = 'https://cosscloudsol.com';
 
@@ -13,7 +22,7 @@ export async function sendEmail({
   subject: string;
   html: string;
 }) {
-  return resend.emails.send({ from: FROM, to, subject, html });
+  return getResend().emails.send({ from: FROM, to, subject, html });
 }
 
 export function buildInstantEmail({

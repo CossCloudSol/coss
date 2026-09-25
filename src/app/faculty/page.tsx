@@ -57,7 +57,7 @@ export default async function FacultyPage() {
         />
       ))}
 
-      <PageBanner title="Our Faculty" breadcrumb={[{ label: 'Faculty', href: '/faculty/' }]} />
+      <PageBanner title="Our Faculty" breadcrumb={[{ label: 'Faculty', href: '/faculty' }]} />
 
       <div style={{ maxWidth: '1160px', margin: '0 auto', padding: '56px 20px' }}>
         <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.8', maxWidth: '760px', margin: '0 auto 40px', textAlign: 'center' }}>
@@ -150,7 +150,7 @@ export default async function FacultyPage() {
                 )}
 
                 <Link
-                  href="/free-demo-class/"
+                  href="/free-demo-class"
                   style={{
                     marginTop: 'auto', display: 'block', textAlign: 'center',
                     background: '#e8401c', color: '#fff', padding: '11px', borderRadius: '6px',

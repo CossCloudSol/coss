@@ -76,6 +76,37 @@ const nextConfig = {
     ];
   },
 
+  async rewrites() {
+    // /blog filter + pagination views → prerendered /blog/filter/[category]/[page].
+    // Public URLs keep their query strings; /blog itself stays fully static.
+    // BLOG_CAT must list the same names as BLOG_CATEGORIES in
+    // src/app/blog/blog-index.tsx. A name missing here just falls through to
+    // the plain /blog page (All posts), which is also what an unknown category did before.
+    const BLOG_CAT = '(?<cat>All|Cloud Computing|DevOps|Data Science|Cyber Security|Digital Marketing|Linux|Programming)';
+    const BLOG_PAGE = '(?<page>\\d{1,3})';
+    return {
+      beforeFiles: [
+        {
+          source: '/blog',
+          has: [{ type: 'query', key: 'category', value: BLOG_CAT }, { type: 'query', key: 'page', value: BLOG_PAGE }],
+          destination: '/blog/filter/:cat/:page',
+        },
+        {
+          source: '/blog',
+          has: [{ type: 'query', key: 'category', value: BLOG_CAT }],
+          missing: [{ type: 'query', key: 'page' }],
+          destination: '/blog/filter/:cat/1',
+        },
+        {
+          source: '/blog',
+          has: [{ type: 'query', key: 'page', value: BLOG_PAGE }],
+          missing: [{ type: 'query', key: 'category' }],
+          destination: '/blog/filter/All/:page',
+        },
+      ],
+    };
+  },
+
   async redirects() {
     return [
       // preserved has: rules (bare domain → www),

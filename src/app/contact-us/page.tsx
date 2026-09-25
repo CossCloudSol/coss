@@ -42,7 +42,7 @@ export default function ContactUsPage() {
           { value: 'Mon–Sat', label: '9 AM – 7 PM' },
         ]}
         ctaText="Dilsukhnagar & Ameerpet, Hyderabad · Free career counselling"
-        breadcrumb={[{ label: 'Contact Us', href: '/contact-us/' }]}
+        breadcrumb={[{ label: 'Contact Us', href: '/contact-us' }]}
       />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
@@ -105,11 +105,11 @@ export default function ContactUsPage() {
             <div style={{ background: 'var(--bg-alt)', borderRadius: '14px', padding: '22px' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '14px' }}>Quick Links</h4>
               {[
-                { label: '📚 View All Courses', href: '/courses/' },
-                { label: '🎓 Enroll Now', href: '/enroll-now-with-coss/' },
-                { label: '💼 Placement Info', href: '/placements/' },
-                { label: '🏢 Corporate Training', href: '/corporate-training/' },
-                { label: '⭐ Student Reviews', href: '/student-reviews/' },
+                { label: '📚 View All Courses', href: '/courses' },
+                { label: '🎓 Enroll Now', href: '/enroll-now-with-coss' },
+                { label: '💼 Placement Info', href: '/placements' },
+                { label: '🏢 Corporate Training', href: '/corporate-training' },
+                { label: '⭐ Student Reviews', href: '/student-reviews' },
               ].map(l => (
                 <Link key={l.href} href={l.href} style={{ display: 'block', padding: '9px 0', fontSize: '13.5px', color: 'var(--text)', borderBottom: '1px solid var(--border)', fontWeight: 500 }}>
                   {l.label} <span style={{ float: 'right', color: '#e8401c' }}>›</span>

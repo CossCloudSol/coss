@@ -41,7 +41,7 @@ export default function AboutUsPage() {
           { value: '50+',    label: 'HIRING PARTNERS' },
         ]}
         ctaText="2 Branches in Hyderabad · Dilsukhnagar & Ameerpet"
-        breadcrumb={[{ label: 'About Us', href: '/about-us/' }]}
+        breadcrumb={[{ label: 'About Us', href: '/about-us' }]}
       />
 
       {/* Who We Are */}

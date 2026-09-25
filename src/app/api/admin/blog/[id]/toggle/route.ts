@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { createNotification } from '@/lib/notifications';
-import { revalidatePaths, getBlogRevalidationPaths } from '@/lib/revalidate';
+import { revalidateTag } from 'next/cache';
+import { revalidatePaths, getBlogRevalidationPaths, BLOG_POSTS_TAG } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -40,6 +41,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
     // Publish and unpublish both need to invalidate — see the matching
     // comment in courses/[id]/toggle/route.ts.
     await revalidatePaths(getBlogRevalidationPaths(post));
+    revalidateTag(BLOG_POSTS_TAG);
 
     if (data.status === 'published') {
       try {

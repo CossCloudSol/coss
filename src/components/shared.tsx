@@ -1,6 +1,9 @@
 ﻿import Link from 'next/link';
-import DemoSidebarForm from '@/components/DemoSidebarForm';
-import CallLink from '@/components/CallLink';
+
+// Do not import client components with heavy dependencies (forms, etc.) into
+// this module: every page that imports anything from shared.tsx downloads
+// every client component referenced here, rendered or not. EnrollSidebar
+// lives in its own file for that reason.
 
 /* ── Page Banner ── */
 export function PageBanner({ title, breadcrumb }: { title: string; breadcrumb?: { label: string; href: string }[] }) {
@@ -97,49 +100,27 @@ export function CorporateHeroBanner() {
         { value: '15+',    label: 'YEARS OF EXCELLENCE' },
       ]}
       ctaText="Free training proposal · Counsellor responds within 2 hours · Mon–Sat 9 am–7 pm"
-      breadcrumb={[{ label: 'Corporate Training', href: '/corporate-training/' }]}
+      breadcrumb={[{ label: 'Corporate Training', href: '/corporate-training' }]}
       ariaLabel="Corporate Training Hero"
     />
-  );
-}
-
-/* ── Enroll Sidebar ── */
-export function EnrollSidebar() {
-  return (
-    <div style={{ position: 'sticky', top: '80px' }}>
-      <DemoSidebarForm />
-
-      <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
-        <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '12px' }}>📞 Talk to Us</h4>
-        <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <CallLink number="+918885166007" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
-          <CallLink number="+917780727374" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 77807 27374</CallLink><br />
-          <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
-        </p>
-        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>
-          <p style={{ fontSize: '12px', color: 'var(--text-light)', marginBottom: '8px' }}>📍 Dilsukhnagar &amp; Ameerpet, Hyderabad</p>
-          <Link href="/contact-us/" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>Get Directions →</Link>
-        </div>
-      </div>
-    </div>
   );
 }
 
 /* ── Course Sidebar Nav ── */
 export function CourseSidebarNav({ active }: { active?: string }) {
   const links = [
-    { label: 'Data, Analytics & BI',         href: '/courses/data-analytics-bi/' },
-    { label: 'Cloud Computing',               href: '/courses/cloud-computing/' },
-    { label: 'DevOps & Multi-Cloud',          href: '/courses/devops-multi-cloud/' },
-    { label: 'Programming & Full Stack',       href: '/courses/programming-full-stack/' },
-    { label: 'Data Engineering',              href: '/courses/data-engineering/' },
-    { label: 'Cyber Security & Networking',   href: '/courses/cyber-security/' },
-    { label: 'ERP, CRM & Enterprise Tools',   href: '/courses/erp-crm-enterprise-tools/' },
-    { label: 'Software Testing & OS',         href: '/courses/software-testing-os/' },
-    { label: 'Digital & Design',              href: '/courses/digital-design/' },
-    { label: 'Professional & Soft Skills',    href: '/courses/professional-soft-skills/' },
-    { label: 'Human Resource',                href: '/courses/human-resource/' },
-    { label: 'Quantum Computing',             href: '/courses/quantum-computing/' },
+    { label: 'Data, Analytics & BI',         href: '/courses/data-analytics-bi' },
+    { label: 'Cloud Computing',               href: '/courses/cloud-computing' },
+    { label: 'DevOps & Multi-Cloud',          href: '/courses/devops-multi-cloud' },
+    { label: 'Programming & Full Stack',       href: '/courses/programming-full-stack' },
+    { label: 'Data Engineering',              href: '/courses/data-engineering' },
+    { label: 'Cyber Security & Networking',   href: '/courses/cyber-security' },
+    { label: 'ERP, CRM & Enterprise Tools',   href: '/courses/erp-crm-enterprise-tools' },
+    { label: 'Software Testing & OS',         href: '/courses/software-testing-os' },
+    { label: 'Digital & Design',              href: '/courses/digital-design' },
+    { label: 'Professional & Soft Skills',    href: '/courses/professional-soft-skills' },
+    { label: 'Human Resource',                href: '/courses/human-resource' },
+    { label: 'Quantum Computing',             href: '/courses/quantum-computing' },
   ];
 
   return (
@@ -170,10 +151,10 @@ export function CtaBanner() {
       <h3 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(18px,4vw,26px)', fontWeight: 800, marginBottom: '10px', color: '#fff' }}>Ready to Start Your Journey?</h3>
       <p style={{ opacity: 0.9, marginBottom: '22px', fontSize: '15px', color: 'rgba(255,255,255,0.9)' }}>Book a free demo class today. No commitment required.</p>
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/free-demo-class/" style={{ background: '#fff', color: 'var(--primary)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+        <Link href="/free-demo-class" style={{ background: '#fff', color: 'var(--primary)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
           Book a free demo class
         </Link>
-        <Link href="/contact-us/" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
+        <Link href="/contact-us" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
           Contact Us
         </Link>
       </div>

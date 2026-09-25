@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getSession } from '@/lib/session'
 
@@ -79,6 +80,8 @@ export async function POST(req: NextRequest): Promise<Response> {
         seoDesc: (body.seoDesc as string) || null,
       },
     })
+    // Header Courses menu is rendered from cached data tagged 'categories'.
+    revalidateTag('categories')
     return NextResponse.json(category, { status: 201 })
   } catch (err) {
     console.error('[POST /api/admin/categories]', err)

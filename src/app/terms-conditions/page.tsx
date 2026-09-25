@@ -75,7 +75,7 @@ export default function TermsPage() {
   return (
     <>
       <ResponsivePageStyles />
-      <PageBanner title="Terms & Conditions" breadcrumb={[{ label: 'Terms & Conditions', href: '/terms-conditions/' }]} />
+      <PageBanner title="Terms & Conditions" breadcrumb={[{ label: 'Terms & Conditions', href: '/terms-conditions' }]} />
 
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '56px 20px' }}>
         {/* Intro box */}

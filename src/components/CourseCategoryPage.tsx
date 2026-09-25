@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import WpImg from '@/components/WpImg';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
-import { PageBanner, EnrollSidebar, CourseSidebarNav, CtaBanner, ResponsivePageStyles } from '@/components/shared';
+import { PageBanner, CourseSidebarNav, CtaBanner, ResponsivePageStyles } from '@/components/shared';
+import EnrollSidebar from '@/components/EnrollSidebar';
 import type { CourseCategoryData } from '@/lib/courseData';
 import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
@@ -107,7 +108,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
       <ResponsivePageStyles />
       <PageBanner
         title={`${data.name} Training in Hyderabad`}
-        breadcrumb={[{ label: 'Courses', href: '/courses/' }, { label: data.name, href: '#' }]}
+        breadcrumb={[{ label: 'Courses', href: '/courses' }, { label: data.name, href: '#' }]}
       />
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 20px' }}>

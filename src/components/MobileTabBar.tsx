@@ -16,7 +16,7 @@ export default function MobileTabBar() {
         )}
       </Link>
       {/* Courses */}
-      <Link href="/courses/" className="relative flex flex-col items-center justify-center py-3 gap-1">
+      <Link href="/courses" className="relative flex flex-col items-center justify-center py-3 gap-1">
         <LayoutGrid className="w-[22px] h-[22px] tab-icon-courses" style={{ color: '#1d4ed8' }} aria-hidden="true" />
         <span className="text-[10px] font-semibold tab-label-courses" style={{ color: '#1d4ed8' }}>Courses</span>
         {pathname.startsWith('/courses') && (
@@ -32,7 +32,7 @@ export default function MobileTabBar() {
         )}
       </Link>
       {/* Reviews */}
-      <Link href="/student-reviews/" className="relative flex flex-col items-center justify-center py-3 gap-1">
+      <Link href="/student-reviews" className="relative flex flex-col items-center justify-center py-3 gap-1">
         <Award className="w-[22px] h-[22px] tab-icon-reviews" style={{ color: '#7c3aed' }} aria-hidden="true" />
         <span className="text-[10px] font-semibold tab-label-reviews" style={{ color: '#7c3aed' }}>Reviews</span>
         {pathname.startsWith('/student-reviews') && (
