@@ -12,6 +12,7 @@ import RelatedCourses from '@/components/RelatedCourses'
 import CallLink from '@/components/CallLink'
 import WhatsAppLink from '@/components/WhatsAppLink'
 import { optimizeCldUrl } from '@/lib/cloudinary'
+import { safeJsonLd } from '@/lib/safe-json-ld'
 
 interface HiringPartner {
   id: string
@@ -173,8 +174,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
   return (
     <div>
       {/* JSON-LD */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(courseSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }} />
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
       <section className="pt-10 pb-0" style={{ background: 'linear-gradient(135deg, #012530 0%, #021e2b 60%, #011820 100%)' }}>

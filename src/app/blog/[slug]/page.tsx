@@ -14,6 +14,7 @@ import BlogCourseCallout from '@/components/BlogCourseCallout';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
 import { COURSE_GROUPS } from '@/data/course-options';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 export const revalidate = 86400;
 
@@ -203,7 +204,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: safeJsonLd({
               '@context': 'https://schema.org',
               '@type': 'BlogPosting',
               headline: dbPost.title,
@@ -305,7 +306,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: safeJsonLd({
             '@context': 'https://schema.org',
             '@type': 'BlogPosting',
             headline: titleStr,

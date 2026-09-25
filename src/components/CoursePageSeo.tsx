@@ -28,6 +28,7 @@
  */
 
 import { buildCourseSchemas, type FaqItem } from '@/lib/course-schema';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 interface CoursePageSeoProps {
   slug: string;
@@ -53,7 +54,7 @@ export default async function CoursePageSeo({
           key={index}
           type="application/ld+json"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
         />
       ))}
     </>

@@ -4,6 +4,7 @@ import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { findTrainers, getYearsOfExperience, splitCommaList } from '@/lib/trainer-queries';
 import { optimizeCldUrl } from '@/lib/cloudinary';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -53,7 +54,7 @@ export default async function FacultyPage() {
         <script
           key={i}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(schema) }}
         />
       ))}
 

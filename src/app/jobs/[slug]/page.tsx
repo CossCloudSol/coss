@@ -6,6 +6,7 @@ import WhatsAppLink from '@/components/WhatsAppLink';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getActiveJobBySlug } from '@/lib/job-queries';
 import { prisma } from '@/lib/db';
+import { safeJsonLd } from '@/lib/safe-json-ld';
 
 export const revalidate = 600;
 
@@ -110,7 +111,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jobSchema) }}
       />
 
       {/* Hero */}
