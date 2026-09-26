@@ -8,6 +8,7 @@ import { courseCardDataMap } from '@/lib/courseData';
 import { wpImages } from '@/lib/wpImages';
 import { optimizeCldUrl } from '@/lib/cloudinary';
 import CourseGrid from '@/components/CourseGrid';
+import { getPromoBanners } from '@/lib/promo-banners';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { prisma } from '@/lib/db';
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
@@ -97,6 +98,7 @@ const ACCENT_MAP: Record<string, CourseCardProps['accentVariant']> = {
 
 export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCourses }: { data: CourseCategoryData; breadcrumbSlug: string; dbCourses?: CourseCardProps[] }) {
   const imgs = wpImages[breadcrumbSlug];
+  const courseGridBanners = await getPromoBanners('course-grid');
 
   const hiringPartners = PLACEMENT_PROVIDERS_CONFIRMED
     ? await prisma.hiringPartner.findMany({
@@ -162,7 +164,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                         Choose the right programme for your goals
                       </p>
                     </div>
-                    <CourseGrid courses={cards} />
+                    <CourseGrid courses={cards} promoBanners={courseGridBanners} />
                   </section>
                 );
               }
@@ -181,6 +183,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                   </div>
                   <div className="max-w-7xl mx-auto">
                     <CourseGrid
+                      promoBanners={courseGridBanners}
                       courses={data.courses.map((course: any, i: number) => {
                         const badgeKey = String(course.badge ?? course.tag ?? '').toLowerCase()
                         return {

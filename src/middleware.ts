@@ -33,6 +33,7 @@ const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, Permission | null]> = [
   ['/admin/homepage',         'content:view'],
   ['/admin/content-blocks',   'content:view'],
   ['/admin/media',            'content:view'],
+  ['/admin/promo-banners',    'content:edit'],   // page needs edit rights, not just view
   ['/admin/generate',         'content:view'],   // API only (/api/admin/generate/*)
 
   ['/admin/users',            null],
