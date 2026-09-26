@@ -150,7 +150,7 @@ const erpCourses: CourseCategoryData = {
   careers: ['SAP Consultant', 'Salesforce Admin/Developer', 'Oracle HCM Consultant', 'ERP Analyst', 'Business Analyst'],
   faqs: [
     { q: 'Do I need a finance background for SAP FICO?', a: 'Basic accounting knowledge helps but is not mandatory. We cover the basics in our course.' },
-    { q: 'Can I get a job after Salesforce training?', a: 'Yes, Salesforce certified professionals have very high placement rates in our alumni network.' },
+    { q: 'Can I get a job after Salesforce training?', a: 'Salesforce skills are in demand, and our placement support covers resume building, mock interviews and referrals to our hiring partners. Placement itself is not guaranteed.' },
   ],
 };
 

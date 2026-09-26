@@ -13,7 +13,7 @@ const milestones = [
   { year: '2016', event: 'Opened the Ameerpet branch to serve more students across Hyderabad.' },
   { year: '2018', event: 'Launched Cloud Computing programs, growing our training footprint across Hyderabad.' },
   { year: '2020', event: 'Launched online training platform to serve students across India during COVID-19.' },
-  { year: '2022', event: 'Introduced AI, Machine Learning and Data Science programs. 5,000+ students trained.' },
+  { year: '2022', event: 'Introduced AI, Machine Learning and Data Science programs.' },
   { year: '2024', event: 'Expanded to 30+ courses. 5,000+ students trained, 50+ hiring partners.' },
 ];
 
