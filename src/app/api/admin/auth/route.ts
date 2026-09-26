@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { getSession } from '@/lib/session';
 import { prisma as db } from '@/lib/db';
 import { verifyPassword } from '@/lib/auth';
-import { ALL_PERMISSIONS } from '@/lib/permissions';
+import { ALL_PERMISSIONS, type AdminRole } from '@/lib/permissions';
 
 // Brute-force protection: max 10 *failed* attempts per IP per 15 minutes.
 // Only active in production — dev environments have no reverse proxy so every
@@ -166,7 +166,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           session.userId = user.id;
           session.name = user.name;
           session.email = user.email;
-          session.role = user.role as 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
+          session.role = user.role as AdminRole;
           session.permissions = user.permissions;
           await session.save();
           return res;

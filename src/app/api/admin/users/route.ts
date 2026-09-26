@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { withAdminAuth, getSession } from '@/lib/session';
 import { prisma as db } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
-import { ROLE_PERMISSIONS, type Permission } from '@/lib/permissions';
+import { ROLE_PERMISSIONS, isAdminRole } from '@/lib/permissions';
 
 // No role in session = old cookie (env-var admin) → always SUPER_ADMIN.
 // DB users always get a role written on login, so undefined = env-var path.
@@ -70,9 +70,6 @@ export const POST = withAdminAuth(async (req) => {
   const email = typeof b.email === 'string' ? b.email.trim().toLowerCase() : '';
   const password = typeof b.password === 'string' ? b.password : '';
   const role = typeof b.role === 'string' ? b.role : 'ADMISSIONS_SALES';
-  const permissions: string[] = Array.isArray(b.permissions)
-    ? (b.permissions as unknown[]).filter((p): p is string => typeof p === 'string')
-    : (ROLE_PERMISSIONS[role] ?? []) as Permission[];
 
   if (!name || !email || !password) {
     return NextResponse.json({ error: 'name, email, and password are required' }, { status: 400 });
@@ -80,9 +77,13 @@ export const POST = withAdminAuth(async (req) => {
   if (password.length < 8) {
     return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
   }
-  if (!['SUPER_ADMIN', 'ADMISSIONS_SALES', 'SUPPORT_HELPDESK'].includes(role)) {
+  if (!isAdminRole(role)) {
     return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
   }
+
+  const permissions: string[] = Array.isArray(b.permissions)
+    ? (b.permissions as unknown[]).filter((p): p is string => typeof p === 'string')
+    : [...ROLE_PERMISSIONS[role]];
 
   try {
     const existing = await db.adminUser.findUnique({ where: { email } });
@@ -96,7 +97,7 @@ export const POST = withAdminAuth(async (req) => {
         name,
         email,
         passwordHash,
-        role: role as 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK',
+        role,
         permissions,
         isActive: true,
       },

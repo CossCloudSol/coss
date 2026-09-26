@@ -1,5 +1,6 @@
 import { getIronSession, type SessionOptions } from 'iron-session';
 import { NextResponse, type NextRequest } from 'next/server';
+import type { AdminRole } from '@/lib/permissions';
 
 /**
  * Shape of the data stored inside the encrypted admin cookie.
@@ -12,7 +13,7 @@ export interface SessionData {
   userId?: string;
   name?: string;
   email?: string;
-  role?: 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
+  role?: AdminRole;
   permissions?: string[];
 }
 

@@ -1,3 +1,16 @@
+export const ADMIN_ROLES = [
+  'SUPER_ADMIN',
+  'ADMISSIONS_SALES',
+  'SUPPORT_HELPDESK',
+  'CONTENT_SEO_MANAGER',
+] as const;
+
+export type AdminRole = typeof ADMIN_ROLES[number];
+
+export function isAdminRole(value: unknown): value is AdminRole {
+  return typeof value === 'string' && (ADMIN_ROLES as readonly string[]).includes(value);
+}
+
 export type Permission =
   | 'dashboard:view'
   | 'leads:view'
@@ -7,6 +20,9 @@ export type Permission =
   | 'corporate:edit'
   | 'corporate:delete'
   | 'analytics:view'
+  | 'content:view'
+  | 'content:edit'
+  | 'content:delete'
   | 'seo:view'
   | 'seo:edit'
   | 'topbar:view'
@@ -26,6 +42,9 @@ export const ALL_PERMISSIONS: Permission[] = [
   'corporate:edit',
   'corporate:delete',
   'analytics:view',
+  'content:view',
+  'content:edit',
+  'content:delete',
   'seo:view',
   'seo:edit',
   'topbar:view',
@@ -37,7 +56,7 @@ export const ALL_PERMISSIONS: Permission[] = [
   'settings:edit',
 ];
 
-export const ROLE_PERMISSIONS: Record<string, Permission[]> = {
+export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
   SUPER_ADMIN: [...ALL_PERMISSIONS],
   ADMISSIONS_SALES: [
     'dashboard:view',
@@ -46,17 +65,30 @@ export const ROLE_PERMISSIONS: Record<string, Permission[]> = {
     'corporate:view',
     'corporate:edit',
     'analytics:view',
+    'content:view',
   ],
   SUPPORT_HELPDESK: [
     'dashboard:view',
     'leads:view',
+    'content:view',
+  ],
+  CONTENT_SEO_MANAGER: [
+    'dashboard:view',
+    'analytics:view',
+    'content:view',
+    'content:edit',
+    'seo:view',
+    'seo:edit',
+    'topbar:view',
+    'topbar:edit',
   ],
 };
 
-export const ROLE_LABELS: Record<string, string> = {
+export const ROLE_LABELS: Record<AdminRole, string> = {
   SUPER_ADMIN: 'Super Admin',
   ADMISSIONS_SALES: 'Admissions & Sales',
   SUPPORT_HELPDESK: 'Support / Helpdesk',
+  CONTENT_SEO_MANAGER: 'Content & SEO Manager',
 };
 
 export const PERMISSION_GROUPS: Array<{
@@ -86,6 +118,14 @@ export const PERMISSION_GROUPS: Array<{
   {
     label: 'Analytics',
     permissions: [{ key: 'analytics:view', label: 'View' }],
+  },
+  {
+    label: 'Content',
+    permissions: [
+      { key: 'content:view', label: 'View' },
+      { key: 'content:edit', label: 'Edit' },
+      { key: 'content:delete', label: 'Delete' },
+    ],
   },
   {
     label: 'SEO Manager',

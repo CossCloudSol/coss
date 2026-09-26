@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import type { AdminRole } from '@/lib/permissions';
 
 // ── Manual type stubs for models not yet in the generated Prisma client ──────
 // These exist because `prisma generate` may not have been run since the models
@@ -45,7 +46,7 @@ type AnnBarDelegate = {
 
 // ─── AdminUser ────────────────────────────────────────────────────────────────
 
-type AdminRoleValue = 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
+type AdminRoleValue = AdminRole;
 
 export type AdminUserRecord = {
   id: string;

@@ -13,10 +13,12 @@ import {
   X,
 } from 'lucide-react';
 import {
+  ADMIN_ROLES,
   ALL_PERMISSIONS,
   PERMISSION_GROUPS,
   ROLE_LABELS,
   ROLE_PERMISSIONS,
+  type AdminRole,
   type Permission,
 } from '@/lib/permissions';
 import PushNotificationPanel from '@/components/admin/PushNotificationPanel';
@@ -339,8 +341,6 @@ function SiteSettingsPanel() {
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
-type AdminRole = 'SUPER_ADMIN' | 'ADMISSIONS_SALES' | 'SUPPORT_HELPDESK';
-
 interface AdminUser {
   id: string;
   name: string;
@@ -369,9 +369,8 @@ const ROLE_BADGE: Record<AdminRole, string> = {
   SUPER_ADMIN: 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
   ADMISSIONS_SALES: 'bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300',
   SUPPORT_HELPDESK: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+  CONTENT_SEO_MANAGER: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300',
 };
-
-const ROLES: AdminRole[] = ['SUPER_ADMIN', 'ADMISSIONS_SALES', 'SUPPORT_HELPDESK'];
 
 function blankForm(): FormState {
   return {
@@ -447,7 +446,7 @@ function RoleDropdown({
       </button>
       {open && (
         <ul className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 shadow-lg">
-          {ROLES.map((role) => (
+          {ADMIN_ROLES.map((role) => (
             <li key={role}>
               <button
                 type="button"
@@ -927,6 +926,19 @@ const ROLE_INFO = [
     access: 'Edit rights for support tickets and feedback; read-only on student info; no access to raw sales leads.',
     color: 'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20',
     badge: 'text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40',
+  },
+  {
+    role: 'CONTENT_SEO_MANAGER' as AdminRole,
+    title: 'Content & SEO Manager',
+    scope: 'Edits courses, blog, homepage and page content, SEO pages, and the topbar.',
+    tasks: [
+      'Edits courses, blog, homepage and page content',
+      'Edits SEO pages',
+      'Edits the topbar',
+    ],
+    access: "Can't delete content or manage users, redirects, schema, batches or settings.",
+    color: 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20',
+    badge: 'text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/40',
   },
 ];
 
