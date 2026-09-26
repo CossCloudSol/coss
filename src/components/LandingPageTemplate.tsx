@@ -13,6 +13,7 @@ import CallLink from '@/components/CallLink'
 import WhatsAppLink from '@/components/WhatsAppLink'
 import { optimizeCldUrl } from '@/lib/cloudinary'
 import { safeJsonLd } from '@/lib/safe-json-ld'
+import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
 
 interface HiringPartner {
   id: string
@@ -55,11 +56,13 @@ const WaIcon = ({ cls }: { cls?: string }) => (
 )
 
 export default async function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related, siblings }: Props) {
-  const hiringPartners: HiringPartner[] = await prisma.hiringPartner.findMany({
-    where: { isVisible: true },
-    orderBy: { sortOrder: 'asc' },
-    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
-  })
+  const hiringPartners: HiringPartner[] = PLACEMENT_PROVIDERS_CONFIRMED
+    ? await prisma.hiringPartner.findMany({
+        where: { isVisible: true },
+        orderBy: { sortOrder: 'asc' },
+        select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+      })
+    : []
 
   type ModuleRaw = { module?: string; title?: string; topics?: string[] }
   const syllabusRaw = safeParseJson<ModuleRaw[]>(course.syllabus, [])
@@ -101,7 +104,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
     { q: `Is there any prior experience needed for ${course.title}?`, a: 'No prior experience is required for most batches. Our curriculum is designed to take you from the fundamentals to advanced concepts with hands-on projects.' },
     { q: `What placement support do you provide after ${titleWithoutTraining} training at Coss?`, a: 'We provide placement support to all our graduates, including resume building, mock interviews, and job referrals through our network of 50+ hiring partners in Hyderabad.' },
     { q: `Do you offer weekend batches for ${course.title} in Hyderabad?`, a: 'Yes. Weekend batches (Sat–Sun) are available at both Dilsukhnagar and Ameerpet, designed specifically for working professionals.' },
-    { q: `What kind of companies does Coss Cloud Solutions place ${course.title} graduates with?`, a: 'We connect graduates with our network of 50+ hiring partners across IT services, product companies, and startups in Hyderabad through placement drives and direct referrals.' },
+    { q: `What kind of companies does Coss Cloud Solutions place ${course.title} graduates with?`, a: 'We refer graduates to our network of 50+ hiring partners across IT services, product companies, and startups in Hyderabad, through placement drives and direct referrals. Placement is not guaranteed.' },
   ]
 
   const courseSchema = {
@@ -247,14 +250,15 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
               <span className="text-xs text-slate-400 font-medium mt-2 block">Real Projects</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl px-4 py-4 text-center">
-              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">15 Yrs</strong>
+              <strong className="block text-3xl md:text-4xl font-black text-orange-400 leading-none">Since 2010</strong>
               <span className="text-xs text-slate-400 font-medium mt-2 block">In Hyderabad</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── SECTION 2: TRUST BAR ────────────────────────────────────────── */}
+      {/* ── SECTION 2: TRUST BAR (hiring-partner logos, off until providers are confirmed) ── */}
+      {PLACEMENT_PROVIDERS_CONFIRMED && hiringPartners.length > 0 && (
       <div className="py-10 md:py-14 px-4 md:px-8 bg-white dark:bg-[#0d1b2e] border-b border-slate-100 dark:border-slate-700">
         <div className="max-w-[1200px] mx-auto">
           <div className="text-center mb-8">
@@ -314,6 +318,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
           </div>
         </div>
       </div>
+      )}
 
       <div className="h-1 bg-gradient-to-r from-transparent via-orange-200 to-transparent dark:via-orange-900/30" />
 
