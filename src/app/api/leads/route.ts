@@ -3,7 +3,14 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { createNotification } from '@/lib/notifications';
-import { botReason, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
+import {
+  MIN_FILL_MS,
+  MIN_FILL_MS_POPUP,
+  botCheck,
+  nameField,
+  normalizeIndianMobile,
+  phoneField,
+} from '@/lib/lead-validation';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -128,6 +135,14 @@ function allowSubmission(ip: string): boolean {
   return true;
 }
 
+/** Short name + phone popups get a lower minimum fill time than page forms. */
+const POPUP_FORM_TYPES: ReadonlySet<string> = new Set(['whatsapp_widget', 'brochure_request']);
+
+function minFillMsFor(body: unknown): number {
+  const formType = typeof body === 'object' && body !== null ? (body as Record<string, unknown>).formType : undefined;
+  return typeof formType === 'string' && POPUP_FORM_TYPES.has(formType) ? MIN_FILL_MS_POPUP : MIN_FILL_MS;
+}
+
 /** Same shape as a Prisma cuid ("c" + 24 lowercase alphanumerics). */
 function fakeLeadId(): string {
   return `c${randomUUID().replace(/-/g, '').slice(0, 24)}`;
@@ -162,9 +177,9 @@ export async function POST(req: NextRequest): Promise<Response> {
 
   // Bot: answer exactly like a saved lead so it learns nothing, but save
   // nothing and send no notification.
-  const bot = botReason(body);
-  if (bot) {
-    console.info(`[POST /api/leads] Dropped bot submission (${bot})`);
+  const bot = botCheck(body, minFillMsFor(body));
+  if (bot.verdict === 'bot') {
+    console.info(`[POST /api/leads] Dropped bot submission (${bot.reason})`);
     return NextResponse.json({ success: true, id: fakeLeadId() }, { status: 201 });
   }
 
@@ -217,6 +232,10 @@ export async function POST(req: NextRequest): Promise<Response> {
 
       return lead;
     });
+
+    if (bot.verdict === 'human_missing_fill_time') {
+      console.info(`[POST /api/leads] Accepted lead ${created.id} (${data.formType}) with no fill time (grace period)`);
+    }
 
     try {
       const isBrochure = data.formType === 'brochure_request';

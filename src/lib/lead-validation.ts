@@ -33,11 +33,13 @@ export const phoneField = z
 /*  Name                                                                      */
 /* -------------------------------------------------------------------------- */
 
-// Letters in any script (\p{M} keeps combining marks, needed for Indic
-// scripts) and spaces only.
-const PERSON_NAME_RE = /^[\p{L}\p{M} ]{2,60}$/u;
+// 2-60 characters: letters in any script (\p{M} keeps combining marks,
+// needed for Indic scripts), spaces, and . ' - for initials and names like
+// "K. Ramesh", "O'Brien", "Anne-Marie". ’ is the apostrophe iOS types by
+// default. The lookahead requires at least one letter, so "..." fails.
+const PERSON_NAME_RE = /^(?=.*\p{L})[\p{L}\p{M} .'’-]{2,60}$/u;
 
-export const NAME_ERROR = 'Name must be 2-60 letters and spaces';
+export const NAME_ERROR = "Name must be 2-60 characters: letters, spaces, . ' or -";
 
 export const nameField = z.string().trim().regex(PERSON_NAME_RE, NAME_ERROR);
 
@@ -49,20 +51,44 @@ export const nameField = z.string().trim().regex(PERSON_NAME_RE, NAME_ERROR);
 export const HONEYPOT_FIELD = 'website';
 /** Milliseconds between the form appearing and being submitted. */
 export const FILL_TIME_FIELD = 'fillMs';
-/** Submissions faster than this are treated as bots. */
+/** Page forms submitted faster than this are treated as bots. */
 export const MIN_FILL_MS = 3000;
+/** Shorter minimum for the WhatsApp widget and brochure popup (name + phone only). */
+export const MIN_FILL_MS_POPUP = 1500;
 
 /**
- * Why a submission looks automated, or null when it looks human. A missing
- * fill time counts as a bot: every form sends one, so its absence means the
- * API was called directly.
+ * Until this moment a submission with no fill time is accepted (and logged),
+ * not dropped: pages opened before this code shipped post without one.
+ * 2026-09-29 00:00 IST. After it, a missing fill time counts as a bot with no
+ * further deploy. Safe to delete the grace branch in botCheck once passed.
  */
-export function botReason(body: unknown): 'honeypot' | 'too_fast' | null {
-  if (typeof body !== 'object' || body === null) return null;
+export const MISSING_FILL_TIME_ACCEPTED_UNTIL = Date.parse('2026-09-29T00:00:00+05:30');
+
+export type BotCheck =
+  | { verdict: 'human' }
+  /** No fill time, accepted during the grace period. The caller logs it. */
+  | { verdict: 'human_missing_fill_time' }
+  | { verdict: 'bot'; reason: 'honeypot' | 'too_fast' | 'missing_fill_time' };
+
+/**
+ * Classifies a raw request body before validation. `minFillMs` is chosen by
+ * the server from the form type, never taken from the request. A missing
+ * fill time means the API was called directly (every form sends one), except
+ * during the grace period above.
+ */
+export function botCheck(body: unknown, minFillMs: number, now: number = Date.now()): BotCheck {
+  if (typeof body !== 'object' || body === null) return { verdict: 'human' };
   const fields = body as Record<string, unknown>;
   const honeypot = fields[HONEYPOT_FIELD];
-  if (typeof honeypot === 'string' && honeypot.trim() !== '') return 'honeypot';
+  if (typeof honeypot === 'string' && honeypot.trim() !== '') return { verdict: 'bot', reason: 'honeypot' };
   const fillMs = fields[FILL_TIME_FIELD];
-  if (typeof fillMs !== 'number' || !Number.isFinite(fillMs) || fillMs < MIN_FILL_MS) return 'too_fast';
-  return null;
+  if (fillMs === undefined) {
+    return now < MISSING_FILL_TIME_ACCEPTED_UNTIL
+      ? { verdict: 'human_missing_fill_time' }
+      : { verdict: 'bot', reason: 'missing_fill_time' };
+  }
+  if (typeof fillMs !== 'number' || !Number.isFinite(fillMs) || fillMs < minFillMs) {
+    return { verdict: 'bot', reason: 'too_fast' };
+  }
+  return { verdict: 'human' };
 }

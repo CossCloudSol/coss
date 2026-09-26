@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { createNotification } from '@/lib/notifications';
-import { botReason, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
+import { MIN_FILL_MS, botCheck, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -70,9 +70,9 @@ export async function POST(req: NextRequest): Promise<Response> {
   }
 
   // Bot: same response as a saved lead, but nothing saved or sent.
-  const bot = botReason(body);
-  if (bot) {
-    console.info(`[POST /api/contact] Dropped bot submission (${bot})`);
+  const bot = botCheck(body, MIN_FILL_MS);
+  if (bot.verdict === 'bot') {
+    console.info(`[POST /api/contact] Dropped bot submission (${bot.reason})`);
     return NextResponse.json({ success: true }, { status: 201 });
   }
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   const d = parsed.data;
 
   try {
-    await prisma.$transaction(async tx => {
+    const created = await prisma.$transaction(async tx => {
       const lead = await tx.lead.create({
         data: {
           name: d.name,
@@ -115,7 +115,12 @@ export async function POST(req: NextRequest): Promise<Response> {
           note: 'Submitted via contact page form',
         },
       });
+      return lead;
     });
+
+    if (bot.verdict === 'human_missing_fill_time') {
+      console.info(`[POST /api/contact] Accepted lead ${created.id} with no fill time (grace period)`);
+    }
 
     // Staff alert, same path as course enquiries (/api/leads): in-app
     // notification plus instant email and push to Admissions & Sales and
