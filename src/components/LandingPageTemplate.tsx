@@ -182,7 +182,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
         <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start relative z-10">
           <div>
             <div className="inline-flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 text-orange-300 text-xs font-black px-4 py-2 rounded-full mb-5 uppercase tracking-[0.1em]">
-              ★ Hyderabad&apos;s #1 {categoryName} Institute
+              ★ Since 2010
             </div>
             <h1 className="font-black text-white leading-[1.08] tracking-tight mb-4">
               <span className="block text-5xl md:text-6xl lg:text-7xl">
@@ -210,7 +210,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
                 'Placement support',
                 `${course.level || 'All levels'} level`,
                 `${course.duration || '3 months'} duration`,
-                'Lifetime LMS access',
+                '1-year LMS access',
               ].map(chip => (
                 <div key={chip} className="flex items-center gap-2.5 text-sm font-semibold text-slate-200">
                   <span className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
@@ -350,8 +350,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
               },
               {
                 svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0H3" /></svg>,
-                title: 'Lifetime LMS',
-                body: 'All class recordings, notes, code repos, and updated resources — available forever at no extra cost.',
+                title: '1-year LMS access',
+                body: 'All class recordings, notes, code repos, and updated resources — available for 1 year at no extra cost.',
               },
               {
                 svg: <svg className="w-7 h-7 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>,
@@ -648,7 +648,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
               { icon: '✓', label: 'Practical Training' },
               { icon: '✓', label: 'Placement Assistance' },
               { icon: '✓', label: 'Certification Prep' },
-              { icon: '✓', label: 'Lifetime LMS Access' },
+              { icon: '✓', label: '1-year LMS access' },
             ].map((pill) => (
               <div key={pill.label} className="flex items-center gap-2 bg-white/8 border border-white/12 rounded-full px-4 py-2 text-sm text-slate-200 font-medium">
                 <span className="text-orange-400 font-bold">{pill.icon}</span>

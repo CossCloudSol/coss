@@ -45,10 +45,62 @@ const corporateLeadSchema = z.object({
 });
 
 /* -------------------------------------------------------------------------- */
+/*  Rate limit (in-memory, single-process) — same policy as /api/leads         */
+/* -------------------------------------------------------------------------- */
+
+const RATE_LIMIT_MAX = 3;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+
+// Module-level — survives between requests within the same Node process. On a
+// multi-instance / serverless deploy this is best-effort only.
+const submissionTimestamps: Map<string, number[]> = new Map();
+
+function clientIp(req: NextRequest): string {
+  const fwd = req.headers.get('x-forwarded-for');
+  if (fwd === null) return 'unknown';
+  // Leftmost entry of the chain is the original client.
+  const first = fwd.split(',')[0]?.trim();
+  return first && first.length > 0 ? first : 'unknown';
+}
+
+/** True when the call may proceed; records it. False once the IP hits its limit. */
+function allowSubmission(ip: string): boolean {
+  const now = Date.now();
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const recent = (submissionTimestamps.get(ip) ?? []).filter((t) => t > cutoff);
+
+  if (recent.length >= RATE_LIMIT_MAX) {
+    submissionTimestamps.set(ip, recent);
+    return false;
+  }
+
+  recent.push(now);
+  submissionTimestamps.set(ip, recent);
+
+  // Prune IPs whose whole window has expired so the map can't grow unbounded.
+  if (submissionTimestamps.size > 10_000) {
+    for (const [storedIp, timestamps] of submissionTimestamps) {
+      if (timestamps.every((t) => t <= cutoff)) submissionTimestamps.delete(storedIp);
+    }
+  }
+
+  return true;
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Handler                                                                   */
 /* -------------------------------------------------------------------------- */
 
 export async function POST(req: NextRequest): Promise<Response> {
+  // Rate limit first — cheap, no DB or JSON parsing wasted on abusive callers.
+  if (!allowSubmission(clientIp(req))) {
+    return NextResponse.json(
+      // `message`, not `error`: CorporateForm shows `message` to the visitor.
+      { success: false, message: 'Too many submissions. Try again later.' },
+      { status: 429 },
+    );
+  }
+
   let body: unknown;
   try {
     body = await req.json();

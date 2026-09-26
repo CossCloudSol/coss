@@ -30,13 +30,12 @@ export default function CertificationPage() {
       <ResponsivePageStyles />
       <HeroBanner
         badge="GLOBALLY RECOGNISED CERTIFICATIONS"
-        titlePre="Crack Your "
+        titlePre="Exam-Focused "
         accentText="IT Certification"
-        titleLine2="on the First Attempt"
+        titlePost=" Training"
         subtitle="Structured preparation for AWS, Azure, Google Cloud, Salesforce & 12+ more certifications — mock exams, study guides & expert mentoring included."
         stats={[
           { value: '12+',    label: 'CERTIFICATIONS' },
-          { value: '95%',    label: 'PASS RATE' },
           { value: '5,000+', label: 'STUDENTS TRAINED' },
         ]}
         ctaText="Exam voucher guidance included · Speak to a counsellor today"
