@@ -17,7 +17,6 @@ const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, Permission | null]> = [
   ['/admin/whatsapp',         'whatsapp:view'],
   ['/admin/call-clicks',      'callclicks:view'],
   ['/admin/seo',              'seo:view'],
-  ['/admin/geo',              'seo:view'],
   ['/admin/analytics',        'analytics:view'],
   ['/admin/topbar',           'topbar:view'],
   ['/admin/announcement-bar', 'topbar:view'],
@@ -37,6 +36,9 @@ const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, Permission | null]> = [
   ['/admin/generate',         'content:view'],   // API only (/api/admin/generate/*)
 
   ['/admin/users',            null],
+  // GEO Manager edits the branch records (addresses, phone numbers, email)
+  // shown sitewide; every /api/admin/geo/* route writes BranchSettings.
+  ['/admin/geo',              null],
   ['/admin/redirects',        null],
   ['/admin/batches',          null],
   ['/admin/schema',           null],
@@ -59,17 +61,18 @@ const SELF_SERVICE_API = [
 /**
  * Permission required to write to an /api/admin/* route, derived from
  * ROUTE_PERMISSIONS: /api/admin/<area> maps onto the /admin/<area> page, whose
- * '<area>:view' key becomes '<area>:delete' for DELETE (when that key exists)
- * or '<area>:edit' otherwise. Returns null (superadmin only) when the area has
- * no entry or no matching key, so new routes are closed by default.
+ * '<area>:view' key becomes '<area>:delete' for DELETE and '<area>:edit' for
+ * other writes. DELETE never falls back to ':edit'. Returns null (superadmin
+ * only) when the area has no entry or the key does not exist, so new routes
+ * and areas without a ':delete' key are closed by default.
  */
 function apiWritePermission(pathname: string, method: string): string | null {
   const adminPath = pathname.slice('/api'.length);
   const match = ROUTE_PERMISSIONS.find(([prefix]) => adminPath.startsWith(prefix));
   if (!match || match[1] === null) return null;
   const area = match[1].split(':')[0];
-  const candidates = method === 'DELETE' ? [`${area}:delete`, `${area}:edit`] : [`${area}:edit`];
-  return candidates.find((key) => (ALL_PERMISSIONS as string[]).includes(key)) ?? null;
+  const key = method === 'DELETE' ? `${area}:delete` : `${area}:edit`;
+  return (ALL_PERMISSIONS as string[]).includes(key) ? key : null;
 }
 
 /**

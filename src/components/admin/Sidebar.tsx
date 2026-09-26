@@ -97,7 +97,7 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
     header: 'SEO and Tech',
     items: [
       { href: '/admin/seo',     label: 'SEO Manager', icon: Search, permissionKey: 'seo:view' },
-      { href: '/admin/geo',     label: 'GEO Manager', icon: MapPin, permissionKey: 'seo:view' },
+      { href: '/admin/geo',     label: 'GEO Manager', icon: MapPin, permissionKey: null, superAdminOnly: true },
       { href: '/admin/sitemap', label: 'Sitemap',      icon: Globe,  permissionKey: null, superAdminOnly: true },
       { href: '/admin/schema',  label: 'Schema',       icon: Braces, permissionKey: null, superAdminOnly: true },
     ],

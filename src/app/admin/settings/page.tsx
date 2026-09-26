@@ -927,6 +927,19 @@ const ROLE_INFO = [
     color: 'border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20',
     badge: 'text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/40',
   },
+  {
+    role: 'CONTENT_SEO_MANAGER' as AdminRole,
+    title: 'Content & SEO Manager',
+    scope: 'Edits courses, blog, homepage and page content, SEO pages, and the topbar.',
+    tasks: [
+      'Edits courses, blog, homepage and page content',
+      'Edits SEO pages',
+      'Edits the topbar',
+    ],
+    access: "Can't delete content or manage users, redirects, schema, batches or settings.",
+    color: 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20',
+    badge: 'text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/40',
+  },
 ];
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
