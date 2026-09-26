@@ -5,20 +5,19 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
+import { nameField, phoneField } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 /* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
-// Schema mirrors the unified spec — strict 10-digit phone (we strip & prefix
-// `+91` at submit time inside submitLead). We map the radios' lower-case
-// values to the API's enum.
+// Name and phone use the shared rules the API enforces (submitLead converts
+// the phone to +91XXXXXXXXXX). We map the radios' lower-case values to the
+// API's enum.
 const heroFormSchema = z.object({
-  name: z.string().trim().min(2, 'Please enter your full name'),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit number'),
+  name: nameField,
+  phone: phoneField,
   inquiryType: z.string().optional(),
   branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, { error: 'Please select a branch' }),
 });
@@ -73,6 +72,7 @@ export default function HeroEnrollForm(): JSX.Element {
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const selectedBranch = watch('branch');
+  const { honeypotRef, botFields } = useBotGuard();
 
   async function onSubmit(values: HeroFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -82,6 +82,7 @@ export default function HeroEnrollForm(): JSX.Element {
       inquiryType: values.inquiryType,
       branch: BRANCH_API_VALUE[values.branch],
       formType: 'hero_demo',
+      bot: botFields(),
     });
     if (result.ok) {
       setState({ kind: 'success' });
@@ -128,6 +129,7 @@ export default function HeroEnrollForm(): JSX.Element {
     >
       <h3>Book a free demo class and start your IT career</h3>
       <p>See the class, meet the trainer, then decide your course</p>
+      <HoneypotField inputRef={honeypotRef} />
 
       <div className="flex items-stretch gap-0" style={{ marginBottom: 11 }}>
         <div className="flex items-center justify-center w-12 bg-orange-500 rounded-l-lg flex-shrink-0">
@@ -165,7 +167,7 @@ export default function HeroEnrollForm(): JSX.Element {
           className="form-input flex-1"
           autoComplete="tel"
           inputMode="tel"
-          maxLength={10}
+          maxLength={15}
           disabled={isSubmitting}
           style={{ marginBottom: 0, borderRadius: '0 6px 6px 0', borderLeft: 'none' }}
           {...register('phone')}

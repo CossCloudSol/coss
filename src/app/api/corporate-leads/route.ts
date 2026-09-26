@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { createNotification } from '@/lib/notifications';
+import { botReason, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -17,29 +18,10 @@ const corporateLeadSchema = z.object({
     .trim()
     .min(2, 'Company name must be at least 2 characters')
     .max(100, 'Company name must be 100 characters or fewer'),
-  contactPerson: z
-    .string()
-    .trim()
-    .min(2, 'Contact person must be at least 2 characters')
-    .max(100, 'Contact person must be 100 characters or fewer'),
-  // Accept either a bare 10-digit number ("9870250243") or one already
-  // prefixed with +91 ("+919870250243"). The form's onSubmit prefixes +91
-  // before POSTing, so without the optional prefix here we'd reject every
-  // submission. Strip non-digits first, drop a leading "91" if that makes
-  // the result 12 digits, validate as 10 digits, then re-prefix canonically.
-  phone: z
-    .string()
-    .trim()
-    .transform((raw) => {
-      const digits = raw.replace(/\D/g, '');
-      return digits.length === 12 && digits.startsWith('91')
-        ? digits.slice(2)
-        : digits;
-    })
-    .pipe(
-      z.string().regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit number'),
-    )
-    .transform((tenDigit) => `+91${tenDigit}`),
+  contactPerson: nameField,
+  // Shared rule (lib/lead-validation): 10 digits starting 6-9 with an
+  // optional +91 or 0 prefix, stored as +91XXXXXXXXXX.
+  phone: phoneField.transform((raw) => normalizeIndianMobile(raw) as string),
   email: z
     .string()
     .trim()
@@ -74,6 +56,13 @@ export async function POST(req: NextRequest): Promise<Response> {
       },
       { status: 422 },
     );
+  }
+
+  // Bot: same response as a saved lead, but nothing saved or sent.
+  const bot = botReason(body);
+  if (bot) {
+    console.info(`[POST /api/corporate-leads] Dropped bot submission (${bot})`);
+    return NextResponse.json({ success: true }, { status: 201 });
   }
 
   const parsed = corporateLeadSchema.safeParse(body);

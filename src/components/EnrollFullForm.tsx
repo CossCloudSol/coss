@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
+import { nameField, phoneField } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 // `?course=` arrives from a URL and is written to the database as the lead's
 // `course` value — it must be a slug shape only, never arbitrary user-editable
@@ -18,8 +20,8 @@ function sanitizeCourseSlug(raw: string | null): string | undefined {
 }
 
 const fullFormSchema = z.object({
-  name:   z.string().trim().min(2, 'Please enter your full name'),
-  phone:  z.string().trim().regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit number'),
+  name:   nameField,
+  phone:  phoneField,
   branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, 'Please select a branch'),
 });
 
@@ -113,6 +115,7 @@ function EnrollFullFormFields({
   });
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
+  const { honeypotRef, botFields } = useBotGuard();
 
   async function onSubmit(values: FullFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -122,6 +125,7 @@ function EnrollFullFormFields({
       branch:   BRANCH_API_VALUE[values.branch],
       course,
       formType: 'full',
+      bot:      botFields(),
     });
     if (result.ok) {
       setState({ kind: 'success' });
@@ -161,6 +165,7 @@ function EnrollFullFormFields({
 
   return (
     <form className="ef-card" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <HoneypotField inputRef={honeypotRef} />
 
       {(eyebrow || statusPill) && (
         <div className="ef-header-row">
@@ -211,7 +216,7 @@ function EnrollFullFormFields({
               placeholder="10-digit number"
               autoComplete="tel"
               inputMode="numeric"
-              maxLength={10}
+              maxLength={15}
               disabled={isSubmitting}
               {...register('phone')}
             />

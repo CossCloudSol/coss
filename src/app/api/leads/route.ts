@@ -1,7 +1,9 @@
+import { randomUUID } from 'crypto';
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { createNotification } from '@/lib/notifications';
+import { botReason, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -11,38 +13,18 @@ export const dynamic = 'force-dynamic';
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
-const PHONE_REGEX = /^(\+91)?[6-9]\d{9}$/;
-
 const BRANCH_VALUES = ['Dilsukhnagar', 'Ameerpet', 'Online'] as const;
 const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget', 'contact', 'brochure_request'] as const;
 
 /**
  * Public lead-capture body. Permissive about email shape (`""` is treated as
- * absent so empty form fields don't 422), but strict about phone format —
- * we require an Indian mobile, with or without the `+91` prefix.
+ * absent so empty form fields don't 422), but strict about name and phone
+ * (shared rules in lib/lead-validation). Phone is stored as +91XXXXXXXXXX.
  */
 const leadInputSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, 'Name must be at least 2 characters')
-    .max(255, 'Name must be 255 characters or fewer'),
+  name: nameField,
 
-  phone: z
-    .string()
-    .trim()
-    .regex(
-      PHONE_REGEX,
-      'Phone must be a 10-digit Indian mobile, optionally prefixed with +91',
-    )
-    .transform((raw) => {
-      // After the regex check, the value is either 10 digits or `+91` + 10
-      // digits. Strip non-digits then re-prefix so we always store the same
-      // canonical shape.
-      const digits = raw.replace(/\D/g, '');
-      const tenDigit = digits.length === 12 ? digits.slice(2) : digits;
-      return `+91${tenDigit}`;
-    }),
+  phone: phoneField.transform((raw) => normalizeIndianMobile(raw) as string),
 
   // Treat `""` (the value an empty <input type="email"> sends) as absent so we
   // don't bounce a perfectly valid submission back as invalid email.
@@ -146,6 +128,11 @@ function allowSubmission(ip: string): boolean {
   return true;
 }
 
+/** Same shape as a Prisma cuid ("c" + 24 lowercase alphanumerics). */
+function fakeLeadId(): string {
+  return `c${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Handler                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -171,6 +158,14 @@ export async function POST(req: NextRequest): Promise<Response> {
       },
       { status: 422 },
     );
+  }
+
+  // Bot: answer exactly like a saved lead so it learns nothing, but save
+  // nothing and send no notification.
+  const bot = botReason(body);
+  if (bot) {
+    console.info(`[POST /api/leads] Dropped bot submission (${bot})`);
+    return NextResponse.json({ success: true, id: fakeLeadId() }, { status: 201 });
   }
 
   const parsed = leadInputSchema.safeParse(body);

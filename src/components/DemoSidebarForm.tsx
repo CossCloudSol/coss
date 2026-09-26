@@ -6,17 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
 import type { CourseGroup } from '@/data/course-options';
+import { nameField, phoneField } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 /* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
 const demoFormSchema = z.object({
-  name: z.string().trim().min(2, 'Please enter your full name'),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^[6-9]\d{9}$/, 'Enter valid 10-digit number'),
+  name: nameField,
+  phone: phoneField,
   course: z.string().optional(),
   branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, 'Please select a branch'),
 });
@@ -145,6 +144,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const selectedBranch = watch('branch');
+  const { honeypotRef, botFields } = useBotGuard();
 
   async function onSubmit(values: DemoFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -154,6 +154,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       course: course ?? values.course,
       branch: BRANCH_API_VALUE[values.branch],
       formType: 'demo',
+      bot: botFields(),
     });
     if (result.ok) {
       setState({ kind: 'success' });
@@ -202,6 +203,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
 
   return (
     <form style={embedded ? undefined : cardStyle} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <HoneypotField inputRef={honeypotRef} />
       <h3
         style={{
           fontFamily: 'Poppins, sans-serif',
@@ -243,7 +245,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
         style={sidebarInput}
         autoComplete="tel"
         inputMode="tel"
-        maxLength={10}
+        maxLength={15}
         disabled={isSubmitting}
         {...register('phone')}
       />

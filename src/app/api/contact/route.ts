@@ -1,24 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { createNotification } from '@/lib/notifications';
+import { botReason, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const PHONE_REGEX = /^(\+91)?[6-9]\d{9}$/;
-
 const contactSchema = z.object({
-  name: z.string().trim().min(2, 'Name must be at least 2 characters').max(255),
+  name: nameField,
 
-  phone: z
-    .string()
-    .trim()
-    .regex(PHONE_REGEX, 'Phone must be a 10-digit Indian mobile, optionally prefixed with +91')
-    .transform(raw => {
-      const digits = raw.replace(/\D/g, '');
-      const ten = digits.length === 12 ? digits.slice(2) : digits;
-      return `+91${ten}`;
-    }),
+  phone: phoneField.transform(raw => normalizeIndianMobile(raw) as string),
 
   email: z.preprocess(
     v => (typeof v === 'string' && v.trim() === '' ? undefined : v),
@@ -77,6 +69,13 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 422 });
   }
 
+  // Bot: same response as a saved lead, but nothing saved or sent.
+  const bot = botReason(body);
+  if (bot) {
+    console.info(`[POST /api/contact] Dropped bot submission (${bot})`);
+    return NextResponse.json({ success: true }, { status: 201 });
+  }
+
   const parsed = contactSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
@@ -117,6 +116,20 @@ export async function POST(req: NextRequest): Promise<Response> {
         },
       });
     });
+
+    // Staff alert, same path as course enquiries (/api/leads): in-app
+    // notification plus instant email and push to Admissions & Sales and
+    // Super Admin users.
+    try {
+      await createNotification({
+        type: 'new_lead',
+        title: `New contact enquiry — ${d.name}`,
+        body: `${d.subject ?? 'No subject'} · ${d.branch}`,
+        link: '/admin/leads',
+      });
+    } catch (notifErr) {
+      console.error('[POST /api/contact] Notification creation failed (non-fatal):', notifErr);
+    }
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {

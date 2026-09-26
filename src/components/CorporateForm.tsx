@@ -3,11 +3,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
+import { nameField, phoneField } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 const corporateFormSchema = z.object({
   companyName:   z.string().min(2, 'Company name is required'),
-  contactPerson: z.string().min(2, 'Contact person name is required'),
-  phone: z.string().refine(v => /^[6-9]\d{9}$/.test(v.replace(/\D/g,'')), { message: 'Enter a valid 10-digit mobile number' }),
+  contactPerson: nameField,
+  phone:         phoneField,
   email:       z.string().email('Enter a valid email address'),
   trainingTopic: z.string().min(2, 'Please mention the training topic'),
   teamSize:    z.string().min(1, 'Team size is required'),
@@ -66,6 +68,7 @@ export default function CorporateForm(): JSX.Element {
   });
 
   const [state, setState] = useState<FormState>({ kind: 'idle' });
+  const { honeypotRef, botFields } = useBotGuard();
 
   async function onSubmit(values: CorporateFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -75,9 +78,11 @@ export default function CorporateForm(): JSX.Element {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          ...botFields(),
           companyName:    values.companyName,
           contactPerson:  values.contactPerson,
-          phone:          values.phone.replace(/\D/g, ''),
+          // Sent as typed; the API normalises it to +91XXXXXXXXXX.
+          phone:          values.phone,
           email:          values.email,
           trainingDomain: values.trainingTopic,
           employeeCount:  values.teamSize,
@@ -131,6 +136,7 @@ export default function CorporateForm(): JSX.Element {
 
   return (
     <form style={cardStyle} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <HoneypotField inputRef={honeypotRef} />
       <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '6px', color: '#fff' }}>
         Corporate Training Enquiry
       </h3>
