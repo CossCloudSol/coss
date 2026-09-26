@@ -62,6 +62,8 @@ model CorporateLead {
   email          String
   trainingDomain String
   employeeCount  String
+  /// Free text from the corporate form's "Additional requirements" box.
+  requirements   String?
   status         String   @default("new")
   createdAt      DateTime @default(now())
 

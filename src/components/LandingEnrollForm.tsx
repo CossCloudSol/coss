@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import { submitLead, type Branch } from '@/lib/submitLead'
+import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation'
 import WhatsAppLink from '@/components/WhatsAppLink'
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField'
 
 interface Props {
   courseTitle: string
@@ -23,12 +25,21 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [branch, setBranch] = useState<'Dilsukhnagar' | 'Ameerpet' | 'Online'>('Dilsukhnagar')
+  const { honeypotRef, botFields } = useBotGuard()
 
   const waMessage = `Hi Coss Cloud Solutions Team, I just booked a free demo for the ${courseTitle} course. Could you confirm my slot?`
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !phone.trim()) return
+    if (!nameField.safeParse(name).success) {
+      setState({ kind: 'error', message: NAME_ERROR })
+      return
+    }
+    if (normalizeIndianMobile(phone) === null) {
+      setState({ kind: 'error', message: PHONE_ERROR })
+      return
+    }
     setState({ kind: 'submitting' })
     const result = await submitLead({
       name: name.trim(),
@@ -36,6 +47,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
       course: courseTitle,
       branch: branch as Branch,
       formType: 'demo',
+      bot: botFields(),
     })
     setState(result.ok ? { kind: 'success' } : { kind: 'error', message: result.message })
   }
@@ -79,6 +91,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
+        <HoneypotField inputRef={honeypotRef} />
         <div className="flex items-center gap-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 dark:focus-within:border-orange-500 transition-colors duration-200 w-full">
           <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>

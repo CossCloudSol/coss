@@ -67,6 +67,7 @@ export async function PATCH(
         email: true,
         trainingDomain: true,
         employeeCount: true,
+        requirements: true,
         status: true,
         createdAt: true,
       },

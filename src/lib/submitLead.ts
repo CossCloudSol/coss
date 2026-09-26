@@ -6,6 +6,8 @@
 
 import { getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
+import { normalizeIndianMobile } from '@/lib/lead-validation';
+import type { BotFields } from '@/components/HoneypotField';
 
 export type Branch = 'Dilsukhnagar' | 'Ameerpet' | 'Online';
 export type FormType = 'hero' | 'hero_demo' | 'full' | 'demo' | 'whatsapp_widget' | 'contact' | 'brochure_request';
@@ -19,6 +21,8 @@ export interface LeadSubmitInput {
   branch: Branch;
   message?: string;
   formType: FormType;
+  /** From useBotGuard().botFields() at submit time. */
+  bot: BotFields;
 }
 
 export type LeadSubmitResult =
@@ -65,10 +69,13 @@ export function trackLeadEvent(params: {
 export async function submitLead(
   input: LeadSubmitInput,
 ): Promise<LeadSubmitResult> {
-  const phone = canonicalisePhone(input.phone);
+  // Send the canonical +91 form when valid; otherwise send what was typed so
+  // the server's validation message comes back to the visitor.
+  const phone = normalizeIndianMobile(input.phone) ?? input.phone.trim();
   const firstTouch = getFirstTouch();
 
   const body = {
+    ...input.bot,
     name: input.name,
     phone,
     email: emptyToUndefined(input.email),
@@ -128,17 +135,6 @@ export async function submitLead(
 /* -------------------------------------------------------------------------- */
 /*  Helpers                                                                   */
 /* -------------------------------------------------------------------------- */
-
-/**
- * Strip non-digits then prefix `+91`. Idempotent: if the input already has a
- * leading `91` after stripping, we don't double-prefix.
- */
-function canonicalisePhone(raw: string): string {
-  const digits = raw.replace(/\D/g, '');
-  const tenDigit =
-    digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
-  return `+91${tenDigit}`;
-}
 
 function emptyToUndefined(value: string | undefined): string | undefined {
   if (typeof value !== 'string') return undefined;

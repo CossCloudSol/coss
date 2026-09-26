@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { submitLead } from '@/lib/submitLead';
 import { buildBrochureDelivery } from '@/lib/whatsapp';
+import { NAME_ERROR, nameField } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import { attachmentUrl } from '@/lib/cloudinary';
 import { trackBrochureDownload } from '@/lib/click-tracking';
 
@@ -32,6 +34,8 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+  // Fill timer restarts each time the popup opens.
+  const { honeypotRef, botFields } = useBotGuard(open);
 
   useEffect(() => {
     if (!open) return;
@@ -57,6 +61,10 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
       setError('Enter your name');
       return;
     }
+    if (!nameField.safeParse(name).success) {
+      setError(NAME_ERROR);
+      return;
+    }
     const delivery = buildBrochureDelivery(phone, courseTitle);
     if (!delivery.ok) {
       setError(delivery.error);
@@ -71,6 +79,7 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
       course: courseTitle,
       branch: 'Online',
       formType: 'brochure_request',
+      bot: botFields(),
     });
     setSubmitting(false);
 
@@ -90,13 +99,13 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
     close();
   }
 
-  return { open, setOpen, name, setName, phone, setPhone, error, submitting, sent, close, handleWhatsAppSubmit, handleSkip };
+  return { open, setOpen, name, setName, phone, setPhone, error, submitting, sent, close, handleWhatsAppSubmit, handleSkip, honeypotRef };
 }
 
 type BrochureModalState = ReturnType<typeof useBrochureModal>;
 
 function BrochureModal({ courseTitle, modal }: { courseTitle: string; modal: BrochureModalState }) {
-  const { open, name, setName, phone, setPhone, error, submitting, sent, close, handleWhatsAppSubmit, handleSkip } = modal;
+  const { open, name, setName, phone, setPhone, error, submitting, sent, close, handleWhatsAppSubmit, handleSkip, honeypotRef } = modal;
   if (!open) return null;
 
   return (
@@ -135,6 +144,7 @@ function BrochureModal({ courseTitle, modal }: { courseTitle: string; modal: Bro
               Share your WhatsApp number and we&apos;ll send the syllabus PDF there — or just download it now.
             </p>
             <form onSubmit={(e) => void handleWhatsAppSubmit(e)} noValidate>
+              <HoneypotField inputRef={honeypotRef} />
               <label htmlFor="brochure-name" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
                 Your Name
               </label>
@@ -156,7 +166,7 @@ function BrochureModal({ courseTitle, modal }: { courseTitle: string; modal: Bro
                 id="brochure-phone"
                 type="tel"
                 inputMode="numeric"
-                maxLength={13}
+                maxLength={15}
                 placeholder="10-digit mobile number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}

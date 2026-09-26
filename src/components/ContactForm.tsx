@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
 import { trackLeadEvent } from '@/lib/submitLead';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 const labelStyle: React.CSSProperties = {
   display: 'block', fontSize: '13px', fontFamily: 'Poppins, sans-serif',
@@ -25,6 +26,7 @@ export default function ContactForm() {
   const [message, setMessage] = useState('');
   const [status, setStatus]   = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const { honeypotRef, botFields } = useBotGuard();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,6 +39,7 @@ export default function ContactForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          ...botFields(),
           name, phone, email, subject, branch, message,
           utmSource: firstTouch?.utmSource,
           utmMedium: firstTouch?.utmMedium,
@@ -82,6 +85,7 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)' }}>
+      <HoneypotField inputRef={honeypotRef} />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
         <div>
           <label style={labelStyle}>Full Name *</label>

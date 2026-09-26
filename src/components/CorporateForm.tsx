@@ -3,15 +3,17 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
+import { nameField, phoneField } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 const corporateFormSchema = z.object({
   companyName:   z.string().min(2, 'Company name is required'),
-  contactPerson: z.string().min(2, 'Contact person name is required'),
-  phone: z.string().refine(v => /^[6-9]\d{9}$/.test(v.replace(/\D/g,'')), { message: 'Enter a valid 10-digit mobile number' }),
+  contactPerson: nameField,
+  phone:         phoneField,
   email:       z.string().email('Enter a valid email address'),
   trainingTopic: z.string().min(2, 'Please mention the training topic'),
   teamSize:    z.string().min(1, 'Team size is required'),
-  message:     z.string().optional(),
+  requirements: z.string().max(1000, 'Requirements must be 1000 characters or fewer').optional(),
 });
 
 type CorporateFormValues = z.infer<typeof corporateFormSchema>;
@@ -66,6 +68,7 @@ export default function CorporateForm(): JSX.Element {
   });
 
   const [state, setState] = useState<FormState>({ kind: 'idle' });
+  const { honeypotRef, botFields } = useBotGuard();
 
   async function onSubmit(values: CorporateFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -75,12 +78,15 @@ export default function CorporateForm(): JSX.Element {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          ...botFields(),
           companyName:    values.companyName,
           contactPerson:  values.contactPerson,
-          phone:          values.phone.replace(/\D/g, ''),
+          // Sent as typed; the API normalises it to +91XXXXXXXXXX.
+          phone:          values.phone,
           email:          values.email,
           trainingDomain: values.trainingTopic,
           employeeCount:  values.teamSize,
+          requirements:   values.requirements,
         }),
       });
     } catch (err) {
@@ -131,6 +137,7 @@ export default function CorporateForm(): JSX.Element {
 
   return (
     <form style={cardStyle} onSubmit={handleSubmit(onSubmit)} noValidate>
+      <HoneypotField inputRef={honeypotRef} />
       <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '6px', color: '#fff' }}>
         Corporate Training Enquiry
       </h3>
@@ -163,7 +170,8 @@ export default function CorporateForm(): JSX.Element {
       </select>
       {errors.teamSize ? <p style={fieldErrorStyle} role="alert">{errors.teamSize.message}</p> : null}
 
-      <textarea placeholder="Additional requirements (optional)" rows={3} style={{ ...inputStyle, resize: 'vertical' }} disabled={isSubmitting} {...register('message')} />
+      <textarea placeholder="Additional requirements (optional)" rows={3} maxLength={1000} style={{ ...inputStyle, resize: 'vertical' }} disabled={isSubmitting} {...register('requirements')} />
+      {errors.requirements ? <p style={fieldErrorStyle} role="alert">{errors.requirements.message}</p> : null}
 
       {state.kind === 'error' && (
         <p style={{ color: '#fecaca', fontSize: 13, margin: '12px 0 0' }} role="alert">

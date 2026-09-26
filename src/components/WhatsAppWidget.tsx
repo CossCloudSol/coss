@@ -6,6 +6,8 @@ import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
 import { submitLead } from '@/lib/submitLead';
+import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation';
+import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 
 /* ─────────────────────────────────────────────────────────────── */
 /*  Constants                                                      */
@@ -92,6 +94,8 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
 
   const panelRef    = useRef<HTMLDivElement | null>(null);
   const floatBtnRef = useRef<HTMLButtonElement | null>(null);
+  // Fill timer restarts each time the panel opens.
+  const { honeypotRef, botFields } = useBotGuard(panelOpen);
 
   /* 3-second delayed appearance */
   useEffect(() => {
@@ -173,10 +177,10 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
 
   function validate(): boolean {
     const next: typeof errors = {};
-    if (!form.name.trim() || form.name.trim().length < 2)
-      next.name = 'Please enter your name (min 2 chars)';
-    if (!/^[6-9]\d{9}$/.test(form.phone.replace(/\D/g, '').slice(-10)))
-      next.phone = 'Enter a valid 10-digit Indian mobile number';
+    if (!nameField.safeParse(form.name).success)
+      next.name = NAME_ERROR;
+    if (normalizeIndianMobile(form.phone) === null)
+      next.phone = PHONE_ERROR;
     setErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -192,6 +196,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       course:   form.course || undefined,
       branch:   form.branch,
       formType: 'whatsapp_widget',
+      bot:      botFields(),
     });
     setSubmitting(false);
     if (!result.ok) {
@@ -286,6 +291,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
           ) : (
             /* ── Lead capture form ── */
             <form className="wa-form-body" onSubmit={handleSubmit} noValidate>
+              <HoneypotField inputRef={honeypotRef} />
 
               {/* Name */}
               <div className="wa-form-field">
@@ -314,7 +320,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
                   onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                   autoComplete="tel"
                   inputMode="numeric"
-                  maxLength={13}
+                  maxLength={15}
                 />
                 {errors.phone && <span className="wa-field-error" role="alert">{errors.phone}</span>}
               </div>

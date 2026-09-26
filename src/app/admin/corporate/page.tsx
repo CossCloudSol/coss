@@ -622,6 +622,12 @@ function DetailModal({
             <DetailItem label="Email" value={lead.email} />
             <DetailItem label="Training Domain" value={lead.trainingDomain} />
             <DetailItem label="Team Size" value={lead.employeeCount} />
+            <div className="col-span-2">
+              <dt className="text-xs text-gray-500 dark:text-gray-400">Requirements</dt>
+              <dd className="mt-0.5 whitespace-pre-wrap break-words text-sm text-gray-900 dark:text-gray-100">
+                {lead.requirements ?? '—'}
+              </dd>
+            </div>
             <DetailItem label="Date submitted" value={submitted} />
             <div>
               <dt className="text-xs text-gray-500 dark:text-gray-400">Status</dt>
@@ -807,6 +813,7 @@ const CSV_HEADERS: ReadonlyArray<string> = [
   'Email',
   'Training Domain',
   'Team Size',
+  'Requirements',
   'Status',
   'Date Submitted',
 ];
@@ -852,6 +859,7 @@ function exportCorporateLeadsCsv(leads: AdminCorporateLeadItem[]): void {
     lead.email,
     lead.trainingDomain,
     lead.employeeCount,
+    lead.requirements ?? '',
     lead.status,
     formatExportDate(lead.createdAt),
   ]);

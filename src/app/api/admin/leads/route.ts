@@ -106,9 +106,15 @@ export async function GET(req: NextRequest): Promise<Response> {
     where.branch = branchParam;
   }
   if (searchRaw.length > 0) {
+    // Phones are stored as +91XXXXXXXXXX. A search holding a full number in
+    // any shape ("+91 98765 43210", "09876543210", "9876543210") is matched
+    // on its last 10 digits so it finds the lead whatever the typed prefix.
+    const searchDigits = searchRaw.replace(/\D/g, '');
+    const phoneLast10 = searchDigits.length >= 10 ? searchDigits.slice(-10) : null;
     where.OR = [
       { name: { contains: searchRaw, mode: 'insensitive' } },
       { phone: { contains: searchRaw, mode: 'insensitive' } },
+      ...(phoneLast10 ? [{ phone: { contains: phoneLast10 } }] : []),
       { email: { contains: searchRaw, mode: 'insensitive' } },
       { course: { contains: searchRaw, mode: 'insensitive' } },
     ];

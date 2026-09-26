@@ -1,3 +1,5 @@
+import { normalizeIndianMobile, PHONE_ERROR } from '@/lib/lead-validation'
+
 // The ONLY place '918885166007' appears as a literal in application code.
 // Every WhatsApp CTA resolves its number through this export (directly, or
 // via <WhatsAppLink>'s default) instead of hardcoding its own copy.
@@ -36,12 +38,10 @@ export type BrochureDeliveryResult =
 // implementation replaces only this function's internals — every caller
 // keeps working unchanged.
 export function buildBrochureDelivery(phone: string, courseName: string): BrochureDeliveryResult {
-  const digits = phone.replace(/\D/g, '')
-  const tenDigit = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits
-  if (!/^[6-9]\d{9}$/.test(tenDigit)) {
-    return { ok: false, error: 'Enter a valid 10-digit Indian mobile number' }
+  const normalizedPhone = normalizeIndianMobile(phone)
+  if (normalizedPhone === null) {
+    return { ok: false, error: PHONE_ERROR }
   }
-  const normalizedPhone = `+91${tenDigit}`
   const message = `Hi, please send me the syllabus for ${courseName}`
   return {
     ok: true,
