@@ -18,6 +18,9 @@ import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
 import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 import { safeJsonLd } from '@/lib/safe-json-ld';
+import PromoBanner from '@/components/PromoBanner';
+import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners';
+import { bannerForSlot } from '@/lib/promo-banner-slots';
 
 export const revalidate = 86400;
 
@@ -154,6 +157,11 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
             )}
           </div>
         </div>
+      </div>
+
+      {/* Promo banner, below the hero */}
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 20px 0' }}>
+        <PromoBanner placement="course-page" banner={bannerForSlot(await getPromoBanners('course-page'), 0)} syllabus={syllabusLinkFor(course)} />
       </div>
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 20px' }}>

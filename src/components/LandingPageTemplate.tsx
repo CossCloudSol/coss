@@ -14,6 +14,9 @@ import WhatsAppLink from '@/components/WhatsAppLink'
 import { optimizeCldUrl } from '@/lib/cloudinary'
 import { safeJsonLd } from '@/lib/safe-json-ld'
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
+import PromoBanner from '@/components/PromoBanner'
+import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners'
+import { bannerForSlot } from '@/lib/promo-banner-slots'
 
 interface HiringPartner {
   id: string
@@ -56,6 +59,7 @@ const WaIcon = ({ cls }: { cls?: string }) => (
 )
 
 export default async function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related, siblings }: Props) {
+  const coursePageBanners = await getPromoBanners('course-page')
   const hiringPartners: HiringPartner[] = PLACEMENT_PROVIDERS_CONFIRMED
     ? await prisma.hiringPartner.findMany({
         where: { isVisible: true },
@@ -256,6 +260,11 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
           </div>
         </div>
       </section>
+
+      {/* ── Promo banner, below the hero ── */}
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-6">
+        <PromoBanner placement="course-page" banner={bannerForSlot(coursePageBanners, 0)} syllabus={syllabusLinkFor(course)} />
+      </div>
 
       {/* ── SECTION 2: TRUST BAR (hiring-partner logos, off until providers are confirmed) ── */}
       {PLACEMENT_PROVIDERS_CONFIRMED && hiringPartners.length > 0 && (
