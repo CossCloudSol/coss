@@ -1,5 +1,12 @@
 -- Manual data fix (applied by hand via Supabase SQL Editor — see CLAUDE.md).
 -- Companion to branch fix/claims-cleanup, which made the same fixes in files.
+--
+-- STATUS 2026-09-26: PART 3 IS SUPERSEDED — DO NOT RUN IT. The developer
+-- applied the DB fixes directly with targeted SQL instead: the ML course,
+-- the SAP FICO highlight, the placement blog sentence, the Azure DevOps meta
+-- description, and the 4 Kukatpally redirects. PART 1 is still useful as a
+-- read-only check; PART 4 only applies to a PART 3 run and does not undo
+-- those direct fixes. Kept for history.
 -- Finds and fixes the same texts where they live in the database instead:
 --   "BlogPost", "Course", "PageSeo", "CourseCategory", plus "Redirect".
 -- No schema change.
