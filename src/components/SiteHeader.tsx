@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import CallLink from './CallLink';
+import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import {
   Award,
   Briefcase,
@@ -159,9 +160,11 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
             <Briefcase className="nav-item-icon" aria-hidden="true" />Placements
           </Link>
 
-          <Link href="/jobs" className="nav-item" onClick={closeAll}>
-            <Briefcase className="nav-item-icon" aria-hidden="true" />Jobs
-          </Link>
+          {PLACEMENT_PROVIDERS_CONFIRMED && (
+            <Link href="/jobs" className="nav-item" onClick={closeAll}>
+              <Briefcase className="nav-item-icon" aria-hidden="true" />Jobs
+            </Link>
+          )}
 
           <Link href="/batches" className="nav-item" onClick={closeAll}>
             <Calendar className="nav-item-icon" aria-hidden="true" />Batches
@@ -309,12 +312,14 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
           </span>
         </Link>
 
-        {/* Jobs */}
-        <Link href="/jobs" className="mobile-nav-item" onClick={closeAll}>
-          <span className="mobile-nav-item-inner">
-            <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />Jobs
-          </span>
-        </Link>
+        {/* Jobs — hidden until hiring partners are confirmed */}
+        {PLACEMENT_PROVIDERS_CONFIRMED && (
+          <Link href="/jobs" className="mobile-nav-item" onClick={closeAll}>
+            <span className="mobile-nav-item-inner">
+              <Briefcase className="w-4 h-4 shrink-0" aria-hidden="true" />Jobs
+            </span>
+          </Link>
+        )}
 
         {/* Batches */}
         <Link href="/batches" className="mobile-nav-item" onClick={closeAll}>

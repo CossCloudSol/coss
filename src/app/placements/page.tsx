@@ -1,9 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { FileText, MessageCircle, HeartHandshake, RefreshCw, Calendar, ArrowRight } from 'lucide-react';
+import { FileText, MessageCircle, ClipboardCheck, HeartHandshake, Calendar, ArrowRight, type LucideIcon } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { findBatches } from '@/lib/batch-queries';
 import { formatBatchDate } from '@/lib/batch-utils';
+import {
+  CAREER_SUPPORT_CTA,
+  CAREER_SUPPORT_HEADLINE,
+  CAREER_SUPPORT_ITEMS,
+  PLACEMENT_DISCLAIMER,
+} from '@/lib/career-support';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import EnrollFullForm from '@/components/EnrollFullForm';
 
@@ -12,28 +18,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('placements');
 }
 
-const SUPPORT_BLOCKS = [
-  {
-    icon: FileText,
-    title: 'Resume built around what you can do',
-    body: "We rewrite your CV around the projects you complete in class — the tools you used, the problems you solved, the things an interviewer will actually ask about. Reviewed by the trainer who taught you.",
-  },
-  {
-    icon: MessageCircle,
-    title: 'Mock interviews with real questions',
-    body: "Technical rounds with your trainer, HR rounds with our placement team. You'll be asked the questions Hyderabad employers are asking right now, and you'll get told plainly where you're weak.",
-  },
-  {
-    icon: HeartHandshake,
-    title: 'Referrals to our hiring network',
-    body: "We share profiles with 50+ hiring partners across Hyderabad. A referral is not a job offer — it's your CV landing in front of a person instead of a portal.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Support that doesn't expire",
-    body: 'Finished six months ago and struggling? Come back. Sit in on a revision batch, redo a mock interview, get your CV looked at again. No time limit, no extra fee.',
-  },
-];
+/** The lead form below; every "Book a Free Career Counselling Call" CTA on this page scrolls to it. */
+const FORM_ANCHOR = 'career-counselling';
+
+const SUPPORT_ICONS: Record<(typeof CAREER_SUPPORT_ITEMS)[number]['key'], LucideIcon> = {
+  resume: FileText,
+  mock: MessageCircle,
+  prep: ClipboardCheck,
+  referrals: HeartHandshake,
+};
 
 export default async function PlacementsPage() {
   const batches = await findBatches();
@@ -49,18 +42,18 @@ export default async function PlacementsPage() {
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Placements</span>
           </nav>
           <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(26px,4.5vw,42px)', lineHeight: 1.2, marginBottom: '16px', color: '#fff' }}>
-            Placement assistance, without the fine print
+            {CAREER_SUPPORT_HEADLINE}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15.5px', lineHeight: '1.75', maxWidth: '640px', marginBottom: '28px' }}>
-            Every institute in Hyderabad advertises 100% placement. We&apos;d rather show you exactly what our career support includes, and let you judge whether it&apos;s worth your time.
+            Resume building, mock interviews, interview preparation and referrals to our 50+ hiring partners. {PLACEMENT_DISCLAIMER}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
-            <Link
-              href="/free-demo-class"
+            <a
+              href={`#${FORM_ANCHOR}`}
               style={{ background: '#e47538', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
             >
-              Book a free demo class
-            </Link>
+              {CAREER_SUPPORT_CTA}
+            </a>
             <WhatsAppLink
               ctaType="hero"
               pageType="static"
@@ -88,10 +81,10 @@ export default async function PlacementsPage() {
             This starts while you&apos;re still learning, not after you finish.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-            {SUPPORT_BLOCKS.map(block => {
-              const Icon = block.icon;
+            {CAREER_SUPPORT_ITEMS.map(block => {
+              const Icon = SUPPORT_ICONS[block.key];
               return (
-                <div key={block.title} style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '26px', border: '1px solid var(--border-card)' }}>
+                <div key={block.key} style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '26px', border: '1px solid var(--border-card)' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(15,118,110,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '14px' }}>
                     <Icon size={20} color="#0f766e" aria-hidden="true" />
                   </div>
@@ -115,7 +108,7 @@ export default async function PlacementsPage() {
             What we don&apos;t promise
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.85', marginBottom: '14px' }}>
-            We don&apos;t guarantee placement, and we&apos;d be careful with any institute that does. Whether you get hired depends on your skills, your interview performance, and what companies are hiring the month you finish — and no training centre controls those.
+            <strong style={{ color: 'var(--text)' }}>{PLACEMENT_DISCLAIMER}</strong> Whether you get hired depends on your skills, your interview performance, and what companies are hiring the month you finish — and no training centre controls those.
           </p>
           <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.85' }}>
             What we control is preparation. We do that thoroughly, for every student, for as long as you need it.
@@ -198,10 +191,10 @@ export default async function PlacementsPage() {
       </div>
 
       {/* Section 4 — Enquiry form */}
-      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '56px 20px' }}>
+      <div id={FORM_ANCHOR} style={{ maxWidth: '600px', margin: '0 auto', padding: '56px 20px', scrollMarginTop: '80px' }}>
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)', marginBottom: '10px' }}>
-            Talk to our placement team
+            {CAREER_SUPPORT_CTA}
           </h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '14.5px' }}>
             Tell us where you are and what you&apos;re aiming for. We&apos;ll tell you honestly whether we can help.
@@ -212,7 +205,7 @@ export default async function PlacementsPage() {
           statusPill={null}
           heading="Tell us where you are and what you're aiming for"
           subtext="We'll tell you honestly whether we can help."
-          submitLabel="Request a callback"
+          submitLabel="Book my free call"
           disclaimer="No spam. We'll reply on WhatsApp."
         />
       </div>
@@ -224,14 +217,14 @@ export default async function PlacementsPage() {
             Come and see for yourself
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '15px', lineHeight: '1.75', marginBottom: '26px' }}>
-            Sit in on a class before you decide anything. Sixty minutes, a real trainer, real tools, no cost and no commitment. Then ask us anything you like about placement support.
+            Talk it through with a counsellor first: your background, the course that fits, and what our career support looks like in practice. No cost and no commitment.
           </p>
-          <Link
-            href="/free-demo-class"
+          <a
+            href={`#${FORM_ANCHOR}`}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff', color: 'var(--primary)', padding: '13px 30px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
           >
-            Book a free demo class <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+            {CAREER_SUPPORT_CTA} <ArrowRight size={16} aria-hidden="true" />
+          </a>
         </div>
       </div>
     </>

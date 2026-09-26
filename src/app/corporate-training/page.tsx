@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { CorporateHeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import CorporateForm from '@/components/CorporateForm';
 import { prisma } from '@/lib/db';
+import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import { optimizeCldUrl } from '@/lib/cloudinary';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
@@ -42,11 +43,13 @@ const process = [
 ];
 
 export default async function CorporateTrainingPage() {
-  const hiringPartners = await prisma.hiringPartner.findMany({
-    where: { isVisible: true },
-    orderBy: { sortOrder: 'asc' },
-    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
-  });
+  const hiringPartners = PLACEMENT_PROVIDERS_CONFIRMED
+    ? await prisma.hiringPartner.findMany({
+        where: { isVisible: true },
+        orderBy: { sortOrder: 'asc' },
+        select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+      })
+    : [];
   return (
     <>
       <ResponsivePageStyles />
@@ -154,7 +157,8 @@ export default async function CorporateTrainingPage() {
         </div>
       </div>
 
-      {/* Companies */}
+      {/* Companies — off until providers are confirmed */}
+      {PLACEMENT_PROVIDERS_CONFIRMED && hiringPartners.length > 0 && (
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '48px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '24px', color: '#fff', marginBottom: '8px' }}>Our Alumni Work At</h3>
@@ -205,6 +209,7 @@ export default async function CorporateTrainingPage() {
           </div>
         </div>
       </div>
+      )}
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 20px 0' }}>
         <CtaBanner />

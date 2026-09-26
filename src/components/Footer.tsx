@@ -5,6 +5,7 @@ import FooterNavCol from './FooterNavCol'
 import CallLink from './CallLink'
 import WhatsAppLink from './WhatsAppLink'
 import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
+import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
 
 const CATEGORIES = [
   { label: 'Data, Analytics & BI',               href: '/courses/data-analytics-bi' },
@@ -32,7 +33,8 @@ const COMPANY = [
 ]
 
 const RESOURCES = [
-  { label: 'Job Openings',      href: '/jobs' },
+  // Job links stay hidden until hiring partners are confirmed.
+  ...(PLACEMENT_PROVIDERS_CONFIRMED ? [{ label: 'Job Openings', href: '/jobs' }] : []),
   { label: 'Upcoming Batches',  href: '/batches' },
   { label: 'Blog',              href: '/blog' },
 ]

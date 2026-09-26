@@ -10,6 +10,13 @@ import WhatsAppLink from '@/components/WhatsAppLink';
 import { WA_NUMBER, batchBookingMessage } from '@/lib/whatsapp';
 import { formatBatchDate } from '@/lib/batch-utils';
 import {
+  CAREER_SUPPORT_CTA,
+  CAREER_SUPPORT_HEADLINE,
+  CAREER_SUPPORT_ITEMS,
+  PLACEMENT_DISCLAIMER,
+  PLACEMENT_PROVIDERS_CONFIRMED,
+} from '@/lib/career-support';
+import {
   Award,
   BadgeCheck,
   BarChart2,
@@ -276,13 +283,15 @@ async function getBlogPosts() {
 }
 
 export default async function HomePage() {
+  // Partner logos and the job board stay hidden (and unqueried) until
+  // PLACEMENT_PROVIDERS_CONFIRMED is switched on.
   const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners] = await Promise.all([
     getCategories(),
-    getFeaturedJobs(),
+    PLACEMENT_PROVIDERS_CONFIRMED ? getFeaturedJobs() : Promise.resolve([]),
     getUpcomingBatches(),
     getHomepageSettings(),
     getBlogPosts(),
-    getHiringPartners(),
+    PLACEMENT_PROVIDERS_CONFIRMED ? getHiringPartners() : Promise.resolve([]),
   ]);
 
   const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
@@ -596,7 +605,7 @@ export default async function HomePage() {
             <h2 className="text-3xl font-bold text-white mt-2">Build Skills Employers Demand</h2>
             <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
             <p className="text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
-              Industry-focused training in Hyderabad — practical labs, expert trainers, real placement outcomes
+              Industry-focused training in Hyderabad — practical labs, expert trainers, career support
             </p>
           </div>
 
@@ -998,7 +1007,7 @@ export default async function HomePage() {
                 { Icon: Calendar,     WaterIcon: Clock,     title: 'Flexible Batches',      desc: 'Weekday, weekend, morning, and evening options — learn without disrupting your current schedule.' },
                 { Icon: IndianRupee,  WaterIcon: Briefcase, title: 'Affordable Fees + EMI', desc: 'Premium-quality training at accessible prices, with easy EMI options available.' },
                 { Icon: Award,        WaterIcon: Shield,    title: 'Industry Certifications', desc: 'Earn globally recognised AWS, Azure, Google Cloud, and other certifications.' },
-                { Icon: Briefcase,    WaterIcon: Users,     title: 'Placement Support', desc: 'Resume building, mock interviews, and direct connections with 50+ top IT hiring companies.' },
+                { Icon: Briefcase,    WaterIcon: Users,     title: 'Placement Assistance', desc: 'Resume building, mock interviews, and referrals to our 50+ hiring partners. Placement is not guaranteed.' },
               ] as const).map(({ Icon, WaterIcon, title, desc }) => (
                 <div key={title} className="wcu-small-card">
                   <div className="wcu-small-icon-wrap" aria-hidden="true">
@@ -1040,11 +1049,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Explore Opportunities ── */}
+      {/* ── Career & Placement Assistance (logos only when providers are confirmed) ── */}
       {hpSettings.showHiringPartners && <section
         className="py-20 px-4 md:px-8 relative overflow-hidden"
         style={{ background: 'linear-gradient(145deg, #0a1628 0%, #0d2237 55%, #091520 100%)' }}
-        aria-label="Hiring partners"
+        aria-label={CAREER_SUPPORT_HEADLINE}
       >
         {/* Decorative glows + dot-grid */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -1067,18 +1076,34 @@ export default async function HomePage() {
           {/* ── Header ── */}
           <div className="text-center mb-10">
             <h2 className="font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(26px,4vw,40px)' }}>
-              Our Graduates Get Hired at{' '}
-              <span style={{ color: '#2dd4bf' }}>Top Companies</span>
+              {CAREER_SUPPORT_HEADLINE}
             </h2>
             <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
             <p className="mt-3 text-sm max-w-lg mx-auto" style={{ color: '#94a3b8' }}>
-              From resume prep to mock interviews — we connect you directly with recruiters.
-              5,000+ alumni now work at companies like these.
+              Resume building, mock interviews, interview preparation and referrals to our 50+ hiring partners.
             </p>
           </div>
 
-          {/* ── Logo grid — white cards on dark bg so original logo colours show ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {/* ── What the assistance includes ── */}
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" role="list">
+            {CAREER_SUPPORT_ITEMS.map((item) => (
+              <li
+                key={item.key}
+                className="rounded-xl p-5"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(45,212,191,0.18)' }}
+              >
+                <p className="font-bold text-white text-sm mb-2">{item.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: '#94a3b8' }}>{item.body}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-5 text-center text-sm font-semibold" style={{ color: '#cbd5e1' }}>
+            {PLACEMENT_DISCLAIMER}
+          </p>
+
+          {/* ── Logo grid — only once hiring partners have confirmed we may name them ── */}
+          {PLACEMENT_PROVIDERS_CONFIRMED && hiringPartners.length > 0 && (
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {hiringPartners.map((partner) => (
               <div
                 key={partner.id}
@@ -1107,39 +1132,37 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+          )}
 
-          {/* ── Conversion CTA ── */}
+          {/* ── Conversion CTA: opens the homepage lead form (#enroll-form) ── */}
           <div className="mt-12 text-center">
-            <p className="text-sm mb-5" style={{ color: '#94a3b8' }}>
-              Ready to land your name on this list?
-            </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link
-                href="/free-demo-class"
+              <a
+                href="#enroll-form"
                 className="inline-flex items-center gap-2 rounded-xl px-8 py-4 font-bold text-sm transition-all hover:opacity-90 hover:-translate-y-0.5"
                 style={{ background: 'linear-gradient(135deg, #e47538 0%, #f5a623 100%)', color: '#fff', boxShadow: '0 4px 20px rgba(228,117,56,0.4)' }}
               >
                 <Rocket className="w-4 h-4" aria-hidden="true" />
-                Start Your IT Career — Book Free Demo Class
-              </Link>
+                {CAREER_SUPPORT_CTA}
+              </a>
               <Link
                 href="/placements"
                 className="inline-flex items-center gap-2 rounded-xl px-6 py-4 font-semibold text-sm transition-all hover:bg-white/10"
                 style={{ color: '#2dd4bf', border: '1px solid rgba(45,212,191,0.3)' }}
               >
-                See our placement support →
+                How our career support works →
               </Link>
             </div>
             <p className="text-xs mt-4" style={{ color: '#94a3b8' }}>
-              No fees · No commitment · Just one free class
+              No fees · No commitment
             </p>
           </div>
 
         </div>
       </section>}
 
-      {/* ── Latest Jobs Widget — only shown when >= 3 active featured jobs ── */}
-      {featuredJobs.length >= 3 && (
+      {/* ── Latest Jobs Widget — only shown when providers are confirmed and >= 3 active featured jobs ── */}
+      {PLACEMENT_PROVIDERS_CONFIRMED && featuredJobs.length >= 3 && (
         <section className="section section-white" aria-label="Job openings">
           <div className="section-inner">
             <div className="section-header">

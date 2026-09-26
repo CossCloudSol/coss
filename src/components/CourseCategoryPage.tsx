@@ -10,6 +10,7 @@ import { optimizeCldUrl } from '@/lib/cloudinary';
 import CourseGrid from '@/components/CourseGrid';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { prisma } from '@/lib/db';
+import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 
 const COMPANY_ALT_MAP: Record<string, string> = {
   google: 'Google',
@@ -97,11 +98,13 @@ const ACCENT_MAP: Record<string, CourseCardProps['accentVariant']> = {
 export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCourses }: { data: CourseCategoryData; breadcrumbSlug: string; dbCourses?: CourseCardProps[] }) {
   const imgs = wpImages[breadcrumbSlug];
 
-  const hiringPartners = await prisma.hiringPartner.findMany({
-    where: { isVisible: true },
-    orderBy: { sortOrder: 'asc' },
-    select: { id: true, name: true, logoUrl: true, altText: true, website: true },
-  });
+  const hiringPartners = PLACEMENT_PROVIDERS_CONFIRMED
+    ? await prisma.hiringPartner.findMany({
+        where: { isVisible: true },
+        orderBy: { sortOrder: 'asc' },
+        select: { id: true, name: true, logoUrl: true, altText: true, website: true },
+      })
+    : [];
 
   return (
     <>
@@ -232,8 +235,8 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
               </div>
             )}
 
-            {/* Real company logos */}
-            {(imgs?.companyLogos?.length > 0 || hiringPartners.length > 0) && (
+            {/* Real company logos — off until providers are confirmed */}
+            {PLACEMENT_PROVIDERS_CONFIRMED && (imgs?.companyLogos?.length > 0 || hiringPartners.length > 0) && (
               <div style={{ marginBottom: '36px' }}>
                 <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>🏢 Companies That Hire Our Graduates</h3>
                 {imgs?.companyLogos?.length > 0 ? (
