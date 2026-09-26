@@ -37,6 +37,11 @@ const corporateLeadSchema = z.object({
     .trim()
     .min(1, 'Employee count is required')
     .max(50, 'Employee count must be 50 characters or fewer'),
+  // Optional "Additional requirements" box. "" (empty textarea) is stored as NULL.
+  requirements: z.preprocess(
+    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+    z.string().trim().max(1000, 'Requirements must be 1000 characters or fewer').optional(),
+  ),
 });
 
 /* -------------------------------------------------------------------------- */
@@ -86,6 +91,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         email: data.email,
         trainingDomain: data.trainingDomain,
         employeeCount: data.employeeCount,
+        requirements: data.requirements ?? null,
         status: 'new',
       },
       select: { id: true },

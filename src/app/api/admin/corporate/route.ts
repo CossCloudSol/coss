@@ -19,6 +19,7 @@ export interface AdminCorporateLeadItem {
   email: string;
   trainingDomain: string;
   employeeCount: string;
+  requirements: string | null;
   status: string;
   createdAt: string; // ISO
 }
@@ -50,6 +51,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         email: true,
         trainingDomain: true,
         employeeCount: true,
+        requirements: true,
         status: true,
         createdAt: true,
       },
@@ -64,6 +66,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         email: row.email,
         trainingDomain: row.trainingDomain,
         employeeCount: row.employeeCount,
+        requirements: row.requirements,
         status: row.status,
         createdAt: row.createdAt.toISOString(),
       })),

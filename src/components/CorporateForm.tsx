@@ -13,7 +13,7 @@ const corporateFormSchema = z.object({
   email:       z.string().email('Enter a valid email address'),
   trainingTopic: z.string().min(2, 'Please mention the training topic'),
   teamSize:    z.string().min(1, 'Team size is required'),
-  message:     z.string().optional(),
+  requirements: z.string().max(1000, 'Requirements must be 1000 characters or fewer').optional(),
 });
 
 type CorporateFormValues = z.infer<typeof corporateFormSchema>;
@@ -86,6 +86,7 @@ export default function CorporateForm(): JSX.Element {
           email:          values.email,
           trainingDomain: values.trainingTopic,
           employeeCount:  values.teamSize,
+          requirements:   values.requirements,
         }),
       });
     } catch (err) {
@@ -169,7 +170,8 @@ export default function CorporateForm(): JSX.Element {
       </select>
       {errors.teamSize ? <p style={fieldErrorStyle} role="alert">{errors.teamSize.message}</p> : null}
 
-      <textarea placeholder="Additional requirements (optional)" rows={3} style={{ ...inputStyle, resize: 'vertical' }} disabled={isSubmitting} {...register('message')} />
+      <textarea placeholder="Additional requirements (optional)" rows={3} maxLength={1000} style={{ ...inputStyle, resize: 'vertical' }} disabled={isSubmitting} {...register('requirements')} />
+      {errors.requirements ? <p style={fieldErrorStyle} role="alert">{errors.requirements.message}</p> : null}
 
       {state.kind === 'error' && (
         <p style={{ color: '#fecaca', fontSize: 13, margin: '12px 0 0' }} role="alert">
