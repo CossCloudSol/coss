@@ -48,9 +48,9 @@ interface Toast {
 
 const DEFAULTS: BarConfig = {
   isEnabled:        false,
-  announcementText: '🎓 New batch starting soon — Limited seats available!',
-  ctaLabel:         'Enroll Now',
-  ctaUrl:           '/enroll-now-with-coss/',
+  announcementText: 'Upcoming batches filling fast',
+  ctaLabel:         'See dates',
+  ctaUrl:           '/batches',
   backgroundColor:  '#0f766e',
   textColor:        '#ffffff',
 };
@@ -300,7 +300,7 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                   Topbar / Announcement Bar
                 </h1>
                 <p className="text-xs text-[#94a3b8] dark:text-gray-400 mt-0.5">
-                  Full-width sticky strip shown at the very top of every page
+                  The batches message in the dark strip above the site header: text, then the link (e.g. &ldquo;See dates&rdquo; → /batches). &ldquo;Enable&rdquo; shows or hides this message. The location, Live Online and 5,000+ students parts are fixed; the strip adds &ldquo;· Limited seats&rdquo; by itself when a batch starting in the next 45 days is nearly full, so don&apos;t write &ldquo;limited seats&rdquo; here (it is removed if you do). The strip uses the site colours; the colour settings below no longer apply.
                 </p>
               </div>
             </div>
@@ -377,7 +377,7 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
                 maxLength={200}
                 value={config.announcementText}
                 onChange={(e) => set('announcementText', e.target.value)}
-                placeholder="e.g. 🎓 New batch starting soon — Limited seats!"
+                placeholder="e.g. Upcoming batches filling fast"
                 className="w-full rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-[#0f172a] dark:text-gray-100 placeholder-[#94a3b8] dark:placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
               />
               <div className="flex justify-between items-center mt-1">

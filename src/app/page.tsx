@@ -429,7 +429,7 @@ export default async function HomePage() {
               </table>
             </div>
             <TrackedCta href="/batches" ctaId="all_batches" location="upcoming_batches" className="text-center text-sm font-bold text-[#b8531c] md:hidden">
-              See all upcoming batches →
+              See all upcoming batches <ArrowRight className="inline h-4 w-4 align-[-3px]" aria-hidden="true" />
             </TrackedCta>
           </div>
         </section>

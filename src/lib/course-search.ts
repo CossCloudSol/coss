@@ -50,6 +50,9 @@ export interface SearchIndex {
   categories: CatalogCategory[];
 }
 
+/** Data-cache tag for the course catalogue (search index, Explore Courses menu). */
+export const COURSE_CATALOG_TAG = 'course-catalog';
+
 /** Query parameters that make /courses a filtered view (noindex, follow via the middleware). */
 export const COURSE_FILTER_PARAMS = ['q', 'cat', 'mode', 'dur', 'level', 'batch', 'sort'] as const;
 

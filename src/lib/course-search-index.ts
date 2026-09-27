@@ -1,8 +1,9 @@
+import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { getCourseUrl, CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { syllabusLinkFor } from '@/lib/promo-banners';
 import { memoDuringBuild } from '@/lib/build-memo';
-import { parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
+import { COURSE_CATALOG_TAG, parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
 
 // next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
 const OPTIMISABLE_IMAGE = /^https:\/\/res\.cloudinary\.com\/dfditihuw\//;
@@ -105,7 +106,17 @@ async function loadSearchIndex(): Promise<SearchIndex> {
   };
 }
 
-/** Published course catalogue for search and /courses. Shared by both during a build. */
+// Revalidated by every course and batch write (revalidatePaths → COURSE_CATALOG_TAG)
+// and by category writes ('categories').
+const getCachedSearchIndex = unstable_cache(loadSearchIndex, ['course-search-index'], {
+  tags: [COURSE_CATALOG_TAG, 'categories'],
+  revalidate: 86400,
+});
+
+/**
+ * Published course catalogue: the search index, /courses, the homepage cards
+ * and the header's Explore Courses menu all read this one cached query.
+ */
 export function getSearchIndex(): Promise<SearchIndex> {
-  return memoDuringBuild('course-search-index', loadSearchIndex);
+  return memoDuringBuild('course-search-index', getCachedSearchIndex);
 }

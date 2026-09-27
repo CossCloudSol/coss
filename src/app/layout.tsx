@@ -18,24 +18,20 @@ const roboto = Roboto({
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import Footer from '@/components/Footer';
-import AnnouncementBar from '@/components/AnnouncementBar';
-import TopInfoBar from '@/components/TopInfoBar';
+import TopStrip from '@/components/header/TopStrip';
+import MegaMenuPanel from '@/components/header/MegaMenuPanel';
 import PublicChrome from '@/components/PublicChrome';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
 import FirstTouchCapture from '@/components/FirstTouchCapture';
 import MobileStickyBar from '@/components/MobileStickyBar';
-import MobileTabBar from '@/components/MobileTabBar';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
-import {
-  fromDbRow,
-  ANNOUNCEMENT_BAR_DEFAULTS,
-  type AnnouncementBarInput,
-} from '@/lib/validations/announcement-bar';
+import { getTopStripData } from '@/lib/top-strip';
+import { getSearchIndex } from '@/lib/course-search-index';
+import type { SearchIndex } from '@/lib/course-search';
 import { buildGlobalSchemas } from '@/lib/global-schemas';
 import { sanitizeGscVerificationId } from '@/lib/get-page-seo';
-import { CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { COURSE_GROUPS } from '@/data/course-options';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { safeJsonLd } from '@/lib/safe-json-ld';
@@ -136,65 +132,24 @@ const getSiteSettings = unstable_cache(
 );
 
 /**
- * Pull the AnnouncementBar singleton at request time so the component
- * receives its config as a prop (no client-side fetch needed).
- * Swallows DB errors the same way getSiteGaId() does — on a fresh deploy
- * the bar simply stays hidden rather than crashing the layout.
+ * Course catalogue for the header's Explore Courses menu (the same cached
+ * query as search and /courses). A DB failure renders the menu empty rather
+ * than failing every page.
  */
-const getAnnouncementBarConfig = unstable_cache(
-  async (): Promise<AnnouncementBarInput> => {
-    try {
-      const row = await prisma.announcementBar.findFirst();
-      if (!row) return ANNOUNCEMENT_BAR_DEFAULTS;
-      return fromDbRow(row);
-    } catch {
-      return ANNOUNCEMENT_BAR_DEFAULTS;
-    }
-  },
-  ['announcement-bar'],
-  { tags: ['announcement-bar'], revalidate: 86400 },
-);
-
-interface NavCategory {
-  name: string;
-  slug: string;
-}
-
-/**
- * Published course categories for the header's Courses menu. Rendered into
- * the cached page HTML so the menu no longer depends on a client-side
- * /api/categories call (an uncached serverless + DB hit on every page view).
- * Admin category writes call revalidateTag('categories').
- *
- * No try/catch inside the cached function: a thrown error is not cached, so a
- * transient DB failure can't pin an empty menu into the data cache for a day.
- */
-const getNavCategoriesCached = unstable_cache(
-  async (): Promise<NavCategory[]> =>
-    prisma.courseCategory.findMany({
-      where: { status: 'published' },
-      orderBy: { sortOrder: 'asc' },
-      select: { name: true, slug: true },
-    }),
-  ['nav-categories'],
-  { tags: ['categories'], revalidate: 86400 },
-);
-
-async function getNavCategories(): Promise<NavCategory[]> {
+async function getMenuIndex(): Promise<SearchIndex> {
   try {
-    return await getNavCategoriesCached();
-  } catch {
-    // DB unreachable: fall back to the 10 fixed legacy categories rather than
-    // rendering an empty Courses menu.
-    return Object.entries(CATEGORY_SLUG_MAP).map(([name, slug]) => ({ name, slug }));
+    return await getSearchIndex();
+  } catch (err) {
+    console.error('[layout] course catalogue unavailable for the header menu:', err);
+    return { courses: [], categories: [] };
   }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [{ gaId, gscId }, announcementConfig, navCategories] = await Promise.all([
+  const [{ gaId, gscId }, stripData, menuIndex] = await Promise.all([
     getSiteSettings(),
-    getAnnouncementBarConfig(),
-    getNavCategories(),
+    getTopStripData(),
+    getMenuIndex(),
   ]);
 
   const globalSchemas = await buildGlobalSchemas();
@@ -240,14 +195,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="pb-16 md:pb-0">
         <ThemeProvider>
         <PublicChrome>
-        {/* Announcement bar + teal info bar — scroll away naturally */}
-        <AnnouncementBar initialConfig={announcementConfig} />
-        <TopInfoBar />
-        {/* Sticky chrome — only the white navbar pins to top while scrolling */}
-        <div className="sticky-chrome">
-          <SiteHeader categories={navCategories} />
-        </div>
-        <MobileTabBar />
+        {/* Header v2: the strip scrolls away; the main row sticks (64px). */}
+        <TopStrip data={stripData} />
+        <SiteHeader categories={menuIndex.categories} megaMenu={<MegaMenuPanel index={menuIndex} />} />
         </PublicChrome>
 
         {/* Main */}
