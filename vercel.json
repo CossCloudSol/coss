@@ -1,5 +1,6 @@
 {
   "regions": ["bom1"],
+  "ignoreCommand": "[ \"$VERCEL_ENV\" != production ] && ! git log -1 --format=%B | grep -qF \"[preview]\"",
   "crons": [
     {
       "path": "/api/cron/media-scan",
