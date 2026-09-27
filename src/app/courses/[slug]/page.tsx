@@ -11,6 +11,9 @@ import { batchBookingMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
 import CourseGrid from '@/components/CourseGrid';
+import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners';
+import { bannerForSlot } from '@/lib/promo-banner-slots';
+import PromoBanner from '@/components/PromoBanner';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { sanitizeDescription, excerptDescription } from '@/lib/sanitizeDescription';
 import { buildPageMetadataWithFallback, getPageSchemaMarkup } from '@/lib/get-page-seo';
@@ -273,6 +276,11 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
         </div>
       </div>
 
+      {/* Promo banner, below the hero */}
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 20px 0' }}>
+        <PromoBanner placement="course-page" banner={bannerForSlot(await getPromoBanners('course-page'), 0)} syllabus={syllabusLinkFor(course)} />
+      </div>
+
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 20px' }}>
         <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>
           <div>
@@ -453,7 +461,8 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
 
 // ─── Category Landing View ─────────────────────────────────────────────────────
 
-function CategoryLandingView({ category, customSchema }: { category: CategoryDetail; customSchema: object | null }) {
+async function CategoryLandingView({ category, customSchema }: { category: CategoryDetail; customSchema: object | null }) {
+  const courseGridBanners = await getPromoBanners('course-grid');
   return (
     <>
       {customSchema && (
@@ -500,6 +509,7 @@ function CategoryLandingView({ category, customSchema }: { category: CategoryDet
         </div>
         <div className="max-w-7xl mx-auto">
           <CourseGrid
+            promoBanners={courseGridBanners}
             courses={(category.courses ?? []).map((course: any, i: number) => {
               const badgeKey = String(course.badge ?? course.tag ?? '').toLowerCase()
               return {

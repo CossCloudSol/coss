@@ -1,10 +1,13 @@
-import { cache } from 'react';
+import { cache, Fragment } from 'react';
 import Link from 'next/link';
 import { unstable_cache } from 'next/cache';
 import { HeroBanner, ResponsivePageStyles } from '@/components/shared';
 import { getAllPosts } from '@/lib/posts';
 import { prisma } from '@/lib/db';
 import { BLOG_POSTS_TAG } from '@/lib/revalidate';
+import PromoBanner from '@/components/PromoBanner';
+import { getPromoBanners } from '@/lib/promo-banners';
+import { bannerForSlot, PROMO_EVERY_N_ITEMS } from '@/lib/promo-banner-slots';
 
 /**
  * Shared /blog index UI + data. Rendered statically by:
@@ -189,7 +192,10 @@ export async function BlogIndexView({
   activeCategory: string;
   currentPage: number;
 }) {
-  const { dbPosts, mdxPosts } = await getBlogIndexData();
+  const [{ dbPosts, mdxPosts }, blogGridBanners] = await Promise.all([
+    getBlogIndexData(),
+    getPromoBanners('blog-grid'),
+  ]);
 
   const filteredDbPosts = filterByCategory(dbPosts, activeCategory);
   const filteredMdxPosts = filterByCategory(mdxPosts, activeCategory);
@@ -197,6 +203,8 @@ export async function BlogIndexView({
   const mdxStart = (currentPage - 1) * POSTS_PER_PAGE;
   const paginatedMdxPosts = filteredMdxPosts.slice(mdxStart, mdxStart + POSTS_PER_PAGE);
   const totalMdxPages = Math.ceil(filteredMdxPosts.length / POSTS_PER_PAGE);
+  // Promo banner after every 6th card; the MDX grid continues the rotation.
+  const dbBannerSlots = Math.floor(filteredDbPosts.length / PROMO_EVERY_N_ITEMS);
 
   const bothEmpty = filteredDbPosts.length === 0 && filteredMdxPosts.length === 0;
 
@@ -301,8 +309,8 @@ export async function BlogIndexView({
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px', padding: '16px 0' }} className="course-list-grid">
                       {filteredDbPosts.map((post, idx) => (
+                        <Fragment key={post.slug}>
                         <BlogCard
-                          key={post.slug}
                           slug={post.slug}
                           title={post.title}
                           excerpt={post.excerpt}
@@ -313,6 +321,12 @@ export async function BlogIndexView({
                           badgeColor="orange"
                           cardIndex={idx}
                         />
+                        {(idx + 1) % PROMO_EVERY_N_ITEMS === 0 && (
+                          <div style={{ gridColumn: '1 / -1' }}>
+                            <PromoBanner placement="blog-grid" banner={bannerForSlot(blogGridBanners, (idx + 1) / PROMO_EVERY_N_ITEMS - 1)} />
+                          </div>
+                        )}
+                        </Fragment>
                       ))}
                     </div>
                   </div>
@@ -335,8 +349,8 @@ export async function BlogIndexView({
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px', padding: '16px 0' }} className="course-list-grid">
                       {paginatedMdxPosts.map((post, idx) => (
+                        <Fragment key={post.slug}>
                         <BlogCard
-                          key={post.slug}
                           slug={post.slug}
                           title={post.title}
                           excerpt={post.excerpt}
@@ -345,6 +359,12 @@ export async function BlogIndexView({
                           badgeColor="indigo"
                           cardIndex={idx}
                         />
+                        {(idx + 1) % PROMO_EVERY_N_ITEMS === 0 && (
+                          <div style={{ gridColumn: '1 / -1' }}>
+                            <PromoBanner placement="blog-grid" banner={bannerForSlot(blogGridBanners, dbBannerSlots + (idx + 1) / PROMO_EVERY_N_ITEMS - 1)} />
+                          </div>
+                        )}
+                        </Fragment>
                       ))}
                     </div>
 

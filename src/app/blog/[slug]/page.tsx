@@ -15,6 +15,9 @@ import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
 import { COURSE_GROUPS } from '@/data/course-options';
 import { safeJsonLd } from '@/lib/safe-json-ld';
+import PromoBanner from '@/components/PromoBanner';
+import { getPromoBanners } from '@/lib/promo-banners';
+import { bannerForSlot, splitAfterSecondSection } from '@/lib/promo-banner-slots';
 
 export const revalidate = 86400;
 
@@ -180,6 +183,9 @@ const RELATED = [
 ];
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  // One blog-page banner, after the post's 2nd section; null shows the fallback card.
+  const blogPageBanner = bannerForSlot(await getPromoBanners('blog-page'), 0);
+
   // Try DB post first — rendered to sanitized HTML server-side
   let dbPost = null;
   try {
@@ -192,6 +198,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       ? new Date(dbPost.publishedAt).toISOString().split('T')[0]
       : new Date(dbPost.createdAt).toISOString().split('T')[0];
     const dbContentHtml = await renderMarkdownToSafeHtml(dbPost.content);
+    const [dbBodyBefore, dbBodyAfter] = splitAfterSecondSection(dbContentHtml);
     const dbCoursePool = await getPublishedCoursesForMatching();
     const dbCalloutTarget = matchPostToCallout(
       { slug: dbPost.slug, title: dbPost.title, tags: dbPost.tags, categories: dbPost.category ? [dbPost.category] : [] },
@@ -234,7 +241,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 <span style={{ background: 'var(--primary)', color: '#fff', padding: '2px 10px', borderRadius: '12px', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{dbPost.category}</span>
                 <span style={{ marginLeft: 'auto', fontSize: '12px' }}>by {dbPost.author}</span>
               </div>
-              <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }} dangerouslySetInnerHTML={{ __html: dbContentHtml }} />
+              <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }} dangerouslySetInnerHTML={{ __html: dbBodyBefore }} />
+              <div style={{ margin: '28px 0' }}>
+                <PromoBanner placement="blog-page" banner={blogPageBanner} />
+              </div>
+              {dbBodyAfter && (
+                <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }} dangerouslySetInnerHTML={{ __html: dbBodyAfter }} />
+              )}
               {dbPost.tags.length > 0 && (
                 <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">
                   <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>Tags:</span>
@@ -279,6 +292,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   // Fall back to file-system post
   const post = await getPostBySlug(params.slug);
   if (!post) notFound();
+  const [mdxBodyBefore, mdxBodyAfter] = splitAfterSecondSection(post.contentHtml ?? '');
 
   // Use spread date from getAllPosts so the post page matches the blog grid
   const allMdxPosts = await getAllPosts();
@@ -376,11 +390,19 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {/* Content */}
             <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }}>
               {post.contentHtml ? (
-                <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+                <div dangerouslySetInnerHTML={{ __html: mdxBodyBefore }} />
               ) : (
                 <div style={{ whiteSpace: 'pre-wrap' }}>{post.content}</div>
               )}
             </div>
+            <div style={{ margin: '28px 0' }}>
+              <PromoBanner placement="blog-page" banner={blogPageBanner} />
+            </div>
+            {mdxBodyAfter && (
+              <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }}>
+                <div dangerouslySetInnerHTML={{ __html: mdxBodyAfter }} />
+              </div>
+            )}
 
             {/* Tags — gray pills, dark-mode aware, clickable */}
             {Array.isArray(post.frontmatter.tags) && post.frontmatter.tags.length > 0 ? (

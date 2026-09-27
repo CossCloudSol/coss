@@ -55,6 +55,32 @@ export function detectDeviceType(): 'mobile' | 'desktop' {
  * missing gtag is a no-op, and any failure here must never affect the
  * download.
  */
+/**
+ * GA4 promo_banner_click. Best-effort, like the other trackers here: a
+ * missing gtag is a no-op and a failure never blocks the navigation.
+ */
+export function trackPromoBannerClick(params: {
+  placement: string;
+  bannerId: string | null;
+  variant: 'image' | 'fallback';
+  cta: string;
+  destination: string;
+}): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    (window as any).gtag('event', 'promo_banner_click', {
+      placement: params.placement,
+      banner_id: params.bannerId ?? 'fallback',
+      variant: params.variant,
+      cta: params.cta,
+      destination: params.destination,
+    });
+  } catch {
+    /* best-effort */
+  }
+}
+
 export function trackBrochureDownload(courseSlug: string, courseTitle: string): void {
   if (typeof window === 'undefined') return;
   if (typeof (window as any).gtag !== 'function') return;
