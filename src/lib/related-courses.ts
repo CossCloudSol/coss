@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import { memoDuringBuild } from '@/lib/build-memo'
 
 export interface RelatedCourseItem {
   id: string
@@ -38,9 +39,12 @@ export async function getRelatedCourses(
   currentCourseId: string
 ): Promise<RelatedCourseItem[]> {
   if (!categorySlug) return []
-  const pool = await prisma.course.findMany({
-    where: { categorySlug, status: 'published' },
-    select: { id: true, title: true, slug: true, duration: true, urlType: true, categorySlug: true },
-  })
+  // Same pool for every course in the category; fetched once per build worker.
+  const pool = await memoDuringBuild(`related-pool:${categorySlug}`, () =>
+    prisma.course.findMany({
+      where: { categorySlug, status: 'published' },
+      select: { id: true, title: true, slug: true, duration: true, urlType: true, categorySlug: true },
+    }),
+  )
   return selectRoundRobinSiblings(pool, currentCourseId)
 }

@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db'
+import { memoDuringBuild } from '@/lib/build-memo'
 
 export type LandingPageCourse = {
   id: string
@@ -89,7 +90,8 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
     // so fetch every published match and choose here. This replaces up to 8
     // sequential findFirst calls (all 8 ran for every unknown slug, e.g. bot
     // probes hitting the /[courseSlug] catch-all).
-    const matches = await prisma.course.findMany({
+    // Landing pages look each other up as siblings; one query per slug per build worker.
+    const matches = await memoDuringBuild(`landing-course:${variants.join('|')}`, () => prisma.course.findMany({
       where: { slug: { in: variants }, status: 'published' },
       select: {
         id: true,
@@ -110,7 +112,7 @@ export async function getLandingPageCourse(slug: string): Promise<LandingPageCou
         category: true,
         courseCategory: { select: { name: true, slug: true } },
       },
-    })
+    }))
     for (const variant of variants) {
       const course = matches.find((c) => c.slug === variant)
       if (course) return course

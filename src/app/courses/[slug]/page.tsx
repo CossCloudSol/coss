@@ -53,9 +53,13 @@ function staticCourseFolders(): Set<string> {
 
 export async function generateStaticParams() {
   try {
+    // Prebuild only courses whose canonical URL is this legacy /courses/<slug>
+    // (getCourseUrl). Courses canonical at /courses/<category>/<slug> are
+    // prebuilt there; their legacy URL still renders on first request (ISR).
+    // This removed ~74 duplicate prerenders per build.
     const [courses, categories] = await Promise.all([
       prisma.course.findMany({
-        where: { status: 'published' },
+        where: { status: 'published', OR: [{ urlType: 'legacy' }, { categorySlug: null }] },
         select: { slug: true },
       }),
       prisma.courseCategory.findMany({

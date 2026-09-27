@@ -1,4 +1,6 @@
 import { getPostBySlug, getAllPosts } from '@/lib/posts';
+import { cache } from 'react';
+import { memoDuringBuild } from '@/lib/build-memo';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -104,11 +106,16 @@ export async function generateStaticParams() {
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
+/** Published DB post by slug. generateMetadata and the page both need it: one query per request, and one per build worker while prerendering. */
+const getPublishedDbPost = cache((slug: string) =>
+  memoDuringBuild(`blog-db-post:${slug}`, () => prisma.blogPost.findFirst({ where: { slug, status: 'published' } })),
+);
+
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   // Try DB post first
   let dbPost = null;
   try {
-    dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+    dbPost = await getPublishedDbPost(params.slug);
   } catch {
     // DB error — fall through to file system
   }
@@ -189,7 +196,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   // Try DB post first — rendered to sanitized HTML server-side
   let dbPost = null;
   try {
-    dbPost = await prisma.blogPost.findFirst({ where: { slug: params.slug, status: 'published' } });
+    dbPost = await getPublishedDbPost(params.slug);
   } catch {
     // DB error — fall through to file system
   }
