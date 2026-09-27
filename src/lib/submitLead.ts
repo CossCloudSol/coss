@@ -10,7 +10,7 @@ import { normalizeIndianMobile } from '@/lib/lead-validation';
 import type { BotFields } from '@/components/HoneypotField';
 
 export type Branch = 'Dilsukhnagar' | 'Ameerpet' | 'Online';
-export type FormType = 'hero' | 'hero_demo' | 'full' | 'demo' | 'whatsapp_widget' | 'contact' | 'brochure_request';
+export type FormType = 'hero' | 'hero_demo' | 'full' | 'demo' | 'whatsapp_widget' | 'contact' | 'brochure_request' | 'course_search';
 
 export interface LeadSubmitInput {
   name: string;

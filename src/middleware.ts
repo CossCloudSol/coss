@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSession } from '@/lib/session';
 import { ALL_PERMISSIONS, type Permission } from '@/lib/permissions';
+import { COURSE_FILTER_PARAMS } from '@/lib/course-search';
 
 /**
  * Maps an admin route prefix to the permission key that grants access.
@@ -133,6 +134,16 @@ async function guardAdminApi(req: NextRequest, pathname: string): Promise<NextRe
 export async function middleware(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
 
+  // /courses filtered views (?q=, ?cat=, …) are the same static page filtered
+  // on the client: keep them out of the index but let crawlers follow links.
+  if (pathname === '/courses') {
+    const res = NextResponse.next();
+    if (COURSE_FILTER_PARAMS.some((p) => req.nextUrl.searchParams.has(p))) {
+      res.headers.set('X-Robots-Tag', 'noindex, follow');
+    }
+    return res;
+  }
+
   if (pathname.startsWith('/api/admin')) {
     return guardAdminApi(req, pathname);
   }
@@ -180,8 +191,9 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 
 export const config = {
   /**
-   * Run on every /admin/* page and /api/admin/* route. Static assets served
-   * by Next under /_next/* are excluded automatically by the App Router.
+   * Run on every /admin/* page and /api/admin/* route, plus /courses (noindex
+   * header on filtered views). Static assets served by Next under /_next/*
+   * are excluded automatically by the App Router.
    */
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/courses'],
 };

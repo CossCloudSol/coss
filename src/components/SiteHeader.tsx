@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import CallLink from './CallLink';
-import HeaderSearch from './HeaderSearch';
+import HeaderSearch, { MOBILE_SEARCH_ID } from './HeaderSearch';
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import {
   Award,
@@ -80,7 +80,10 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
   /* ── Close on outside click ── */
   useEffect(() => {
     function handleOutsideClick(e: MouseEvent) {
-      if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
+      const target = e.target as Element;
+      // The mobile search overlay is portalled to <body>, outside the header.
+      if (target.closest?.(`#${MOBILE_SEARCH_ID}`)) return;
+      if (headerRef.current && !headerRef.current.contains(target)) {
         setMobileOpen(false);
         setSearchOpen(false);
         setCoursesOpen(false);
@@ -184,7 +187,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
             className={iconButton}
             aria-label={searchOpen ? 'Close search' : 'Search courses'}
             aria-expanded={searchOpen}
-            aria-controls="mobile-search"
+            aria-controls={MOBILE_SEARCH_ID}
             onClick={() => {
               setMobileOpen(false);
               setSearchOpen((v) => !v);
@@ -246,12 +249,8 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
         </div>
       </nav>
 
-      {/* ── Mobile search ─────────────────────────────────────────────── */}
-      {searchOpen && (
-        <div id="mobile-search" className="border-t border-[#e3eaec] bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900 lg:hidden">
-          <HeaderSearch autoFocus shortcut={false} className="w-full" />
-        </div>
-      )}
+      {/* ── Mobile search: full screen ────────────────────────────────── */}
+      {searchOpen && <HeaderSearch variant="overlay" onClose={() => setSearchOpen(false)} />}
 
       {/* ── Mobile Menu ───────────────────────────────────────────────── */}
       <nav

@@ -4,13 +4,11 @@ import Link from 'next/link';
 import {
   ArrowRight,
   Award,
-  BarChart3,
   Briefcase,
   Building2,
   CalendarCheck,
   CalendarDays,
   CheckCircle2,
-  Clock,
   Code2,
   FileText,
   MapPin,
@@ -27,9 +25,10 @@ import {
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
 import { getHomepageSettings } from '@/lib/get-homepage-settings';
-import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate } from '@/lib/batch-utils';
-import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners';
+import { getPromoBanners } from '@/lib/promo-banners';
+import { getSearchIndex } from '@/lib/course-search-index';
+import type { CatalogCourse, SearchIndex } from '@/lib/course-search';
 import { getAllPosts } from '@/lib/posts';
 import {
   CAREER_SUPPORT_CTA,
@@ -42,6 +41,7 @@ import CallLink from '@/components/CallLink';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import PromoBanner from '@/components/PromoBanner';
 import HomeHeroForm from '@/components/home/HomeHeroForm';
+import CourseTile, { BANNER_FILLS } from '@/components/courses/CourseTile';
 import TrackedCta from '@/components/home/TrackedCta';
 
 /*
@@ -103,12 +103,6 @@ const FAQS = [
   { q: 'What batch timings are available?', a: 'Weekday, weekend and online batches. A counsellor shares the next start dates for your course when you book a demo.' },
 ] as const;
 
-/** Brand fills for course banners without an image and for article covers. */
-const BANNER_FILLS = ['#0a3d4a', '#1f3a44', '#123f55', '#5a3a26', '#005663', '#26383d'] as const;
-
-// Admin badges that read as placement or ranking claims are not shown here.
-const DISALLOWED_BADGE = /placement|guarant|bestseller|rank|#\s*1\b|\bno\.?\s*1\b/i;
-
 // next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
 const OPTIMISABLE_IMAGE = /^https:\/\/res\.cloudinary\.com\/dfditihuw\//;
 
@@ -118,27 +112,6 @@ function todayMidnightIST(): Date {
   const istOffset = 5.5 * 60 * 60 * 1000;
   const nowIST = new Date(Date.now() + istOffset);
   return new Date(Date.UTC(nowIST.getUTCFullYear(), nowIST.getUTCMonth(), nowIST.getUTCDate()) - istOffset);
-}
-
-async function getCategories() {
-  try {
-    const rows = await prisma.courseCategory.findMany({
-      where: { status: 'published' },
-      orderBy: { sortOrder: 'asc' },
-      select: { id: true, name: true, slug: true, _count: { select: { courses: { where: { status: 'published' } } } } },
-    });
-    return rows.filter((c) => c._count.courses > 0);
-  } catch {
-    return [];
-  }
-}
-
-async function getPublishedCourseCount() {
-  try {
-    return await prisma.course.count({ where: { status: 'published' } });
-  } catch {
-    return 0;
-  }
 }
 
 async function getUpcomingBatches() {
@@ -157,23 +130,6 @@ async function getUpcomingBatches() {
   }
 }
 
-/** Earliest upcoming start date per course, for the popular course cards. */
-async function getNextBatchDates(courseIds: string[]): Promise<Map<string, Date>> {
-  const next = new Map<string, Date>();
-  if (courseIds.length === 0) return next;
-  try {
-    const rows = await prisma.batch.findMany({
-      where: { courseId: { in: courseIds }, status: { in: ['upcoming', 'ongoing'] }, startDate: { gte: todayMidnightIST() } },
-      orderBy: { startDate: 'asc' },
-      select: { courseId: true, startDate: true },
-    });
-    for (const r of rows) if (!next.has(r.courseId)) next.set(r.courseId, r.startDate);
-  } catch {
-    /* cards show no date */
-  }
-  return next;
-}
-
 async function getReviews() {
   try {
     return await prisma.testimonial.findMany({
@@ -187,37 +143,12 @@ async function getReviews() {
   }
 }
 
-const COURSE_SELECT = {
-  id: true,
-  title: true,
-  slug: true,
-  category: true,
-  duration: true,
-  mode: true,
-  level: true,
-  badge: true,
-  thumbnail: true,
-  brochureUrl: true,
-  categorySlug: true,
-  urlType: true,
-} as const;
-
 /** Admin-picked popular courses (Homepage manager), else the featured courses. */
-async function getPopularCourses(ids: string[], useAdminPick: boolean) {
-  try {
-    if (useAdminPick && ids.length > 0) {
-      const rows = await prisma.course.findMany({ where: { id: { in: ids }, status: 'published' }, select: COURSE_SELECT });
-      return ids.map((id) => rows.find((c) => c.id === id)).filter((c): c is NonNullable<typeof c> => c != null).slice(0, 6);
-    }
-    return await prisma.course.findMany({
-      where: { status: 'published', featured: true },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-      take: 6,
-      select: COURSE_SELECT,
-    });
-  } catch {
-    return [];
+function popularCourses(all: CatalogCourse[], ids: string[], useAdminPick: boolean): CatalogCourse[] {
+  if (useAdminPick && ids.length > 0) {
+    return ids.map((id) => all.find((c) => c.id === id)).filter((c): c is CatalogCourse => c != null).slice(0, 6);
   }
+  return all.filter((c) => c.featured).slice(0, 6);
 }
 
 interface ArticleCard {
@@ -267,16 +198,16 @@ async function getLatestArticles(): Promise<ArticleCard[]> {
 
 export default async function HomePage() {
   const hp = await getHomepageSettings();
-  const [categories, courseCount, batches, reviews, courses, articles, homeBanners] = await Promise.all([
-    getCategories(),
-    getPublishedCourseCount(),
+  const [index, batches, reviews, articles, homeBanners] = await Promise.all([
+    getSearchIndex().catch((): SearchIndex => ({ courses: [], categories: [] })),
     getUpcomingBatches(),
     hp.showTestimonials ? getReviews() : Promise.resolve([]),
-    getPopularCourses(hp.featuredCourseIds, hp.showFeaturedCourses),
     getLatestArticles(),
     getPromoBanners('home'),
   ]);
-  const nextBatch = await getNextBatchDates(courses.map((c) => c.id));
+  const courses = popularCourses(index.courses, hp.featuredCourseIds, hp.showFeaturedCourses);
+  const categories = index.categories;
+  const courseCount = index.courses.length;
 
   return (
     <>
@@ -300,7 +231,7 @@ export default async function HomePage() {
                   name="q"
                   placeholder="What do you want to learn? e.g. AWS, Python"
                   autoComplete="off"
-                  className="min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] md:text-[17px]"
+                  className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] md:text-[17px]"
                 />
                 <button type="submit" className="flex h-11 shrink-0 items-center gap-2 rounded-[10px] bg-[#005663] px-3 font-bold text-white hover:bg-[#0a3d4a] md:h-12 md:px-[22px]">
                   <Search className="h-5 w-5 md:hidden" aria-hidden="true" />
@@ -379,7 +310,7 @@ export default async function HomePage() {
                 </Link>
                 {categories.slice(0, 6).map((cat) => (
                   <Link
-                    key={cat.id}
+                    key={cat.slug}
                     href={`/courses/${cat.slug}`}
                     className="flex h-[38px] shrink-0 items-center rounded-full border border-[#cfdadd] bg-white px-4 text-[13px] text-[#26383d] hover:border-[#005663] md:h-10 md:px-[18px] md:text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
                   >
@@ -390,69 +321,9 @@ export default async function HomePage() {
             )}
 
             <div className="-mx-4 flex snap-x gap-3.5 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-3">
-              {courses.map((c, i) => {
-                const url = getCourseUrl(c);
-                const syllabus = syllabusLinkFor(c);
-                const date = nextBatch.get(c.id);
-                const tag = c.badge?.trim() && !DISALLOWED_BADGE.test(c.badge) ? c.badge.trim() : null;
-                const image = c.thumbnail && OPTIMISABLE_IMAGE.test(c.thumbnail) ? c.thumbnail : null;
-                return (
-                  <article key={c.id} className={`${CARD} flex w-[300px] shrink-0 snap-start flex-col overflow-hidden shadow-[0_2px_8px_rgba(10,61,74,0.06)] md:w-auto`}>
-                    <Link href={url} className="relative block h-40 md:h-[190px]" style={{ background: BANNER_FILLS[i % BANNER_FILLS.length] }} tabIndex={-1} aria-hidden="true">
-                      {image ? (
-                        <Image src={image} alt="" fill sizes="(min-width: 1024px) 384px, (min-width: 768px) 50vw, 300px" className="object-cover" />
-                      ) : (
-                        <span className="absolute inset-0 flex items-center justify-center px-6 text-center font-heading text-2xl font-extrabold leading-tight text-white/90">
-                          {c.title}
-                        </span>
-                      )}
-                      <span className="absolute left-3 top-3 max-w-[70%] truncate rounded-full bg-white/[0.92] px-2.5 py-1 text-[11px] font-bold text-[#0a3d4a] md:left-3.5 md:top-3.5 md:text-xs">
-                        {c.category}
-                      </span>
-                      {tag && (
-                        <span className="absolute right-3 top-3 rounded-full bg-[#b8531c] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.5px] text-white md:right-3.5 md:top-3.5">
-                          {tag}
-                        </span>
-                      )}
-                    </Link>
-                    <div className="flex flex-1 flex-col gap-2.5 p-4 md:gap-3 md:p-5">
-                      <h3 className="font-heading text-lg font-extrabold leading-snug text-[#17262a] md:text-xl dark:text-white">
-                        <Link href={url} className="hover:text-[#b8531c]">{c.title}</Link>
-                      </h3>
-                      <p className="flex flex-wrap gap-x-3.5 gap-y-1 text-xs text-[#4a5c61] md:text-[13px] dark:text-slate-400">
-                        {c.duration && <span className="inline-flex items-center gap-1"><Clock className="h-[15px] w-[15px]" aria-hidden="true" />{c.duration.trim()}</span>}
-                        {c.mode && <span className="inline-flex items-center gap-1"><Monitor className="h-[15px] w-[15px]" aria-hidden="true" />{c.mode}</span>}
-                        {c.level && <span className="inline-flex items-center gap-1"><BarChart3 className="h-[15px] w-[15px]" aria-hidden="true" />{c.level}</span>}
-                      </p>
-                      <p className="flex items-center gap-1.5 text-xs font-medium text-[#005663] md:text-[13px] dark:text-[#5ef0c8]">
-                        <CalendarDays className="h-[15px] w-[15px]" aria-hidden="true" />
-                        {date ? `Next batch: ${formatBatchDate(date)}` : 'Ask for the next batch date'} · 1-year LMS access
-                      </p>
-                      <div className="mt-auto grid grid-cols-2 gap-2 border-t border-[#eef2f3] pt-3 md:gap-2.5 md:pt-3.5 dark:border-slate-800">
-                        <TrackedCta
-                          href={FORM_ANCHOR}
-                          ctaId="book_demo"
-                          location="popular_courses"
-                          prefillCourse={c.title}
-                          className={`flex h-11 items-center justify-center gap-1.5 rounded-[10px] text-sm font-bold ${ORANGE_BUTTON}`}
-                        >
-                          <CalendarCheck className="h-4 w-4" aria-hidden="true" />
-                          Book demo
-                        </TrackedCta>
-                        <TrackedCta
-                          href={syllabus.href}
-                          ctaId="get_syllabus"
-                          location="popular_courses"
-                          className="flex h-11 items-center justify-center gap-1.5 rounded-[10px] border border-[#cfdadd] text-sm font-bold text-[#005663] hover:border-[#005663] dark:border-slate-700 dark:text-[#5ef0c8]"
-                        >
-                          <FileText className="h-4 w-4" aria-hidden="true" />
-                          Syllabus
-                        </TrackedCta>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
+              {courses.map((c, i) => (
+                <CourseTile key={c.id} course={c} index={i} layout="carousel" location="popular_courses" demoHref={FORM_ANCHOR} prefillCourse />
+              ))}
             </div>
 
             <TrackedCta

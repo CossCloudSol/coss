@@ -49,9 +49,12 @@ interface CourseRevalidationInput {
   categorySlug?: string | null;
 }
 
+/** Course search index route (src/app/api/search-index): lists every course and its next batch. */
+const SEARCH_INDEX_PATH = '/api/search-index';
+
 /** All public paths a single course occupies — see src/lib/course-url.ts for the canonical-URL logic this mirrors. */
 export function getCourseRevalidationPaths(course: CourseRevalidationInput): string[] {
-  const paths = ['/courses/' + course.slug, '/courses', '/'];
+  const paths = ['/courses/' + course.slug, '/courses', '/', SEARCH_INDEX_PATH];
 
   if (course.categorySlug) {
     paths.push('/courses/' + course.categorySlug + '/' + course.slug);
@@ -82,7 +85,7 @@ interface BatchRevalidationInput {
  * paths. A revalidation failure must not fail the caller's write.
  */
 export async function getBatchRevalidationPaths(batch: BatchRevalidationInput): Promise<string[]> {
-  const paths = ['/', '/placements', '/free-demo-class'];
+  const paths = ['/', '/placements', '/free-demo-class', SEARCH_INDEX_PATH];
 
   if (!batch.courseId) return paths;
 
