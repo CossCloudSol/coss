@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getCourseUrl, CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { syllabusLinkFor } from '@/lib/promo-banners';
 import { memoDuringBuild } from '@/lib/build-memo';
+import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 import { COURSE_CATALOG_TAG, parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
 
 // next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
@@ -108,7 +109,7 @@ async function loadSearchIndex(): Promise<SearchIndex> {
 
 // Revalidated by every course and batch write (revalidatePaths → COURSE_CATALOG_TAG)
 // and by category writes ('categories').
-const getCachedSearchIndex = unstable_cache(loadSearchIndex, ['course-search-index'], {
+const getCachedSearchIndex = unstable_cache(loadSearchIndex, ['course-search-index', DEPLOY_CACHE_KEY], {
   tags: [COURSE_CATALOG_TAG, 'categories'],
   revalidate: 86400,
 });

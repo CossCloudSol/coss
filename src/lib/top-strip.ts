@@ -4,6 +4,7 @@ import { COURSE_CATALOG_TAG } from '@/lib/course-search';
 import { getGoogleRating, type GoogleRating } from '@/lib/google-rating';
 import { ANNOUNCEMENT_BAR_DEFAULTS, fromDbRow } from '@/lib/validations/announcement-bar';
 import { hasLimitedSeats, LIMITED_SEATS_WINDOW_DAYS } from '@/lib/limited-seats';
+import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 
 /** What the header's top strip shows. */
 export interface TopStripData {
@@ -57,7 +58,7 @@ const getCachedStrip = unstable_cache(
       limitedSeats,
     };
   },
-  ['top-strip'],
+  ['top-strip', DEPLOY_CACHE_KEY],
   // Topbar saves revalidate 'announcement-bar'; batch writes revalidate the catalogue.
   { tags: ['announcement-bar', COURSE_CATALOG_TAG], revalidate: 3600 },
 );
