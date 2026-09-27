@@ -27,6 +27,7 @@ const BRANCH_MOBILE_BG: Record<string, string> = {
   dilsukhnagar: 'bg-[#024c57]',
   ameerpet:     'bg-[#03798a]',
   online:       'bg-[#1d4ed8]',
+  undecided:    'bg-gray-500',
 };
 const BRANCH_BG_CYCLE = ['bg-[#024c57]', 'bg-[#03798a]', 'bg-[#1d4ed8]'];
 
@@ -372,6 +373,7 @@ const BRANCH_LABEL: Record<string, string> = {
   dilsukhnagar: 'Dilsukhnagar',
   ameerpet: 'Ameerpet',
   online: 'Online',
+  undecided: 'Undecided',
 };
 
 function BranchTable({

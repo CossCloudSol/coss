@@ -55,6 +55,31 @@ export function detectDeviceType(): 'mobile' | 'desktop' {
  * missing gtag is a no-op, and any failure here must never affect the
  * download.
  */
+function gtagEvent(name: string, params: Record<string, string>): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    (window as any).gtag('event', name, params);
+  } catch {
+    /* best-effort */
+  }
+}
+
+/** GA4 form_start: first interaction with a lead form (fire once per form view). */
+export function trackFormStart(formId: string): void {
+  gtagEvent('form_start', { form_id: formId, page_path: window.location.pathname });
+}
+
+/** GA4 form_submit: a lead form was submitted and accepted. */
+export function trackFormSubmit(formId: string, course?: string): void {
+  gtagEvent('form_submit', { form_id: formId, page_path: window.location.pathname, ...(course ? { course } : {}) });
+}
+
+/** GA4 cta_click: a call-to-action link or button (ctaId names the CTA, location the section). */
+export function trackCtaClick(ctaId: string, location: string, destination: string): void {
+  gtagEvent('cta_click', { cta_id: ctaId, location, destination, page_path: window.location.pathname });
+}
+
 /**
  * GA4 promo_banner_click. Best-effort, like the other trackers here: a
  * missing gtag is a no-op and a failure never blocks the navigation.

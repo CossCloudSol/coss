@@ -18,7 +18,8 @@ export interface LeadSubmitInput {
   email?: string;
   course?: string;
   inquiryType?: string;
-  branch: Branch;
+  /** Omit when the form doesn't ask (homepage hero); the lead is saved as "undecided". */
+  branch?: Branch;
   message?: string;
   formType: FormType;
   /** From useBotGuard().botFields() at submit time. */

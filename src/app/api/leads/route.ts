@@ -20,6 +20,9 @@ export const dynamic = 'force-dynamic';
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
+/** Stored when a form doesn't ask for a branch. */
+const UNDECIDED_BRANCH = 'undecided';
+
 const BRANCH_VALUES = ['Dilsukhnagar', 'Ameerpet', 'Online'] as const;
 const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget', 'contact', 'brochure_request'] as const;
 
@@ -53,7 +56,9 @@ const leadInputSchema = z.object({
       z.string().trim().max(100, 'Inquiry type must be 100 characters or fewer').optional(),
     ),
 
-  branch: z.enum(BRANCH_VALUES, { error: 'Branch must be Dilsukhnagar, Ameerpet, or Online' }),
+  // Optional: the homepage hero form asks only name, phone and course; the
+  // counsellor confirms the branch on the call. Missing -> "undecided".
+  branch: z.enum(BRANCH_VALUES, { error: 'Branch must be Dilsukhnagar, Ameerpet, or Online' }).optional(),
 
   message: z
     .preprocess(
@@ -207,7 +212,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           // Admin list/stats compare against lowercase branch keys
           // (`dilsukhnagar` etc.) — normalize at write so a single value space
           // exists in the DB regardless of which form sent the lead.
-          branch: data.branch.toLowerCase(),
+          branch: data.branch ? data.branch.toLowerCase() : UNDECIDED_BRANCH,
           formType: data.formType,
           status: 'new',
           message: data.message ?? null,
@@ -248,8 +253,8 @@ export async function POST(req: NextRequest): Promise<Response> {
             ? `WhatsApp lead — ${data.name}`
             : `New lead — ${data.name}`,
         body: isBrochure
-          ? `Send the ${data.course ?? 'course'} brochure PDF via WhatsApp to this lead · ${data.branch}`
-          : `${data.course ?? 'No course specified'} · ${data.branch}`,
+          ? `Send the ${data.course ?? 'course'} brochure PDF via WhatsApp to this lead · ${data.branch ?? 'Branch undecided'}`
+          : `${data.course ?? 'No course specified'} · ${data.branch ?? 'Branch undecided'}`,
         link: '/admin/leads',
       });
     } catch (notifErr) {
