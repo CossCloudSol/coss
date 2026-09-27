@@ -23,9 +23,11 @@ export default function MegaMenuPanel({ index }: { index: SearchIndex }): JSX.El
     .join('');
 
   return (
-    <div data-mega="" data-active={first} className="grid grid-cols-[260px_minmax(0,1fr)_260px] gap-0">
+    // Height: at most the viewport below the header (38px strip + 76px row at
+    // rest, plus a margin); each column scrolls on its own.
+    <div data-mega="" data-active={first} className="grid h-[min(680px,calc(100vh-130px))] grid-cols-[260px_minmax(0,1fr)_260px] gap-0">
       <style>{rules}</style>
-      <ul aria-label="Course categories" className="max-h-[440px] overflow-y-auto border-r border-[#e3eaec] p-3">
+      <ul aria-label="Course categories" className="min-h-0 overflow-y-auto overscroll-contain border-r border-[#e3eaec] p-3">
         {categories.map((c) => (
           <li key={c.slug}>
             <Link href={`/courses/${c.slug}`} data-mega-cat={c.slug} className="mm-cat">
@@ -36,7 +38,7 @@ export default function MegaMenuPanel({ index }: { index: SearchIndex }): JSX.El
         ))}
       </ul>
 
-      <div className="max-h-[440px] overflow-y-auto p-5">
+      <div className="min-h-0 overflow-y-auto overscroll-contain p-5">
         {categories.map((c) => {
           const courses = index.courses.filter((x) => x.categorySlug === c.slug);
           return (
@@ -65,7 +67,7 @@ export default function MegaMenuPanel({ index }: { index: SearchIndex }): JSX.El
         })}
       </div>
 
-      <div className="flex flex-col gap-3 border-l border-[#e3eaec] bg-[#f4f7f8] p-5">
+      <div className="flex min-h-0 flex-col gap-3 overflow-y-auto overscroll-contain border-l border-[#e3eaec] bg-[#f4f7f8] p-5">
         <div className="flex flex-col gap-2.5 rounded-2xl bg-[#005663] p-5 text-white">
           <MessageCircle className="h-6 w-6" aria-hidden="true" />
           <p className="font-heading text-lg font-extrabold">Free career counselling</p>

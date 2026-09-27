@@ -4,6 +4,7 @@ import FooterLogo from './FooterLogo'
 import FooterNavCol from './FooterNavCol'
 import CallLink from './CallLink'
 import WhatsAppLink from './WhatsAppLink'
+import FooterThemeToggle from './FooterThemeToggle'
 import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
 
@@ -258,6 +259,7 @@ export default async function Footer() {
             <Link href="/terms-conditions">Terms</Link>
             <Link href="/refund-cancellation-policy">Refund Policy</Link>
             <Link href="/sitemap.xml">Sitemap</Link>
+            <FooterThemeToggle />
           </div>
         </div>
       </div>

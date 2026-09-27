@@ -164,7 +164,7 @@ export default function HomeHeroForm(): JSX.Element {
       </label>
 
       <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-        <legend className="mb-2 p-0 text-[13px] font-bold text-[#26383d]">
+        <legend className="mb-2 p-0 font-sans text-[13px] font-bold text-[#26383d]">
           How would you like to learn? <span className="font-normal text-[#6b7d82]">(optional)</span>
         </legend>
         <div className="grid grid-cols-3 gap-2">
@@ -207,7 +207,8 @@ export default function HomeHeroForm(): JSX.Element {
         {!busy && <ArrowRight className="h-5 w-5" aria-hidden="true" />}
       </button>
 
-      <p className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[13px] text-[#4a5c61]">
+      {/* font-sans on the small flowing lines: no shift when the web font swaps in. */}
+      <p className="flex flex-wrap justify-center gap-x-5 gap-y-1 font-sans text-[13px] text-[#4a5c61]">
         <span className="inline-flex items-center gap-1.5">
           <Check className="h-[15px] w-[15px] text-[#005663]" aria-hidden="true" />
           No payment to book

@@ -3268,7 +3268,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 /* Explore Courses mega-menu (MegaMenuPanel). Short classes on purpose: the
    panel is in every page's HTML and RSC payload, so repeated utility strings
    would add up. */
-.mm-cat { display: flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 8px; border-radius: 10px; padding: 0 12px; font-size: 14px; color: #17262a; }
+.mm-cat { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 8px; border-radius: 10px; padding: 0 12px; font-size: 14px; color: #17262a; }
 .mm-cat:hover, .mm-course:hover { background: #f4f7f8; }
 .mm-cat small { flex-shrink: 0; font-size: 12px; color: #6b7d82; }
 .mm-course { display: flex; min-height: 44px; flex-direction: column; justify-content: center; border-radius: 10px; padding: 6px 12px; }

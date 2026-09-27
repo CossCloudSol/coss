@@ -28,8 +28,8 @@ function initials(name: string): string {
 }
 
 /**
- * /faculty: trainers marked visible in Admin → Trainers. Public-safe fields
- * only: name, photo, title, expertise, experience and the courses they teach.
+ * /faculty: trainers marked visible in Admin → Trainers: name, photo, title,
+ * bio (public copy; clamped to 3 lines), expertise, experience and courses taught.
  */
 export default async function FacultyPage() {
   const trainers = await findTrainers();
@@ -98,6 +98,24 @@ export default async function FacultyPage() {
                         <p className="text-sm text-[#4a5c61] dark:text-slate-400">{t.title}</p>
                       </div>
                     </div>
+
+                    {t.bio && (
+                      // Clamped to 3 lines; the (visually hidden) checkbox toggles
+                      // the full text with no client JS, and the text stays in the HTML.
+                      <div>
+                        <input type="checkbox" id={`bio-${t.id}`} className="peer sr-only" />
+                        <p className="line-clamp-3 text-sm leading-relaxed text-[#4a5c61] peer-checked:line-clamp-none dark:text-slate-400">{t.bio}</p>
+                        {t.bio.length > 160 && (
+                          <label
+                            htmlFor={`bio-${t.id}`}
+                            className="mt-1 inline-block cursor-pointer text-sm font-bold text-[#b8531c] peer-focus-visible:underline [&>span:last-child]:hidden peer-checked:[&>span:first-child]:hidden peer-checked:[&>span:last-child]:inline"
+                          >
+                            <span>Read more</span>
+                            <span>Read less</span>
+                          </label>
+                        )}
+                      </div>
+                    )}
 
                     {years !== null && years > 0 && (
                       <p className="text-sm text-[#26383d] dark:text-slate-300">

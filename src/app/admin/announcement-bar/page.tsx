@@ -15,7 +15,6 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   AlertCircle,
   CheckCircle2,
-  ChevronRight,
   Eye,
   EyeOff,
   Loader2,
@@ -55,16 +54,7 @@ const DEFAULTS: BarConfig = {
   textColor:        '#ffffff',
 };
 
-// ── Colour presets ────────────────────────────────────────────────────────────
 
-const PRESETS = [
-  { label: 'Teal (default)', bg: '#0f766e', text: '#ffffff' },
-  { label: 'Deep Blue',      bg: '#1e40af', text: '#ffffff' },
-  { label: 'Vibrant Orange', bg: '#ea580c', text: '#ffffff' },
-  { label: 'Rich Purple',    bg: '#7c3aed', text: '#ffffff' },
-  { label: 'Midnight',       bg: '#111827', text: '#f9fafb' },
-  { label: 'Sunshine',       bg: '#fbbf24', text: '#1f2937' },
-];
 
 // ── Toast portal ──────────────────────────────────────────────────────────────
 
@@ -118,41 +108,21 @@ function ToastPortal({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: numbe
 
 // ── Live preview ──────────────────────────────────────────────────────────────
 
+/** Preview of the batches message as the new header strip shows it (site colours). */
 function BarPreview({ config }: { config: BarConfig }) {
   if (!config.isEnabled) {
     return (
       <div className="flex items-center justify-center h-12 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 text-sm text-gray-400 dark:text-gray-500 gap-2 select-none">
         <EyeOff className="w-4 h-4" />
-        Bar is disabled — it will not appear on the site
+        Message hidden: the strip shows only location, Live Online and 5,000+ students
       </div>
     );
   }
 
   return (
-    <div
-      className="relative flex items-center justify-center gap-3 px-12 py-2.5 rounded-lg text-sm font-medium overflow-hidden transition-all duration-200"
-      style={{ backgroundColor: config.backgroundColor, color: config.textColor, minHeight: 44 }}
-    >
-      <span className="text-center leading-snug">{config.announcementText || '…'}</span>
-
-      {config.ctaLabel && (
-        <span
-          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shrink-0 cursor-default"
-          style={{ backgroundColor: config.textColor, color: config.backgroundColor }}
-        >
-          {config.ctaLabel}
-          <ChevronRight className="w-3 h-3" />
-        </span>
-      )}
-
-      {/* Dismiss icon (decorative in preview) */}
-      <span
-        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-full opacity-60"
-        style={{ color: config.textColor }}
-        aria-hidden="true"
-      >
-        <X className="w-3.5 h-3.5" />
-      </span>
+    <div className="flex h-[38px] items-center gap-1.5 overflow-hidden rounded-lg bg-[#0a3d4a] px-4 font-sans text-[13px] text-white">
+      <span className="truncate">{config.announcementText || '…'}</span>
+      {config.ctaLabel && <span className="shrink-0 font-bold underline underline-offset-2">{config.ctaLabel}</span>}
     </div>
   );
 }
@@ -424,107 +394,11 @@ export default function AnnouncementBarAdminPage(): JSX.Element {
               </p>
             </div>
 
-            {/* ⑤ Colour presets */}
+            {/* Colours: kept in the saved record, but the new header strip uses the site colours. */}
             <div className="px-5 py-4">
-              <p className="text-sm font-medium text-[#475569] dark:text-gray-300 mb-2.5">Colour scheme presets</p>
-              <div className="flex flex-wrap gap-2">
-                {PRESETS.map((p) => {
-                  const active = config.backgroundColor === p.bg && config.textColor === p.text;
-                  return (
-                    <button
-                      key={p.label}
-                      type="button"
-                      title={p.label}
-                      onClick={() => {
-                        set('backgroundColor', p.bg);
-                        set('textColor', p.text);
-                      }}
-                      className={[
-                        'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border-2 transition-all duration-150',
-                        active
-                          ? 'border-white ring-2 ring-teal-400 shadow-md scale-105'
-                          : 'border-transparent opacity-80 hover:opacity-100 hover:scale-105',
-                      ].join(' ')}
-                      style={{ backgroundColor: p.bg, color: p.text }}
-                    >
-                      {active && <CheckCircle2 className="w-3 h-3 shrink-0" />}
-                      {p.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* ⑥ Custom colour pickers */}
-            <div className="px-5 py-4">
-              <p className="text-sm font-medium text-[#475569] dark:text-gray-300 mb-3">Custom colours</p>
-              <div className="grid grid-cols-2 gap-5">
-
-                {/* Background colour */}
-                <div>
-                  <label className="block text-xs text-[#94a3b8] dark:text-gray-400 mb-1.5" htmlFor="bg-color">
-                    Background colour
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <label
-                      htmlFor="bg-color"
-                      className="w-9 h-9 rounded-lg border border-[#e2e8f0] dark:border-white/10 cursor-pointer shadow-sm hover:shadow-md transition-shadow shrink-0"
-                      style={{ backgroundColor: config.backgroundColor }}
-                      title="Click to pick background colour"
-                    >
-                      <input
-                        id="bg-color"
-                        type="color"
-                        value={config.backgroundColor}
-                        onChange={(e) => set('backgroundColor', e.target.value)}
-                        className="sr-only"
-                      />
-                    </label>
-                    <input
-                      type="text"
-                      value={config.backgroundColor}
-                      onChange={(e) => set('backgroundColor', e.target.value)}
-                      maxLength={7}
-                      spellCheck={false}
-                      className="flex-1 rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-2.5 py-2 text-sm font-mono text-[#0f172a] dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
-                    />
-                  </div>
-                </div>
-
-                {/* Text colour */}
-                <div>
-                  <label className="block text-xs text-[#94a3b8] dark:text-gray-400 mb-1.5" htmlFor="text-color">
-                    Text colour
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <label
-                      htmlFor="text-color"
-                      className="w-9 h-9 rounded-lg border border-[#e2e8f0] dark:border-white/10 cursor-pointer shadow-sm hover:shadow-md transition-shadow shrink-0"
-                      style={{ backgroundColor: config.textColor }}
-                      title="Click to pick text colour"
-                    >
-                      <input
-                        id="text-color"
-                        type="color"
-                        value={config.textColor}
-                        onChange={(e) => set('textColor', e.target.value)}
-                        className="sr-only"
-                      />
-                    </label>
-                    <input
-                      type="text"
-                      value={config.textColor}
-                      onChange={(e) => set('textColor', e.target.value)}
-                      maxLength={7}
-                      spellCheck={false}
-                      className="flex-1 rounded-lg border border-[#e2e8f0] dark:border-white/10 bg-white dark:bg-gray-700 px-2.5 py-2 text-sm font-mono text-[#0f172a] dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-xs text-[#94a3b8] dark:text-gray-500 mt-3">
-                💡 Aim for high contrast between background and text for accessibility (WCAG AA).
+              <p className="text-sm font-medium text-[#475569] dark:text-gray-300">Colours</p>
+              <p className="mt-1 text-xs text-[#94a3b8] dark:text-gray-500">
+                Not used by the new header: the strip is always dark teal with white text, so the old colour settings are hidden.
               </p>
             </div>
           </div>
