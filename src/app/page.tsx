@@ -1,14 +1,36 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  ArrowRight,
+  Award,
+  BarChart3,
+  Briefcase,
+  Building2,
+  CalendarCheck,
+  CalendarDays,
+  CheckCircle2,
+  Clock,
+  Code2,
+  FileText,
+  MapPin,
+  MessageCircle,
+  Mic,
+  Monitor,
+  Phone,
+  Plus,
+  Search,
+  Send,
+  Star,
+  Users,
+} from 'lucide-react';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
 import { getHomepageSettings } from '@/lib/get-homepage-settings';
 import { getCourseUrl } from '@/lib/course-url';
-import { excerptDescription } from '@/lib/sanitizeDescription';
-import WhatsAppLink from '@/components/WhatsAppLink';
-import { WA_NUMBER, batchBookingMessage } from '@/lib/whatsapp';
 import { formatBatchDate } from '@/lib/batch-utils';
+import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners';
+import { getAllPosts } from '@/lib/posts';
 import {
   CAREER_SUPPORT_CTA,
   CAREER_SUPPORT_HEADLINE,
@@ -16,1237 +38,789 @@ import {
   PLACEMENT_DISCLAIMER,
   PLACEMENT_PROVIDERS_CONFIRMED,
 } from '@/lib/career-support';
-import {
-  Award,
-  BadgeCheck,
-  BarChart2,
-  BookOpen,
-  BrainCircuit,
-  Briefcase,
-  Building,
-  Calendar,
-  Clock,
-  Cloud,
-  Code2,
-  GraduationCap,
-  IndianRupee,
-  MessageSquare,
-  Monitor,
-  Rocket,
-  Settings,
-  Shield,
-  TestTube,
-  TrendingUp,
-  Users,
-  Wifi,
-  type LucideIcon,
-} from 'lucide-react';
-import WpImg from '@/components/WpImg';
-import HeroEnrollForm from '@/components/HeroEnrollForm';
-import HeroLaptopComposition from '@/components/HeroLaptopComposition';
-import CategoryGrid from '@/components/CategoryGrid';
-import { siteImages } from '@/lib/wpImages';
-import { optimizeCldUrl } from '@/lib/cloudinary';
+import CallLink from '@/components/CallLink';
+import WhatsAppLink from '@/components/WhatsAppLink';
+import PromoBanner from '@/components/PromoBanner';
+import HomeHeroForm from '@/components/home/HomeHeroForm';
+import TrackedCta from '@/components/home/TrackedCta';
 
-// Swap this URL to change the category section background
-const CATEGORY_SECTION_BG =
-  'https://res.cloudinary.com/dfditihuw/image/upload/f_auto,q_auto/v1784106397/tech_background_nvsdzj.png';
-
-function getCategoryAccent(slug: string): string {
-  const map: Record<string, string> = {
-    'cloud-computing':          'linear-gradient(90deg, #1e40af, #60a5fa)',
-    'devops-multi-cloud':       'linear-gradient(90deg, #0f766e, #2dd4bf)',
-    'data-analytics-bi':        'linear-gradient(90deg, #7c3aed, #a78bfa)',
-    'data-engineering':         'linear-gradient(90deg, #0369a1, #38bdf8)',
-    'programming-full-stack':   'linear-gradient(90deg, #b45309, #fbbf24)',
-    'cyber-security':           'linear-gradient(90deg, #065f46, #34d399)',
-    'erp-crm-enterprise-tools': 'linear-gradient(90deg, #9f1239, #fb7185)',
-    'software-testing-os':      'linear-gradient(90deg, #1d4ed8, #93c5fd)',
-    'digital-design':           'linear-gradient(90deg, #be185d, #f472b6)',
-    'professional-soft-skills': 'linear-gradient(90deg, #92400e, #fcd34d)',
-    'human-resource':           'linear-gradient(90deg, #7c3aed, #c4b5fd)',
-    'quantum-computing':        'linear-gradient(90deg, #0e7490, #67e8f9)',
-    'medical-coding':           'linear-gradient(90deg, #166534, #86efac)',
-  }
-  return map[slug] ?? 'linear-gradient(90deg, #f97316, #fb923c)'
-}
-
-function getCategoryIconBg(slug: string): string {
-  const map: Record<string, string> = {
-    'cloud-computing':          'rgba(96,165,250,0.15)',
-    'devops-multi-cloud':       'rgba(45,212,191,0.15)',
-    'data-analytics-bi':        'rgba(167,139,250,0.15)',
-    'data-engineering':         'rgba(56,189,248,0.15)',
-    'programming-full-stack':   'rgba(251,191,36,0.15)',
-    'cyber-security':           'rgba(52,211,153,0.15)',
-    'erp-crm-enterprise-tools': 'rgba(251,113,133,0.15)',
-    'software-testing-os':      'rgba(147,197,253,0.15)',
-    'digital-design':           'rgba(244,114,182,0.15)',
-    'professional-soft-skills': 'rgba(252,211,77,0.15)',
-    'human-resource':           'rgba(196,181,253,0.15)',
-    'quantum-computing':        'rgba(103,232,249,0.15)',
-    'medical-coding':           'rgba(134,239,172,0.15)',
-  }
-  return map[slug] ?? 'rgba(249,115,22,0.15)'
-}
-
-function getCategoryAccentSolid(slug: string): string {
-  const map: Record<string, string> = {
-    'cloud-computing':          '#2563eb',
-    'devops-multi-cloud':       '#0f766e',
-    'data-analytics-bi':        '#7c3aed',
-    'data-engineering':         '#0284c7',
-    'programming-full-stack':   '#d97706',
-    'cyber-security':           '#059669',
-    'erp-crm-enterprise-tools': '#e11d48',
-    'software-testing-os':      '#1d4ed8',
-    'digital-design':           '#db2777',
-    'professional-soft-skills': '#d97706',
-    'human-resource':           '#7c3aed',
-    'quantum-computing':        '#0891b2',
-    'medical-coding':           '#16a34a',
-    'certification':            '#7c3aed',
-  }
-  return map[slug] ?? '#ea580c'
-}
-
-function getCategoryAccentDark(slug: string): string {
-  const map: Record<string, string> = {
-    'cloud-computing':          '#378ADD',
-    'devops-multi-cloud':       '#1D9E75',
-    'data-analytics-bi':        '#7F77DD',
-    'data-engineering':         '#6366f1',
-    'programming-full-stack':   '#D85A30',
-    'cyber-security':           '#639922',
-    'erp-crm-enterprise-tools': '#E24B4A',
-    'software-testing-os':      '#22d3ee',
-    'digital-design':           '#D4537E',
-    'professional-soft-skills': '#EF9F27',
-    'human-resource':           '#7F77DD',
-    'quantum-computing':        '#97C459',
-    'medical-coding':           '#4ade80',
-    'certification':            '#7F77DD',
-  }
-  return map[slug] ?? '#7F77DD'
-}
-
-// Hero laptop composition — floating category tiles. Slugs are locked (match
-// CATEGORY_ICONS in CategoryGrid.tsx / CATEGORY_SLUG_MAP in course-url.ts).
-const HERO_CATEGORY_TILES: {
-  slug: string;
-  label: string;
-  Icon: LucideIcon;
-  accent: string;
-  pos: 1 | 2 | 3 | 4 | 5 | 6;
-  delay: string;
-  entranceDelay: string;
-  depth: number;
-  mobileHidden?: boolean;
-}[] = [
-  { slug: 'data-analytics-bi',                 label: 'Data & BI',              Icon: BarChart2,    accent: '#60a5fa', pos: 1, delay: '0s',   entranceDelay: '.45s', depth: 34 },
-  { slug: 'cloud-computing',                   label: 'Cloud Computing',        Icon: Cloud,        accent: '#38bdf8', pos: 2, delay: '0.4s', entranceDelay: '.55s', depth: 26 },
-  { slug: 'devops-multi-cloud',                label: 'DevOps & Multi-Cloud',   Icon: Settings,     accent: '#2dd4bf', pos: 3, delay: '0.8s', entranceDelay: '.65s', depth: 38, mobileHidden: true },
-  { slug: 'artificial-intelligence-training',  label: 'Artificial Intelligence', Icon: BrainCircuit, accent: '#fb923c', pos: 4, delay: '1s',   entranceDelay: '.75s', depth: 30 },
-  { slug: 'cyber-security',                    label: 'Cyber Security',         Icon: Shield,       accent: '#e879f9', pos: 5, delay: '1.6s', entranceDelay: '.85s', depth: 24 },
-  { slug: 'programming-full-stack',            label: 'Full Stack Development', Icon: Code2,        accent: '#818cf8', pos: 6, delay: '2s',   entranceDelay: '.95s', depth: 32, mobileHidden: true },
-];
-
-async function getCategories() {
-  try {
-    return await prisma.courseCategory.findMany({
-      where: { status: 'published' },
-      orderBy: { sortOrder: 'asc' },
-      include: {
-        _count: { select: { courses: { where: { status: 'published' } } } },
-      },
-    });
-  } catch {
-    return [];
-  }
-}
-
-const BLOG_GRADIENTS = [
-  'linear-gradient(135deg,#1a3a5c,#1e5799)',
-  'linear-gradient(135deg,#0a5260,#0d7a8e)',
-  'linear-gradient(135deg,#5c2a0a,#b0552a)',
-  'linear-gradient(135deg,#1a4a2a,#2e7d32)',
-];
-
-async function getHiringPartners() {
-  try {
-    return await prisma.hiringPartner.findMany({
-      where: { isVisible: true },
-      orderBy: { sortOrder: 'asc' },
-      select: { id: true, name: true, logoUrl: true, altText: true },
-    });
-  } catch { return []; }
-}
+/*
+ * Homepage built for lead generation (approved mockup "COSS Homepage Mockup"):
+ * hero with a course search and the free-demo form, trust bar, popular
+ * courses, promo banner slot, batches, how it works, career assistance,
+ * reviews, corporate strip, FAQ, latest articles and a final CTA band.
+ * Text-only hero (no images) so LCP is the headline. No third-party scripts.
+ * GA4 events: form_start / form_submit (hero form), cta_click (every CTA).
+ *
+ * Allowed claims only: "since 2010", "5,000+ students trained",
+ * "50+ hiring partners", "1-year access".
+ */
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('home');
 }
 
-const CORP_FEATURES: Array<{ Icon: LucideIcon; text: string }> = [
-  { Icon: Users,         text: 'Highly experienced, industry-certified faculty.' },
-  { Icon: Building,      text: 'Dedicated batches for Hyderabad corporate clients.' },
-  { Icon: Award,         text: 'Certified instructor-led training.' },
-  { Icon: Clock,         text: 'Flexible class timings to suit your teams.' },
-  { Icon: Settings,      text: 'Customised approach with weekend workshops on advanced technologies.' },
-  { Icon: MessageSquare, text: 'Programs shaped by in-depth training-needs analysis.' },
-];
+const FORM_ANCHOR = '#enroll-form';
+const PHONE = '+918885166007';
 
-const CORP_BADGES: Array<{ label: string; Icon: LucideIcon }> = [
-  { label: 'SKILLS',        Icon: BookOpen     },
-  { label: 'GROWTH',        Icon: Rocket       },
-  { label: 'SUCCESS',       Icon: Award        },
-  { label: 'TRANSFORMATION',Icon: GraduationCap},
-];
+const ORANGE_BUTTON = 'bg-[#b8531c] text-white hover:bg-[#8f3f14]';
+const EYEBROW = 'text-xs font-bold uppercase tracking-[1.4px] text-[#b8531c] md:text-[13px] dark:text-[#f3a57a]';
+const H2 = 'font-heading text-[26px] font-extrabold leading-tight text-[#0a3d4a] md:text-[38px] dark:text-white';
+const SECTION = 'px-4 py-10 md:px-8 md:py-20';
+const CONTAINER = 'mx-auto max-w-[1200px]';
+const CARD = 'rounded-2xl border border-[#e3eaec] bg-white dark:border-slate-700 dark:bg-slate-900';
 
-const CORP_BOTTOM_BAR: Array<{ Icon: LucideIcon; title: string; desc: string }> = [
-  { Icon: Award,  title: 'EXPERT TRAINERS',    desc: 'Industry-leading professionals.'   },
-  { Icon: Shield, title: 'PROVEN RESULTS',     desc: 'Impactful training that delivers.' },
-  { Icon: Users,  title: 'TAILORED SOLUTIONS', desc: 'Programs designed for your goals.' },
-];
+const POPULAR_SEARCHES = ['AWS DevOps', 'Python Full Stack', 'Data Science', 'Ethical Hacking', 'Azure'] as const;
 
-const CORP_QR_SRC =
-  `https://api.qrserver.com/v1/create-qr-code/?size=88x88&data=https%3A%2F%2Fwa.me%2F${WA_NUMBER}&bgcolor=ffffff&color=083344&margin=4`;
+const HERO_POINTS = [
+  { icon: Monitor, text: 'Live trainer-led classes, with recordings and 1-year LMS access' },
+  { icon: Code2, text: 'Hands-on labs and real-world projects in every module' },
+  { icon: Briefcase, text: 'Career and placement assistance with 50+ hiring partners' },
+] as const;
 
-async function getFeaturedJobs() {
+// The Google rating item joins this bar once live Google review data exists (Q5).
+const TRUST_ITEMS = [
+  { icon: CalendarDays, value: 'Since 2010', label: 'Training in Hyderabad' },
+  { icon: Users, value: '5,000+', label: 'Students trained' },
+  { icon: Briefcase, value: '50+', label: 'Hiring partners' },
+  { icon: MapPin, value: '2 + Online', label: 'Dilsukhnagar · Ameerpet' },
+] as const;
+
+const STEPS = [
+  { icon: CalendarCheck, title: 'Book a free demo', body: 'Pick a course and leave your number. A counsellor calls or WhatsApps you to fix a slot.' },
+  { icon: Users, title: 'Attend the demo, meet your trainer', body: 'Online or at our Dilsukhnagar or Ameerpet branch. See how the class runs before you pay anything.' },
+  { icon: CheckCircle2, title: 'Enrol and start learning', body: 'Choose a weekday, weekend or online batch. Recordings and materials come with 1-year access.' },
+] as const;
+
+const CAREER_ICONS = { resume: FileText, mock: Mic, prep: Award, referrals: Send } as const;
+
+const FAQS = [
+  { q: 'Is the demo class really free?', a: 'Yes. Book a slot, attend one class online or at a branch, and decide after. No payment is needed to book.' },
+  { q: 'Can I learn online instead of at a branch?', a: 'Yes. Courses run live online as well as in our Dilsukhnagar and Ameerpet classrooms. Recordings and materials come with 1-year access.' },
+  { q: 'Do you help with placements?', a: `Resume building, mock interviews, interview preparation and referrals to our 50+ hiring partners. ${PLACEMENT_DISCLAIMER}` },
+  { q: 'How long has Coss Cloud Solutions been training students?', a: 'We have been training IT students in Hyderabad since 2010, with 5,000+ students trained.' },
+  { q: 'What batch timings are available?', a: 'Weekday, weekend and online batches. A counsellor shares the next start dates for your course when you book a demo.' },
+] as const;
+
+/** Brand fills for course banners without an image and for article covers. */
+const BANNER_FILLS = ['#0a3d4a', '#1f3a44', '#123f55', '#5a3a26', '#005663', '#26383d'] as const;
+
+// Admin badges that read as placement or ranking claims are not shown here.
+const DISALLOWED_BADGE = /placement|guarant|bestseller|rank|#\s*1\b|\bno\.?\s*1\b/i;
+
+// next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
+const OPTIMISABLE_IMAGE = /^https:\/\/res\.cloudinary\.com\/dfditihuw\//;
+
+/* ── Data ─────────────────────────────────────────────────────────────── */
+
+function todayMidnightIST(): Date {
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const nowIST = new Date(Date.now() + istOffset);
+  return new Date(Date.UTC(nowIST.getUTCFullYear(), nowIST.getUTCMonth(), nowIST.getUTCDate()) - istOffset);
+}
+
+async function getCategories() {
   try {
-    const now = new Date();
-    return await prisma.job.findMany({
-      where: {
-        status: 'active',
-        featured: true,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
-      },
-      orderBy: { postedAt: 'desc' },
-      take: 6,
-      select: { id: true, title: true, company: true, category: true, salary: true, mode: true },
+    const rows = await prisma.courseCategory.findMany({
+      where: { status: 'published' },
+      orderBy: { sortOrder: 'asc' },
+      select: { id: true, name: true, slug: true, _count: { select: { courses: { where: { status: 'published' } } } } },
     });
-  } catch { return []; }
+    return rows.filter((c) => c._count.courses > 0);
+  } catch {
+    return [];
+  }
+}
+
+async function getPublishedCourseCount() {
+  try {
+    return await prisma.course.count({ where: { status: 'published' } });
+  } catch {
+    return 0;
+  }
 }
 
 async function getUpcomingBatches() {
   try {
-    // IST = UTC+5:30; startDate must be today or later (IST midnight)
-    const now = new Date();
-    const istOffset = 5.5 * 60 * 60 * 1000;
-    const nowIST = new Date(now.getTime() + istOffset);
-    const todayMidnightIST = new Date(
-      Date.UTC(nowIST.getUTCFullYear(), nowIST.getUTCMonth(), nowIST.getUTCDate()) - istOffset
-    );
-
     const all = await prisma.batch.findMany({
-      where: {
-        status: { in: ['upcoming', 'ongoing'] },
-        featured: true,
-        startDate: { gte: todayMidnightIST },
-      },
-      include: { course: { select: { title: true, categorySlug: true } } },
+      where: { status: { in: ['upcoming', 'ongoing'] }, featured: true, startDate: { gte: todayMidnightIST() } },
+      include: { course: { select: { title: true } } },
       orderBy: { startDate: 'asc' },
       take: 20,
     });
-
-    // Deduplicate: one earliest batch per course
+    // One earliest batch per course
     const seen = new Set<string>();
-    const deduped: typeof all = [];
-    for (const b of all) {
-      if (!seen.has(b.courseId)) {
-        seen.add(b.courseId);
-        deduped.push(b);
+    return all.filter((b) => (seen.has(b.courseId) ? false : (seen.add(b.courseId), true))).slice(0, 4);
+  } catch {
+    return [];
+  }
+}
+
+/** Earliest upcoming start date per course, for the popular course cards. */
+async function getNextBatchDates(courseIds: string[]): Promise<Map<string, Date>> {
+  const next = new Map<string, Date>();
+  if (courseIds.length === 0) return next;
+  try {
+    const rows = await prisma.batch.findMany({
+      where: { courseId: { in: courseIds }, status: { in: ['upcoming', 'ongoing'] }, startDate: { gte: todayMidnightIST() } },
+      orderBy: { startDate: 'asc' },
+      select: { courseId: true, startDate: true },
+    });
+    for (const r of rows) if (!next.has(r.courseId)) next.set(r.courseId, r.startDate);
+  } catch {
+    /* cards show no date */
+  }
+  return next;
+}
+
+async function getReviews() {
+  try {
+    return await prisma.testimonial.findMany({
+      where: { visible: true, scope: 'global' },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+      take: 3,
+      select: { id: true, name: true, jobTitle: true, company: true, quote: true, rating: true, reviewDate: true },
+    });
+  } catch {
+    return [];
+  }
+}
+
+const COURSE_SELECT = {
+  id: true,
+  title: true,
+  slug: true,
+  category: true,
+  duration: true,
+  mode: true,
+  level: true,
+  badge: true,
+  thumbnail: true,
+  brochureUrl: true,
+  categorySlug: true,
+  urlType: true,
+} as const;
+
+/** Admin-picked popular courses (Homepage manager), else the featured courses. */
+async function getPopularCourses(ids: string[], useAdminPick: boolean) {
+  try {
+    if (useAdminPick && ids.length > 0) {
+      const rows = await prisma.course.findMany({ where: { id: { in: ids }, status: 'published' }, select: COURSE_SELECT });
+      return ids.map((id) => rows.find((c) => c.id === id)).filter((c): c is NonNullable<typeof c> => c != null).slice(0, 6);
+    }
+    return await prisma.course.findMany({
+      where: { status: 'published', featured: true },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
+      take: 6,
+      select: COURSE_SELECT,
+    });
+  } catch {
+    return [];
+  }
+}
+
+interface ArticleCard {
+  href: string;
+  title: string;
+  category: string;
+  date: string | null;
+  readTime: string | null;
+  image: string | null;
+}
+
+/**
+ * Three newest admin blog posts; topped up from the MDX archive when there
+ * are fewer. MDX dates are synthesised display dates, so they aren't shown.
+ */
+async function getLatestArticles(): Promise<ArticleCard[]> {
+  try {
+    const rows = await prisma.blogPost.findMany({
+      where: { status: 'published' },
+      orderBy: [{ publishedAt: 'desc' }, { createdAt: 'desc' }],
+      take: 3,
+      select: { slug: true, title: true, category: true, readTime: true, thumbnail: true, publishedAt: true, createdAt: true },
+    });
+    const cards: ArticleCard[] = rows.map((p) => ({
+      href: `/blog/${p.slug}`,
+      title: p.title,
+      category: p.category || 'Career',
+      date: formatBatchDate(p.publishedAt ?? p.createdAt),
+      readTime: p.readTime,
+      image: p.thumbnail && OPTIMISABLE_IMAGE.test(p.thumbnail) ? p.thumbnail : null,
+    }));
+    if (cards.length < 3) {
+      const mdx = await getAllPosts();
+      for (const p of mdx) {
+        if (cards.length >= 3) break;
+        if (cards.some((c) => c.href === `/blog/${p.slug}`)) continue;
+        cards.push({ href: `/blog/${p.slug}`, title: p.frontmatter.title, category: p.frontmatter.categories?.[0] ?? 'Career', date: null, readTime: p.frontmatter.readingTime ?? null, image: null });
       }
     }
-    return deduped.slice(0, 3);
-  } catch { return []; }
+    return cards;
+  } catch {
+    return [];
+  }
 }
 
-async function getBlogPosts() {
-  try {
-    const posts = await prisma.blogPost.findMany({
-      where: { status: 'published' },
-      orderBy: { createdAt: 'desc' },
-      take: 10,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        createdAt: true,
-        category: true,
-      },
-    });
-    // Guard against junk slugs (e.g. /blog/a) — require slug length >= 4
-    return posts.filter(p => p.slug.length >= 4).slice(0, 3);
-  } catch { return []; }
-}
+/* ── Page ─────────────────────────────────────────────────────────────── */
 
 export default async function HomePage() {
-  // Partner logos and the job board stay hidden (and unqueried) until
-  // PLACEMENT_PROVIDERS_CONFIRMED is switched on.
-  const [categories, featuredJobs, upcomingBatches, hpSettings, blogPosts, hiringPartners] = await Promise.all([
+  const hp = await getHomepageSettings();
+  const [categories, courseCount, batches, reviews, courses, articles, homeBanners] = await Promise.all([
     getCategories(),
-    PLACEMENT_PROVIDERS_CONFIRMED ? getFeaturedJobs() : Promise.resolve([]),
+    getPublishedCourseCount(),
     getUpcomingBatches(),
-    getHomepageSettings(),
-    getBlogPosts(),
-    PLACEMENT_PROVIDERS_CONFIRMED ? getHiringPartners() : Promise.resolve([]),
+    hp.showTestimonials ? getReviews() : Promise.resolve([]),
+    getPopularCourses(hp.featuredCourseIds, hp.showFeaturedCourses),
+    getLatestArticles(),
+    getPromoBanners('home'),
   ]);
-
-  const featuredCourses = hpSettings.showFeaturedCourses && hpSettings.featuredCourseIds.length > 0
-    ? await prisma.course.findMany({
-        where: { id: { in: hpSettings.featuredCourseIds }, status: 'published' },
-      }).then(courses =>
-        hpSettings.featuredCourseIds
-          .map(id => courses.find(c => c.id === id))
-          .filter((c): c is NonNullable<typeof c> => c != null)
-      )
-    : [];
-
-  const siteOrigin = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
-  const secondaryCtaUrl = hpSettings.heroCTASecondaryUrl?.trim();
-  const secondaryCtaHref = secondaryCtaUrl?.startsWith(siteOrigin)
-    ? secondaryCtaUrl.slice(siteOrigin.length) || '/'
-    : secondaryCtaUrl;
-  const secondaryCtaIsExternal = !!secondaryCtaUrl && secondaryCtaHref === secondaryCtaUrl && /^https?:\/\//i.test(secondaryCtaUrl);
+  const nextBatch = await getNextBatchDates(courses.map((c) => c.id));
 
   return (
     <>
-      {/* ── Hero ── */}
-      <section className="hero-section" aria-label="Hero">
-
-        {/* Decorative orbs rendered via CSS classes */}
-        <div className="hero-orb-right" aria-hidden="true" />
-        <div className="hero-orb-left"  aria-hidden="true" />
-        <div className="hero-bg-sweep"  aria-hidden="true" />
-
-        {/* Circuit / tech line traces — valid SVG coordinates only */}
-        <svg
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 w-full h-full"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="xMidYMid slice"
-          style={{ opacity: 0.18, zIndex: 0 }}
-        >
-          <defs>
-            <linearGradient id="hg-teal" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#4fd1c5" stopOpacity="0.9"/>
-              <stop offset="100%" stopColor="#4fd1c5" stopOpacity="0"/>
-            </linearGradient>
-            <linearGradient id="hg-orange" x1="100%" y1="0%" x2="0%" y2="0%">
-              <stop offset="0%" stopColor="#e47538" stopOpacity="0.9"/>
-              <stop offset="100%" stopColor="#e47538" stopOpacity="0"/>
-            </linearGradient>
-          </defs>
-          {/* Left-side teal circuit traces */}
-          <g stroke="url(#hg-teal)" strokeWidth="1.4" fill="none">
-            <polyline points="0,80 90,80 120,50 300,50" />
-            <circle cx="300" cy="50" r="4" fill="#4fd1c5" fillOpacity="0.6" stroke="none" />
-            <polyline points="0,180 55,180 85,150 210,150 240,120" />
-            <circle cx="210" cy="150" r="3" fill="#4fd1c5" fillOpacity="0.5" stroke="none" />
-            <polyline points="0,300 42,300 72,270 180,270" />
-            <circle cx="180" cy="270" r="3" fill="#4fd1c5" fillOpacity="0.4" stroke="none" />
-          </g>
-          {/* Right-side orange circuit traces (fixed pixel coords from right edge ~1200px) */}
-          <g stroke="url(#hg-orange)" strokeWidth="1.4" fill="none">
-            <polyline points="1200,60 1110,60 1080,90 1080,190" />
-            <circle cx="1200" cy="60" r="4" fill="#e47538" fillOpacity="0.6" stroke="none" />
-            <polyline points="1200,250 1140,250 1110,220 980,220" />
-            <circle cx="1200" cy="250" r="3" fill="#e47538" fillOpacity="0.5" stroke="none" />
-          </g>
-          {/* Hexagonal accent shapes */}
-          <g fill="none" strokeWidth="1.2">
-            <polygon stroke="#4fd1c5" strokeOpacity="0.25" points="55,28 77,16 99,28 99,52 77,64 55,52" />
-            <polygon stroke="#e47538" strokeOpacity="0.2" points="1090,340 1112,328 1134,340 1134,364 1112,376 1090,364" />
-          </g>
-          {/* Floating accent dots */}
-          <circle cx="420" cy="110" r="2.5" fill="#4fd1c5" fillOpacity="0.5" />
-          <circle cx="310" cy="290" r="2" fill="#e47538" fillOpacity="0.45" />
-          <circle cx="900" cy="80"  r="3" fill="#4fd1c5" fillOpacity="0.3" />
-          <circle cx="760" cy="350" r="2" fill="#fff" fillOpacity="0.2" />
-        </svg>
-
-        {/* Flowing wave lines — lower band only, echoes the category section's tech background */}
-        <svg
-          aria-hidden="true"
-          className="hero-wave-lines"
-          viewBox="0 0 1200 300"
-          preserveAspectRatio="none"
-        >
-          <path d="M0,170 C150,130 300,210 480,180 C660,150 780,220 960,190 C1080,170 1140,200 1200,180" stroke="rgba(59,130,246,.5)" strokeWidth="1.5" fill="none" />
-          <path d="M0,210 C180,250 320,170 500,205 C680,240 820,160 1000,195 C1100,215 1150,190 1200,205" stroke="rgba(168,85,247,.45)" strokeWidth="1.5" fill="none" />
-          <path d="M0,255 C200,225 360,275 560,245 C760,215 900,265 1080,240 C1130,232 1170,245 1200,238" stroke="rgba(96,165,250,.25)" strokeWidth="1" fill="none" />
-        </svg>
-
-        <div className="hero-inner">
-
-          {/* Left: copy + trust indicators + CTAs */}
-          <div>
-            <div className="hero-badge" role="text">
-              <GraduationCap className="hero-badge-icon" aria-hidden="true" />
-              Learn Today. <span className="hero-badge-accent">Get Hired Tomorrow.</span>
-            </div>
-
-            <h1 className="hero-title">
-              <span className="hero-title-white">Industry-Focused</span><br />
-              <span className="hero-title-orange">IT Training</span>{' '}
-              <span className="hero-title-white">for</span><br />
-              <span className="hero-title-white">Your </span>
-              <span className="hero-title-blue">Future</span>
-            </h1>
-
-            <p className="hero-desc">
-              {hpSettings.heroSubtext}
+      {/* ── Hero: course search + free demo form ── */}
+      <section aria-label="Book a free demo class" className="bg-[#0a3d4a] px-4 pb-8 pt-7 md:px-8 md:pb-[72px] md:pt-16">
+        <div className={`${CONTAINER} grid gap-4 lg:grid-cols-[minmax(0,1fr)_480px] lg:gap-x-16 lg:gap-y-6`}>
+          <div className="flex flex-col gap-4 md:gap-6 lg:col-start-1 lg:row-start-1">
+            <p className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-[#ffd9c2] md:px-3.5 md:py-2 md:text-sm">
+              <MapPin className="h-4 w-4" aria-hidden="true" />
+              IT training in Hyderabad · Since 2010
             </p>
-
-            {/* Trust indicators — value + label are admin-editable (stat1-4Value/Label),
-                icons/colors are fixed. A stat with no value is withheld pending
-                verification, so the whole item is dropped rather than showing a bare label. */}
-            <div className="hero-trust-row" aria-label="Why choose us">
-              {([
-                { Icon: Users,       color: 'orange',  value: hpSettings.stat1Value, label: hpSettings.stat1Label },
-                { Icon: BadgeCheck,  color: 'purple',  value: hpSettings.stat2Value, label: hpSettings.stat2Label },
-                { Icon: Briefcase,   color: 'blue',    value: hpSettings.stat3Value, label: hpSettings.stat3Label },
-                { Icon: TrendingUp,  color: 'emerald', value: hpSettings.stat4Value, label: hpSettings.stat4Label },
-              ]).filter(({ value }) => value).map(({ Icon, color, value, label }) => (
-                <div key={label} className={`hero-trust-item hero-trust-item-${color}`}>
-                  <Icon className="hero-trust-icon" aria-hidden="true" />
-                  <span className="hero-trust-value">{value}</span>
-                  <span className="hero-trust-label">{label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Primary + Secondary CTAs — min 48px tap targets. Primary always
-                scrolls to the relocated enroll form; secondary navigates to
-                the admin-configured URL, falling back to the form when unset. */}
-            <div className="hero-btns">
-              <a href="#enroll-form" className="btn-primary hero-cta-primary">
-                {hpSettings.heroCTAPrimaryText}
-              </a>
-              {secondaryCtaHref ? (
-                secondaryCtaIsExternal ? (
-                  <a href={secondaryCtaHref} className="btn-outline-dark hero-cta-secondary">
-                    {hpSettings.heroCTASecondaryText}
-                  </a>
-                ) : (
-                  <Link href={secondaryCtaHref} className="btn-outline-dark hero-cta-secondary">
-                    {hpSettings.heroCTASecondaryText}
-                  </Link>
-                )
-              ) : (
-                <a href="#enroll-form" className="btn-outline-dark hero-cta-secondary">
-                  {hpSettings.heroCTASecondaryText}
-                </a>
-              )}
-            </div>
-          </div>
-
-          {/* Right: laptop composition */}
-          <HeroLaptopComposition>
-            <div className="hero-ring hero-ring-outer" aria-hidden="true" />
-            <div className="hero-ring hero-ring-inner" aria-hidden="true" />
-            <div className="hero-laptop-parallax" data-depth="18">
-              <div className="hero-laptop-float">
-                <Image
-                  src="https://res.cloudinary.com/dfditihuw/image/upload/f_auto,q_auto/v1784125790/hero-laptop_h1vcqj.png"
-                  alt="Coss Cloud Solutions online learning platform"
-                  width={768}
-                  height={512}
-                  priority
-                  sizes="(min-width: 1024px) 500px, (min-width: 600px) 560px, calc(100vw - 40px)"
-                  className="hero-laptop-img"
+            <h1 className="font-heading text-[32px] font-extrabold leading-[1.12] text-white md:text-[54px] md:leading-[1.08]">{hp.heroHeadline}</h1>
+            <p className="max-w-[600px] text-base leading-relaxed text-white/85 md:text-[19px] md:leading-[1.6]">{hp.heroSubtext}</p>
+            <form action="/courses" method="get" role="search" aria-label="Find a course" className="flex max-w-[640px] flex-col gap-3">
+              <div className="flex h-[54px] items-center gap-2 rounded-xl bg-white pl-3.5 pr-1.5 text-[#6b7d82] shadow-[0_12px_30px_rgba(0,0,0,0.25)] md:h-[62px] md:rounded-[14px] md:pl-5 md:pr-2">
+                <Search className="h-5 w-5 shrink-0 md:h-[22px] md:w-[22px]" aria-hidden="true" />
+                <label htmlFor="hero-course-search" className="sr-only">What do you want to learn?</label>
+                <input
+                  id="hero-course-search"
+                  type="search"
+                  name="q"
+                  placeholder="What do you want to learn? e.g. AWS, Python"
+                  autoComplete="off"
+                  className="min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] md:text-[17px]"
                 />
+                <button type="submit" className="flex h-11 shrink-0 items-center gap-2 rounded-[10px] bg-[#005663] px-3 font-bold text-white hover:bg-[#0a3d4a] md:h-12 md:px-[22px]">
+                  <Search className="h-5 w-5 md:hidden" aria-hidden="true" />
+                  <span className="sr-only md:not-sr-only">Search</span>
+                </button>
               </div>
-            </div>
-            {HERO_CATEGORY_TILES.map((tile) => (
-              <div
-                key={tile.slug}
-                className={`hero-cat-tile-wrap hero-cat-tile-${tile.pos}`}
-                data-depth={tile.depth}
-              >
-                <Link
-                  href={`/courses/${tile.slug}`}
-                  className={`hero-cat-tile flex flex-col items-center gap-1${tile.mobileHidden ? ' hidden lg:flex' : ''}`}
-                  style={{ '--tile-accent': tile.accent, animationDelay: `${tile.entranceDelay}, ${tile.delay}` } as React.CSSProperties}
-                >
-                  <tile.Icon className="hero-cat-tile-icon" aria-hidden="true" />
-                  <span className="hero-cat-tile-label">{tile.label}</span>
-                </Link>
-              </div>
-            ))}
-          </HeroLaptopComposition>
-        </div>
-      </section>
-
-      {/* ── Book Your Free Demo Class (relocated hero enroll form) ── */}
-      <section id="enroll-form" className="enroll-form-section" aria-label="Book your free demo class">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <HeroEnrollForm />
-        </div>
-      </section>
-
-      {/* ── Featured Courses ── */}
-      {hpSettings.showFeaturedCourses && featuredCourses.length > 0 && (
-        <section className="py-16 bg-gray-50 dark:bg-gray-950" aria-label="Featured courses">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <span className="text-orange-500 dark:text-orange-400 text-xs font-bold uppercase tracking-widest">
-                Featured Courses
-              </span>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                {hpSettings.featuredSectionTitle}
-              </h2>
-              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-              {hpSettings.featuredSectionSubtext && (
-                <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-2xl mx-auto">
-                  {hpSettings.featuredSectionSubtext}
-                </p>
-              )}
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredCourses.slice(0, 6).map((course, index) => {
-                const isNew = new Date(course.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-                const isFirst = index === 0;
-                const badgeText = isFirst ? 'Most Popular' : isNew ? 'Newly Added' : null;
-                const courseUrl = getCourseUrl(course);
-                const formattedPrice = course.price != null
-                  ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(course.price)
-                  : null;
-                const cardExcerpt = excerptDescription(course.excerpt || course.description);
-
-                return (
-                  <div key={course.id} className="rounded-xl overflow-hidden shadow-md border border-gray-100 dark:border-gray-700 flex flex-col hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-l-4 border-l-transparent hover:border-l-orange-500">
-                    {/* Dark navy header */}
-                    <div className="bg-gradient-to-br from-[#0f1f3d] to-[#1a3460] p-5 flex flex-col gap-3 min-h-[140px]">
-                      {badgeText && (
-                        <span className="self-start bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
-                          {badgeText}
-                        </span>
-                      )}
-                      <h3 className="text-white font-semibold text-lg leading-snug line-clamp-2">
-                        {course.title}
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {course.duration && (
-                          <span className="bg-white/10 text-white/90 text-xs px-3 py-1 rounded-full flex items-center gap-1">
-                            🕐 {course.duration}
-                          </span>
-                        )}
-                        {course.mode && (
-                          <span className="bg-white/10 text-white/90 text-xs px-3 py-1 rounded-full flex items-center gap-1">
-                            🏛 {course.mode}
-                          </span>
-                        )}
-                        {course.level && (
-                          <span className="bg-white/10 text-white/90 text-xs px-3 py-1 rounded-full flex items-center gap-1">
-                            📋 {course.level}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {/* White body */}
-                    <div className="bg-white dark:bg-gray-800 p-5 flex flex-col gap-4 flex-1 border-t border-gray-100 dark:border-gray-700">
-                      {cardExcerpt && (
-                        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3 flex-1">
-                          {cardExcerpt}
-                        </p>
-                      )}
-                      <div className="flex items-center justify-between mt-auto pt-2">
-                        {formattedPrice ? (
-                          <span className="text-gray-900 dark:text-white font-bold text-lg">{formattedPrice}</span>
-                        ) : (
-                          <span className="text-gray-400 text-sm">Price on request</span>
-                        )}
-                        <a
-                          href={courseUrl}
-                          className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors whitespace-nowrap shadow-sm hover:shadow-md"
-                        >
-                          View <span className="sr-only">{course.title} </span>Details →
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── Course Categories ── */}
-      <section
-        className="py-20 relative overflow-hidden bg-[#05080f]"
-        aria-label="Course categories"
-      >
-        {/* Animated tech-pattern background */}
-        <div className="cat-bg-kenburns" aria-hidden="true">
-          <Image
-            src={CATEGORY_SECTION_BG}
-            alt=""
-            fill
-            loading="lazy"
-            quality={60}
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-        <div className="cat-bg-orb cat-bg-orb-1" aria-hidden="true" />
-        <div className="cat-bg-orb cat-bg-orb-2" aria-hidden="true" />
-        {/* Light veil — reveals the image's wave lines/glows, still protects contrast */}
-        <div className="absolute inset-0 z-0 bg-[rgba(5,8,15,0.35)] pointer-events-none" aria-hidden="true" />
-        {/* Radial darkening behind the header only, for extra heading contrast over the image's bright top region */}
-        <div className="cat-bg-header-veil" aria-hidden="true" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <div className="text-orange-400 text-xs font-bold uppercase tracking-widest">30+ Courses Available</div>
-            <h2 className="text-3xl font-bold text-white mt-2">Build Skills Employers Demand</h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="text-slate-400 mt-3 max-w-2xl mx-auto text-sm">
-              Industry-focused training in Hyderabad — practical labs, expert trainers, career support
-            </p>
-          </div>
-
-          <CategoryGrid
-            categories={categories.map((cat) => ({
-              slug: cat.slug,
-              name: cat.name,
-              description: cat.description,
-              courseCount: cat._count?.courses ?? 0,
-              accentGradient: getCategoryAccent(cat.slug),
-              accentSolid: getCategoryAccentSolid(cat.slug),
-              accentDark: getCategoryAccentDark(cat.slug),
-              iconBg: getCategoryIconBg(cat.slug),
-            }))}
-          />
-
-          <div className="mt-12 text-center">
-            <Link
-              href="/courses"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-orange-500/25"
-            >
-              View All 30+ Courses
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Upcoming Batches Widget ── */}
-      <section className="section section-light" aria-label="Upcoming batches">
-        <div className="section-inner">
-          <div className="section-header">
-            <div className="section-tag">Training Schedule</div>
-            <h2 className="section-title">Batches Starting Soon</h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="section-subtitle">Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
-            {upcomingBatches.map((batch) => {
-              const d = new Date(batch.startDate);
-              const day = d.toLocaleDateString('en-IN', { day: 'numeric' });
-              const mon = d.toLocaleDateString('en-IN', { month: 'short' }).toUpperCase();
-              const seatsOk = batch.seatsAvailable !== null && batch.seatsAvailable !== undefined;
-              const formattedDate = formatBatchDate(batch.startDate);
-              const bookMsg = batchBookingMessage({
-                courseName: batch.course.title,
-                mode: batch.mode,
-                startDate: formattedDate,
-                centre: batch.centre,
-                schedule: batch.schedule,
-              });
-              const enrollMsg = batchBookingMessage({
-                courseName: batch.course.title,
-                mode: 'Online',
-                startDate: formattedDate,
-                centre: null,
-                schedule: batch.schedule,
-              });
-              return (
-                <div key={batch.id} className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 flex flex-col gap-4">
-                  <div className="flex gap-4 items-start">
-                    <div className="shrink-0 flex flex-col items-center justify-center w-12 h-12 rounded-xl text-white" style={{ background: '#0f766e' }}>
-                      <span className="text-base font-extrabold leading-none">{day}</span>
-                      <span className="text-[10px] font-bold leading-none">{mon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-900 dark:text-white text-sm leading-snug mb-1 truncate">{batch.course.title}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{batch.schedule}</p>
-                      {batch.mode === 'Online' ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
-                          <Wifi className="w-3 h-3" aria-hidden="true" /> Unlimited
-                        </span>
-                      ) : seatsOk ? (
-                        <span className="text-xs font-bold" style={{ color: (batch.seatsAvailable ?? 0) <= 3 ? '#dc2626' : (batch.seatsAvailable ?? 0) <= 6 ? '#d97706' : '#16a34a' }}>
-                          {batch.seatsAvailable} seats left
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    {(batch.mode === 'Classroom' || batch.mode === 'Hybrid') && (
-                      <WhatsAppLink
-                        ctaType="batch"
-                        message={bookMsg}
-                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
-                        style={{ background: '#25D366' }}
-                      >
-                        Book Seat on WhatsApp
-                      </WhatsAppLink>
-                    )}
-                    {(batch.mode === 'Online' || batch.mode === 'Hybrid') && (
-                      <WhatsAppLink
-                        ctaType="batch"
-                        message={enrollMsg}
-                        className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
-                        style={{ background: '#e47538' }}
-                      >
-                        Enroll Online Class
-                      </WhatsAppLink>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-            {/* Fallback card when fewer than 3 upcoming batches */}
-            {upcomingBatches.length < 3 && (
-              <Link
-                href="/batches"
-                className="rounded-2xl border-2 border-dashed border-teal-300 dark:border-teal-700 bg-white dark:bg-gray-800 p-5 flex flex-col items-center justify-center gap-2 text-center hover:border-teal-500 transition-colors"
-              >
-                <Calendar className="w-7 h-7 text-teal-600 dark:text-teal-400" aria-hidden="true" />
-                <p className="font-semibold text-gray-800 dark:text-gray-100 text-sm">New batches announced weekly</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Call <strong>+91 88851 66007</strong> to reserve your seat</p>
-              </Link>
-            )}
-          </div>
-          <div className="center-btn mt-6">
-            <Link href="/batches" className="btn-primary" style={{ display: 'inline-flex' }}>
-              View all upcoming batches →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Corporate Training (homepage section) ── */}
-      <section className="py-16 px-4 md:px-8 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #061c26 0%, #083344 55%, #0a3d4f 100%)' }}>
-
-        {/* Section-level decorative glows */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(79,209,197,0.12), transparent 70%)' }} />
-          <div className="absolute -bottom-40 -left-40 w-[400px] h-[400px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(228,117,56,0.10), transparent 70%)' }} />
-          {/* Subtle dot-grid */}
-          <svg className="absolute inset-0 w-full h-full opacity-[0.055]" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="corp-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-                <circle cx="14" cy="14" r="1.2" fill="#4fd1c5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#corp-dots)" />
-          </svg>
-        </div>
-
-        <div className="max-w-[1100px] mx-auto relative">
-          <div className="grid grid-cols-1 lg:grid-cols-[52%_44%] gap-10 items-center">
-
-            {/* ── LEFT — Professional illustrated card ── */}
-            <div
-              className="rounded-2xl overflow-hidden flex flex-col"
-              style={{ border: '1px solid rgba(79,209,197,0.22)', boxShadow: '0 8px 40px rgba(0,0,0,0.35)' }}
-            >
-              {/* Visual area — CSS/SVG background, no external image */}
-              <div
-                className="relative overflow-hidden flex flex-col justify-between p-6"
-                style={{
-                  minHeight: '340px',
-                  background: 'linear-gradient(135deg, #071e28 0%, #0c3a4c 55%, #0e4d63 100%)',
-                }}
-              >
-                {/* Decorative circuit-style SVG */}
-                <svg aria-hidden="true" className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Grid lines */}
-                  <defs>
-                    <pattern id="cg" width="48" height="48" patternUnits="userSpaceOnUse">
-                      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#4fd1c5" strokeWidth="0.6" strokeOpacity="0.12"/>
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#cg)" />
-                  {/* Circuit traces */}
-                  <g stroke="#4fd1c5" strokeWidth="1.5" strokeOpacity="0.18" fill="none">
-                    <polyline points="0,80 60,80 80,60 200,60" />
-                    <polyline points="200,60 200,30 260,30" />
-                    <circle cx="200" cy="60" r="3" fill="#4fd1c5" fillOpacity="0.3" strokeOpacity="0" />
-                    <polyline points="0,160 40,160 60,140 160,140 180,120" />
-                    <circle cx="160" cy="140" r="3" fill="#4fd1c5" fillOpacity="0.3" strokeOpacity="0" />
-                  </g>
-                  {/* Bottom-right circuit */}
-                  <g stroke="#e47538" strokeWidth="1.5" strokeOpacity="0.15" fill="none">
-                    <polyline points="500,320 420,320 400,300 400,260" />
-                  </g>
-                  {/* Decorative hexagons */}
-                  <g fill="none" stroke="#4fd1c5" strokeOpacity="0.1" strokeWidth="1">
-                    <polygon points="320,20 340,8 360,20 360,44 340,56 320,44" />
-                    <polygon points="280,180 300,168 320,180 320,204 300,216 280,204" />
-                  </g>
-                </svg>
-
-                {/* Teal glow orb top-right */}
-                <div aria-hidden="true" className="absolute -top-16 -right-16 w-56 h-56 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(79,209,197,0.18), transparent 70%)' }} />
-                {/* Orange glow orb bottom-left */}
-                <div aria-hidden="true" className="absolute -bottom-12 -left-12 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(228,117,56,0.15), transparent 70%)' }} />
-
-                {/* Top row: label + logo */}
-                <div className="relative flex items-start justify-between z-10">
-                  <div
-                    className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-widest"
-                    style={{ background: 'rgba(228,117,56,0.15)', border: '1px solid rgba(228,117,56,0.35)', color: '#e47538' }}
+              <div className="flex items-center gap-2 overflow-x-auto text-[13px] md:flex-wrap md:overflow-visible">
+                <span className="hidden shrink-0 text-white/70 md:inline">Popular:</span>
+                {POPULAR_SEARCHES.map((term) => (
+                  <TrackedCta
+                    key={term}
+                    href={`/courses?q=${encodeURIComponent(term)}`}
+                    ctaId="popular_search"
+                    location="hero_search"
+                    className="shrink-0 rounded-full border border-white/30 px-3 py-1.5 text-white hover:border-white/70"
                   >
-                    <Building className="w-3 h-3" aria-hidden="true" />
-                    Corporate Programs
-                  </div>
-                  <WpImg
-                    src={siteImages.logo}
-                    alt="Coss Cloud Solutions"
-                    style={{
-                      height: '36px',
-                      width: 'auto',
-                      objectFit: 'contain',
-                      background: 'rgba(255,255,255,0.9)',
-                      borderRadius: '6px',
-                      padding: '3px 8px',
-                    }}
-                  />
-                </div>
-
-                {/* Headline */}
-                <div className="relative z-10 mt-5">
-                  <p
-                    className="font-extrabold leading-tight text-white"
-                    style={{ fontSize: 'clamp(22px, 3vw, 32px)', textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}
-                  >
-                    BUILDING SKILLS.<br />
-                    <span style={{ color: '#4fd1c5' }}>DRIVING SUCCESS.</span>
-                  </p>
-                  <div className="mt-2 h-0.5 w-16 rounded-full" style={{ background: 'linear-gradient(to right, #e47538, transparent)' }} />
-                </div>
-
-                {/* Badge pills */}
-                <div className="relative z-10 mt-4 flex flex-wrap gap-2">
-                  {CORP_BADGES.map(({ label, Icon }) => (
-                    <span
-                      key={label}
-                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold text-white"
-                      style={{ background: 'rgba(79,209,197,0.12)', border: '1px solid rgba(79,209,197,0.3)' }}
-                    >
-                      <Icon className="w-3 h-3" style={{ color: '#4fd1c5' }} aria-hidden="true" />
-                      {label}
-                    </span>
-                  ))}
-                </div>
-
-                {/* QR code — desktop/tablet only; mobile gets a direct WhatsApp link instead */}
-                <div className="relative z-10 mt-5 hidden sm:block">
-                  <div className="inline-flex flex-col items-center rounded-2xl px-4 py-3" style={{ background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.25)' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={CORP_QR_SRC} alt="Scan QR to WhatsApp" width={96} height={96} loading="lazy" />
-                    <div className="flex items-center gap-1.5 mt-2">
-                      <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" fill="#25D366" aria-hidden="true">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                      </svg>
-                      <span className="text-xs font-bold" style={{ color: '#083344' }}>Scan to WhatsApp</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Mobile-only: direct WhatsApp CTA instead of un-scannable QR */}
-                <WhatsAppLink
-                  ctaType="hero"
-                  pageType="static"
-                  message="Hi Coss Cloud Solutions Team, I'd like to know more about your courses. Could you help me?"
-                  className="relative z-10 mt-5 sm:hidden inline-flex items-center gap-3 rounded-2xl px-5 py-3 font-bold text-sm"
-                  style={{ background: '#25D366', color: '#fff', boxShadow: '0 4px 20px rgba(37,211,102,0.35)' }}
-                >
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0" fill="currentColor" aria-hidden="true">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                  </svg>
-                  Chat on WhatsApp
-                </WhatsAppLink>
-              </div>
-
-              {/* Bottom bar — 3 stat columns */}
-              <div
-                className="grid grid-cols-3"
-                style={{ background: '#05202e', borderTop: '1px solid rgba(79,209,197,0.18)' }}
-              >
-                {CORP_BOTTOM_BAR.map(({ Icon, title, desc }, i) => (
-                  <div
-                    key={title}
-                    className="p-3 text-center"
-                    style={i < 2 ? { borderRight: '1px solid rgba(79,209,197,0.15)' } : undefined}
-                  >
-                    <Icon className="w-5 h-5 mx-auto mb-1" style={{ color: '#4fd1c5' }} aria-hidden="true" />
-                    <p className="text-white font-bold text-xs mb-0.5">{title}</p>
-                    <p className="text-xs" style={{ color: '#94a3b8', lineHeight: '1.4' }}>{desc}</p>
-                  </div>
+                    {term}
+                  </TrackedCta>
                 ))}
               </div>
-            </div>
-
-            {/* ── RIGHT — Text Content ── */}
-            <div className="flex flex-col justify-center">
-              <h2 className="font-extrabold text-white" style={{ fontSize: 'clamp(28px,4vw,40px)' }}>
-                Corporate Training
-              </h2>
-
-              {/* Orange divider */}
-              <div className="h-1 w-14 rounded-full mt-3 mb-3" style={{ background: '#e47538' }} />
-
-              {/* Subheading */}
-              <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: '#e47538', letterSpacing: '0.12em' }}>
-                Transform Your Workforce Skills
-              </p>
-
-              {/* Body copy */}
-              <p className="text-sm leading-relaxed mb-6" style={{ color: '#b0cdd6' }}>
-                We deliver top-quality training programs meeting client
-                organization requirements. Excellent corporate trainers in
-                current IT industry within limited budgets.
-              </p>
-
-              {/* Features grid — 6 items, 2 cols */}
-              <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-                {CORP_FEATURES.map(({ Icon, text }) => (
-                  <div key={text} className="flex items-start gap-3">
-                    <div
-                      className="p-2 rounded-lg shrink-0 mt-0.5"
-                      style={{ background: '#0f4a5c', border: '1px solid rgba(79,209,197,0.2)' }}
-                    >
-                      <Icon className="w-4 h-4" style={{ color: '#4fd1c5' }} aria-hidden="true" />
-                    </div>
-                    <span className="text-sm font-semibold leading-snug" style={{ color: '#d1e8ee' }}>
-                      {text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTA Button */}
-              <Link
-                href="/corporate-training"
-                className="inline-flex items-center justify-center font-bold uppercase tracking-wide rounded-xl mt-7 px-7 py-3 transition-opacity hover:opacity-90"
-                style={{ background: '#f5a623', color: '#1a1a2e', width: 'fit-content' }}
-              >
-                <BarChart2 className="w-4 h-4 mr-2 shrink-0" aria-hidden="true" />
-                Start Your Career Today
-              </Link>
-            </div>
+            </form>
           </div>
 
-        </div>
-      </section>
-
-      {/* ── Why Choose Us ── */}
-      <section className="wcu-section" aria-label="Why choose us" id="why-choose-us">
-        {/* Decorative backgrounds */}
-        <div className="wcu-dot-grid" aria-hidden="true" />
-        <div className="wcu-wave" aria-hidden="true" />
-
-        <div className="section-inner" style={{ position: 'relative', zIndex: 1 }}>
-
-          {/* ── Header ── */}
-          <div className="section-header">
-            <div className="section-tag">WHY CHOOSE US</div>
-            <h2 className="wcu-heading">
-              Everything You Need to{' '}
-              <span style={{ color: 'var(--primary)' }}>Succeed</span> in IT
-            </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="section-subtitle">
-              Expert instruction, hands-on labs, and end-to-end career support — all under one roof
-            </p>
+          <div id="enroll-form" className="mt-2 scroll-mt-40 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-0 lg:self-center">
+            <HomeHeroForm />
           </div>
 
-
-          {/* ── Feature Cards ── */}
-          <div className="wcu-cards-layout">
-
-            {/* Left — tall featured card */}
-            <div className="wcu-featured-card">
-              <div className="wcu-feat-icon-wrap" aria-hidden="true">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <div className="wcu-feat-illustration" aria-hidden="true">
-                <svg viewBox="0 0 180 140" fill="none" xmlns="http://www.w3.org/2000/svg" className="wcu-feat-svg">
-                  <rect x="20" y="40" width="140" height="85" rx="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5"/>
-                  <rect x="28" y="50" width="124" height="12" rx="3" fill="rgba(255,255,255,0.18)"/>
-                  <rect x="28" y="68" width="56" height="32" rx="4" fill="rgba(228,117,56,0.5)"/>
-                  <rect x="92" y="68" width="60" height="14" rx="3" fill="rgba(255,255,255,0.15)"/>
-                  <rect x="92" y="86" width="40" height="14" rx="3" fill="rgba(255,255,255,0.10)"/>
-                  <rect x="28" y="107" width="124" height="10" rx="3" fill="rgba(255,255,255,0.1)"/>
-                  <polygon points="90,8 130,26 90,44 50,26" fill="rgba(255,255,255,0.9)"/>
-                  <rect x="122" y="26" width="3" height="18" rx="1.5" fill="rgba(255,255,255,0.7)"/>
-                  <ellipse cx="123.5" cy="45" rx="5" ry="4" fill="var(--primary)"/>
-                  <path d="M70 35 Q90 44 110 35" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" fill="none"/>
-                </svg>
-              </div>
-              <h3 className="wcu-feat-title">Expert Trainers</h3>
-              <div className="wcu-orange-bar" aria-hidden="true" />
-              <p className="wcu-feat-desc">
-                Learn from certified professionals with real-world experience in top IT companies.
-              </p>
-              <Link href="/courses" className="wcu-feat-cta">
-                Learn from the Best →
-              </Link>
-            </div>
-
-            {/* Right — 2×2 + 1 grid */}
-            <div className="wcu-right-grid">
-              {([
-                { Icon: Monitor,      WaterIcon: TestTube,  title: 'Hands-On Labs',        desc: 'Train on real-time projects using industry-standard tools — live lab access included in every course.' },
-                { Icon: Calendar,     WaterIcon: Clock,     title: 'Flexible Batches',      desc: 'Weekday, weekend, morning, and evening options — learn without disrupting your current schedule.' },
-                { Icon: IndianRupee,  WaterIcon: Briefcase, title: 'Affordable Fees + EMI', desc: 'Premium-quality training at accessible prices, with easy EMI options available.' },
-                { Icon: Award,        WaterIcon: Shield,    title: 'Industry Certifications', desc: 'Earn globally recognised AWS, Azure, Google Cloud, and other certifications.' },
-                { Icon: Briefcase,    WaterIcon: Users,     title: 'Placement Assistance', desc: 'Resume building, mock interviews, and referrals to our 50+ hiring partners. Placement is not guaranteed.' },
-              ] as const).map(({ Icon, WaterIcon, title, desc }) => (
-                <div key={title} className="wcu-small-card">
-                  <div className="wcu-small-icon-wrap" aria-hidden="true">
-                    <Icon className="w-4 h-4 text-white" />
-                  </div>
-                  <h4 className="wcu-small-title">{title}</h4>
-                  <div className="wcu-orange-bar" aria-hidden="true" />
-                  <p className="wcu-small-desc">{desc}</p>
-                  <WaterIcon className="wcu-watermark" aria-hidden="true" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Bottom Banner ── */}
-          <div className="wcu-banner">
-            <div className="wcu-banner-left">
-              <div className="wcu-banner-rocket" aria-hidden="true">
-                <Rocket className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="wcu-banner-title">Start Your Career Transformation Today</p>
-                <p className="wcu-banner-sub">
-                  Get the skills, confidence, and support you need to build a successful IT career.
-                </p>
-              </div>
-            </div>
-            <div className="wcu-banner-btns">
-              <Link href="/courses" className="wcu-banner-btn-primary">
-                Explore Courses →
-              </Link>
-              <Link href="/contact-us" className="wcu-banner-btn-outline">
-                <MessageSquare className="w-4 h-4" aria-hidden="true" />
-                Talk to Counselor
-              </Link>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ── Career & Placement Assistance (logos only when providers are confirmed) ── */}
-      {hpSettings.showHiringPartners && <section
-        className="py-20 px-4 md:px-8 relative overflow-hidden"
-        style={{ background: 'linear-gradient(145deg, #0a1628 0%, #0d2237 55%, #091520 100%)' }}
-        aria-label={CAREER_SUPPORT_HEADLINE}
-      >
-        {/* Decorative glows + dot-grid */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-48 left-1/4 w-[480px] h-[480px] rounded-full opacity-[0.09]"
-            style={{ background: 'radial-gradient(circle, #14b8a6, transparent 70%)' }} />
-          <div className="absolute -bottom-48 right-1/4 w-[400px] h-[400px] rounded-full opacity-[0.07]"
-            style={{ background: 'radial-gradient(circle, #3b82f6, transparent 70%)' }} />
-          <svg className="absolute inset-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="opp-dots" width="30" height="30" patternUnits="userSpaceOnUse">
-                <circle cx="15" cy="15" r="1.2" fill="#14b8a6" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#opp-dots)" />
-          </svg>
-        </div>
-
-        <div className="max-w-[1100px] mx-auto relative">
-
-          {/* ── Header ── */}
-          <div className="text-center mb-10">
-            <h2 className="font-extrabold text-white leading-tight" style={{ fontSize: 'clamp(26px,4vw,40px)' }}>
-              {CAREER_SUPPORT_HEADLINE}
-            </h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="mt-3 text-sm max-w-lg mx-auto" style={{ color: '#94a3b8' }}>
-              Resume building, mock interviews, interview preparation and referrals to our 50+ hiring partners.
-            </p>
-          </div>
-
-          {/* ── What the assistance includes ── */}
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3" role="list">
-            {CAREER_SUPPORT_ITEMS.map((item) => (
-              <li
-                key={item.key}
-                className="rounded-xl p-5"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(45,212,191,0.18)' }}
-              >
-                <p className="font-bold text-white text-sm mb-2">{item.title}</p>
-                <p className="text-xs leading-relaxed" style={{ color: '#94a3b8' }}>{item.body}</p>
+          <ul className="mt-2 flex flex-col gap-2.5 md:gap-3.5 lg:col-start-1 lg:row-start-2 lg:mt-0">
+            {HERO_POINTS.map(({ icon: Icon, text }) => (
+              <li key={text} className="flex items-center gap-3 text-sm text-white md:text-base">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#e47538]/20 text-[#f3a57a] md:h-9 md:w-9">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                {text}
               </li>
             ))}
           </ul>
-          <p className="mt-5 text-center text-sm font-semibold" style={{ color: '#cbd5e1' }}>
-            {PLACEMENT_DISCLAIMER}
-          </p>
-
-          {/* ── Logo grid — only once hiring partners have confirmed we may name them ── */}
-          {PLACEMENT_PROVIDERS_CONFIRMED && hiringPartners.length > 0 && (
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {hiringPartners.map((partner) => (
-              <div
-                key={partner.id}
-                title={partner.name}
-                className="flex items-center justify-center h-[76px] px-4 rounded-xl bg-white transition-all duration-200 hover:-translate-y-1 cursor-default"
-                style={{ boxShadow: '0 2px 10px rgba(0,0,0,0.18)' }}
-              >
-                {partner.logoUrl ? (
-                  <WpImg
-                    src={optimizeCldUrl(partner.logoUrl, { width: 200, height: 80, crop: 'fit' })}
-                    alt={partner.altText || partner.name}
-                    width={200}
-                    height={80}
-                    style={{
-                      maxHeight: '40px',
-                      width: 'auto',
-                      maxWidth: '108px',
-                      objectFit: 'contain',
-                    }}
-                  />
-                ) : (
-                  <span className="text-sm font-bold text-center text-gray-700">
-                    {partner.name}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-          )}
-
-          {/* ── Conversion CTA: opens the homepage lead form (#enroll-form) ── */}
-          <div className="mt-12 text-center">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a
-                href="#enroll-form"
-                className="inline-flex items-center gap-2 rounded-xl px-8 py-4 font-bold text-sm transition-all hover:opacity-90 hover:-translate-y-0.5"
-                style={{ background: 'linear-gradient(135deg, #e47538 0%, #f5a623 100%)', color: '#fff', boxShadow: '0 4px 20px rgba(228,117,56,0.4)' }}
-              >
-                <Rocket className="w-4 h-4" aria-hidden="true" />
-                {CAREER_SUPPORT_CTA}
-              </a>
-              <Link
-                href="/placements"
-                className="inline-flex items-center gap-2 rounded-xl px-6 py-4 font-semibold text-sm transition-all hover:bg-white/10"
-                style={{ color: '#2dd4bf', border: '1px solid rgba(45,212,191,0.3)' }}
-              >
-                How our career support works →
-              </Link>
-            </div>
-            <p className="text-xs mt-4" style={{ color: '#94a3b8' }}>
-              No fees · No commitment
-            </p>
-          </div>
-
         </div>
-      </section>}
+      </section>
 
-      {/* ── Latest Jobs Widget — only shown when providers are confirmed and >= 3 active featured jobs ── */}
-      {PLACEMENT_PROVIDERS_CONFIRMED && featuredJobs.length >= 3 && (
-        <section className="section section-white" aria-label="Job openings">
-          <div className="section-inner">
-            <div className="section-header">
-              <div className="section-tag">Placement Board</div>
-              <h2 className="section-title">Jobs Our Students Get Hired For</h2>
-              <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-              <p className="section-subtitle">Partner companies actively hiring in Hyderabad</p>
+      {/* ── Trust bar ── */}
+      <section aria-label="Why students trust us" className="border-b border-[#e3eaec] bg-white px-4 py-5 dark:border-slate-800 dark:bg-slate-900 md:px-8 md:py-7">
+        <ul className={`${CONTAINER} grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6`}>
+          {TRUST_ITEMS.map(({ icon: Icon, value, label }) => (
+            <li key={value} className="flex items-center gap-2.5 md:gap-3.5">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#e6f0f1] text-[#005663] md:h-12 md:w-12 md:rounded-xl dark:bg-slate-800 dark:text-[#5ef0c8]">
+                <Icon className="h-5 w-5 md:h-[22px] md:w-[22px]" aria-hidden="true" />
+              </span>
+              <span className="flex flex-col">
+                <span className="font-heading text-lg font-extrabold text-[#0a3d4a] md:text-[22px] dark:text-white">{value}</span>
+                <span className="text-xs text-[#4a5c61] md:text-[13px] dark:text-slate-400">{label}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ── Popular courses ── */}
+      {courses.length > 0 && (
+        <section id="courses" aria-labelledby="popular-title" className="bg-[#f4f7f8] px-4 pb-4 pt-10 dark:bg-slate-950 md:px-8 md:pb-10 md:pt-20">
+          <div className={`${CONTAINER} flex flex-col gap-5 md:gap-7`}>
+            <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+              <div className="flex flex-col gap-1.5 md:gap-2">
+                <p className={EYEBROW}>{hp.featuredSectionTitle}</p>
+                <h2 id="popular-title" className={H2}>Start with a course that gets you hired</h2>
+              </div>
+              <TrackedCta href="/courses" ctaId="all_courses" location="popular_courses" className="hidden items-center gap-1.5 text-[15px] font-bold text-[#b8531c] hover:text-[#8f3f14] md:flex dark:text-[#f3a57a]">
+                View all {courseCount > 0 ? `${courseCount} ` : ''}courses <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+              </TrackedCta>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-4xl mx-auto">
-              {featuredJobs.map((job) => {
-                const color = '#0f766e';
-                const initial = job.company.trim()[0]?.toUpperCase() ?? '?';
-                return (
+
+            {categories.length > 0 && (
+              <nav aria-label="Course categories" className="-mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:gap-2.5 md:overflow-visible md:px-0">
+                <Link href="/courses" className="flex h-[38px] shrink-0 items-center rounded-full bg-[#0a3d4a] px-4 text-[13px] font-bold text-white md:h-10 md:px-[18px] md:text-sm">
+                  All
+                </Link>
+                {categories.slice(0, 6).map((cat) => (
                   <Link
-                    key={job.id}
-                    href="/jobs"
-                    className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow"
-                    style={{ textDecoration: 'none' }}
+                    key={cat.id}
+                    href={`/courses/${cat.slug}`}
+                    className="flex h-[38px] shrink-0 items-center rounded-full border border-[#cfdadd] bg-white px-4 text-[13px] text-[#26383d] hover:border-[#005663] md:h-10 md:px-[18px] md:text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
                   >
-                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold shrink-0" style={{ background: color }}>
-                      {initial}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">{job.title}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{job.company}</p>
-                    </div>
-                    {job.salary && (
-                      <span className="text-xs font-bold text-teal-600 dark:text-teal-400 shrink-0">{job.salary}</span>
-                    )}
-                    <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 shrink-0">{job.category}</span>
+                    {cat.name}
                   </Link>
+                ))}
+              </nav>
+            )}
+
+            <div className="-mx-4 flex snap-x gap-3.5 overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-3">
+              {courses.map((c, i) => {
+                const url = getCourseUrl(c);
+                const syllabus = syllabusLinkFor(c);
+                const date = nextBatch.get(c.id);
+                const tag = c.badge?.trim() && !DISALLOWED_BADGE.test(c.badge) ? c.badge.trim() : null;
+                const image = c.thumbnail && OPTIMISABLE_IMAGE.test(c.thumbnail) ? c.thumbnail : null;
+                return (
+                  <article key={c.id} className={`${CARD} flex w-[300px] shrink-0 snap-start flex-col overflow-hidden shadow-[0_2px_8px_rgba(10,61,74,0.06)] md:w-auto`}>
+                    <Link href={url} className="relative block h-40 md:h-[190px]" style={{ background: BANNER_FILLS[i % BANNER_FILLS.length] }} tabIndex={-1} aria-hidden="true">
+                      {image ? (
+                        <Image src={image} alt="" fill sizes="(min-width: 1024px) 384px, (min-width: 768px) 50vw, 300px" className="object-cover" />
+                      ) : (
+                        <span className="absolute inset-0 flex items-center justify-center px-6 text-center font-heading text-2xl font-extrabold leading-tight text-white/90">
+                          {c.title}
+                        </span>
+                      )}
+                      <span className="absolute left-3 top-3 max-w-[70%] truncate rounded-full bg-white/[0.92] px-2.5 py-1 text-[11px] font-bold text-[#0a3d4a] md:left-3.5 md:top-3.5 md:text-xs">
+                        {c.category}
+                      </span>
+                      {tag && (
+                        <span className="absolute right-3 top-3 rounded-full bg-[#b8531c] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.5px] text-white md:right-3.5 md:top-3.5">
+                          {tag}
+                        </span>
+                      )}
+                    </Link>
+                    <div className="flex flex-1 flex-col gap-2.5 p-4 md:gap-3 md:p-5">
+                      <h3 className="font-heading text-lg font-extrabold leading-snug text-[#17262a] md:text-xl dark:text-white">
+                        <Link href={url} className="hover:text-[#b8531c]">{c.title}</Link>
+                      </h3>
+                      <p className="flex flex-wrap gap-x-3.5 gap-y-1 text-xs text-[#4a5c61] md:text-[13px] dark:text-slate-400">
+                        {c.duration && <span className="inline-flex items-center gap-1"><Clock className="h-[15px] w-[15px]" aria-hidden="true" />{c.duration.trim()}</span>}
+                        {c.mode && <span className="inline-flex items-center gap-1"><Monitor className="h-[15px] w-[15px]" aria-hidden="true" />{c.mode}</span>}
+                        {c.level && <span className="inline-flex items-center gap-1"><BarChart3 className="h-[15px] w-[15px]" aria-hidden="true" />{c.level}</span>}
+                      </p>
+                      <p className="flex items-center gap-1.5 text-xs font-medium text-[#005663] md:text-[13px] dark:text-[#5ef0c8]">
+                        <CalendarDays className="h-[15px] w-[15px]" aria-hidden="true" />
+                        {date ? `Next batch: ${formatBatchDate(date)}` : 'Ask for the next batch date'} · 1-year LMS access
+                      </p>
+                      <div className="mt-auto grid grid-cols-2 gap-2 border-t border-[#eef2f3] pt-3 md:gap-2.5 md:pt-3.5 dark:border-slate-800">
+                        <TrackedCta
+                          href={FORM_ANCHOR}
+                          ctaId="book_demo"
+                          location="popular_courses"
+                          prefillCourse={c.title}
+                          className={`flex h-11 items-center justify-center gap-1.5 rounded-[10px] text-sm font-bold ${ORANGE_BUTTON}`}
+                        >
+                          <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+                          Book demo
+                        </TrackedCta>
+                        <TrackedCta
+                          href={syllabus.href}
+                          ctaId="get_syllabus"
+                          location="popular_courses"
+                          className="flex h-11 items-center justify-center gap-1.5 rounded-[10px] border border-[#cfdadd] text-sm font-bold text-[#005663] hover:border-[#005663] dark:border-slate-700 dark:text-[#5ef0c8]"
+                        >
+                          <FileText className="h-4 w-4" aria-hidden="true" />
+                          Syllabus
+                        </TrackedCta>
+                      </div>
+                    </div>
+                  </article>
                 );
               })}
             </div>
-            <div className="center-btn mt-6">
-              <Link href="/jobs" className="btn-primary" style={{ display: 'inline-flex' }}>
-                View all job openings →
-              </Link>
+
+            <TrackedCta
+              href="/courses"
+              ctaId="all_courses"
+              location="popular_courses"
+              className="flex h-12 items-center justify-center gap-1.5 rounded-[10px] border border-[#cfdadd] bg-white text-[15px] font-bold text-[#005663] md:hidden dark:border-slate-700 dark:bg-slate-900 dark:text-[#5ef0c8]"
+            >
+              View all {courseCount > 0 ? `${courseCount} ` : ''}courses <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+            </TrackedCta>
+          </div>
+        </section>
+      )}
+
+      {/* ── Promo banner slot (admin-managed, "Homepage" placement) ── */}
+      <section aria-label="Promotion" className="bg-[#f4f7f8] px-4 pb-8 pt-4 dark:bg-slate-950 md:px-8 md:pb-10 md:pt-6">
+        <div className={CONTAINER}>
+          <PromoBanner
+            placement="home"
+            banner={homeBanners[0] ?? null}
+            fallback={
+              <div className="relative flex flex-col gap-2.5 overflow-hidden rounded-[18px] bg-[#b8531c] px-5 py-6 md:h-[200px] md:flex-row md:items-center md:justify-between md:rounded-[20px] md:px-14 md:py-0">
+                <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border-[30px] border-white/[0.08] md:-right-16 md:-top-20 md:h-[280px] md:w-[280px] md:border-[40px]" />
+                <div className="relative flex flex-col gap-2 md:gap-2.5">
+                  <p className="font-heading text-2xl font-extrabold text-white md:text-[34px]">Try a class before you enrol</p>
+                  <p className="text-sm text-white/90 md:text-base">Free demo class for every course, online or at a branch.</p>
+                </div>
+                <TrackedCta
+                  href={FORM_ANCHOR}
+                  ctaId="book_demo"
+                  location="promo_banner"
+                  className="relative mt-1 flex h-[46px] items-center gap-2 self-start rounded-[10px] bg-white px-[18px] font-heading text-[15px] font-extrabold text-[#8f3f14] md:mt-0 md:h-[54px] md:self-auto md:rounded-xl md:px-[26px] md:text-[17px]"
+                >
+                  Book Free Demo <ArrowRight className="h-5 w-5" aria-hidden="true" />
+                </TrackedCta>
+              </div>
+            }
+          />
+        </div>
+      </section>
+
+      {/* ── Upcoming batches ── */}
+      {batches.length > 0 && (
+        <section aria-labelledby="batches-title" className={`bg-white dark:bg-slate-900 ${SECTION} md:py-[72px]`}>
+          <div className={`${CONTAINER} flex flex-col gap-4 md:gap-7`}>
+            <div className="flex flex-col gap-1.5 md:flex-row md:items-end md:justify-between md:gap-2">
+              <div className="flex flex-col gap-1.5 md:gap-2">
+                <p className={EYEBROW}>Upcoming batches</p>
+                <h2 id="batches-title" className={H2}>Batches starting soon</h2>
+              </div>
+              <TrackedCta href="/batches" ctaId="all_batches" location="upcoming_batches" className="hidden items-center gap-1.5 text-[15px] font-bold text-[#b8531c] hover:text-[#8f3f14] md:flex dark:text-[#f3a57a]">
+                All batches <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+              </TrackedCta>
+            </div>
+            <div className="md:overflow-hidden md:rounded-2xl md:border md:border-[#e3eaec] md:dark:border-slate-700">
+              <table className="w-full border-collapse text-left max-md:block">
+                <thead className="hidden bg-[#f4f7f8] text-xs font-bold uppercase tracking-[1px] text-[#4a5c61] md:table-header-group dark:bg-slate-800 dark:text-slate-400">
+                  <tr>
+                    <th scope="col" className="px-6 py-3.5">Course</th>
+                    <th scope="col" className="px-4 py-3.5">Starts</th>
+                    <th scope="col" className="px-4 py-3.5">Mode</th>
+                    <th scope="col" className="px-4 py-3.5">Branch</th>
+                    <th scope="col" className="px-6 py-3.5"><span className="sr-only">Action</span></th>
+                  </tr>
+                </thead>
+                <tbody className="flex flex-col gap-3 md:table-row-group">
+                  {batches.map((b) => {
+                    const online = b.mode === 'Online';
+                    return (
+                      <tr key={b.id} className="flex flex-col gap-2.5 rounded-[14px] border border-[#e3eaec] p-4 text-[15px] md:table-row md:rounded-none md:border-0 md:border-t md:border-[#eef2f3] md:p-0 dark:border-slate-700">
+                        <th scope="row" className="flex items-center justify-between gap-2 font-bold text-[#17262a] md:table-cell md:px-6 md:py-[18px] dark:text-white">
+                          {b.course.title}
+                          <span className="rounded-full bg-[#e6f0f1] px-2.5 py-0.5 text-xs font-bold text-[#005663] md:hidden">{online ? 'Online' : 'Classroom'}</span>
+                        </th>
+                        <td className="text-sm text-[#26383d] md:table-cell md:px-4 md:py-[18px] md:text-[15px] dark:text-slate-300">
+                          <span className="flex items-start gap-2">
+                            <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-[#005663]" aria-hidden="true" />
+                            <span>
+                              {formatBatchDate(b.startDate)} · {b.schedule}
+                              <span className="md:hidden"> · {online ? 'Live online' : b.centre ?? 'Classroom'}</span>
+                            </span>
+                          </span>
+                        </td>
+                        <td className="hidden md:table-cell md:px-4 md:py-[18px]">
+                          <span className="rounded-full bg-[#e6f0f1] px-2.5 py-1 text-[13px] font-bold text-[#005663]">{online ? 'Online' : 'Classroom'}</span>
+                        </td>
+                        <td className="hidden text-[#26383d] md:table-cell md:px-4 md:py-[18px] dark:text-slate-300">{online ? 'Live online' : b.centre ?? 'Classroom'}</td>
+                        <td className="md:table-cell md:w-[220px] md:px-6 md:py-[18px]">
+                          <TrackedCta
+                            href={FORM_ANCHOR}
+                            ctaId="reserve_seat"
+                            location="upcoming_batches"
+                            prefillCourse={b.course.title}
+                            className="flex h-11 items-center justify-center gap-1.5 rounded-[10px] border border-[#b8531c] text-sm font-bold text-[#b8531c] hover:bg-[#fdf0e8] dark:text-[#f3a57a]"
+                          >
+                            Reserve a seat <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                          </TrackedCta>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <TrackedCta href="/batches" ctaId="all_batches" location="upcoming_batches" className="text-center text-sm font-bold text-[#b8531c] md:hidden">
+              See all upcoming batches →
+            </TrackedCta>
+          </div>
+        </section>
+      )}
+
+      {/* ── How it works ── */}
+      <section aria-labelledby="how-title" className={`bg-[#f4f7f8] dark:bg-slate-950 ${SECTION}`}>
+        <div className={`${CONTAINER} flex flex-col gap-4 md:items-center md:gap-10`}>
+          <div className="flex flex-col gap-1.5 md:items-center md:gap-2 md:text-center">
+            <p className={EYEBROW}>How it works</p>
+            <h2 id="how-title" className={H2}>From first call to first class in 3 steps</h2>
+          </div>
+          <ol className="grid w-full gap-3.5 md:grid-cols-3 md:gap-6">
+            {STEPS.map(({ icon: Icon, title, body }, i) => (
+              <li key={title} className={`${CARD} flex gap-3.5 p-4 md:flex-col md:gap-3.5 md:p-7`}>
+                <div className="flex shrink-0 items-start justify-between md:items-center">
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl text-white md:h-14 md:w-14 md:rounded-[14px] ${i === STEPS.length - 1 ? 'bg-[#b8531c]' : 'bg-[#0a3d4a]'}`}>
+                    <Icon className="h-6 w-6 md:h-[26px] md:w-[26px]" aria-hidden="true" />
+                  </span>
+                  <span aria-hidden="true" className="hidden font-heading text-[44px] font-extrabold text-[#e3eaec] md:block dark:text-slate-700">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1 md:gap-3.5">
+                  <h3 className="font-heading text-base font-extrabold text-[#17262a] md:text-xl dark:text-white">
+                    <span className="md:hidden">{i + 1}. </span>{title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-[#4a5c61] md:text-[15px] md:leading-[1.6] dark:text-slate-400">{body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ── Career & placement assistance ── */}
+      {hp.showHiringPartners && (
+        <section aria-labelledby="career-title" className={`bg-[#0a3d4a] ${SECTION}`}>
+          <div className={`${CONTAINER} grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16`}>
+            <div className="flex flex-col gap-3 md:gap-[18px]">
+              <p className="text-xs font-bold uppercase tracking-[1.4px] text-[#f3a57a] md:text-[13px]">Career support</p>
+              <h2 id="career-title" className="font-heading text-[26px] font-extrabold text-white md:text-[38px]">{CAREER_SUPPORT_HEADLINE}</h2>
+              <p className="text-[15px] leading-relaxed text-white/85 md:text-[17px] md:leading-[1.65]">
+                We prepare you for interviews and connect you with our 50+ hiring partners. {PLACEMENT_DISCLAIMER}
+              </p>
+              <TrackedCta
+                href={FORM_ANCHOR}
+                ctaId="career_counselling"
+                location="career_assistance"
+                className={`mt-2 hidden h-[52px] items-center gap-2.5 self-start rounded-xl px-[22px] text-base font-bold lg:flex ${ORANGE_BUTTON}`}
+              >
+                <Phone className="h-5 w-5" aria-hidden="true" />
+                {CAREER_SUPPORT_CTA}
+              </TrackedCta>
+            </div>
+            <ul className="grid grid-cols-2 gap-2.5 md:gap-4">
+              {CAREER_SUPPORT_ITEMS.map((item) => {
+                const Icon = CAREER_ICONS[item.key];
+                return (
+                  <li key={item.key} className="flex flex-col gap-2 rounded-[14px] border border-white/[0.12] bg-white/[0.06] p-3.5 md:gap-3 md:rounded-2xl md:p-6">
+                    <Icon className="h-6 w-6 text-[#f3a57a] md:h-7 md:w-7" aria-hidden="true" />
+                    <h3 className="font-heading text-sm font-extrabold text-white md:text-lg">{item.title}</h3>
+                    <p className="hidden text-sm leading-[1.55] text-white/[0.78] md:block">{item.body}</p>
+                  </li>
+                );
+              })}
+            </ul>
+            <TrackedCta
+              href={FORM_ANCHOR}
+              ctaId="career_counselling"
+              location="career_assistance"
+              className={`flex h-[50px] items-center justify-center gap-2 rounded-xl text-[15px] font-bold lg:hidden ${ORANGE_BUTTON}`}
+            >
+              <Phone className="h-5 w-5" aria-hidden="true" />
+              Free Career Counselling Call
+            </TrackedCta>
+          </div>
+        </section>
+      )}
+
+      {/* ── Reviews (live Google reviews replace these once Q5 lands) ── */}
+      {reviews.length > 0 && (
+        <section aria-labelledby="reviews-title" className="bg-[#f4f7f8] py-10 dark:bg-slate-950 md:px-8 md:py-20">
+          <div className={`${CONTAINER} flex flex-col gap-4 md:gap-8`}>
+            <div className="flex flex-col gap-1.5 px-4 md:gap-2 md:px-0">
+              <p className={EYEBROW}>Student reviews</p>
+              <h2 id="reviews-title" className={H2}>What our students say</h2>
+            </div>
+            <div className="flex snap-x gap-3 overflow-x-auto px-4 pb-1.5 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
+              {reviews.map((r) => (
+                <figure key={r.id} className={`${CARD} flex w-[290px] shrink-0 snap-start flex-col gap-2.5 p-4 md:w-auto md:gap-3.5 md:p-6`}>
+                  <div className="flex items-center gap-2.5 md:gap-3">
+                    <span aria-hidden="true" className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-[#e6f0f1] font-bold text-[#005663] md:h-11 md:w-11">
+                      {r.name.trim().charAt(0).toUpperCase()}
+                    </span>
+                    <figcaption className="flex min-w-0 flex-col">
+                      <span className="truncate font-bold text-[#17262a] dark:text-white">{r.name}</span>
+                      {/* Company names stay hidden until hiring partners are confirmed. */}
+                      {(r.jobTitle || (PLACEMENT_PROVIDERS_CONFIRMED && r.company) || r.reviewDate) && (
+                        <span className="truncate text-xs text-[#6b7d82]">
+                          {[r.jobTitle, PLACEMENT_PROVIDERS_CONFIRMED ? r.company : null, r.reviewDate].filter(Boolean).join(' · ')}
+                        </span>
+                      )}
+                    </figcaption>
+                    <span className="ml-auto flex shrink-0 gap-px" aria-label={`${r.rating} out of 5 stars`}>
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < r.rating ? 'fill-[#b8531c] text-[#b8531c]' : 'text-[#cfdadd]'}`} aria-hidden="true" />
+                      ))}
+                    </span>
+                  </div>
+                  <blockquote className="line-clamp-4 text-sm leading-relaxed text-[#26383d] md:text-[15px] md:leading-[1.6] dark:text-slate-300">{r.quote}</blockquote>
+                </figure>
+              ))}
+            </div>
+            <TrackedCta
+              href="/student-reviews"
+              ctaId="all_reviews"
+              location="reviews"
+              className="mx-4 flex h-12 items-center justify-center gap-2 rounded-[10px] border border-[#cfdadd] bg-white px-[22px] text-[15px] font-bold text-[#005663] md:mx-0 md:self-center dark:border-slate-700 dark:bg-slate-900 dark:text-[#5ef0c8]"
+            >
+              Read all student reviews <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+            </TrackedCta>
+          </div>
+        </section>
+      )}
+
+      {/* ── Corporate strip ── */}
+      <section aria-label="Corporate training" className={`bg-[#f4f7f8] px-4 pb-7 dark:bg-slate-950 md:px-8 md:pb-16 ${reviews.length > 0 ? '' : 'pt-8 md:pt-16'}`}>
+        <div className={`${CONTAINER} flex flex-col gap-3 rounded-2xl bg-[#e6f0f1] p-5 md:flex-row md:items-center md:gap-6 md:rounded-[20px] md:px-10 md:py-8 dark:bg-slate-900`}>
+          <span className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#005663] text-white md:flex">
+            <Building2 className="h-[30px] w-[30px]" aria-hidden="true" />
+          </span>
+          <div className="flex flex-1 flex-col gap-2 md:gap-1.5">
+            <h2 className="flex items-center gap-3 font-heading text-xl font-extrabold text-[#0a3d4a] md:text-2xl dark:text-white">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#005663] text-white md:hidden">
+                <Building2 className="h-6 w-6" aria-hidden="true" />
+              </span>
+              Training a team?
+            </h2>
+            <p className="text-sm leading-normal text-[#26383d] md:text-base dark:text-slate-300">
+              Custom corporate programmes in Cloud, DevOps, AI and Security, delivered online or on-site.
+            </p>
+          </div>
+          <TrackedCta
+            href="/corporate-training"
+            ctaId="corporate_training"
+            location="corporate_strip"
+            className="flex h-[46px] shrink-0 items-center justify-center gap-2 rounded-[10px] bg-[#005663] px-[22px] text-sm font-bold text-white hover:bg-[#0a3d4a] md:h-[50px] md:rounded-xl md:text-[15px]"
+          >
+            Corporate training <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+          </TrackedCta>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section aria-labelledby="faq-title" className={`bg-white dark:bg-slate-900 ${SECTION}`}>
+        <div className={`${CONTAINER} grid gap-2 lg:grid-cols-[380px_minmax(0,1fr)] lg:gap-16`}>
+          <div className="flex flex-col gap-1.5 md:gap-3.5">
+            <p className={EYEBROW}>FAQ</p>
+            <h2 id="faq-title" className={H2}>Questions students ask us</h2>
+            <p className="hidden text-base leading-relaxed text-[#4a5c61] lg:block dark:text-slate-400">Still unsure? A counsellor can answer anything on a quick call.</p>
+            <WhatsAppLink
+              ctaType="hero"
+              pageType="static"
+              message="Hi, I have a question about your courses."
+              className="hidden h-[46px] items-center gap-2 self-start rounded-[10px] bg-[#e7f6ec] px-[18px] text-sm font-bold text-[#0f5a2c] lg:flex"
+            >
+              <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" />
+              Ask on WhatsApp
+            </WhatsAppLink>
+          </div>
+          <div className="flex flex-col">
+            {FAQS.map((f, i) => (
+              <details key={f.q} open={i === 0} className="group border-b border-[#e3eaec] dark:border-slate-700">
+                <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 py-3.5 font-heading text-base font-bold text-[#17262a] md:min-h-16 md:py-[18px] md:text-lg dark:text-white [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <Plus className="h-[22px] w-[22px] shrink-0 text-[#005663] transition-transform group-open:rotate-45 group-open:text-[#b8531c] dark:text-[#5ef0c8]" aria-hidden="true" />
+                </summary>
+                <p className="pb-4 text-[15px] leading-relaxed text-[#4a5c61] md:pb-5 md:pr-10 md:text-base md:leading-[1.65] dark:text-slate-400">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Latest articles ── */}
+      {articles.length > 0 && (
+        <section aria-labelledby="blog-title" className="bg-[#f4f7f8] py-10 dark:bg-slate-950 md:px-8 md:py-20">
+          <div className={`${CONTAINER} flex flex-col gap-4 md:gap-7`}>
+            <div className="flex items-end justify-between gap-2 px-4 md:px-0">
+              <div className="flex flex-col gap-1.5 md:gap-2">
+                <p className={EYEBROW}>From the blog</p>
+                <h2 id="blog-title" className={H2}>Latest articles</h2>
+              </div>
+              <TrackedCta href="/blog" ctaId="all_articles" location="latest_articles" className="flex shrink-0 items-center gap-1.5 text-sm font-bold text-[#b8531c] hover:text-[#8f3f14] md:text-[15px] dark:text-[#f3a57a]">
+                All articles <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
+              </TrackedCta>
+            </div>
+            <div className="flex snap-x gap-3 overflow-x-auto px-4 pb-1.5 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
+              {articles.map((a, i) => (
+                <Link key={a.href} href={a.href} className={`${CARD} group flex w-[260px] shrink-0 snap-start flex-col overflow-hidden md:w-auto`}>
+                  <span aria-hidden="true" className="relative flex h-[130px] items-end p-3.5 md:h-[170px] md:p-5" style={{ background: BANNER_FILLS[(i + 1) % BANNER_FILLS.length] }}>
+                    {a.image ? (
+                      <Image src={a.image} alt="" fill sizes="(min-width: 1024px) 384px, (min-width: 768px) 33vw, 260px" className="object-cover" />
+                    ) : (
+                      <span className="flex flex-col gap-1">
+                        <span className="text-[10px] font-bold tracking-[1.2px] text-white/60">COSS CLOUD SOLUTIONS</span>
+                        <span className="font-heading text-lg font-extrabold leading-tight text-white md:text-xl">{a.category}</span>
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex flex-col gap-1.5 p-3.5 md:gap-2.5 md:p-5">
+                    <span className="text-[11px] font-bold uppercase tracking-[1px] text-[#005663] md:text-xs dark:text-[#5ef0c8]">{a.category}</span>
+                    <span className="line-clamp-3 font-heading text-base font-extrabold leading-snug text-[#17262a] group-hover:text-[#b8531c] md:text-lg dark:text-white">{a.title}</span>
+                    {(a.date || a.readTime) && (
+                      <span className="text-xs text-[#6b7d82] md:text-[13px]">{[a.date, a.readTime].filter(Boolean).join(' · ')}</span>
+                    )}
+                  </span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* ── Blog / Resources ── */}
-      <section className="section section-white" aria-label="Latest blog posts">
-        <div className="section-inner">
-          <div className="section-header">
-            <div className="section-tag">Resources</div>
-            <h2 className="section-title">Latest From Our Blog</h2>
-            <div className="w-16 h-1 bg-gradient-to-r from-orange-500 to-orange-300 rounded-full mx-auto mt-3" />
-            <p className="section-subtitle">
-              Expert insights, course guides, and career tips from the Coss Cloud Solutions team
-            </p>
+      {/* ── Final CTA band ── */}
+      <section aria-label="Book your free demo class" className="bg-[#f4f7f8] px-4 pb-8 dark:bg-slate-950 md:px-8 md:pb-20">
+        <div className={`${CONTAINER} relative flex flex-col gap-3 overflow-hidden rounded-[20px] bg-[#0a3d4a] px-5 py-7 md:flex-row md:items-center md:justify-between md:gap-10 md:rounded-3xl md:p-14`}>
+          <span aria-hidden="true" className="pointer-events-none absolute -bottom-[70px] -right-[60px] h-[200px] w-[200px] rounded-full border-[32px] border-[#e47538]/[0.14] md:-bottom-[120px] md:-left-20 md:right-auto md:h-80 md:w-80 md:border-[48px]" />
+          <div className="relative flex flex-col gap-2 md:gap-3">
+            <h2 className="font-heading text-[26px] font-extrabold text-white md:text-[40px]">Your next step: a free demo class</h2>
+            <p className="text-[15px] text-white/85 md:text-[17px]">Meet the trainer, see the lab setup, then decide. No payment to book.</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {blogPosts.map((post, i) => {
-              const d = new Date(post.createdAt);
-              const day = d.getDate().toString().padStart(2, '0');
-              const mon = d.toLocaleDateString('en-IN', { month: 'short', timeZone: 'Asia/Kolkata' }).toUpperCase();
-              const gradient = BLOG_GRADIENTS[i % BLOG_GRADIENTS.length];
-              return (
-                <Link key={post.id} href={`/blog/${post.slug}`} className="blog-card">
-                  <div className="blog-card-img" style={{ background: gradient }}>
-                    <div className="blog-date-badge" aria-label={`${day} ${mon}`}>
-                      <span className="blog-date-day">{day}</span>
-                      <span className="blog-date-mon">{mon}</span>
-                    </div>
-                    <p className="blog-card-brand">Coss Cloud Solutions</p>
-                    {post.category && <span className="blog-card-pill">{post.category}</span>}
-                  </div>
-                  <div className="blog-card-body">
-                    <h3>{post.title}</h3>
-                    <span className="blog-read-more">Read More →</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="center-btn">
-            <Link href="/blog" className="btn-primary" style={{ display: 'inline-flex' }}>
-              View All Posts
-            </Link>
+          <div className="relative flex w-full shrink-0 flex-col gap-3 md:w-[300px]">
+            <TrackedCta
+              href={FORM_ANCHOR}
+              ctaId="book_demo"
+              location="final_cta"
+              className={`flex h-14 items-center justify-center gap-2.5 rounded-xl font-heading text-[17px] font-extrabold md:text-lg ${ORANGE_BUTTON}`}
+            >
+              <CalendarCheck className="h-5 w-5" aria-hidden="true" />
+              Book My Free Demo
+            </TrackedCta>
+            <div className="grid grid-cols-2 gap-2.5">
+              <WhatsAppLink
+                ctaType="hero"
+                pageType="static"
+                message="Hi, I'd like help choosing a course at Coss Cloud Solutions."
+                className="flex h-12 items-center justify-center gap-1.5 rounded-[10px] bg-[#e7f6ec] text-sm font-bold text-[#0f5a2c]"
+              >
+                <MessageCircle className="h-[17px] w-[17px]" aria-hidden="true" />
+                WhatsApp
+              </WhatsAppLink>
+              <CallLink
+                number={PHONE}
+                pageType="static"
+                className="flex h-12 items-center justify-center gap-1.5 rounded-[10px] border border-white/45 text-sm font-bold text-white hover:bg-white/10"
+              >
+                <Phone className="h-[17px] w-[17px]" aria-hidden="true" />
+                Call
+              </CallLink>
+            </div>
           </div>
         </div>
       </section>

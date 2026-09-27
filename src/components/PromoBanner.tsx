@@ -18,6 +18,8 @@ interface Props {
   banner: PromoBannerData | null;
   /** Adds "Download Syllabus" to the fallback (course pages only). */
   syllabus?: SyllabusLink;
+  /** Replaces the coded fallback card when there is no admin image banner. */
+  fallback?: ReactNode;
   className?: string;
 }
 
@@ -57,7 +59,7 @@ function TrackedLink({
   );
 }
 
-export default function PromoBanner({ placement, banner, syllabus, className = '' }: Props): JSX.Element {
+export default function PromoBanner({ placement, banner, syllabus, fallback, className = '' }: Props): JSX.Element {
   // ── Admin image banner ──────────────────────────────────────────────────
   if (banner && banner.imageUrl) {
     const mobileSrc = banner.mobileImageUrl || banner.imageUrl;
@@ -93,6 +95,8 @@ export default function PromoBanner({ placement, banner, syllabus, className = '
       </TrackedLink>
     );
   }
+
+  if (fallback) return <>{fallback}</>;
 
   // ── Coded fallback in brand colours ─────────────────────────────────────
   const bannerId = banner?.id ?? null;

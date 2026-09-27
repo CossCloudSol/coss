@@ -49,7 +49,7 @@ export interface AdminLeadsListResponse {
 /* -------------------------------------------------------------------------- */
 
 const ALLOWED_STATUS = new Set(['new', 'contacted', 'enrolled', 'lost']);
-const ALLOWED_BRANCH = new Set(['dilsukhnagar', 'ameerpet', 'online']);
+const ALLOWED_BRANCH = new Set(['dilsukhnagar', 'ameerpet', 'online', 'undecided']);
 const ALLOWED_SORT = new Set<'createdAt' | 'name'>(['createdAt', 'name']);
 const ALLOWED_ORDER = new Set<'asc' | 'desc'>(['asc', 'desc']);
 

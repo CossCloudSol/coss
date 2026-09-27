@@ -299,7 +299,8 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* Dropdown */
 .nav-dropdown-wrap { position: relative; align-self: stretch; display: flex; align-items: center; }
-.nav-dropdown-wrap:hover .nav-dropdown { display: block; }
+.nav-dropdown-wrap:hover .nav-dropdown,
+.nav-dropdown-wrap:focus-within .nav-dropdown { display: block; }
 .nav-dropdown {
   display: none; position: absolute; top: 100%; left: 0;
   background: var(--bg-card); border-radius: 10px;

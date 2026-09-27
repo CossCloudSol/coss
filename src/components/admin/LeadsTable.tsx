@@ -36,7 +36,7 @@ import LeadDrawer from '@/components/admin/LeadDrawer';
 const STATUS_OPTIONS = ['new', 'contacted', 'enrolled', 'lost'] as const;
 type Status = (typeof STATUS_OPTIONS)[number];
 
-const BRANCH_OPTIONS = ['dilsukhnagar', 'ameerpet', 'online'] as const;
+const BRANCH_OPTIONS = ['dilsukhnagar', 'ameerpet', 'online', 'undecided'] as const;
 type Branch = (typeof BRANCH_OPTIONS)[number];
 
 const STATUS_LABEL: Record<Status, string> = {
@@ -63,12 +63,14 @@ const BRANCH_LABEL: Record<Branch, string> = {
   dilsukhnagar: 'Dilsukhnagar',
   ameerpet: 'Ameerpet',
   online: 'Online',
+  undecided: 'Undecided',
 };
 
 const BRANCH_STYLES: Record<Branch, string> = {
   dilsukhnagar: 'bg-teal-50 text-teal-700 ring-teal-200',
   ameerpet: 'bg-purple-50 text-purple-700 ring-purple-200',
   online: 'bg-blue-50 text-blue-700 ring-blue-200',
+  undecided: 'bg-gray-50 text-gray-600 ring-gray-200',
 };
 
 const PAGE_SIZE = 25;

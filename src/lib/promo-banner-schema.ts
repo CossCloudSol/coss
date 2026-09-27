@@ -8,10 +8,11 @@ import { z } from 'zod';
 
 export const PROMO_BANNER_BLOCK_TYPE = 'promo_banner';
 
-export const PROMO_BANNER_PLACEMENTS = ['course-grid', 'blog-grid', 'course-page', 'blog-page'] as const;
+export const PROMO_BANNER_PLACEMENTS = ['home', 'course-grid', 'blog-grid', 'course-page', 'blog-page'] as const;
 export type PromoBannerPlacement = (typeof PROMO_BANNER_PLACEMENTS)[number];
 
 export const PLACEMENT_LABELS: Record<PromoBannerPlacement, string> = {
+  home: 'Homepage (below popular courses)',
   'course-grid': 'Course grids (after every 6th course)',
   'blog-grid': 'Blog grid (after every 6th post)',
   'course-page': 'Course pages (below the hero)',
