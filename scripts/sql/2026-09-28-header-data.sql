@@ -53,8 +53,19 @@ WHERE source LIKE '/courses/aws-devops%' ORDER BY source;
 --    Leftover: azure-administrator-certification-training-hyderabad (nested URL,
 --    already 308-redirected to the other in next.config.mjs). Keep:
 --    azure-administrator-training-in-hyderabad (canonical, landing-page target).
---    Unpublish the leftover (not deleted) and record its redirects in the table.
+--    First copy the leftover's thumbnail and featured flag onto the kept course
+--    (duration left as is), then unpublish the leftover (not deleted) and
+--    record its redirects in the table.
 -- ─────────────────────────────────────────────────────────────────────────────
+UPDATE "Course" AS keep
+SET thumbnail   = old.thumbnail,
+    featured    = true,
+    "updatedAt" = now()
+FROM "Course" AS old
+WHERE keep.slug = 'azure-administrator-training-in-hyderabad'
+  AND old.slug  = 'azure-administrator-certification-training-hyderabad';
+-- Expected: UPDATE 1
+
 UPDATE "Course"
 SET status = 'draft', featured = false, "updatedAt" = now()
 WHERE slug = 'azure-administrator-certification-training-hyderabad';
@@ -69,10 +80,19 @@ VALUES
 ON CONFLICT (source) DO UPDATE
 SET destination = EXCLUDED.destination, "statusCode" = 308, "isActive" = true, "updatedAt" = now();
 
--- Check b1 — expect 2 rows: the certification slug 'draft' / featured false; the other 'published'
+-- Check b1 — expect 2 rows: the certification slug 'draft' / featured false / 45 Days;
+--            azure-administrator-training-in-hyderabad 'published' / featured true / 60 Days
 SELECT slug, title, status, featured, duration FROM "Course"
 WHERE slug IN ('azure-administrator-certification-training-hyderabad', 'azure-administrator-training-in-hyderabad')
 ORDER BY slug;
+-- Check b1b — expect 1 row: thumbnail_copied = true, thumbnail starts with
+--            https://res.cloudinary.com/dfditihuw/ (the same URL on both rows)
+SELECT keep.slug, keep.featured,
+       keep.thumbnail IS NOT NULL AND keep.thumbnail = old.thumbnail AS thumbnail_copied,
+       keep.thumbnail
+FROM "Course" keep, "Course" old
+WHERE keep.slug = 'azure-administrator-training-in-hyderabad'
+  AND old.slug  = 'azure-administrator-certification-training-hyderabad';
 -- Check b2 — expect 1: exactly one published course with this title
 SELECT count(*) AS published_azure_admin FROM "Course"
 WHERE title = 'Microsoft Azure Administrator Training' AND status = 'published';
