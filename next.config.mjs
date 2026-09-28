@@ -381,6 +381,9 @@ const nextConfig = {
       { source: '/courses/software-testing-os/manual-testing-certification-training-in-hyderabad', destination: '/courses/software-testing-os/manual-testing-training-in-hyderabad', permanent: true },
       { source: '/courses/manual-testing-training-institute-in-hyderabad', destination: '/courses/software-testing-os/manual-testing-training-in-hyderabad', permanent: true },
       { source: '/courses/cloud-computing/azure-administrator-certification-training-hyderabad', destination: '/courses/azure-administrator-training-in-hyderabad', permanent: true },
+      // AWS DEVOPS category merged into DevOps & Multi-Cloud (scripts/sql/2026-09-28-header-data.sql adds the same Redirect rows)
+      { source: '/courses/aws-devops', destination: '/courses/devops-multi-cloud', permanent: true },
+      { source: '/courses/aws-devops/aws-devops-training-institute-in-hyderabad', destination: '/courses/devops-multi-cloud/aws-devops-training-institute-in-hyderabad', permanent: true },
       { source: '/courses/erp-crm-enterprise-tools/salesforce-admin-developer-training-hyderabad', destination: '/courses/erp-crm-enterprise-tools/salesforce-admin-developer-training-in-hyderabad', permanent: true },
       { source: '/courses/erp-crm-enterprise-tools/sap-fico-training-in-hyderabad', destination: '/courses/erp-crm-enterprise-tools/sap-fico-training-institute-in-hyderabad', permanent: true },
       { source: '/courses/erp-crm-enterprise-tools/sap-mm-sd-training-institute-in-hyderabad', destination: '/courses/erp-crm-enterprise-tools/sap-mm-sd-training-in-hyderabad', permanent: true },

@@ -1,4 +1,5 @@
-import { revalidatePath as nextRevalidatePath } from 'next/cache';
+import { revalidatePath as nextRevalidatePath, revalidateTag } from 'next/cache';
+import { COURSE_CATALOG_TAG } from '@/lib/course-search';
 import { prisma } from '@/lib/db';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
 
@@ -38,6 +39,17 @@ export async function revalidatePaths(paths: string[]): Promise<RevalidateResult
       const error = err instanceof Error ? err.message : String(err);
       console.error(`[revalidate] Failed to revalidate "${path}"`, err);
       results.push({ path, ok: false, error });
+    }
+  }
+
+  // Course and batch writes (their path lists include the search index) also
+  // refresh the cached course catalogue behind the header's Explore Courses
+  // menu, which every page renders.
+  if (paths.includes(SEARCH_INDEX_PATH)) {
+    try {
+      revalidateTag(COURSE_CATALOG_TAG);
+    } catch (err) {
+      console.error(`[revalidate] Failed to revalidate tag "${COURSE_CATALOG_TAG}"`, err);
     }
   }
 

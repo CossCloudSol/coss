@@ -1,9 +1,10 @@
 import Link from 'next/link'
-import { MapPin } from 'lucide-react'
+import { ArrowRight, MapPin } from 'lucide-react'
 import FooterLogo from './FooterLogo'
 import FooterNavCol from './FooterNavCol'
 import CallLink from './CallLink'
 import WhatsAppLink from './WhatsAppLink'
+import FooterThemeToggle from './FooterThemeToggle'
 import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
 
@@ -232,7 +233,7 @@ export default async function Footer() {
                   <p className="footer-branch-address">{b.subtitle}</p>
                 </div>
                 <a href={b.directionsHref} target="_blank" rel="noopener noreferrer" className="footer-branch-dir">
-                  Directions <span aria-hidden="true">→</span>
+                  Directions <ArrowRight size={14} aria-hidden="true" style={{ display: 'inline', verticalAlign: '-2px' }} />
                 </a>
               </div>
             ))}
@@ -258,6 +259,7 @@ export default async function Footer() {
             <Link href="/terms-conditions">Terms</Link>
             <Link href="/refund-cancellation-policy">Refund Policy</Link>
             <Link href="/sitemap.xml">Sitemap</Link>
+            <FooterThemeToggle />
           </div>
         </div>
       </div>

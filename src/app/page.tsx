@@ -238,7 +238,8 @@ export default async function HomePage() {
                   <span className="sr-only md:not-sr-only">Search</span>
                 </button>
               </div>
-              <div className="flex items-center gap-2 overflow-x-auto text-[13px] md:flex-wrap md:overflow-visible">
+              {/* System font (font-sans): these flowing chips would shift when the web font swaps in. */}
+              <div className="flex items-center gap-2 overflow-x-auto font-sans text-[13px] md:flex-wrap md:overflow-visible">
                 <span className="hidden shrink-0 text-white/70 md:inline">Popular:</span>
                 {POPULAR_SEARCHES.map((term) => (
                   <TrackedCta
@@ -429,7 +430,7 @@ export default async function HomePage() {
               </table>
             </div>
             <TrackedCta href="/batches" ctaId="all_batches" location="upcoming_batches" className="text-center text-sm font-bold text-[#b8531c] md:hidden">
-              See all upcoming batches →
+              See all upcoming batches <ArrowRight className="inline h-4 w-4 align-[-3px]" aria-hidden="true" />
             </TrackedCta>
           </div>
         </section>

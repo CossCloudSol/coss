@@ -221,9 +221,11 @@ function BrowseLinks(): JSX.Element {
 export default function HeaderSearch({
   variant = 'desktop',
   onClose,
+  placeholder = SEARCH_PLACEHOLDER,
   className = '',
 }: {
   variant?: 'desktop' | 'overlay';
+  placeholder?: string;
   /** Overlay only: close it. */
   onClose?: () => void;
   className?: string;
@@ -266,7 +268,8 @@ export default function HeaderSearch({
     if (overlay) return;
     setIsMac(/Mac|iPhone|iPad/.test(navigator.platform));
     function onKeyDown(e: KeyboardEvent) {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      // Hidden at this width (the header shows a search icon instead): let the header open the overlay.
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k' && inputRef.current?.offsetParent != null) {
         e.preventDefault();
         inputRef.current?.focus();
         inputRef.current?.select();
@@ -350,7 +353,7 @@ export default function HeaderSearch({
       aria-controls={listId}
       aria-autocomplete="list"
       aria-activedescendant={activeId ?? undefined}
-      placeholder={SEARCH_PLACEHOLDER}
+      placeholder={overlay ? SEARCH_PLACEHOLDER : placeholder}
       autoComplete="off"
       value={query}
       onChange={(e) => setQuery(e.target.value)}
@@ -381,7 +384,7 @@ export default function HeaderSearch({
     // Portalled to <body>: inside the sticky header's stacking context the
     // site's sticky bottom bar and WhatsApp button would sit on top of it.
     return createPortal(
-      <div id={MOBILE_SEARCH_ID} role="dialog" aria-modal="true" aria-label="Search courses" className="fixed inset-0 z-[10001] flex flex-col bg-white lg:hidden dark:bg-slate-900">
+      <div id={MOBILE_SEARCH_ID} role="dialog" aria-modal="true" aria-label="Search courses" className="fixed inset-0 z-[10001] flex flex-col bg-white dark:bg-slate-900">
         <form action="/courses" method="get" role="search" onSubmit={onSubmit} className="flex h-16 shrink-0 items-center gap-2 border-b border-[#e3eaec] px-3 dark:border-slate-800">
           <button type="button" onClick={onClose} aria-label="Close search" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] text-[#17262a] dark:text-slate-100">
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />
