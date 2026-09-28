@@ -24,7 +24,7 @@ export const dynamic = 'force-dynamic';
 const UNDECIDED_BRANCH = 'undecided';
 
 const BRANCH_VALUES = ['Dilsukhnagar', 'Ameerpet', 'Online'] as const;
-const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget', 'contact', 'brochure_request'] as const;
+const FORM_TYPE_VALUES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget', 'contact', 'brochure_request', 'course_search'] as const;
 
 /**
  * Public lead-capture body. Permissive about email shape (`""` is treated as
@@ -141,7 +141,7 @@ function allowSubmission(ip: string): boolean {
 }
 
 /** Short name + phone popups get a lower minimum fill time than page forms. */
-const POPUP_FORM_TYPES: ReadonlySet<string> = new Set(['whatsapp_widget', 'brochure_request']);
+const POPUP_FORM_TYPES: ReadonlySet<string> = new Set(['whatsapp_widget', 'brochure_request', 'course_search']);
 
 function minFillMsFor(body: unknown): number {
   const formType = typeof body === 'object' && body !== null ? (body as Record<string, unknown>).formType : undefined;

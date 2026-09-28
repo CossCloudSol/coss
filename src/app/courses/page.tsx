@@ -1,95 +1,32 @@
-import type { Metadata } from 'next'
-import { prisma } from '@/lib/db'
-import { COURSE_GROUPS, CATEGORY_ACCENTS, CATEGORY_ICONS } from '@/lib/course-groups'
-import { getCourseUrl } from '@/lib/course-url'
-import CoursesTabPage from '@/components/CoursesTabPage'
-import { buildPageMetadata } from '@/lib/get-page-seo'
+import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/get-page-seo';
+import { getSearchIndex } from '@/lib/course-search-index';
+import { getPromoBanners } from '@/lib/promo-banners';
+import { bannerForSlot } from '@/lib/promo-banner-slots';
+import { COURSE_FILTER_PARAMS } from '@/lib/course-search';
+import CoursesExplorer from '@/components/courses/CoursesExplorer';
 
-export const revalidate = 86400
+export const revalidate = 86400;
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildPageMetadata('courses')
+  // Canonical stays /courses; filtered views (?q=, ?cat=, …) get
+  // X-Robots-Tag: noindex, follow from the middleware.
+  return buildPageMetadata('courses');
 }
 
+/**
+ * Runs before the results are painted: on a filtered URL, hide the parts the
+ * client will re-filter so the unfiltered list never flashes (or shifts).
+ * The class is removed once the filters apply, or after 3 s as a fallback.
+ */
+const PENDING_SCRIPT = `(function(){try{if(new RegExp('[?&](${COURSE_FILTER_PARAMS.join('|')})=').test(location.search)){var r=document.documentElement;r.classList.add('courses-pending');setTimeout(function(){r.classList.remove('courses-pending')},3000)}}catch(e){}})();`;
+
 export default async function CoursesPage() {
-  const categoriesWithCourses = await prisma.courseCategory.findMany({
-    orderBy: { sortOrder: 'asc' },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      description: true,
-      courses: {
-        where: { status: 'published' },
-        orderBy: { sortOrder: 'asc' },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          urlType: true,
-          duration: true,
-          mode: true,
-          level: true,
-          price: true,
-          originalPrice: true,
-          badge: true,
-          categorySlug: true,
-          description: true,
-          excerpt: true,
-        },
-      },
-    },
-  })
-
-  const categoryMap = Object.fromEntries(
-    categoriesWithCourses.map(cat => [
-      cat.slug,
-      {
-        id: cat.id,
-        name: cat.name,
-        slug: cat.slug,
-        description: cat.description,
-        accent: CATEGORY_ACCENTS[cat.slug] ?? 'linear-gradient(90deg,#f97316,#fb923c)',
-        icon: CATEGORY_ICONS[cat.slug] ?? '📚',
-        courses: cat.courses.map(c => ({
-          ...c,
-          url: getCourseUrl(c),
-          description: c.description ?? null,
-          excerpt: c.excerpt ?? null,
-          formattedPrice: c.price
-            ? new Intl.NumberFormat('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-                maximumFractionDigits: 0,
-              }).format(c.price)
-            : null,
-        })),
-        courseCount: cat.courses.length,
-      },
-    ])
-  )
-
-  const groups = COURSE_GROUPS.map(group => ({
-    ...group,
-    categories: group.slugs
-      .map(slug => categoryMap[slug])
-      .filter((c): c is NonNullable<typeof c> => c != null),
-    totalCourses: group.slugs.reduce(
-      (sum, slug) => sum + (categoryMap[slug]?.courseCount ?? 0),
-      0
-    ),
-  }))
-
-  const totalCourses = categoriesWithCourses.reduce(
-    (sum, c) => sum + c.courses.length,
-    0
-  )
-
+  const [index, banners] = await Promise.all([getSearchIndex(), getPromoBanners('course-grid')]);
   return (
-    <CoursesTabPage
-      groups={groups}
-      totalCourses={totalCourses}
-      totalCategories={categoriesWithCourses.length}
-    />
-  )
+    <>
+      <script dangerouslySetInnerHTML={{ __html: PENDING_SCRIPT }} />
+      <CoursesExplorer courses={index.courses} banner={bannerForSlot(banners, 0)} />
+    </>
+  );
 }

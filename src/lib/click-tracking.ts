@@ -55,7 +55,7 @@ export function detectDeviceType(): 'mobile' | 'desktop' {
  * missing gtag is a no-op, and any failure here must never affect the
  * download.
  */
-function gtagEvent(name: string, params: Record<string, string>): void {
+function gtagEvent(name: string, params: Record<string, string | number>): void {
   if (typeof window === 'undefined') return;
   if (typeof (window as any).gtag !== 'function') return;
   try {
@@ -78,6 +78,38 @@ export function trackFormSubmit(formId: string, course?: string): void {
 /** GA4 cta_click: a call-to-action link or button (ctaId names the CTA, location the section). */
 export function trackCtaClick(ctaId: string, location: string, destination: string): void {
   gtagEvent('cta_click', { cta_id: ctaId, location, destination, page_path: window.location.pathname });
+}
+
+const SEARCH_REPEAT_MS = 30_000;
+let lastSearch: { term: string; at: number; noResults: boolean } | null = null;
+
+function isRepeatSearch(term: string, noResults: boolean): boolean {
+  const key = term.trim().toLowerCase();
+  const now = Date.now();
+  const repeat = lastSearch !== null && lastSearch.term === key && lastSearch.noResults === noResults && now - lastSearch.at < SEARCH_REPEAT_MS;
+  if (!repeat) lastSearch = { term: key, at: now, noResults };
+  return repeat;
+}
+
+/**
+ * GA4 search: a course search settled on a term (typing paused or
+ * submitted). The same term within 30 s counts once, so a header search that
+ * lands on /courses?q= isn't reported by both.
+ */
+export function trackSearch(term: string, resultCount: number, location: string): void {
+  if (isRepeatSearch(term, resultCount === 0)) return;
+  gtagEvent('search', { search_term: term, result_count: resultCount, search_location: location, page_path: window.location.pathname });
+  if (resultCount === 0) gtagEvent('search_no_results', { search_term: term, search_location: location, page_path: window.location.pathname });
+}
+
+/** GA4 search_select: a course or category picked from search results. */
+export function trackSearchSelect(term: string, destination: string, position: number, location: string): void {
+  gtagEvent('search_select', { search_term: term, destination, position, search_location: location, page_path: window.location.pathname });
+}
+
+/** GA4 filter_apply: a /courses filter, tab or sort changed. */
+export function trackFilterApply(filterType: string, value: string, resultCount: number): void {
+  gtagEvent('filter_apply', { filter_type: filterType, filter_value: value, result_count: resultCount, page_path: window.location.pathname });
 }
 
 /**

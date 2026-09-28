@@ -22,7 +22,7 @@ const BRANCHES: Array<{ value: Branch; label: string; sub: string; online: boole
 
 const field =
   'flex h-[50px] items-center gap-2.5 rounded-[10px] border border-[#cfdadd] bg-[#f8fafb] px-3.5 text-[#6b7d82] focus-within:border-[#005663] focus-within:ring-2 focus-within:ring-[#005663]/20';
-const input = 'min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82]';
+const input = 'field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82]';
 
 /**
  * Homepage hero lead form: name, phone and an optional branch. With no branch

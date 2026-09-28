@@ -477,6 +477,7 @@ const FORM_LABEL: Record<string, string> = {
   whatsapp_widget: 'WhatsApp widget',
   contact: 'Contact page',
   brochure_request: 'Brochure request (WhatsApp)',
+  course_search: 'Course search (no match)',
 };
 
 function FormSourceTable({
