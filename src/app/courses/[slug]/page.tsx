@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { courseOgImages } from '@/lib/course-banner-sign';
 import path from 'node:path';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
@@ -190,7 +191,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     const fallback: Metadata = {
       title: course.seoTitle ?? course.title,
       description: course.seoDesc ?? course.excerpt,
-      openGraph: course.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
+      openGraph: { images: await courseOgImages({ ...course, categorySlug: course.categorySlug ?? null }, SITE_URL) },
       alternates: { canonical: `${SITE_URL}${getCourseUrl(course)}` },
     };
     return buildPageMetadataWithFallback(`courses/${params.slug}`, fallback);

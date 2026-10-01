@@ -15,6 +15,7 @@ import {
   type SearchIndex,
 } from '@/lib/course-search';
 import { trackSearch, trackSearchSelect } from '@/lib/click-tracking';
+import { squareBannerPath } from '@/lib/course-banner';
 import NoResultsLead from '@/components/search/NoResultsLead';
 
 export const SEARCH_PLACEHOLDER = 'Search courses: AWS, Python, Cyber Security…';
@@ -103,13 +104,13 @@ function Suggestions({
   const rowBase = 'flex items-center gap-3.5 px-4 py-2.5 md:px-5';
   return (
     <div id={listId} role="listbox" aria-label="Search suggestions">
-      <p className="px-4 pb-1.5 pt-3.5 text-xs font-bold tracking-[1.2px] text-[#6b7d82] md:px-5">COURSES</p>
+      <p className="px-4 pb-1.5 pt-3.5 text-xs font-bold tracking-[1.2px] text-[#5f7075] md:px-5 dark:text-slate-400">COURSES</p>
       {hits.slice(0, MAX_COURSES).map((h, i) => {
         const id = `${listId}-c${i}`;
         const date = formatNextBatch(h.course.nextBatch);
         const meta = [h.course.duration, h.course.mode, date ? `Next batch ${date}` : null].filter(Boolean).join(' · ');
         return (
-          <div key={h.course.id} id={id} role="option" aria-selected={activeId === id} className={`${rowBase} min-h-[72px] ${activeId === id ? 'bg-[#f4f7f8]' : 'hover:bg-[#f4f7f8]'}`}>
+          <div key={h.course.id} id={id} role="option" aria-selected={activeId === id} className={`${rowBase} min-h-[72px] ${activeId === id ? 'bg-[#f4f7f8] dark:bg-slate-800' : 'hover:bg-[#f4f7f8] dark:hover:bg-slate-800'}`}>
             <Link
               href={h.course.url}
               tabIndex={-1}
@@ -120,17 +121,23 @@ function Suggestions({
               className="flex min-w-0 flex-1 items-center gap-3.5"
             >
               <span className="relative flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-[10px] text-white/80" style={{ background: THUMB_FILLS[i % THUMB_FILLS.length] }}>
-                {h.course.thumbnail ? (
-                  <Image src={h.course.thumbnail} alt="" fill sizes="52px" className="object-cover" />
+                {h.course.thumbnail || h.course.banner ? (
+                  <Image
+                    src={h.course.thumbnail ?? squareBannerPath(h.course.banner as string)}
+                    alt=""
+                    fill
+                    sizes="52px"
+                    className="object-cover"
+                  />
                 ) : (
                   <ImageIcon className="h-[22px] w-[22px]" aria-hidden="true" />
                 )}
               </span>
               <span className="flex min-w-0 flex-col gap-0.5">
-                <span className="truncate text-[15px] font-bold text-[#17262a] md:text-base">
+                <span className="truncate text-[15px] font-bold text-[#17262a] md:text-base dark:text-slate-100">
                   <Highlighted title={h.course.title} range={h.highlight} />
                 </span>
-                <span className="truncate text-[13px] text-[#4a5c61]">{meta}</span>
+                <span className="truncate text-[13px] text-[#4a5c61] dark:text-slate-400">{meta}</span>
               </span>
             </Link>
             <Link
@@ -140,7 +147,7 @@ function Suggestions({
                 e.preventDefault();
                 onSelect(DEMO_HREF, i + 1);
               }}
-              className="flex shrink-0 items-center gap-1 text-[13px] font-bold text-[#b8531c] hover:text-[#8f3f14]"
+              className="flex shrink-0 items-center gap-1 text-[13px] font-bold text-[#b8531c] hover:text-[#8f3f14] dark:text-[#f3a57a]"
             >
               Book demo <ArrowRight className="h-[15px] w-[15px]" aria-hidden="true" />
             </Link>
@@ -149,7 +156,7 @@ function Suggestions({
       })}
       {categories.length > 0 && (
         <>
-          <p className="border-t border-[#eef2f3] px-4 pb-1.5 pt-3.5 text-xs font-bold tracking-[1.2px] text-[#6b7d82] md:px-5">CATEGORIES</p>
+          <p className="border-t border-[#eef2f3] px-4 pb-1.5 pt-3.5 text-xs font-bold tracking-[1.2px] text-[#5f7075] md:px-5 dark:border-slate-700 dark:text-slate-400">CATEGORIES</p>
           <div className="flex flex-wrap gap-2 px-4 pb-3.5 pt-1.5 md:px-5">
             {categories.map((cat, i) => {
               const id = `${listId}-k${i}`;
@@ -186,15 +193,15 @@ function Suggestions({
           e.preventDefault();
           onSelect(coursesHref(term), 0);
         }}
-        className={`flex items-center justify-between gap-3 border-t border-[#e3eaec] px-4 py-3.5 text-sm font-bold text-[#005663] md:px-5 ${activeId === `${listId}-all` ? 'bg-[#e6f0f1]' : 'bg-[#f4f7f8] hover:bg-[#eaf1f2]'}`}
+        className={`flex items-center justify-between gap-3 border-t border-[#e3eaec] px-4 py-3.5 text-sm font-bold text-[#005663] md:px-5 dark:border-slate-700 dark:text-[#5ef0c8] ${activeId === `${listId}-all` ? 'bg-[#e6f0f1] dark:bg-slate-700' : 'bg-[#f4f7f8] hover:bg-[#eaf1f2] dark:bg-slate-800 dark:hover:bg-slate-700'}`}
       >
         <span>
           See all {hits.length} {hits.length === 1 ? 'result' : 'results'} for &ldquo;{term}&rdquo;
         </span>
         {showKeys && (
-          <span className="hidden items-center gap-2 text-xs font-medium text-[#6b7d82] lg:flex">
-            <kbd className="rounded-[5px] border border-[#cfdadd] bg-white px-1.5 font-sans">↑↓</kbd>to move
-            <kbd className="rounded-[5px] border border-[#cfdadd] bg-white px-1.5 font-sans">Enter</kbd>to open
+          <span className="hidden items-center gap-2 text-xs font-medium text-[#5f7075] lg:flex dark:text-slate-400">
+            <kbd className="rounded-[5px] border border-[#cfdadd] bg-white px-1.5 font-sans dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">↑↓</kbd>to move
+            <kbd className="rounded-[5px] border border-[#cfdadd] bg-white px-1.5 font-sans dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">Enter</kbd>to open
           </span>
         )}
       </Link>
@@ -204,7 +211,7 @@ function Suggestions({
 
 function BrowseLinks(): JSX.Element {
   return (
-    <p className="text-xs text-[#6b7d82]">
+    <p className="text-xs text-[#5f7075] dark:text-slate-400">
       Or browse: <Link href="/courses?cat=ai-data" className="font-bold text-[#b8531c]">AI &amp; Data</Link> ·{' '}
       <Link href="/courses?cat=cloud-devops" className="font-bold text-[#b8531c]">Cloud</Link> ·{' '}
       <Link href="/courses" className="font-bold text-[#b8531c]">All courses</Link>
@@ -329,7 +336,7 @@ export default function HeaderSearch({
 
   const results =
     term.length < 2 ? null : !index ? (
-      <p className="px-5 py-6 text-sm text-[#4a5c61]" role="status">
+      <p className="px-5 py-6 text-sm text-[#4a5c61] dark:text-slate-300" role="status">
         {failed ? 'Search is unavailable right now. Press Enter to see all courses.' : 'Loading courses…'}
       </p>
     ) : hits.length === 0 ? (
@@ -362,7 +369,7 @@ export default function HeaderSearch({
         load();
       }}
       onKeyDown={onKeyDown}
-      className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] lg:text-[15px] dark:text-slate-100"
+      className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#5f7075] lg:text-[15px] dark:text-slate-100"
     />
   );
 
@@ -398,7 +405,7 @@ export default function HeaderSearch({
         <div ref={wrapRef} className="flex-1 overflow-y-auto">
           {results ?? (
             <div className="flex flex-col gap-3 p-4">
-              <p className="text-xs font-bold tracking-[1.2px] text-[#6b7d82]">POPULAR SEARCHES</p>
+              <p className="text-xs font-bold tracking-[1.2px] text-[#5f7075] dark:text-slate-400">POPULAR SEARCHES</p>
               <div className="flex flex-wrap gap-2">
                 {POPULAR_SEARCHES.map((t) => (
                   <button
@@ -430,20 +437,20 @@ export default function HeaderSearch({
         role="search"
         aria-label="Search courses"
         onSubmit={onSubmit}
-        className={`flex h-[46px] w-full items-center gap-2.5 rounded-xl border bg-[#f4f7f8] pl-4 pr-1.5 text-[#6b7d82] dark:bg-slate-800 dark:text-slate-400 ${
+        className={`flex h-[46px] w-full items-center gap-2.5 rounded-xl border bg-[#f4f7f8] pl-4 pr-1.5 text-[#5f7075] dark:bg-slate-800 dark:text-slate-400 ${
           open ? 'border-2 border-[#005663] bg-white dark:bg-slate-900' : 'border-[#cfdadd] dark:border-slate-700'
         }`}
       >
         <Search className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
         {input}
         {clearButton || (
-          <kbd className="hidden shrink-0 rounded-md border border-[#cfdadd] bg-white px-1.5 py-0.5 font-sans text-[11px] font-bold text-[#6b7d82] xl:inline dark:border-slate-600 dark:bg-slate-900">
+          <kbd className="hidden shrink-0 rounded-md border border-[#cfdadd] bg-white px-1.5 py-0.5 font-sans text-[11px] font-bold text-[#5f7075] xl:inline dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">
             {isMac ? '⌘K' : 'Ctrl K'}
           </kbd>
         )}
       </form>
       {open && results && (
-        <div className="absolute left-0 top-[calc(100%+8px)] z-50 w-[min(640px,calc(100vw-32px))] overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_rgba(0,0,0,0.25)] ring-1 ring-black/5">
+        <div className="absolute left-0 top-[calc(100%+8px)] z-50 w-[min(640px,calc(100vw-32px))] overflow-hidden rounded-2xl bg-white shadow-[0_24px_60px_rgba(0,0,0,0.25)] ring-1 ring-black/5 dark:bg-slate-900 dark:ring-slate-700">
           {results}
         </div>
       )}

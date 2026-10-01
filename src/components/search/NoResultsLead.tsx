@@ -62,7 +62,7 @@ export default function NoResultsLead({
 
   const busy = state.kind === 'submitting';
   const input =
-    'h-12 min-w-0 rounded-[10px] border border-[#cfdadd] bg-white px-3 text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] focus:border-[#005663] focus:ring-2 focus:ring-[#005663]/20';
+    'h-12 min-w-0 rounded-[10px] border border-[#cfdadd] bg-white px-3 text-base text-[#17262a] outline-none placeholder:text-[#5f7075] focus:border-[#005663] focus:ring-2 focus:ring-[#005663]/20';
 
   return (
     <div className={`flex flex-col gap-3 ${compact ? '' : 'items-center text-center'}`}>
@@ -71,10 +71,10 @@ export default function NoResultsLead({
           <SearchX className="h-7 w-7" aria-hidden="true" />
         </span>
       )}
-      <p className={`font-heading font-extrabold text-[#0a3d4a] ${compact ? 'text-lg' : 'text-[22px]'}`}>
+      <p className={`font-heading font-extrabold text-[#0a3d4a] dark:text-white ${compact ? 'text-lg' : 'text-[22px]'}`}>
         We couldn&apos;t find that course yet
       </p>
-      <p className="max-w-[420px] text-sm leading-relaxed text-[#4a5c61] md:text-[15px]">
+      <p className="max-w-[420px] text-sm leading-relaxed text-[#4a5c61] md:text-[15px] dark:text-slate-300">
         Leave your number and a counsellor will tell you the closest course we run for &ldquo;{term.trim()}&rdquo;.
       </p>
       {state.kind === 'success' ? (
@@ -94,7 +94,7 @@ export default function NoResultsLead({
               <span className="text-[15px] text-[#26383d]" aria-hidden="true">+91</span>
               <span className="sr-only">Mobile number</span>
               <input
-                className="field-bare h-full min-w-0 flex-1 rounded-r-[10px] border-0 bg-transparent pr-3 text-base text-[#17262a] outline-none placeholder:text-[#6b7d82]"
+                className="field-bare h-full min-w-0 flex-1 rounded-r-[10px] border-0 bg-transparent pr-3 text-base text-[#17262a] outline-none placeholder:text-[#5f7075]"
                 type="tel"
                 inputMode="tel"
                 placeholder="10-digit mobile"

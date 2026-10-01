@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { BarChart3, CalendarCheck, CalendarDays, Clock, FileText, Monitor } from 'lucide-react';
 import TrackedCta from '@/components/home/TrackedCta';
 import { formatNextBatch, type CatalogCourse } from '@/lib/course-search';
+import { BANNER_SQUARE, BANNER_WIDE, squareBannerPath } from '@/lib/course-banner';
 
 /** Brand fills for course banners without an image. */
 export const BANNER_FILLS = ['#0a3d4a', '#1f3a44', '#123f55', '#5a3a26', '#005663', '#26383d'] as const;
@@ -21,6 +22,8 @@ interface Props {
   /** "Book demo" target; with prefill, the homepage hero form gets the course. */
   demoHref: string;
   prefillCourse?: boolean;
+  /** First row above the fold: load eagerly with high priority. */
+  priority?: boolean;
 }
 
 /**
@@ -28,7 +31,7 @@ interface Props {
  * or a coded brand banner) with category chip and tag, duration / mode /
  * level, next batch, then Book demo and Syllabus.
  */
-export default function CourseTile({ course: c, index, layout, location, demoHref, prefillCourse = false }: Props): JSX.Element {
+export default function CourseTile({ course: c, index, layout, location, demoHref, prefillCourse = false, priority = false }: Props): JSX.Element {
   const grid = layout === 'grid';
   const date = formatNextBatch(c.nextBatch);
   const fill = BANNER_FILLS[index % BANNER_FILLS.length];
@@ -50,21 +53,53 @@ export default function CourseTile({ course: c, index, layout, location, demoHre
           {c.thumbnail ? (
             <Image
               src={c.thumbnail}
-              alt=""
+              alt={`${c.title} course`}
               fill
+              priority={priority}
               sizes={grid ? '(min-width: 1024px) 300px, (min-width: 768px) 50vw, 88px' : '(min-width: 1024px) 384px, (min-width: 768px) 50vw, 300px'}
               className="object-cover"
             />
+          ) : c.banner ? (
+            <>
+              {/* Generated, category-branded banner (admin thumbnail wins when set). */}
+              <Image
+                src={c.banner}
+                alt={`${c.title}: ${c.category} course banner`}
+                width={BANNER_WIDE.width}
+                height={BANNER_WIDE.height}
+                priority={priority}
+                sizes={grid ? '(min-width: 1024px) 300px, 50vw' : '(min-width: 1024px) 384px, (min-width: 768px) 50vw, 300px'}
+                className={`h-full w-full object-cover ${grid ? 'hidden md:block' : ''}`}
+              />
+              {grid && (
+                <Image
+                  src={squareBannerPath(c.banner)}
+                  alt={`${c.title}: ${c.category} course banner`}
+                  width={BANNER_SQUARE.width}
+                  height={BANNER_SQUARE.height}
+                  priority={priority}
+                  sizes="88px"
+                  className="h-full w-full object-cover md:hidden"
+                />
+              )}
+            </>
           ) : (
             <span className={`absolute inset-0 flex items-center justify-center px-5 text-center font-heading font-extrabold leading-tight text-white/90 ${grid ? 'hidden text-xl md:flex' : 'text-2xl'}`}>
               {c.title}
             </span>
           )}
-          <span className={`absolute left-3 top-3 max-w-[70%] truncate rounded-full bg-white/[0.92] px-2.5 py-1 text-[11px] font-bold text-[#0a3d4a] ${grid ? 'hidden md:block' : 'md:left-3.5 md:top-3.5 md:text-xs'}`}>
-            {c.category}
-          </span>
+          {/* The generated banner has its own category chip and COSS mark. */}
+          {!c.banner && (
+            <span className={`absolute left-3 top-3 max-w-[70%] truncate rounded-full bg-white/[0.92] px-2.5 py-1 text-[11px] font-bold text-[#0a3d4a] ${grid ? 'hidden md:block' : 'md:left-3.5 md:top-3.5 md:text-xs'}`}>
+              {c.category}
+            </span>
+          )}
           {c.badge && (
-            <span className={`absolute right-3 top-3 rounded-full bg-[#b8531c] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.5px] text-white ${grid ? 'hidden md:block' : 'md:right-3.5 md:top-3.5'}`}>
+            <span
+              className={`absolute rounded-full bg-[#b8531c] px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.5px] text-white ${
+                c.banner ? 'bottom-3 right-3' : 'right-3 top-3 md:right-3.5 md:top-3.5'
+              } ${grid ? 'hidden md:block' : ''}`}
+            >
               {c.badge}
             </span>
           )}

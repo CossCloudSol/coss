@@ -1,4 +1,5 @@
 import { cache } from 'react'
+import { courseOgImages } from '@/lib/course-banner-sign';
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getLandingPageCourse, SLUG_MAP } from '@/lib/get-landing-page-data'
@@ -51,7 +52,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       course?.excerpt ??
       course?.description ??
       'Best IT training institute in Hyderabad. Hands-on courses with placement support at Dilsukhnagar & Ameerpet.',
-    openGraph: course?.thumbnail ? { images: [{ url: course.thumbnail }] } : undefined,
+    openGraph: course
+      ? {
+          images: await courseOgImages(
+            { slug: course.slug, title: course.title, category: course.courseCategory?.name ?? course.category, categorySlug: course.courseCategory?.slug ?? course.categorySlug, thumbnail: course.thumbnail },
+            SITE_URL,
+          ),
+        }
+      : undefined,
   }
 
   const nestedCanonical = NESTED_CANONICAL_OVERRIDES[slug]

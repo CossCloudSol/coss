@@ -411,7 +411,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
           <form
             role="search"
             onSubmit={(e) => e.preventDefault()}
-            className="flex h-[52px] max-w-[760px] items-center gap-2.5 rounded-xl bg-white pl-3.5 pr-1.5 text-[#6b7d82] md:h-[60px] md:rounded-[14px] md:pl-5 md:pr-2"
+            className="flex h-[52px] max-w-[760px] items-center gap-2.5 rounded-xl bg-white pl-3.5 pr-1.5 text-[#5f7075] md:h-[60px] md:rounded-[14px] md:pl-5 md:pr-2"
           >
             <Search className="h-5 w-5 shrink-0" aria-hidden="true" />
             <label htmlFor="courses-q" className="sr-only">Search courses</label>
@@ -422,7 +422,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
               onChange={(e) => update({ q: e.target.value })}
               placeholder="Search by course, tool or skill: AWS, Python, CEH…"
               autoComplete="off"
-              className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] md:text-[17px]"
+              className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#5f7075] md:text-[17px]"
             />
             {f.q && (
               <button type="button" onClick={() => update({ q: '' })} aria-label="Clear search" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#f4f7f8] text-[#4a5c61]">
@@ -483,7 +483,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
                   <Filter className="h-[18px] w-[18px]" aria-hidden="true" />
                   Filters
                 </p>
-                <button type="button" onClick={clearAll} className="text-sm font-bold text-[#b8531c] hover:text-[#8f3f14]">Clear all</button>
+                <button type="button" onClick={clearAll} className="text-sm font-bold text-[#b8531c] hover:text-[#8f3f14] dark:text-[#f3a57a]">Clear all</button>
               </div>
               {filterGroups(false)}
             </div>
@@ -532,7 +532,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
                     </div>
                   )}
                   <div data-pos={i + 1} className="contents">
-                    <CourseTile course={c} index={i} layout="grid" location="courses_page" demoHref={DEMO_HREF} />
+                    <CourseTile course={c} index={i} layout="grid" location="courses_page" demoHref={DEMO_HREF} priority={i < 3} />
                   </div>
                 </Fragment>
               ))}
@@ -562,7 +562,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
 
             <p className="text-center text-sm text-[#4a5c61] dark:text-slate-400">
               Can&apos;t decide?{' '}
-              <TrackedCta href={DEMO_HREF} ctaId="book_demo" location="courses_page_footer" className="font-bold text-[#b8531c] hover:underline">
+              <TrackedCta href={DEMO_HREF} ctaId="book_demo" location="courses_page_footer" className="font-bold text-[#b8531c] hover:underline dark:text-[#f3a57a]">
                 Book a free demo class
               </TrackedCta>{' '}
               and meet the trainer first.
