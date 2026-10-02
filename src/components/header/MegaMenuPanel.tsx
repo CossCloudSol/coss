@@ -14,7 +14,9 @@ const COURSES_PER_CATEGORY = 8;
 export default function MegaMenuPanel({ index }: { index: SearchIndex }): JSX.Element {
   const categories = index.categories;
   const first = categories[0]?.slug ?? '';
+  // Slugs are DB values: only plain slugs go into CSS.
   const rules = categories
+    .filter((c) => /^[a-z0-9-]+$/.test(c.slug))
     .map(
       (c) =>
         `[data-mega][data-active="${c.slug}"] [data-mega-list="${c.slug}"]{display:block}` +
@@ -26,7 +28,10 @@ export default function MegaMenuPanel({ index }: { index: SearchIndex }): JSX.El
     // Height: at most the viewport below the header (38px strip + 76px row at
     // rest, plus a margin); each column scrolls on its own.
     <div data-mega="" data-active={first} className="grid h-[min(680px,calc(100vh-130px))] grid-cols-[260px_minmax(0,1fr)_260px] gap-0">
-      <style>{rules}</style>
+      {/* dangerouslySetInnerHTML, not a text child: React escapes quotes in <style>
+          text on the server (&quot;), which broke these selectors and made every
+          page fail hydration (React #425/#418/#423). */}
+      <style dangerouslySetInnerHTML={{ __html: rules }} />
       <ul aria-label="Course categories" className="min-h-0 overflow-y-auto overscroll-contain border-r border-[#e3eaec] p-3">
         {categories.map((c) => (
           <li key={c.slug}>
