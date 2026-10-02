@@ -119,7 +119,7 @@ export default function PromoBanner({ placement, banner, syllabus, fallback, cla
         <div className="flex flex-wrap gap-2">
           <TrackedLink
             href={DEMO_HREF}
-            className="inline-flex items-center rounded-lg bg-[#e47538] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+            className="inline-flex items-center rounded-lg bg-[#b8531c] px-4 py-2 text-sm font-bold text-white hover:bg-[#8f3f14]"
             onClick={() =>
               trackPromoBannerClick({ placement, bannerId, variant: 'fallback', cta: 'book_demo_button', destination: DEMO_HREF })
             }

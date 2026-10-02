@@ -253,7 +253,9 @@ export async function buildPageMetadataWithFallback(
     const ogDescription =
       seo?.ogDescription ?? (fallbackOg as { description?: string }).description ?? description;
     const fallbackImage = firstImageUrl((fallbackOg as { images?: unknown }).images);
-    const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? fallbackImage ?? DEFAULT_OG_IMAGE;
+    // The page's own image (e.g. a course thumbnail or generated banner) beats
+    // the site-wide default; an admin per-page OG image beats both.
+    const ogImage = seo?.ogImage ?? fallbackImage ?? settings?.defaultOgImage ?? DEFAULT_OG_IMAGE;
     const ogType = (fallbackOg as { type?: string }).type ?? 'website';
 
     const fallbackCanonical =

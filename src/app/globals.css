@@ -840,8 +840,8 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-branch-name { display: block; font-size: 13px; font-weight: 600; color: var(--footer-heading); text-decoration: none; margin-bottom: 2px; transition: color 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .footer-branch-name:hover { color: #5ef0c8; }
 .footer-branch-address { font-size: 13px; color: var(--footer-text); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.footer-branch-dir { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; padding: 8px 16px; border-radius: 999px; background: var(--primary); color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; text-decoration: none; transition: background 0.2s; }
-.footer-branch-dir:hover { background: var(--primary-dark); }
+.footer-branch-dir { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; padding: 8px 16px; border-radius: 999px; background: #b8531c; /* white text: 4.9:1 (AA) */ color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; text-decoration: none; transition: background 0.2s; }
+.footer-branch-dir:hover { background: #8f3f14; }
 .footer-areas-served { font-size: 11px; color: var(--footer-text); line-height: 1.6; margin-top: 12px; }
 .footer-areas-served a { color: #5ef0c8; font-weight: 500; text-decoration: none; }
 .footer-areas-served a:hover { opacity: 0.8; }
@@ -3270,8 +3270,17 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
    would add up. */
 .mm-cat { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 8px; border-radius: 10px; padding: 0 12px; font-size: 14px; color: #17262a; }
 .mm-cat:hover, .mm-course:hover { background: #f4f7f8; }
-.mm-cat small { flex-shrink: 0; font-size: 12px; color: #6b7d82; }
-.mm-course { display: flex; min-height: 44px; flex-direction: column; justify-content: center; border-radius: 10px; padding: 6px 12px; }
+.mm-cat small { flex-shrink: 0; font-size: 12px; color: #5f7075; }
+.mm-course { display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 10px; align-items: center; min-height: 44px; border-radius: 10px; padding: 6px 12px; }
+.mm-course > img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+.mm-course > span { display: flex; flex-direction: column; grid-column: 2; }
 .mm-course b { font-size: 14px; line-height: 1.35; color: #17262a; }
 .mm-course small { font-size: 12px; color: #4a5c61; }
 [data-mega-list] { display: none; }
+.dark .mm-cat { color: #e2e8f0; }
+.dark .mm-cat:hover, .dark .mm-course:hover { background: #1e293b; }
+.dark .mm-cat small, .dark .mm-course small { color: #94a3b8; }
+.dark .mm-course b { color: #f1f5f9; }
+
+/* Muted grey text (#5f7075) is AA on light surfaces; on dark ones use slate-400. */
+.dark .text-\[\#5f7075\] { color: #94a3b8; }

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import CallLink from './CallLink';
 import HeaderSearch, { MOBILE_SEARCH_ID } from './HeaderSearch';
-import { CalendarCheck, ChevronDown, LayoutGrid, Menu, Phone, Search, X } from 'lucide-react';
+import { CalendarCheck, ChevronDown, LayoutGrid, Menu, Moon, Phone, Search, Sun, X } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
 
 const PHONE = '+918885166007';
@@ -189,6 +189,22 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
   const iconButton =
     'flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[#cfdadd] bg-white text-[#005663] hover:border-[#005663] dark:border-slate-700 dark:bg-slate-900 dark:text-[#5ef0c8]';
 
+  // Both icons are in the HTML and CSS picks one (dark: variants), so the
+  // button looks right before hydration and never shifts. The label follows
+  // the synced state.
+  const themeButton = (className: string) => (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      className={`${iconButton} ${className}`}
+    >
+      <Moon className="h-5 w-5 dark:hidden" aria-hidden="true" />
+      <Sun className="hidden h-5 w-5 dark:block" aria-hidden="true" />
+    </button>
+  );
+
   return (
     <header
       ref={headerRef}
@@ -197,7 +213,9 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
       <div className="relative h-16 bg-white lg:h-[76px] lg:pt-3 dark:bg-slate-950">
         {/* The 64px content box: centred in the 76px row at rest, flush once stuck. */}
         <div className={`mx-auto flex h-16 max-w-[1280px] items-center gap-3 px-4 transition-transform duration-200 xl:gap-4 ${scrolled ? '' : 'lg:-translate-y-1.5'}`}>
-          <Link href="/" className="logo-link shrink-0" aria-label="Coss Cloud Solutions — Home">
+          {/* px-1 in both themes so toggling never moves anything; the white backdrop
+              keeps the orange/teal logo legible on the dark header. */}
+          <Link href="/" className="logo-link shrink-0 rounded-lg px-1 dark:bg-white" aria-label="Coss Cloud Solutions — Home">
             {/* priority: on mobile the logo is often the LCP element. */}
             <Image
               src="/logo.png"
@@ -227,7 +245,7 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
           </button>
 
           {/* Search box (≥1100) */}
-          <div data-header-search="" className="hidden min-w-[150px] flex-1 min-[1100px]:block">
+          <div data-header-search="" className="hidden min-w-[120px] flex-1 min-[1100px]:block">
             <HeaderSearch placeholder="Search course" className="w-full" />
           </div>
 
@@ -259,10 +277,12 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
             >
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
+            {themeButton('hidden lg:flex')}
             <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={iconButton}>
               <Phone className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">{PHONE_LABEL}</span>
             </CallLink>
+            {themeButton('lg:hidden')}
             <Link
               href={DEMO_HREF}
               className="hidden h-11 w-[174px] items-center gap-2 whitespace-nowrap rounded-[10px] bg-[#b8531c] px-4 text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
@@ -301,7 +321,7 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
           // No display classes here: they would override the hidden attribute.
           className="absolute inset-x-0 top-full px-4"
         >
-          <div className="mx-auto max-w-[1248px] overflow-hidden rounded-b-2xl border border-t-0 border-[#e3eaec] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)]">
+          <div className="mx-auto max-w-[1248px] overflow-hidden rounded-b-2xl border border-t-0 border-[#e3eaec] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)] dark:border-slate-700 dark:bg-slate-900">
             {megaMenu}
           </div>
         </div>
@@ -314,14 +334,14 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
           className="absolute inset-x-0 top-full max-h-[calc(100dvh-64px)] overflow-y-auto border-t border-[#e3eaec] bg-white shadow-[0_24px_40px_rgba(0,0,0,0.15)] lg:hidden dark:border-slate-800 dark:bg-slate-950"
         >
           <div className="flex flex-col gap-5 p-4 pb-24 md:pb-4">
-            <form action="/courses" method="get" role="search" className="flex h-12 items-center gap-2 rounded-xl border border-[#cfdadd] bg-[#f4f7f8] pl-3 pr-1.5 text-[#6b7d82] focus-within:border-[#005663] dark:border-slate-700 dark:bg-slate-900">
+            <form action="/courses" method="get" role="search" className="flex h-12 items-center gap-2 rounded-xl border border-[#cfdadd] bg-[#f4f7f8] pl-3 pr-1.5 text-[#5f7075] focus-within:border-[#005663] dark:border-slate-700 dark:bg-slate-900">
               <Search className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
               <label htmlFor="drawer-search" className="sr-only">Search courses</label>
               <input id="drawer-search" type="search" name="q" placeholder="Search course" autoComplete="off" className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none dark:text-slate-100" />
             </form>
 
             <div>
-              <p className="mb-2.5 text-xs font-bold uppercase tracking-[1.2px] text-[#6b7d82]">Explore courses</p>
+              <p className="mb-2.5 text-xs font-bold uppercase tracking-[1.2px] text-[#5f7075]">Explore courses</p>
               <div className="flex flex-wrap gap-2">
                 {categories.map((c) => (
                   <Link key={c.slug} href={`/courses/${c.slug}`} className="flex min-h-[44px] items-center rounded-full border border-[#cfdadd] px-4 text-sm text-[#26383d] dark:border-slate-700 dark:text-slate-200">
@@ -342,11 +362,6 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
                   </Link>
                 </li>
               ))}
-              <li className="border-b border-[#eef2f3] dark:border-slate-800">
-                <button type="button" onClick={toggleTheme} className="flex min-h-[48px] w-full items-center text-base font-medium text-[#17262a] dark:text-slate-100">
-                  {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-                </button>
-              </li>
             </ul>
 
             <div className="grid grid-cols-2 gap-2.5">

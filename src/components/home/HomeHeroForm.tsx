@@ -12,6 +12,9 @@ import { PREFILL_COURSE_EVENT } from '@/components/home/TrackedCta';
 
 const FORM_ID = 'home_hero';
 
+// The card stays white in dark mode, so its muted text uses #5e6f74 (5.0:1 on
+// white), not #5f7075, which globals.css lightens for dark surfaces.
+
 type State = { kind: 'idle' } | { kind: 'submitting' } | { kind: 'success' } | { kind: 'error'; message: string };
 
 const BRANCHES: Array<{ value: Branch; label: string; sub: string; online: boolean }> = [
@@ -21,8 +24,8 @@ const BRANCHES: Array<{ value: Branch; label: string; sub: string; online: boole
 ];
 
 const field =
-  'flex h-[50px] items-center gap-2.5 rounded-[10px] border border-[#cfdadd] bg-[#f8fafb] px-3.5 text-[#6b7d82] focus-within:border-[#005663] focus-within:ring-2 focus-within:ring-[#005663]/20';
-const input = 'field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82]';
+  'flex h-[50px] items-center gap-2.5 rounded-[10px] border border-[#cfdadd] bg-[#f8fafb] px-3.5 text-[#5e6f74] focus-within:border-[#005663] focus-within:ring-2 focus-within:ring-[#005663]/20';
+const input = 'field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#5e6f74]';
 
 /**
  * Homepage hero lead form: name, phone and an optional branch. With no branch
@@ -165,7 +168,7 @@ export default function HomeHeroForm(): JSX.Element {
 
       <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
         <legend className="mb-2 p-0 font-sans text-[13px] font-bold text-[#26383d]">
-          How would you like to learn? <span className="font-normal text-[#6b7d82]">(optional)</span>
+          How would you like to learn? <span className="font-normal text-[#5e6f74]">(optional)</span>
         </legend>
         <div className="grid grid-cols-3 gap-2">
           {BRANCHES.map((b) => {
@@ -186,7 +189,7 @@ export default function HomeHeroForm(): JSX.Element {
               >
                 <Icon className="h-5 w-5" aria-hidden="true" />
                 <span className="text-xs font-bold sm:text-[13px]">{b.label}</span>
-                <span className="hidden text-[11px] text-[#6b7d82] sm:block">{b.sub}</span>
+                <span className="hidden text-[11px] text-[#5e6f74] sm:block">{b.sub}</span>
               </button>
             );
           })}
@@ -219,7 +222,7 @@ export default function HomeHeroForm(): JSX.Element {
         </span>
       </p>
 
-      <div className="flex items-center gap-3 text-xs text-[#6b7d82]">
+      <div className="flex items-center gap-3 text-xs text-[#5e6f74]">
         <span className="h-px flex-1 bg-[#e3eaec]" />
         or talk to us now
         <span className="h-px flex-1 bg-[#e3eaec]" />

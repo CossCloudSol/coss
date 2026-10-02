@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getCourseUrl, CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { syllabusLinkFor } from '@/lib/promo-banners';
 import { memoDuringBuild } from '@/lib/build-memo';
+import { courseBannerPath } from '@/lib/course-banner-sign';
 import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 import { COURSE_CATALOG_TAG, parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
 
@@ -71,14 +72,17 @@ async function loadSearchIndex(): Promise<SearchIndex> {
     }),
   ]);
 
-  const catalog: CatalogCourse[] = courses.map((c, rank) => {
+  const catalog: CatalogCourse[] = await Promise.all(courses.map(async (c, rank): Promise<CatalogCourse> => {
     const categorySlug = c.courseCategory?.slug ?? c.categorySlug ?? CATEGORY_SLUG_MAP[c.category] ?? null;
     const badge = c.badge?.trim() || null;
+    const thumbnail = c.thumbnail && OPTIMISABLE_IMAGE.test(c.thumbnail) ? c.thumbnail : null;
+    const category = c.courseCategory?.name ?? c.category;
     return {
       id: c.id,
+      slug: c.slug,
       title: c.title.trim(),
       url: getCourseUrl(c),
-      category: c.courseCategory?.name ?? c.category,
+      category,
       categorySlug,
       tab: tabForCategory(categorySlug),
       keywords: Array.from(new Set([...c.tools.map((k) => k.toLowerCase().trim()), ...slugKeywords(c.slug)].filter(Boolean))),
@@ -90,11 +94,13 @@ async function loadSearchIndex(): Promise<SearchIndex> {
       nextBatch: c.batches[0]?.startDate.toISOString() ?? null,
       featured: c.featured,
       rank,
-      thumbnail: c.thumbnail && OPTIMISABLE_IMAGE.test(c.thumbnail) ? c.thumbnail : null,
+      thumbnail,
+      // Admin thumbnail first; otherwise the generated, category-branded banner.
+      banner: thumbnail ? null : await courseBannerPath({ slug: c.slug, title: c.title, category, categorySlug }),
       badge: badge && !DISALLOWED_BADGE.test(badge) ? badge : null,
       syllabusHref: syllabusLinkFor(c).href,
     };
-  });
+  }));
 
   const counts = new Map<string, number>();
   for (const c of catalog) if (c.categorySlug) counts.set(c.categorySlug, (counts.get(c.categorySlug) ?? 0) + 1);

@@ -125,7 +125,7 @@ export default async function FacultyPage() {
 
                     {skills.length > 0 && (
                       <div>
-                        <p className="mb-1.5 text-xs font-bold uppercase tracking-[1px] text-[#6b7d82]">Expertise</p>
+                        <p className="mb-1.5 text-xs font-bold uppercase tracking-[1px] text-[#5f7075]">Expertise</p>
                         <ul className="flex flex-wrap gap-1.5">
                           {skills.map((s) => (
                             <li key={s} className="rounded-full bg-[#e6f0f1] px-2.5 py-1 text-xs font-bold text-[#005663]">{s}</li>

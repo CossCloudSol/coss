@@ -214,7 +214,7 @@ export default async function HomePage() {
       {/* ── Hero: course search + free demo form ── */}
       <section aria-label="Book a free demo class" className="bg-[#0a3d4a] px-4 pb-8 pt-7 md:px-8 md:pb-[72px] md:pt-16">
         <div className={`${CONTAINER} grid gap-4 lg:grid-cols-[minmax(0,1fr)_480px] lg:gap-x-16 lg:gap-y-6`}>
-          <div className="flex flex-col gap-4 md:gap-6 lg:col-start-1 lg:row-start-1">
+          <div className="flex min-w-0 flex-col gap-4 md:gap-6 lg:col-start-1 lg:row-start-1">
             <p className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium text-[#ffd9c2] md:px-3.5 md:py-2 md:text-sm">
               <MapPin className="h-4 w-4" aria-hidden="true" />
               IT training in Hyderabad · Since 2010
@@ -222,7 +222,7 @@ export default async function HomePage() {
             <h1 className="font-heading text-[32px] font-extrabold leading-[1.12] text-white md:text-[54px] md:leading-[1.08]">{hp.heroHeadline}</h1>
             <p className="max-w-[600px] text-base leading-relaxed text-white/85 md:text-[19px] md:leading-[1.6]">{hp.heroSubtext}</p>
             <form action="/courses" method="get" role="search" aria-label="Find a course" className="flex max-w-[640px] flex-col gap-3">
-              <div className="flex h-[54px] items-center gap-2 rounded-xl bg-white pl-3.5 pr-1.5 text-[#6b7d82] shadow-[0_12px_30px_rgba(0,0,0,0.25)] md:h-[62px] md:rounded-[14px] md:pl-5 md:pr-2">
+              <div className="flex h-[54px] items-center gap-2 rounded-xl bg-white pl-3.5 pr-1.5 text-[#5f7075] shadow-[0_12px_30px_rgba(0,0,0,0.25)] md:h-[62px] md:rounded-[14px] md:pl-5 md:pr-2">
                 <Search className="h-5 w-5 shrink-0 md:h-[22px] md:w-[22px]" aria-hidden="true" />
                 <label htmlFor="hero-course-search" className="sr-only">What do you want to learn?</label>
                 <input
@@ -231,7 +231,7 @@ export default async function HomePage() {
                   name="q"
                   placeholder="What do you want to learn? e.g. AWS, Python"
                   autoComplete="off"
-                  className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#6b7d82] md:text-[17px]"
+                  className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#5f7075] md:text-[17px]"
                 />
                 <button type="submit" className="flex h-11 shrink-0 items-center gap-2 rounded-[10px] bg-[#005663] px-3 font-bold text-white hover:bg-[#0a3d4a] md:h-12 md:px-[22px]">
                   <Search className="h-5 w-5 md:hidden" aria-hidden="true" />
@@ -350,7 +350,7 @@ export default async function HomePage() {
                 <span aria-hidden="true" className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border-[30px] border-white/[0.08] md:-right-16 md:-top-20 md:h-[280px] md:w-[280px] md:border-[40px]" />
                 <div className="relative flex flex-col gap-2 md:gap-2.5">
                   <p className="font-heading text-2xl font-extrabold text-white md:text-[34px]">Try a class before you enrol</p>
-                  <p className="text-sm text-white/90 md:text-base">Free demo class for every course, online or at a branch.</p>
+                  <p className="text-sm text-white md:text-base">Free demo class for every course, online or at a branch.</p>
                 </div>
                 <TrackedCta
                   href={FORM_ANCHOR}
@@ -530,7 +530,7 @@ export default async function HomePage() {
                       <span className="truncate font-bold text-[#17262a] dark:text-white">{r.name}</span>
                       {/* Company names stay hidden until hiring partners are confirmed. */}
                       {(r.jobTitle || (PLACEMENT_PROVIDERS_CONFIRMED && r.company) || r.reviewDate) && (
-                        <span className="truncate text-xs text-[#6b7d82]">
+                        <span className="truncate text-xs text-[#5f7075]">
                           {[r.jobTitle, PLACEMENT_PROVIDERS_CONFIRMED ? r.company : null, r.reviewDate].filter(Boolean).join(' · ')}
                         </span>
                       )}
@@ -646,7 +646,7 @@ export default async function HomePage() {
                     <span className="text-[11px] font-bold uppercase tracking-[1px] text-[#005663] md:text-xs dark:text-[#5ef0c8]">{a.category}</span>
                     <span className="line-clamp-3 font-heading text-base font-extrabold leading-snug text-[#17262a] group-hover:text-[#b8531c] md:text-lg dark:text-white">{a.title}</span>
                     {(a.date || a.readTime) && (
-                      <span className="text-xs text-[#6b7d82] md:text-[13px]">{[a.date, a.readTime].filter(Boolean).join(' · ')}</span>
+                      <span className="text-xs text-[#5f7075] md:text-[13px]">{[a.date, a.readTime].filter(Boolean).join(' · ')}</span>
                     )}
                   </span>
                 </Link>

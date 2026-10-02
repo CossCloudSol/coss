@@ -44,7 +44,7 @@ export default function MobileStickyBar() {
           {/* Book Demo — orange bg */}
           <a
             href="/free-demo-class"
-            className="flex flex-col items-center justify-center gap-1 py-3 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 transition-colors border-r border-orange-600/40"
+            className="flex flex-col items-center justify-center gap-1 py-3 bg-[#b8531c] hover:bg-[#8f3f14] active:bg-[#8f3f14] transition-colors border-r border-[#8f3f14]/40"
             aria-label="Book a free demo class"
           >
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">

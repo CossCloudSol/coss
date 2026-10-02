@@ -11,6 +11,7 @@
 /** One published course as the search index and the /courses grid see it. */
 export interface CatalogCourse {
   id: string;
+  slug: string;
   title: string;
   url: string;
   category: string;
@@ -33,6 +34,8 @@ export interface CatalogCourse {
   rank: number;
   /** Cloudinary thumbnail next/image can optimise, else null. */
   thumbnail: string | null;
+  /** Generated banner (/course-banner/…, 800×400) when there is no thumbnail, else null. */
+  banner: string | null;
   /** Admin badge, with placement/ranking claims removed. */
   badge: string | null;
   /** Brochure PDF or a WhatsApp syllabus request. */
