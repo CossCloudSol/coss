@@ -128,7 +128,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
   const slug = decodeURIComponent(params.slug);
   const course = { title: (q.get('t') ?? '').slice(0, 160), category: (q.get('c') ?? '').slice(0, 80), categorySlug: q.get('k') ?? '' };
   const expected = await bannerSignature(slug, course.title, course.category, course.categorySlug);
-  if (!course.title || !sameSignature(q.get('v') ?? '', expected)) {
+  if (!course.title || !expected || !sameSignature(q.get('v') ?? '', expected)) {
     return new Response('Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } });
   }
 
