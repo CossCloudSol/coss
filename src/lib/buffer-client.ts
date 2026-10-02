@@ -26,6 +26,22 @@ const REQUEST_TIMEOUT_MS = 15_000;
 const LINKEDIN_CHANNEL_ID = '6aa6ca86ea19ca0bde35bd08';
 const ORGANIZATION_ID = '6aa6b591da36a3ea4daa5ce9';
 
+export type BufferService = 'linkedin' | 'facebook' | 'instagram';
+
+/**
+ * Buffer channel ("profile") id per network, from BUFFER_PROFILE_LINKEDIN /
+ * _FACEBOOK / _INSTAGRAM (ids, not secrets). LinkedIn falls back to the id
+ * it has always used, so it keeps working before the env var is added.
+ */
+export function bufferChannelId(service: BufferService): string | null {
+  const fromEnv = {
+    linkedin: process.env.BUFFER_PROFILE_LINKEDIN,
+    facebook: process.env.BUFFER_PROFILE_FACEBOOK,
+    instagram: process.env.BUFFER_PROFILE_INSTAGRAM,
+  }[service]?.trim();
+  return fromEnv || (service === 'linkedin' ? LINKEDIN_CHANNEL_ID : null);
+}
+
 export type BufferError = {
   message: string;
   authFailure?: boolean;
@@ -190,6 +206,10 @@ export type CreatePostInput = {
   imageUrl?: string;
   imageAltText?: string;
   linkUrl?: string;
+  /** Network of channelId; decides the metadata shape. Defaults to linkedin. */
+  service?: BufferService;
+  /** Save as a Buffer draft (not scheduled, never published). */
+  saveToDraft?: boolean;
 };
 
 export type CreatePostResult = {
@@ -213,7 +233,7 @@ type CreatePostPayload =
 export async function createPost(
   input: CreatePostInput
 ): Promise<BufferResult<CreatePostResult>> {
-  const { text, channelId, dueAt, imageUrl, imageAltText, linkUrl } = input;
+  const { text, channelId, dueAt, imageUrl, imageAltText, linkUrl, service = 'linkedin', saveToDraft } = input;
 
   // Media (assets) and a link preview attachment are mutually exclusive.
   const assets =
@@ -228,10 +248,15 @@ export async function createPost(
         ]
       : undefined;
 
+  const linkAttachment = !assets && linkUrl ? { linkAttachment: { url: linkUrl } } : undefined;
   const metadata =
-    !assets && linkUrl
-      ? { linkedin: { linkAttachment: { url: linkUrl } } }
-      : undefined;
+    service === 'instagram'
+      ? { instagram: { type: 'post', shouldShareToFeed: true } }
+      : service === 'facebook'
+        ? { facebook: { type: 'post', ...linkAttachment } }
+        : linkAttachment
+          ? { linkedin: linkAttachment }
+          : undefined;
 
   const query = `
     mutation CreatePost($input: CreatePostInput!) {
@@ -259,6 +284,7 @@ export async function createPost(
       dueAt: dueAt.toISOString(),
       ...(assets ? { assets } : {}),
       ...(metadata ? { metadata } : {}),
+      ...(saveToDraft ? { saveToDraft: true } : {}),
     },
   };
 

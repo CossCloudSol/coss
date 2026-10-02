@@ -71,9 +71,10 @@ export default function AdminSocialPostsPage() {
   }
 
   function getQueueAction(status: string): { next: 'draft' | 'queued'; label: string } | null {
-    if (status === 'draft') return { next: 'queued', label: 'Queue' };
+    // Approval is the only way a post reaches Buffer (the cron sends queued posts).
+    if (status === 'draft') return { next: 'queued', label: 'Approve & schedule' };
     if (status === 'queued') return { next: 'draft', label: 'To Draft' };
-    if (status === 'failed') return { next: 'queued', label: 'Requeue' };
+    if (status === 'failed') return { next: 'queued', label: 'Approve again' };
     return null;
   }
 
@@ -90,7 +91,7 @@ export default function AdminSocialPostsPage() {
       if (!res.ok) {
         throw new Error(data?.error || 'Failed to update status');
       }
-      showToast(action.next === 'queued' ? 'Post queued' : 'Post reverted to draft');
+      showToast(action.next === 'queued' ? 'Approved: it goes to Buffer at its scheduled time' : 'Post reverted to draft');
       void load();
     } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update status', 'error'); }
   }

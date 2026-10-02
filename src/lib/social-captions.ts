@@ -1,0 +1,212 @@
+/**
+ * Per-channel captions and rules for social posts (LinkedIn, Facebook,
+ * Instagram via Buffer). Pure and dependency-free: the admin form (live
+ * previews and counters), the approve endpoint and the cron all use it, and
+ * `node --test` imports it directly (scripts/test/social-captions.test.mjs).
+ *
+ *   LinkedIn  : the post text as written; its own image OR link (Buffer
+ *               allows one), the link gets UTM tags.
+ *   Facebook  : link post to the course page (or the post's link) with UTM
+ *               tags; Facebook shows the page's og:image (the course banner).
+ *   Instagram : must have an image (the course's portrait banner, or the
+ *               post's image); no clickable links, so URLs are removed from
+ *               the caption, which ends "Link in bio / DM us" + up to 10 hashtags.
+ */
+
+export type SocialChannel = 'linkedin' | 'facebook' | 'instagram';
+export const SOCIAL_CHANNELS: readonly SocialChannel[] = ['linkedin', 'facebook', 'instagram'];
+export const CHANNEL_LABEL: Record<SocialChannel, string> = { linkedin: 'LinkedIn', facebook: 'Facebook', instagram: 'Instagram' };
+
+/** Caption length limits per network. */
+export const CAPTION_LIMIT: Record<SocialChannel, number> = { linkedin: 3000, facebook: 63206, instagram: 2200 };
+export const IG_MAX_HASHTAGS = 10;
+export const IG_CTA = 'Link in bio / DM us';
+export const HOOK_MAX = 80;
+
+const SITE_HOST = /(^|\.)cosscloudsol\.com$/i;
+
+export function parseChannels(raw: string | null | undefined): SocialChannel[] {
+  const set = new Set((raw ?? '').split(',').map((c) => c.trim().toLowerCase()));
+  return SOCIAL_CHANNELS.filter((c) => set.has(c));
+}
+
+/** "#AWS, devops  #DevOps cloud-computing" → ["#AWS", "#devops", "#cloudcomputing"] (deduped, case-insensitive). */
+export function normalizeHashtags(raw: string | null | undefined): string[] {
+  const seen = new Set<string>();
+  const tags: string[] = [];
+  for (const part of (raw ?? '').split(/[\s,]+/)) {
+    const word = part.replace(/^#+/, '').replace(/[^\p{L}\p{N}_]/gu, '');
+    if (!word || seen.has(word.toLowerCase())) continue;
+    seen.add(word.toLowerCase());
+    tags.push(`#${word}`);
+  }
+  return tags;
+}
+
+/**
+ * Adds utm_source/utm_medium=social/utm_campaign to links on our own site
+ * (other sites' links are returned unchanged). Existing UTM values are replaced.
+ */
+export function withUtm(url: string, source: SocialChannel, campaign: string): string {
+  let u: URL;
+  try {
+    u = new URL(url);
+  } catch {
+    return url;
+  }
+  if (!SITE_HOST.test(u.hostname)) return url;
+  u.searchParams.set('utm_source', source);
+  u.searchParams.set('utm_medium', 'social');
+  u.searchParams.set('utm_campaign', campaign);
+  return u.toString();
+}
+
+/** utm_campaign: the course slug, else the link's last path segment, else "social". */
+export function utmCampaign(courseSlug: string | null | undefined, linkUrl?: string | null): string {
+  if (courseSlug) return courseSlug;
+  try {
+    const last = new URL(linkUrl ?? '').pathname.split('/').filter(Boolean).pop();
+    if (last) return last.toLowerCase();
+  } catch {
+    // not a URL
+  }
+  return 'social';
+}
+
+/** Removes URLs (Instagram captions can't link) and tidies the whitespace left behind. */
+export function stripLinks(text: string): string {
+  return text
+    .replace(/\b(?:https?:\/\/|www\.)\S+/gi, '')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+export function buildCaption(channel: SocialChannel, post: { content: string; hashtags?: string | null }): string {
+  const text = post.content.trim();
+  if (channel !== 'instagram') return text;
+  const tags = normalizeHashtags(post.hashtags).slice(0, IG_MAX_HASHTAGS);
+  return [stripLinks(text), IG_CTA, tags.join(' ')].filter(Boolean).join('\n\n');
+}
+
+// ── Claims ───────────────────────────────────────────────────────────────
+// Only these may appear (CCPA): since 2010, 5,000+ students trained,
+// 50+ hiring partners, 1-year LMS access. They're removed before the checks
+// below, so any number/claim left over is not an approved one.
+const APPROVED_CLAIMS = [/\bsince\s+2010\b/gi, /\b5,?000\+\s*students\s+trained\b/gi, /\b50\+\s*hiring\s+partners\b/gi, /\b1[-\s]year\s+LMS\s+access\b/gi];
+
+const BANNED: Array<[RegExp, string]> = [
+  [/guarant/i, 'no guarantees (e.g. "placement guaranteed", "job guarantee")'],
+  [/\bassured\b/i, 'no "assured" placement or job claims'],
+  // No \b: hashtags run words together ("#100percentplacement").
+  [/\d\s*%|per\s*cent/i, 'no percentages'],
+  [/\brank(ed|ing|s)?\b|#\s*1\b|\bno\.?\s*1\b|\bnumber\s+one\b|\btop[-\s]?(rated|ranked)\b|\bbest\s+(institute|training|course|in\b)|\b(leading|largest)\s+(institute|training)/i, 'no rankings ("#1", "best institute", "top-rated")'],
+  [/life\s*-?\s*time/i,'no "lifetime" (LMS access is 1 year)'],
+  [/\bsince\s+(19|20)\d{2}\b/i, 'the only founding year allowed is "since 2010"'],
+  [/\b\d[\d,.]*\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|placements?|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+];
+
+/** Reasons the text breaks the allowed-claims rule (empty when it's fine). */
+export function findClaimViolations(text: string | null | undefined): string[] {
+  let rest = text ?? '';
+  for (const re of APPROVED_CLAIMS) rest = rest.replace(re, ' ');
+  return BANNED.filter(([re]) => re.test(rest)).map(([, why]) => why);
+}
+
+// ── Channel rules ────────────────────────────────────────────────────────
+export type SocialPostDraft = {
+  content: string;
+  channels: SocialChannel[];
+  /** A course is linked: Facebook links to its page, Instagram uses its portrait banner. */
+  hasCourse: boolean;
+  hook?: string | null;
+  hashtags?: string | null;
+  imageUrl?: string | null;
+  imageAltText?: string | null;
+  linkUrl?: string | null;
+};
+
+export type RuleReport = { general: string[]; channels: Record<SocialChannel, string[]> };
+
+export function checkPost(post: SocialPostDraft): RuleReport {
+  const general: string[] = [];
+  const channels: Record<SocialChannel, string[]> = { linkedin: [], facebook: [], instagram: [] };
+  const on = new Set(post.channels);
+
+  if (!post.content.trim()) general.push('Post text is required.');
+  if (on.size === 0) general.push('Select at least one channel.');
+  for (const [field, value] of [['Post text', post.content], ['Hook', post.hook], ['Hashtags', post.hashtags], ['Alt text', post.imageAltText]] as const) {
+    for (const why of findClaimViolations(value)) general.push(`${field}: ${why}.`);
+  }
+
+  if (on.has('linkedin')) {
+    if (post.imageUrl && post.linkUrl) channels.linkedin.push('An image and a link can’t both be set (Buffer allows one).');
+    if (post.imageUrl && !post.imageAltText?.trim()) channels.linkedin.push('Alt text is required when an image is set.');
+  }
+
+  if (on.has('facebook') && !post.hasCourse && !post.linkUrl) {
+    channels.facebook.push('Choose a course (or set a link): Facebook posts link to the course page.');
+  }
+
+  if (on.has('instagram')) {
+    if (post.hasCourse) {
+      const hook = post.hook?.trim() ?? '';
+      if (!hook) channels.instagram.push('Add a hook line for the Instagram image.');
+      else if (hook.length > HOOK_MAX) channels.instagram.push(`Hook line is ${hook.length} characters; keep it to ${HOOK_MAX}.`);
+    } else if (!post.imageUrl) {
+      channels.instagram.push('Instagram needs an image: choose a course (portrait banner) or set an image.');
+    } else if (!post.imageAltText?.trim()) {
+      channels.instagram.push('Alt text is required when an image is set.');
+    }
+    const tags = normalizeHashtags(post.hashtags);
+    if (tags.length > IG_MAX_HASHTAGS) channels.instagram.push(`${tags.length} hashtags; Instagram posts here use at most ${IG_MAX_HASHTAGS}.`);
+  }
+
+  for (const c of SOCIAL_CHANNELS) {
+    if (!on.has(c)) continue;
+    const length = buildCaption(c, post).length;
+    if (length > CAPTION_LIMIT[c]) channels[c].push(`Caption is ${length.toLocaleString('en-IN')} characters; the ${CHANNEL_LABEL[c]} limit is ${CAPTION_LIMIT[c].toLocaleString('en-IN')}.`);
+  }
+
+  return { general, channels };
+}
+
+export function ruleErrors(report: RuleReport): string[] {
+  return [...report.general, ...SOCIAL_CHANNELS.flatMap((c) => report.channels[c].map((e) => `${CHANNEL_LABEL[c]}: ${e}`))];
+}
+
+// ── What gets sent ───────────────────────────────────────────────────────
+/** Course-derived inputs, resolved server-side (lib/social-post-course). */
+export type ChannelContext = {
+  courseSlug?: string | null;
+  courseTitle?: string | null;
+  /** Absolute course page URL (no UTM yet). */
+  courseUrl?: string | null;
+  /** Absolute URL of the course's Instagram portrait banner. */
+  igImageUrl?: string | null;
+};
+
+export type ChannelPayload = { text: string; imageUrl?: string; imageAltText?: string; linkUrl?: string };
+
+/** The Buffer post for one channel: caption plus its image or link. */
+export function channelPayload(channel: SocialChannel, post: SocialPostDraft, ctx: ChannelContext = {}): ChannelPayload {
+  const text = buildCaption(channel, post);
+  if (channel === 'instagram') {
+    if (ctx.igImageUrl) {
+      const hook = post.hook?.trim();
+      return { text, imageUrl: ctx.igImageUrl, imageAltText: `${ctx.courseTitle ?? 'Course'} at Coss Cloud Solutions${hook ? `: ${hook}` : ''}` };
+    }
+    return { text, imageUrl: post.imageUrl ?? undefined, imageAltText: post.imageAltText ?? undefined };
+  }
+  if (channel === 'facebook') {
+    const link = ctx.courseUrl ?? post.linkUrl ?? null;
+    return { text, ...(link ? { linkUrl: withUtm(link, 'facebook', utmCampaign(ctx.courseSlug, link)) } : {}) };
+  }
+  // LinkedIn: as before, plus UTM tags on the link.
+  return {
+    text,
+    ...(post.imageUrl ? { imageUrl: post.imageUrl, imageAltText: post.imageAltText ?? undefined } : {}),
+    ...(post.linkUrl ? { linkUrl: withUtm(post.linkUrl, 'linkedin', utmCampaign(ctx.courseSlug, post.linkUrl)) } : {}),
+  };
+}

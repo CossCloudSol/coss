@@ -51,6 +51,9 @@ export async function POST(req: NextRequest): Promise<Response> {
   const imageUrl     = (body.imageUrl as string)     || null;
   const imageAltText = (body.imageAltText as string) || null;
   const linkUrl       = (body.linkUrl as string)       || null;
+  const courseId     = (body.courseId as string)     || null;
+  const hook         = ((body.hook as string) ?? '').trim() || null;
+  const hashtags     = ((body.hashtags as string) ?? '').trim() || null;
 
   const validationError = validateAssetRules(imageUrl, imageAltText, linkUrl);
   if (validationError) {
@@ -65,7 +68,12 @@ export async function POST(req: NextRequest): Promise<Response> {
         imageUrl,
         imageAltText,
         linkUrl,
+        courseId,
+        hook,
+        hashtags,
         scheduledFor: new Date(scheduledFor),
+        // Always a draft: only "Approve & schedule" queues a post for Buffer.
+        status: 'draft',
       },
     });
     return NextResponse.json(socialPost, { status: 201 });
