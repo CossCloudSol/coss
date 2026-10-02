@@ -66,61 +66,61 @@ export const SLUG_MAP: Record<string, string> = {
       'seo-training-institute-in-hyderabad':                    'seo-training-institute-in-hyderabad',
 }
 
+/**
+ * Published course for a flat landing slug, or null when none matches.
+ * DB errors propagate on purpose: a swallowed error became a cached 404.
+ */
 export async function getLandingPageCourse(slug: string): Promise<LandingPageCourse | null> {
-  try {
-    // Check explicit map first
-    const mappedSlug = SLUG_MAP[slug]
+  // Check explicit map first
+  const mappedSlug = SLUG_MAP[slug]
 
-    // Build variant list — explicit map takes priority
-    const variants = Array.from(new Set([
-      ...(mappedSlug ? [mappedSlug] : []),
-      slug,
-      slug.replace(/-training-institute-in-hyderabad$/, '-training-in-hyderabad'),
-      slug.replace(/-training-institute-in-hyderabad$/, ''),
-      slug.replace(/-institute-in-hyderabad$/, '-in-hyderabad'),
-      slug.replace(/-institute-in-hyderabad$/, ''),
-      slug.replace(/-training-in-hyderabad$/, ''),
-      slug.replace(/-in-hyderabad$/, ''),
-    ]))
+  // Build variant list — explicit map takes priority
+  const variants = Array.from(new Set([
+    ...(mappedSlug ? [mappedSlug] : []),
+    slug,
+    slug.replace(/-training-institute-in-hyderabad$/, '-training-in-hyderabad'),
+    slug.replace(/-training-institute-in-hyderabad$/, ''),
+    slug.replace(/-institute-in-hyderabad$/, '-in-hyderabad'),
+    slug.replace(/-institute-in-hyderabad$/, ''),
+    slug.replace(/-training-in-hyderabad$/, ''),
+    slug.replace(/-in-hyderabad$/, ''),
+  ]))
 
-    // One round trip for all variants, then pick in priority order (explicit
-    // SLUG_MAP entry first). A single findFirst({ slug: { in: variants } })
-    // would lose that order since SQL IN doesn't preserve array order, letting
-    // a regex-fallback variant that matches a different course win instead —
-    // so fetch every published match and choose here. This replaces up to 8
-    // sequential findFirst calls (all 8 ran for every unknown slug, e.g. bot
-    // probes hitting the /[courseSlug] catch-all).
-    // Landing pages look each other up as siblings; one query per slug per build worker.
-    const matches = await memoDuringBuild(`landing-course:${variants.join('|')}`, () => prisma.course.findMany({
-      where: { slug: { in: variants }, status: 'published' },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        categorySlug: true,
-        description: true,
-        excerpt: true,
-        duration: true,
-        level: true,
-        price: true,
-        originalPrice: true,
-        thumbnail: true,
-        brochureUrl: true,
-        highlights: true,
-        syllabus: true,
-        tools: true,
-        category: true,
-        courseCategory: { select: { name: true, slug: true } },
-      },
-    }))
-    for (const variant of variants) {
-      const course = matches.find((c) => c.slug === variant)
-      if (course) return course
-    }
-    return null
-  } catch {
-    return null
+  // One round trip for all variants, then pick in priority order (explicit
+  // SLUG_MAP entry first). A single findFirst({ slug: { in: variants } })
+  // would lose that order since SQL IN doesn't preserve array order, letting
+  // a regex-fallback variant that matches a different course win instead —
+  // so fetch every published match and choose here. This replaces up to 8
+  // sequential findFirst calls (all 8 ran for every unknown slug, e.g. bot
+  // probes hitting the /[courseSlug] catch-all).
+  // Landing pages look each other up as siblings; one query per slug per build worker.
+  const matches = await memoDuringBuild(`landing-course:${variants.join('|')}`, () => prisma.course.findMany({
+    where: { slug: { in: variants }, status: 'published' },
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      categorySlug: true,
+      description: true,
+      excerpt: true,
+      duration: true,
+      level: true,
+      price: true,
+      originalPrice: true,
+      thumbnail: true,
+      brochureUrl: true,
+      highlights: true,
+      syllabus: true,
+      tools: true,
+      category: true,
+      courseCategory: { select: { name: true, slug: true } },
+    },
+  }))
+  for (const variant of variants) {
+    const course = matches.find((c) => c.slug === variant)
+    if (course) return course
   }
+  return null
 }
 
 // Handles Prisma Json (already parsed), JSON strings, or null gracefully.
