@@ -45,7 +45,8 @@ test('Instagram caption: links removed, CTA, at most 10 hashtags; others unchang
   const tags = Array.from({ length: 12 }, (_, i) => `tag${i}`).join(' ');
   const ig = buildCaption('instagram', { content, hashtags: tags });
   assert.ok(!/https?:|www\./.test(ig), ig);
-  assert.ok(ig.startsWith('Learn Terraform hands-on.\nDetails:'));
+  assert.ok(ig.startsWith('Learn Terraform hands-on.'));
+  assert.ok(!ig.includes('Details:'), 'the label introducing the removed link goes too');
   const [, cta, hashtagLine] = ig.split('\n\n');
   assert.equal(cta, IG_CTA);
   assert.equal(hashtagLine.split(' ').length, 10);
@@ -149,4 +150,34 @@ test('channel payloads: FB links the course with UTM, IG uses the portrait banne
   assert.equal(li.linkUrl, 'https://www.cosscloudsol.com/courses/devops/aws?utm_source=linkedin&utm_medium=social&utm_campaign=aws');
   assert.deepEqual(channelPayload('linkedin', { ...base, imageUrl: 'https://i/x.png', imageAltText: 'A' }), { text: base.content, imageUrl: 'https://i/x.png', imageAltText: 'A' });
   assert.deepEqual(channelPayload('linkedin', base), { text: base.content });
+});
+
+test('Instagram: a label that only introduced the removed link goes too', () => {
+  const cases = [
+    ['Batch starts Monday. Details: https://www.cosscloudsol.com/x', 'Batch starts Monday.'],
+    ['Batch starts Monday.\nLink: https://www.cosscloudsol.com/x', 'Batch starts Monday.'],
+    ['Visit: www.cosscloudsol.com', ''],
+    ['Seats are limited. Register here: https://forms.gle/abc', 'Seats are limited.'],
+    ['Book a free demo class: https://www.cosscloudsol.com/free-demo-class', ''],
+    ['New batch!\nRegister here:\nhttps://www.cosscloudsol.com/x\nSee you there.', 'New batch!\nSee you there.'],
+    ['Syllabus 👉 https://www.cosscloudsol.com/s', 'Syllabus'],
+    ['Learn more - https://www.cosscloudsol.com/x', ''],
+    ['Apply now → https://www.cosscloudsol.com/x', ''],
+    ['Full details (link: https://www.cosscloudsol.com/x) inside.', 'Full details inside.'],
+    // Kept: the word isn't introducing the link.
+    ['We share the syllabus https://www.cosscloudsol.com/s on request.', 'We share the syllabus on request.'],
+    ['Details matter in DevOps.', 'Details matter in DevOps.'],
+  ];
+  for (const [input, want] of cases) assert.equal(stripLinks(input), want, input);
+  const ig = buildCaption('instagram', { content: 'AWS batch on Monday.\n\nDetails: https://www.cosscloudsol.com/x', hashtags: '#AWS' });
+  assert.equal(ig, `AWS batch on Monday.\n\n${IG_CTA}\n\n#AWS`);
+});
+
+test('Instagram images are delivered as JPEG from our Cloudinary library', async () => {
+  const { cloudinaryJpegUrl } = await import('../../src/lib/social-captions.ts');
+  const base = 'https://res.cloudinary.com/dfditihuw/image/upload/';
+  assert.equal(cloudinaryJpegUrl(`${base}v1790944861/social/instagram/abc.png`), `${base}f_jpg,q_auto,c_limit,w_1080/v1790944861/social/instagram/abc.jpg`);
+  assert.equal(cloudinaryJpegUrl(`${base}f_auto,q_80/v1/x/photo.webp`), `${base}f_jpg,q_auto,c_limit,w_1080/v1/x/photo.jpg`);
+  assert.equal(cloudinaryJpegUrl(`${base}social/no-version`), `${base}f_jpg,q_auto,c_limit,w_1080/social/no-version.jpg`);
+  assert.equal(cloudinaryJpegUrl('https://example.com/a.png'), 'https://example.com/a.png');
 });

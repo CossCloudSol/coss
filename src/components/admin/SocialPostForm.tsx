@@ -281,6 +281,9 @@ export default function SocialPostForm({
                   )}
                 </div>
               )}
+              {c === 'instagram' && p.imageUrl && (
+                <p className="-mt-1 mb-3 text-[11px] text-gray-500 dark:text-gray-400">Sent to Instagram as a JPEG (converted via Cloudinary at send time).</p>
+              )}
               <p className="whitespace-pre-wrap break-words text-sm text-gray-800 dark:text-gray-200">{p.text || <span className="text-gray-400">Post text…</span>}</p>
               {c !== 'instagram' && p.imageUrl && (
                 // eslint-disable-next-line @next/next/no-img-element

@@ -73,10 +73,33 @@ export function utmCampaign(courseSlug: string | null | undefined, linkUrl?: str
   return 'social';
 }
 
-/** Removes URLs (Instagram captions can't link) and tidies the whitespace left behind. */
+// Stops at ")" / "]" so "(link: https://…)" leaves "()" to tidy up.
+const URL_RE = /\b(?:https?:\/\/|www\.)[^\s)\]]+/gi;
+
+/**
+ * A label that only introduces the link right after it ("Details:", "Link:",
+ * "Visit:", "Register here:", "Book a free demo class:", "👉"), possibly on
+ * the line above. Removed with the link so the caption doesn't end mid-thought.
+ */
+const LABEL = String.raw`(?:more\s+)?(?:details|info(?:rmation)?|link|links|visit(?:\s+us)?|website|url|register|registration|apply|enrol{1,2}|enrolment|enrollment|sign\s*up|learn\s+more|read\s+more|know\s+more|click\s+here|check\s+it\s+out|syllabus|brochure|book(?:\s+(?:your\s+seat|a\s+(?:free\s+)?demo(?:\s+class)?|now))?)(?:\s+(?:here|now|today|at|on|below))*`;
+const BEFORE_LINK = String.raw`\s*(?=(?:https?:\/\/|www\.))`;
+// A label word is only dropped when it plainly introduces the link: it ends
+// in ":" / "-" / "→", or starts its line, or is an arrow emoji. "We share the
+// syllabus https://…" keeps "syllabus".
+const LINK_LABEL_RE = new RegExp(
+  String.raw`(?:\b${LABEL}\s*[:\-–—→]+|^[ \t]*${LABEL}|[👉➡→⬇👇]️?)${BEFORE_LINK}`,
+  'gimu',
+);
+
+/** Removes URLs (Instagram captions can't link), their dangling labels, and the whitespace left behind. */
 export function stripLinks(text: string): string {
   return text
-    .replace(/\b(?:https?:\/\/|www\.)\S+/gi, '')
+    .replace(LINK_LABEL_RE, '')
+    // A link alone on its line goes with its line break.
+    .replace(/^[ \t]*(?:https?:\/\/|www\.)\S+[ \t]*(?:\n|$)/gim, '')
+    .replace(URL_RE, '')
+    .replace(/\(\s*\)|\[\s*\]/g, '')
+    .replace(/[ \t]+([.,;!?])/g, '$1')
     .replace(/[ \t]+\n/g, '\n')
     .replace(/[ \t]{2,}/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
@@ -209,4 +232,17 @@ export function channelPayload(channel: SocialChannel, post: SocialPostDraft, ct
     ...(post.imageUrl ? { imageUrl: post.imageUrl, imageAltText: post.imageAltText ?? undefined } : {}),
     ...(post.linkUrl ? { linkUrl: withUtm(post.linkUrl, 'linkedin', utmCampaign(ctx.courseSlug, post.linkUrl)) } : {}),
   };
+}
+
+/**
+ * JPEG delivery URL for an image in our Cloudinary library: Instagram only
+ * takes JPEG, and Buffer passes the file through. f_jpg + a .jpg extension
+ * (the format Cloudinary serves), q_auto, and at most 1080px wide.
+ * Non-Cloudinary URLs are returned unchanged.
+ */
+export function cloudinaryJpegUrl(url: string): string {
+  const m = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.+?)(?:\.[a-z0-9]+)?$/i);
+  if (!m) return url;
+  const rest = m[2].replace(/^(?:[a-z]_[^/]*\/)+(?=v\d+\/|[^/]+\/)/i, ''); // drop existing transformations
+  return `${m[1]}f_jpg,q_auto,c_limit,w_1080/${rest}.jpg`;
 }

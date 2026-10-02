@@ -4,6 +4,7 @@ import { findDueSocialPosts } from '@/lib/social-post-queries';
 import { bufferChannelId, createPost } from '@/lib/buffer-client';
 import { channelPayload, checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
 import { getSocialPostCourse } from '@/lib/social-post-course';
+import { instagramJpegUrl } from '@/lib/social-post-image';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -98,7 +99,18 @@ export async function GET(req: NextRequest): Promise<Response> {
           continue;
         }
 
-        const result = await createPost({ ...channelPayload(channel, draft, course ?? {}), channelId, dueAt, service: channel });
+        let payload = channelPayload(channel, draft, course ?? {});
+        if (channel === 'instagram' && payload.imageUrl) {
+          try {
+            payload = { ...payload, imageUrl: await instagramJpegUrl(payload.imageUrl) };
+          } catch (err) {
+            errors.push(`instagram: JPEG conversion failed: ${err instanceof Error ? err.message : String(err)}`);
+            anyRetryable = true;
+            continue;
+          }
+        }
+
+        const result = await createPost({ ...payload, channelId, dueAt, service: channel });
 
         if (result.ok) {
           succeededIds.push(`${channel}:${result.data.id}`);
