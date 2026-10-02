@@ -2,6 +2,7 @@ import { getPostBySlug, getAllPosts } from '@/lib/posts';
 import { cache } from 'react';
 import { memoDuringBuild } from '@/lib/build-memo';
 import { notFound } from 'next/navigation';
+import { resolveDbThenFile } from '@/lib/resolve-content';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
@@ -112,14 +113,11 @@ const getPublishedDbPost = cache((slug: string) =>
 );
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  // Try DB post first
-  let dbPost = null;
-  try {
-    dbPost = await getPublishedDbPost(params.slug);
-  } catch {
-    // DB error — fall through to file system
-  }
-  if (dbPost) {
+  // DB post first, then the MDX file. A DB error throws (never 'Not Found').
+  const found = await resolveDbThenFile(() => getPublishedDbPost(params.slug), () => getPostBySlug(params.slug));
+  if (!found) return { title: 'Not Found' };
+  if (found.source === 'db') {
+    const dbPost = found.value;
     const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
     const dbFallback = capAtWordBoundary(`${stripBrandFragments(dbPost.title)}${BRAND_TAGLINE}`, 160);
     const description =
@@ -143,8 +141,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     return buildPageMetadataWithFallback(`blog/${params.slug}`, fallback);
   }
 
-  const post = await getPostBySlug(params.slug);
-  if (!post) return { title: 'Not Found' };
+  const post = found.value;
 
   const titleStr = tagToString(post.frontmatter.title) || params.slug;
   const titleTaglineFallback = capAtWordBoundary(`${stripBrandFragments(titleStr)}${BRAND_TAGLINE}`, 160);
@@ -193,14 +190,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   // One blog-page banner, after the post's 2nd section; null shows the fallback card.
   const blogPageBanner = bannerForSlot(await getPromoBanners('blog-page'), 0);
 
-  // Try DB post first — rendered to sanitized HTML server-side
-  let dbPost = null;
-  try {
-    dbPost = await getPublishedDbPost(params.slug);
-  } catch {
-    // DB error — fall through to file system
-  }
-  if (dbPost) {
+  // DB post first (rendered to sanitized HTML server-side), then the MDX file.
+  // A DB error throws: ISR keeps serving the last good page instead of caching
+  // a 404. notFound() only when neither source has the post.
+  const found = await resolveDbThenFile(() => getPublishedDbPost(params.slug), () => getPostBySlug(params.slug));
+  if (!found) notFound();
+  if (found.source === 'db') {
+    const dbPost = found.value;
     const dbDateIso = dbPost.publishedAt
       ? new Date(dbPost.publishedAt).toISOString().split('T')[0]
       : new Date(dbPost.createdAt).toISOString().split('T')[0];
@@ -297,8 +293,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   }
 
   // Fall back to file-system post
-  const post = await getPostBySlug(params.slug);
-  if (!post) notFound();
+  const post = found.value;
   const [mdxBodyBefore, mdxBodyAfter] = splitAfterSecondSection(post.contentHtml ?? '');
 
   // Use spread date from getAllPosts so the post page matches the blog grid
