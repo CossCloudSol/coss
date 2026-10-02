@@ -5,8 +5,9 @@ import { BANNER_SQUARE, BANNER_WIDE, categoryStyle, shortCourseTitle, type Banne
 /**
  * Branded banner for a course without an admin thumbnail (next/og).
  * GET /course-banner/<slug>?t=<title>&c=<category>&k=<categorySlug>&v=<signature>[&s=sq]
- *   wide (default): 800×400 for cards and og:image — title, category chip, COSS mark
- *   s=sq: 256×256 for small thumbnails — icon and COSS mark only
+ *   wide (default): 800×400 for cards — wordmark, category chip, title
+ *   s=og: the wide banner plus "cosscloudsol.com", for og:image
+ *   s=sq: 256×256 for small thumbnails — icon and the C tile only
  * URLs are built server-side (lib/course-banner-sign) with an HMAC over the
  * slug, title and category: unsigned or edited parameters get a 404, and
  * the signature changes with the title or category, so the image is cached
@@ -96,27 +97,43 @@ function Pattern({ accent, width, height }: { accent: string; width: number; hei
   );
 }
 
-function CossMark({ size }: { size: number }) {
+/** The "C" tile from the site logo. */
+function CTile({ size }: { size: number }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: size * 0.28 }}>
-      <div
-        style={{
-          width: size,
-          height: size,
-          borderRadius: size * 0.24,
-          background: '#b8531c',
-          color: '#ffffff',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'Raleway',
-          fontWeight: 800,
-          fontSize: size * 0.6,
-        }}
-      >
-        C
+    <div
+      style={{
+        width: size,
+        height: size,
+        flexShrink: 0,
+        borderRadius: size * 0.24,
+        background: '#e47538',
+        color: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Raleway',
+        fontWeight: 800,
+        fontSize: size * 0.62,
+      }}
+    >
+      C
+    </div>
+  );
+}
+
+/**
+ * Full wordmark, as the site logo: C tile, "COSS" in brand orange, "CLOUD
+ * SOLUTIONS" letter-spaced under it. flexShrink 0: it never truncates; the
+ * category chip next to it gives way instead.
+ */
+function Wordmark() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+      <CTile size={60} />
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ color: '#e47538', fontFamily: 'Raleway', fontWeight: 800, fontSize: 36, lineHeight: 1, letterSpacing: 3 }}>COSS</div>
+        <div style={{ color: '#cfeff0', fontFamily: 'Raleway', fontWeight: 700, fontSize: 17, lineHeight: 1, letterSpacing: 3.4, marginTop: 7 }}>CLOUD SOLUTIONS</div>
       </div>
-      {size >= 40 && <div style={{ color: '#ffffff', fontFamily: 'Raleway', fontWeight: 800, fontSize: size * 0.5, letterSpacing: 2 }}>COSS</div>}
     </div>
   );
 }
@@ -124,7 +141,8 @@ function CossMark({ size }: { size: number }) {
 export async function GET(req: Request, { params }: { params: { slug: string } }): Promise<Response> {
   const url = new URL(req.url);
   const q = url.searchParams;
-  const square = q.get('s') === 'sq';
+  const variant = q.get('s'); // 'sq' square thumbnail, 'og' social share, else card
+  const square = variant === 'sq';
   const slug = decodeURIComponent(params.slug);
   const course = { title: (q.get('t') ?? '').slice(0, 160), category: (q.get('c') ?? '').slice(0, 80), categorySlug: q.get('k') ?? '' };
   const expected = await bannerSignature(slug, course.title, course.category, course.categorySlug);
@@ -153,8 +171,9 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
           <Pattern accent={accent} width={width} height={height} />
           <div style={{ position: 'absolute', width: 200, height: 200, borderRadius: 100, background: '#005663', border: `3px solid ${accent}` }} />
           <Icon shapes={shapes} size={120} color={accent} strokeWidth={1.5} />
+          {/* Shown down to 40px (mega-menu), where a wordmark can't be read: the C tile only. */}
           <div style={{ position: 'absolute', left: 16, bottom: 16, display: 'flex' }}>
-            <CossMark size={32} />
+            <CTile size={44} />
           </div>
         </div>
       ),
@@ -165,7 +184,8 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
   const { width, height } = BANNER_WIDE;
   const title = shortCourseTitle(course.title);
   // The title stays left of the disc (max 430px wide, 2 lines).
-  const fontSize = title.length <= 16 ? 56 : title.length <= 26 ? 48 : 42;
+  // Long titles step down in size; the wordmark row is never squeezed for them.
+  const fontSize = title.length <= 16 ? 52 : title.length <= 26 ? 46 : 40;
 
   return new ImageResponse(
     (
@@ -176,12 +196,13 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
         <div style={{ position: 'absolute', right: 55, top: 190, display: 'flex' }}>
           <Icon shapes={shapes} size={160} color={accent} strokeWidth={1.3} />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <CossMark size={46} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
+          <Wordmark />
           <div
             style={{
               display: 'flex',
-              maxWidth: 420,
+              flexShrink: 1,
+              maxWidth: 400,
               padding: '8px 18px',
               borderRadius: 999,
               border: `2px solid ${accent}`,
@@ -209,6 +230,12 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
         >
           {title}
         </div>
+        {/* Social shares only; cards stay clean. */}
+        {variant === 'og' && (
+          <div style={{ position: 'absolute', right: 28, bottom: 22, display: 'flex', color: '#ffffff', fontFamily: 'Raleway', fontWeight: 700, fontSize: 20, opacity: 0.9 }}>
+            cosscloudsol.com
+          </div>
+        )}
       </div>
     ),
     { width, height, ...fontOptions },

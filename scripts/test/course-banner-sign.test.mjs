@@ -36,6 +36,17 @@ test('banner URLs carry the signed parameters', async () => {
   assert.ok(!sameSignature(url.searchParams.get('v').replace(/.$/, (c) => (c === '0' ? '1' : '0')), expected));
 });
 
+test('og:image uses the s=og variant (site address); cards use the plain URL', async () => {
+  process.env.ADMIN_SESSION_SECRET = 'test-secret-a';
+  const { courseBannerPath, courseOgImages } = await load();
+  const course = { slug: 'devops', title: 'DevOps Training', category: 'DevOps', categorySlug: 'devops-multi-cloud', thumbnail: null };
+  const card = await courseBannerPath(course);
+  assert.ok(!card.includes('s='));
+  const [og] = await courseOgImages(course, 'https://example.test');
+  assert.equal(og.url, `https://example.test${card}&s=og`);
+  assert.deepEqual([og.width, og.height], [800, 400]);
+});
+
 test('without the secret in production, banners are disabled (no guessable key)', async () => {
   const saved = { secret: process.env.ADMIN_SESSION_SECRET, env: process.env.NODE_ENV };
   delete process.env.ADMIN_SESSION_SECRET;

@@ -9,16 +9,16 @@
  * the Edge.
  *
  * Key: derived, never the session secret itself —
- *   bannerKey = HMAC-SHA256(ADMIN_SESSION_SECRET, "coss:course-banner:v1")
+ *   bannerKey = HMAC-SHA256(ADMIN_SESSION_SECRET, "coss:course-banner:v2")
  * No extra env var. Without the secret in production, banners are switched
  * off (courseBannerPath returns null, the route answers 404) instead of
  * being signed with a guessable key; local builds use a dev-only fallback.
  */
 
 /** Bump when the banner design changes, so every cached image is replaced. */
-const DESIGN_VERSION = '1';
+const DESIGN_VERSION = '2';
 
-const KEY_NAMESPACE = 'coss:course-banner:v1';
+const KEY_NAMESPACE = 'coss:course-banner:v2';
 const encoder = new TextEncoder();
 let keyPromise: Promise<CryptoKey | null> | null = null;
 
@@ -73,7 +73,7 @@ export async function courseBannerPath(course: { slug: string; title: string; ca
 
 /**
  * og:image for a course page: the admin thumbnail, else its generated banner
- * (absolute URL, 800×400); empty when neither exists (site default applies).
+ * (absolute URL, 800×400, the s=og variant with the site address); empty when neither exists (site default applies).
  */
 export async function courseOgImages(
   course: { slug: string; title: string; category: string; categorySlug: string | null; thumbnail: string | null },
@@ -81,5 +81,5 @@ export async function courseOgImages(
 ): Promise<Array<{ url: string; width?: number; height?: number; alt: string }>> {
   if (course.thumbnail) return [{ url: course.thumbnail, alt: course.title }];
   const path = await courseBannerPath(course);
-  return path ? [{ url: `${siteUrl}${path}`, width: 800, height: 400, alt: `${course.title}: ${course.category} course` }] : [];
+  return path ? [{ url: `${siteUrl}${path}&s=og`, width: 800, height: 400, alt: `${course.title}: ${course.category} course` }] : [];
 }
