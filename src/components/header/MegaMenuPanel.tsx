@@ -33,7 +33,7 @@ export default function MegaMenuPanel({ index }: { index: SearchIndex }): JSX.El
     <div data-mega="" data-active={first} className="grid h-[min(680px,calc(100vh-130px))] grid-cols-[260px_minmax(0,1fr)_260px] gap-0">
       {/* dangerouslySetInnerHTML, not a text child: React escapes quotes in <style>
           text on the server (&quot;), which broke these selectors and made every
-          page fail hydration (React #425/#418), wiping the theme class. */}
+          page fail hydration (React #425/#418/#423), which also wiped the theme class. */}
       <style dangerouslySetInnerHTML={{ __html: rules }} />
       <ul aria-label="Course categories" className="min-h-0 overflow-y-auto overscroll-contain border-r border-[#e3eaec] p-3 dark:border-slate-700">
         {categories.map((c) => (
