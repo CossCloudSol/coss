@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { manualDraftNote } from '@/lib/social-post-state';
 import { bufferChannelId } from '@/lib/buffer-client';
 import { checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
 import { getSocialPostCourse } from '@/lib/social-post-course';
@@ -67,7 +68,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const data: { status?: string; lastError?: null; sentAt?: null } = {};
+  const data: { status?: string; lastError?: string | null; sentAt?: null } = {};
   if (typeof body.status === 'string' && (body.status === 'draft' || body.status === 'queued')) {
     data.status = body.status;
   }
@@ -86,10 +87,16 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
     if (validationError) {
       return NextResponse.json({ error: validationError }, { status: 400 });
     }
-    if (existing.status === 'failed') {
-      data.lastError = null;
-      data.sentAt = null;
+    // Approval starts clean: drop old revert/skip/failure notes.
+    data.lastError = null;
+    if (existing.status === 'failed') data.sentAt = null;
+  }
+
+  if (data.status === 'draft') {
+    if (existing.status !== 'queued') {
+      return NextResponse.json({ error: `Only approved (queued) posts can go back to Draft; this one is ${existing.status}.` }, { status: 409 });
     }
+    data.lastError = manualDraftNote(new Date());
   }
 
   try {
