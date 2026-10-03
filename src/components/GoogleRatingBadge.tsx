@@ -1,7 +1,7 @@
 import { ratingLabel, type GoogleRating } from '@/lib/google-places';
 
 /**
- * "★ 4.7/5 on Google (123 reviews)", linked to the Google Maps listing.
+ * "★ {rating}/5 on Google ({count} reviews)", linked to the Google Maps listing.
  * Renders nothing without a live rating or without the attribution link
  * (Google requires both "on Google" and a link to the listing). Kept apart
  * from "5,000+ students trained": that's our number, this is Google's.

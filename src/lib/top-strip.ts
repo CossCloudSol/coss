@@ -64,6 +64,8 @@ const getCachedStrip = unstable_cache(
 );
 
 export async function getTopStripData(): Promise<TopStripData> {
-  const [strip, rating] = await Promise.all([getCachedStrip(), getGoogleRating().catch(() => null)]);
+  // getGoogleRating already returns null on any ordinary failure; no catch
+  // here, so Next.js internals (dynamic usage, redirect…) are never swallowed.
+  const [strip, rating] = await Promise.all([getCachedStrip(), getGoogleRating()]);
   return { ...strip, rating };
 }

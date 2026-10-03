@@ -1,6 +1,8 @@
 import 'server-only';
 import { unstable_cache } from 'next/cache';
-import { fetchPlaceRating, ratingGetter, type GoogleRating } from '@/lib/google-places';
+import { isDynamicServerError } from 'next/dist/client/components/hooks-server-context';
+import { isDynamicUsageError } from 'next/dist/export/helpers/is-dynamic-usage-error';
+import { dedupeInFlight, fetchPlaceRating, isNextInternalError, ratingGetter, type GoogleRating } from '@/lib/google-places';
 
 export type { GoogleRating };
 
@@ -8,11 +10,13 @@ export type { GoogleRating };
  * Live Google rating for the Dilsukhnagar listing (Places API (New),
  * GOOGLE_PLACES_API_KEY + GOOGLE_PLACE_ID_DILSUKHNAGAR, server-only).
  *
- * Only successes are cached: fetchPlaceRating throws on a missing env var,
- * non-200, timeout or bad data, and unstable_cache doesn't store a rejected
- * call, so a failure is retried on the next render instead of being kept
- * for 24 h. Outside the cache the error becomes null (logged once), so it
- * never throws to the page and never breaks the build.
+ * Only successes are cached (revalidate 86400 s, tag 'google-rating'): the
+ * cached function THROWS on a missing env var, non-OK response, network error,
+ * timeout (5 s) or bad data, and unstable_cache doesn't store a rejected call,
+ * so a failure is retried on the next render instead of being kept for 24 h.
+ * Outside the cache an ordinary failure becomes null (rating hidden; one
+ * console.warn line per process, no key, no URL). Next.js internals
+ * (DYNAMIC_SERVER_USAGE etc.) are rethrown, never swallowed.
  *
  * Every caller hides its rating UI on null, and shows it only with "on
  * Google" and a link to mapsUri (Google's attribution rule). Never
@@ -23,4 +27,7 @@ const loadCached = unstable_cache(() => fetchPlaceRating(process.env), ['google-
   tags: ['google-rating'],
 });
 
-export const getGoogleRating: () => Promise<GoogleRating | null> = ratingGetter(loadCached);
+const isNextInternal = (err: unknown) => isDynamicServerError(err) || isDynamicUsageError(err) || isNextInternalError(err);
+
+// Concurrent renders in one worker process share one request.
+export const getGoogleRating: () => Promise<GoogleRating | null> = ratingGetter(dedupeInFlight(loadCached), { isInternal: isNextInternal });
