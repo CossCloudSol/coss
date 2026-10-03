@@ -112,6 +112,42 @@ export function ratingGetter(
   };
 }
 
+/** How long this process stops calling Google after a failed Places call. */
+export const FAILURE_PAUSE_MS = 10 * 60 * 1000;
+
+/**
+ * After an ordinary failure, this process makes no Places call for
+ * FAILURE_PAUSE_MS: calls fail fast instead (rating hidden). Meant to run
+ * INSIDE the unstable_cache callback, so a cached success is still served
+ * during a pause (the callback only runs on a cache miss) and a paused call
+ * throws, so nothing is ever written to the 24 h entry. In memory, per
+ * process: a new deploy or cold start begins unpaused. Next.js internals
+ * don't trigger a pause.
+ */
+export function pauseAfterFailure<T>(
+  fn: () => Promise<T>,
+  opts: { pauseMs?: number; now?: () => number; isInternal?: (err: unknown) => boolean } = {},
+): () => Promise<T> {
+  const pauseMs = opts.pauseMs ?? FAILURE_PAUSE_MS;
+  const now = opts.now ?? Date.now;
+  const isInternal = opts.isInternal ?? isNextInternalError;
+  let pausedUntil = 0;
+  let reason = '';
+  return async () => {
+    // Constant message for the whole pause, so it's logged once.
+    if (now() < pausedUntil) throw new Error(`Places API paused for ${Math.round(pauseMs / 60_000)} min after a failure (${reason})`);
+    try {
+      return await fn();
+    } catch (err) {
+      if (!isInternal(err)) {
+        pausedUntil = now() + pauseMs;
+        reason = err instanceof Error ? err.message : String(err);
+      }
+      throw err;
+    }
+  };
+}
+
 /**
  * Concurrent callers share one in-flight call (per worker process: each
  * build worker or server instance has its own). Every page renders the

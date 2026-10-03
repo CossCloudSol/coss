@@ -95,9 +95,10 @@ export function CorporateHeroBanner() {
       titleLine2="with Expert-Led Training"
       subtitle="Customised IT corporate training programs — certified trainers, real-world projects, flexible scheduling & globally recognised certifications. Online & on-site delivery."
       stats={[
-        { value: '5,000+', label: 'EMPLOYEES TRAINED' },
-        { value: '30+',    label: 'PROGRAMS OFFERED' },
-        { value: '15+',    label: 'YEARS OF EXCELLENCE' },
+        // Allowed claims only: "5,000+ students trained", "since 2010".
+        { value: '5,000+',     label: 'STUDENTS TRAINED' },
+        { value: '30+',        label: 'PROGRAMS OFFERED' },
+        { value: 'Since 2010', label: 'TRAINING IN HYDERABAD' },
       ]}
       ctaText="Free training proposal · Counsellor responds within 2 hours · Mon–Sat 9 am–7 pm"
       breadcrumb={[{ label: 'Corporate Training', href: '/corporate-training' }]}

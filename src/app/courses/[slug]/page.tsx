@@ -7,6 +7,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { getCourseUrl } from '@/lib/course-url';
+import { courseCanonicalUrl } from '@/lib/course-canonical';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { batchBookingMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
@@ -192,7 +193,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: course.seoTitle ?? course.title,
       description: course.seoDesc ?? course.excerpt,
       openGraph: { images: await courseOgImages({ ...course, categorySlug: course.categorySlug ?? null }, SITE_URL) },
-      alternates: { canonical: `${SITE_URL}${getCourseUrl(course)}` },
+      // A same-slug flat landing page is canonical (as in the sitemap).
+      alternates: { canonical: courseCanonicalUrl(course) },
     };
     return buildPageMetadataWithFallback(`courses/${params.slug}`, fallback);
   }

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
-import { getCourseUrl, CATEGORY_SLUG_MAP } from '@/lib/course-url';
+import { CATEGORY_SLUG_MAP } from '@/lib/course-url';
+import { courseCanonicalUrl } from '@/lib/course-canonical';
 import { courseOgImages, instagramBannerPath } from '@/lib/course-banner-sign';
 import type { ChannelContext } from '@/lib/social-captions';
 
@@ -45,8 +46,9 @@ export async function getSocialPostCourse(courseId: string, hook: string | null)
     courseSlug: c.slug,
     courseTitle: c.title.trim(),
     category,
-    // Same URL the site links to (course search index).
-    courseUrl: `${SITE_URL}${getCourseUrl(c)}`,
+    // The course's canonical URL: a same-slug flat landing page beats the
+    // /courses duplicate (the 3 Oct post linked the non-canonical duplicate).
+    courseUrl: courseCanonicalUrl(c),
     ogImageUrl: og?.url ?? null,
     igImageUrl: igPath ? `${SITE_URL}${igPath}` : null,
   };

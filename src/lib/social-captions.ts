@@ -132,7 +132,7 @@ const APPROVED_CLAIMS = [
   // A learner's experience, not ours: "with 2–3 years of experience you can…".
   /\b(?:with|have|having|need|needs|requires?|required)\s+[1-9]\d*(?:\s*[–-]\s*\d+)?\+?\s*years?\s+of\s+experience\b/gi,
   /\b(?:max(?:imum)?|up\s+to|only)\s+\d+\s+students\s+(?:per|in\s+(?:a|each))\s+batch\b/gi,
-  /\b(?:is|are)\s+not\s+guaranteed\b|\bno\s+(?:job\s+|placement\s+)?guarantees?\b|\b(?:do|does|can|will)(?:\s+not|n['’]t)\s+guarantee\b|\bcannot\s+guarantee\b|\bwithout\s+(?:any\s+)?guarantees?\b/gi,
+  /\b(?:is|are)\s+not\s+guaranteed\b|\bno\s+(?:job\s+|placement\s+)?guarantees?\b|\b(?:do|does|can|will)(?:\s+not|n['’]t)\s+(?:\w+\s+)?guarantee\b|\bnot\s+(?!only\b|just\b)(?:\w+\s+){0,3}?guarantees?\b|\bcannot\s+guarantee\b|\bwithout\s+(?:any\s+)?guarantees?\b/gi,
 ];
 
 const BANNED: Array<[RegExp, string]> = [
@@ -144,7 +144,10 @@ const BANNED: Array<[RegExp, string]> = [
   [/life\s*-?\s*time/i,'no "lifetime" (LMS access is 1 year)'],
   [/\bsince\s+(19|20)\d{2}\b/i, 'the only founding year allowed is "since 2010"'],
   // [1-9]: not step numbers like "03 Placement Support".
-  [/\b[1-9][\d,.]*\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|placements|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training|trust))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+  [/\b[1-9](?:[\d,.]*\d)?\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|placements|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training|trust))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+  // Reworded headcounts ("5,000+ employees trained"); a verb makes it a claim, so
+  // a form's team-size options ("1–5 employees", "50+ employees") are not.
+  [/\b[1-9](?:[\d,.]*\d)?\s*(\+|k\b)?\s*(employees|professionals)\s+(trained|upskilled|taught|certified|placed|skilled)\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
   // The institute's own experience: "our 15+ years of experience".
   [/\bour\s+[1-9]\d*\+?\s*(?:\w+\s+)?years?\b/i, 'no years-of-experience claims (only "since 2010")'],
   // "Best IT training institute", "a leading IT training institute", "Best SAP FICO Training".
@@ -157,19 +160,32 @@ const BANNED: Array<[RegExp, string]> = [
   [/\btop\s+(?:[\w-]+\s+){0,2}?(companies|mncs?|firms|recruiters|employers|brands)\b/i, 'no "top companies" claims'],
 ];
 
-/** Each banned claim in the text, with the matched phrase (empty when it's fine). */
-export function findClaimMatches(text: string | null | undefined): Array<{ phrase: string; why: string }> {
+// Every rule as a global regex: every occurrence is reported, not just the first.
+const BANNED_ALL: ReadonlyArray<readonly [RegExp, string]> = BANNED.map(([re, why]) => [new RegExp(re.source, re.flags.includes('g') ? re.flags : `${re.flags}g`), why] as const);
+
+/**
+ * Every banned claim in the text: all rules, all occurrences, in text order
+ * (empty when it's fine). One phrase can match more than one rule, e.g.
+ * "Land high-paying jobs" is both a salary and a job-outcome claim.
+ */
+export function findClaimMatches(text: string | null | undefined): Array<{ phrase: string; why: string; index: number }> {
+  // Approved claims and disclaimers are blanked with spaces of the same length,
+  // so the reported index points into the original text.
   let rest = text ?? '';
-  for (const re of APPROVED_CLAIMS) rest = rest.replace(re, ' ');
-  return BANNED.flatMap(([re, why]) => {
-    const m = rest.match(re);
-    return m ? [{ phrase: m[0].trim(), why }] : [];
-  });
+  for (const re of APPROVED_CLAIMS) rest = rest.replace(re, (m) => ' '.repeat(m.length));
+  const out: Array<{ phrase: string; why: string; index: number }> = [];
+  for (const [re, why] of BANNED_ALL) {
+    for (const m of rest.matchAll(re)) {
+      const phrase = m[0].trim();
+      if (phrase) out.push({ phrase, why, index: m.index ?? 0 });
+    }
+  }
+  return out.sort((a, b) => a.index - b.index);
 }
 
-/** Reasons the text breaks the allowed-claims rule (empty when it's fine). */
+/** Reasons the text breaks the allowed-claims rule (empty when it's fine), each once. */
 export function findClaimViolations(text: string | null | undefined): string[] {
-  return findClaimMatches(text).map((m) => m.why);
+  return [...new Set(findClaimMatches(text).map((m) => m.why))];
 }
 
 // ── Channel rules ────────────────────────────────────────────────────────
