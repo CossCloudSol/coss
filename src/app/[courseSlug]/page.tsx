@@ -8,22 +8,13 @@ import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
 import { appendTrainingInHyderabad } from '@/lib/build-title'
 import { getRelatedCourses } from '@/lib/related-courses'
 import { getFlatSiblingSlugs } from '@/lib/flat-siblings'
-import { getFlatCourseUrl } from '@/lib/flat-url'
+import { getFlatCourseUrl, NESTED_CANONICAL_OVERRIDES } from '@/lib/flat-url'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
 import type { FlatSiblingLink } from '@/components/LandingPageTemplate'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com'
 
-// Nested canonical override allowlist — EXACTLY this 1 flat slug. Each entry
-// requires GSC Performance + URL Inspection evidence that the nested URL
-// matches or beats the flat URL. Do NOT key this off urlType/categorySlug —
-// that predicate matches 12 pages, 10 of which are unreviewed in GSC.
-// ui-ux removed 2026-09-09: flat URL ranks 24.6 vs nested 36.2 (GSC, 4mo).
-// The nested URL now 308s to flat, so a nested canonical would contradict it.
-export const NESTED_CANONICAL_OVERRIDES: Record<string, string> = {
-  'digital-marketing-training-institute-in-hyderabad':
-    '/courses/digital-design/digital-marketing-training-in-hyderabad',
-}
+// NESTED_CANONICAL_OVERRIDES lives in lib/flat-url (course canonicals and the sitemap use it too).
 
 export const revalidate = 86400
 

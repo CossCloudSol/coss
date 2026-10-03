@@ -20,7 +20,7 @@ import { COURSE_PAGES, CATEGORY_PAGES, STATIC_PAGES } from '@/lib/all-pages-regi
 import { getAllPosts } from '@/lib/posts';
 import { getCourseUrl } from '@/lib/course-url';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
-import { NESTED_CANONICAL_OVERRIDES } from '@/app/[courseSlug]/page';
+import { NESTED_CANONICAL_OVERRIDES } from '@/lib/flat-url';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';

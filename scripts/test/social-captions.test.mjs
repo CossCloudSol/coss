@@ -181,3 +181,31 @@ test('Instagram images are delivered as JPEG from our Cloudinary library', async
   assert.equal(cloudinaryJpegUrl(`${base}social/no-version`), `${base}f_jpg,q_auto,c_limit,w_1080/social/no-version.jpg`);
   assert.equal(cloudinaryJpegUrl('https://example.com/a.png'), 'https://example.com/a.png');
 });
+
+test('the checker reports every match: all rules, all occurrences, in text order', async () => {
+  const { findClaimMatches, findClaimViolations } = await import('../../src/lib/social-captions.ts');
+  // Two claims of the same rule in one text (the first used to hide the second).
+  const banner = 'TRUSTED BY 500+ COMPANIES ACROSS INDIA · 15+ YEARS OF EXCELLENCE';
+  assert.deepEqual(findClaimMatches(banner).map((m) => m.phrase), ['500+ COMPANIES', '15+ YEARS OF EXCELLENCE']);
+  // Several occurrences of one rule.
+  const two = 'Best AWS training institute in Hyderabad. Also the best Azure training in town.';
+  assert.deepEqual(findClaimMatches(two).map((m) => m.phrase), ['Best AWS training', 'best Azure training']);
+  // One phrase, two rules.
+  const both = findClaimMatches('Land high-paying jobs as a Security Analyst.');
+  assert.deepEqual(both.map((m) => m.phrase).sort(), ['Land high-paying jobs', 'high-paying'].sort());
+  // Indexes point into the original text, also after blanked approved claims.
+  const t = 'Since 2010, 5,000+ students trained. Placement guaranteed. Lifetime access.';
+  const ms = findClaimMatches(t);
+  assert.deepEqual(ms.map((m) => m.phrase), ['guarant', 'Lifetime']);
+  for (const m of ms) assert.equal(t.slice(m.index, m.index + m.phrase.length).toLowerCase(), m.phrase.toLowerCase());
+  // Reasons are listed once each.
+  assert.equal(findClaimViolations('Best X institute. Best Y institute.').length, 1);
+  assert.deepEqual(findClaimMatches('Since 2010, 5,000+ students trained, 50+ hiring partners, 1-year LMS access.'), []);
+});
+
+test('reworded numbers are not the approved claims: employees / professionals', async () => {
+  const { findClaimMatches } = await import('../../src/lib/social-captions.ts');
+  assert.deepEqual(findClaimMatches('5,000+ EMPLOYEES TRAINED').map((m) => m.phrase), ['5,000+ EMPLOYEES']);
+  assert.deepEqual(findClaimMatches('10,000+ professionals upskilled').map((m) => m.phrase), ['10,000+ professionals']);
+  assert.deepEqual(findClaimMatches('5,000+ STUDENTS TRAINED · Since 2010'), []);
+});
