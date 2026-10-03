@@ -133,3 +133,64 @@ test('concurrent renders share one in-flight request; the next call after it set
   await assert.rejects(failing(), /503/);
   assert.equal(failCalls, 2);
 });
+
+test('failure pause: no Google call for 10 min after a failure, then one retry; never cached', async () => {
+  const { pauseAfterFailure, FAILURE_PAUSE_MS } = await import('../../src/lib/google-places.ts');
+  assert.equal(FAILURE_PAUSE_MS, 600_000);
+  let t = 1_000_000;
+  const now = () => t;
+  const outcomes = ['fail', 'ok'];
+  let googleCalls = 0;
+  const google = async () => {
+    googleCalls++;
+    if (outcomes.shift() === 'fail') throw new Error('Places API HTTP 403');
+    return { rating: 4.4, count: 9, mapsUri: OK.googleMapsUri };
+  };
+  const paused = pauseAfterFailure(google, { now });
+
+  // The stand-in cache stores successes only, like unstable_cache.
+  const cache = successOnlyCache(paused);
+  const logs = [];
+  const get = ratingGetter(cache, { log: (l) => logs.push(l) });
+
+  assert.equal(await get(), null);                 // the failure
+  assert.equal(googleCalls, 1);
+  t += 9 * 60_000;                                  // 9 min later: still paused
+  assert.equal(await get(), null);
+  assert.equal(await get(), null);
+  assert.equal(googleCalls, 1, 'no Places call during the pause');
+  assert.deepEqual(logs, [
+    '[google-rating] hidden: Places API HTTP 403',
+    '[google-rating] hidden: Places API paused for 10 min after a failure (Places API HTTP 403)',
+  ], 'the pause is logged once, not once per render');
+
+  t += 61_000;                                      // just past 10 min: one retry
+  assert.deepEqual(await get(), { rating: 4.4, count: 9, mapsUri: OK.googleMapsUri });
+  assert.equal(googleCalls, 2);
+  assert.deepEqual(await get(), { rating: 4.4, count: 9, mapsUri: OK.googleMapsUri });
+  assert.equal(googleCalls, 2, 'the success is cached; failures and pauses never were');
+});
+
+test('failure pause: a cached success is still served during a pause (pause sits inside the cached callback)', async () => {
+  const { pauseAfterFailure } = await import('../../src/lib/google-places.ts');
+  let googleCalls = 0;
+  const paused = pauseAfterFailure(async () => { googleCalls++; throw new Error('Places API HTTP 503'); }, { now: () => 0 });
+  await assert.rejects(paused(), /503/);              // this process is now paused
+  // Another worker filled the shared cache: a cache hit never reaches the paused callback.
+  const shared = { value: { rating: 4.6, count: 50, mapsUri: OK.googleMapsUri } };
+  const cachedLoad = async () => shared.value ?? paused();
+  const get = ratingGetter(cachedLoad, { log: () => {} });
+  assert.equal((await get()).count, 50);
+  assert.equal(googleCalls, 1);
+});
+
+test('failure pause: Next internals pass through and do not start a pause', async () => {
+  const { pauseAfterFailure } = await import('../../src/lib/google-places.ts');
+  let calls = 0;
+  const dyn = nextError('DYNAMIC_SERVER_USAGE');
+  const seq = [dyn, null];
+  const paused = pauseAfterFailure(async () => { calls++; const e = seq.shift(); if (e) throw e; return 'ok'; }, { now: () => 0 });
+  await assert.rejects(paused(), (err) => err === dyn);
+  assert.equal(await paused(), 'ok', 'not paused by an internal error');
+  assert.equal(calls, 2);
+});
