@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { findDueSocialPosts } from '@/lib/social-post-queries';
-import { createPost, LINKEDIN_CHANNEL_ID } from '@/lib/buffer-client';
+import { bufferChannelId, createPost } from '@/lib/buffer-client';
+import { channelPayload, checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
+import { getSocialPostCourse } from '@/lib/social-post-course';
+import { instagramJpegUrl } from '@/lib/social-post-image';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -10,9 +13,15 @@ const MAX_POSTS_PER_RUN = 10;
 const MAX_ATTEMPTS = 5;
 const PAST_DUE_SEND_BUFFER_MS = 5 * 60 * 1000;
 
-const CHANNEL_IDS: Record<string, string> = {
-  linkedin: LINKEDIN_CHANNEL_ID,
-};
+/** "linkedin:abc,facebook:def" → channels already sent (ids from before this format have no channel). */
+function sentChannels(bufferPostIds: string | null): Map<string, string> {
+  const sent = new Map<string, string>();
+  for (const entry of (bufferPostIds ?? '').split(',').filter(Boolean)) {
+    const [channel, id] = entry.includes(':') ? entry.split(':', 2) : ['', entry];
+    if (channel) sent.set(channel, id);
+  }
+  return sent;
+}
 
 export async function GET(req: NextRequest): Promise<Response> {
   const authHeader = req.headers.get('authorization');
@@ -40,8 +49,9 @@ export async function GET(req: NextRequest): Promise<Response> {
       }
 
       processed++;
-      const channels = post.channels.split(',').map((c) => c.trim()).filter(Boolean);
-      const succeededIds: string[] = [];
+      const channels = parseChannels(post.channels);
+      const alreadySent = sentChannels(post.bufferPostIds);
+      const succeededIds: string[] = (post.bufferPostIds ?? '').split(',').filter(Boolean);
       const errors: string[] = [];
       let anyRetryable = false;
       let hitLimit = false;
@@ -49,6 +59,26 @@ export async function GET(req: NextRequest): Promise<Response> {
       if (channels.length === 0) {
         errors.push('no channels configured on this post');
       }
+
+      // Course (Facebook link, Instagram banner). A DB error is retryable.
+      let course: Awaited<ReturnType<typeof getSocialPostCourse>> = null;
+      if (post.courseId && channels.length > 0) {
+        try {
+          course = await getSocialPostCourse(post.courseId, post.hook);
+          if (!course) errors.push('the linked course is missing or unpublished');
+        } catch (err) {
+          errors.push(`course lookup failed: ${err instanceof Error ? err.message : String(err)}`);
+          anyRetryable = true;
+        }
+      }
+
+      // Backstop for the approve step: channel rules and allowed claims.
+      const draft = { ...post, channels, hasCourse: Boolean(post.courseId) };
+      if (errors.length === 0) {
+        errors.push(...ruleErrors(checkPost(draft)));
+        if (channels.includes('instagram') && course && !course.igImageUrl) errors.push('instagram: banner generation is unavailable');
+      }
+      const sendable = errors.length === 0 ? channels : [];
 
       // The cron only ever selects posts where scheduledFor <= now, so
       // scheduledFor itself always fails Buffer's "must be in the future"
@@ -60,24 +90,30 @@ export async function GET(req: NextRequest): Promise<Response> {
           ? new Date(now + PAST_DUE_SEND_BUFFER_MS)
           : post.scheduledFor;
 
-      for (const channel of channels) {
-        const channelId = CHANNEL_IDS[channel];
+      for (const channel of sendable) {
+        // Sent on an earlier attempt: don't post it twice.
+        if (alreadySent.has(channel)) continue;
+        const channelId = bufferChannelId(channel);
         if (!channelId) {
-          errors.push(`${channel}: no Buffer channel configured for this service`);
+          errors.push(`${channel}: no Buffer channel configured (set BUFFER_PROFILE_${channel.toUpperCase()})`);
           continue;
         }
 
-        const result = await createPost({
-          text: post.content,
-          channelId,
-          dueAt,
-          imageUrl: post.imageUrl ?? undefined,
-          imageAltText: post.imageAltText ?? undefined,
-          linkUrl: post.linkUrl ?? undefined,
-        });
+        let payload = channelPayload(channel, draft, course ?? {});
+        if (channel === 'instagram' && payload.imageUrl) {
+          try {
+            payload = { ...payload, imageUrl: await instagramJpegUrl(payload.imageUrl) };
+          } catch (err) {
+            errors.push(`instagram: JPEG conversion failed: ${err instanceof Error ? err.message : String(err)}`);
+            anyRetryable = true;
+            continue;
+          }
+        }
+
+        const result = await createPost({ ...payload, channelId, dueAt, service: channel });
 
         if (result.ok) {
-          succeededIds.push(result.data.id);
+          succeededIds.push(`${channel}:${result.data.id}`);
           continue;
         }
 

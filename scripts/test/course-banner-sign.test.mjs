@@ -64,3 +64,18 @@ test('without the secret in production, banners are disabled (no guessable key)'
     process.env.NODE_ENV = saved.env;
   }
 });
+
+test('Instagram portrait URL signs the hook; without a hook signatures are unchanged', async () => {
+  process.env.ADMIN_SESSION_SECRET = 'test-secret-a';
+  const { bannerSignature, instagramBannerPath, sameSignature } = await load();
+  const course = { slug: 'devops', title: 'DevOps Training', category: 'DevOps', categorySlug: 'devops-multi-cloud' };
+  const plain = await bannerSignature('devops', 'DevOps Training', 'DevOps', 'devops-multi-cloud');
+  assert.equal(await bannerSignature('devops', 'DevOps Training', 'DevOps', 'devops-multi-cloud', ''), plain);
+  const url = new URL(await instagramBannerPath(course, ' Ship pipelines. '), 'https://example.test');
+  assert.equal(url.searchParams.get('s'), 'ig');
+  assert.equal(url.searchParams.get('h'), 'Ship pipelines.');
+  const withHook = await bannerSignature('devops', 'DevOps Training', 'DevOps', 'devops-multi-cloud', 'Ship pipelines.');
+  assert.ok(sameSignature(url.searchParams.get('v'), withHook));
+  assert.ok(!sameSignature(url.searchParams.get('v'), plain));
+  assert.ok(!sameSignature(url.searchParams.get('v'), await bannerSignature('devops', 'DevOps Training', 'DevOps', 'devops-multi-cloud', 'Placement guaranteed')));
+});

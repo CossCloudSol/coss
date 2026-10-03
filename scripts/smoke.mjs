@@ -12,16 +12,31 @@
  * and is safe to run against production without the .env targeting concerns
  * that apply to PrismaClient scripts in this repo.
  *
- * Usage: node scripts/smoke.mjs [baseUrl]
+ * Usage: node scripts/smoke.mjs [baseUrl] [--concurrency N]
  * Default baseUrl: https://www.cosscloudsol.com
+ * Default concurrency: 10, or 4 against localhost / 127.0.0.1 — a local
+ * `next start` has a Prisma pool of 5 connections to the remote DB, so 10
+ * parallel cold renders queue past the timeout (P2024) and fail falsely.
  */
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const BASE_URL = process.argv[2] || 'https://www.cosscloudsol.com';
-const CONCURRENCY = 10;
+const args = process.argv.slice(2);
+const flagAt = args.findIndex((a) => a === '--concurrency' || a.startsWith('--concurrency='));
+let concurrencyArg = null;
+if (flagAt !== -1) {
+  const [flag] = args.splice(flagAt, 1);
+  concurrencyArg = flag.includes('=') ? flag.split('=')[1] : args.splice(flagAt, 1)[0];
+}
+const BASE_URL = args[0] || 'https://www.cosscloudsol.com';
+const IS_LOCAL = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?(\/|$)/i.test(BASE_URL);
+const CONCURRENCY = concurrencyArg ? Number(concurrencyArg) : IS_LOCAL ? 4 : 10;
+if (!Number.isInteger(CONCURRENCY) || CONCURRENCY < 1) {
+  console.error(`--concurrency must be a positive integer (got "${concurrencyArg}")`);
+  process.exit(2);
+}
 const TIMEOUT_MS = 15000;
 
 const routes = JSON.parse(readFileSync(join(__dirname, 'routes.json'), 'utf8'));
@@ -72,7 +87,7 @@ async function runPool(items, worker, concurrency) {
 }
 
 async function main() {
-  console.log(`Smoke-checking ${routes.length} routes against ${BASE_URL}\n`);
+  console.log(`Smoke-checking ${routes.length} routes against ${BASE_URL} (concurrency ${CONCURRENCY})\n`);
 
   const results = await runPool(routes, checkRoute, CONCURRENCY);
   const failures = results.filter((r) => !r.ok);

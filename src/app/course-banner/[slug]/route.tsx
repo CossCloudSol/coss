@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { bannerSignature, sameSignature } from '@/lib/course-banner-sign';
-import { BANNER_SQUARE, BANNER_WIDE, categoryStyle, shortCourseTitle, type BannerIcon } from '@/lib/course-banner';
+import { BANNER_PORTRAIT, BANNER_SQUARE, BANNER_WIDE, categoryStyle, shortCourseTitle, type BannerIcon } from '@/lib/course-banner';
 
 /**
  * Branded banner for a course without an admin thumbnail (next/og).
@@ -8,6 +8,7 @@ import { BANNER_SQUARE, BANNER_WIDE, categoryStyle, shortCourseTitle, type Banne
  *   wide (default): 800×400 for cards — wordmark, category chip, title
  *   s=og: the wide banner plus "cosscloudsol.com", for og:image
  *   s=sq: 256×256 for small thumbnails — icon and the C tile only
+ *   s=ig: 1080×1350 Instagram portrait — wordmark, title and the signed hook (h)
  * URLs are built server-side (lib/course-banner-sign) with an HMAC over the
  * slug, title and category: unsigned or edited parameters get a 404, and
  * the signature changes with the title or category, so the image is cached
@@ -126,13 +127,13 @@ function CTile({ size }: { size: number }) {
  * SOLUTIONS" letter-spaced under it. flexShrink 0: it never truncates; the
  * category chip next to it gives way instead.
  */
-function Wordmark() {
+function Wordmark({ scale = 1 }: { scale?: number }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-      <CTile size={60} />
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14 * scale, flexShrink: 0 }}>
+      <CTile size={60 * scale} />
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ color: '#e47538', fontFamily: 'Raleway', fontWeight: 800, fontSize: 36, lineHeight: 1, letterSpacing: 3 }}>COSS</div>
-        <div style={{ color: '#cfeff0', fontFamily: 'Raleway', fontWeight: 700, fontSize: 17, lineHeight: 1, letterSpacing: 3.4, marginTop: 7 }}>CLOUD SOLUTIONS</div>
+        <div style={{ color: '#e47538', fontFamily: 'Raleway', fontWeight: 800, fontSize: 36 * scale, lineHeight: 1, letterSpacing: 3 * scale }}>COSS</div>
+        <div style={{ color: '#cfeff0', fontFamily: 'Raleway', fontWeight: 700, fontSize: 17 * scale, lineHeight: 1, letterSpacing: 3.4 * scale, marginTop: 7 * scale }}>CLOUD SOLUTIONS</div>
       </div>
     </div>
   );
@@ -141,11 +142,13 @@ function Wordmark() {
 export async function GET(req: Request, { params }: { params: { slug: string } }): Promise<Response> {
   const url = new URL(req.url);
   const q = url.searchParams;
-  const variant = q.get('s'); // 'sq' square thumbnail, 'og' social share, else card
+  const variant = q.get('s'); // 'sq' square thumbnail, 'og' social share, 'ig' Instagram portrait, else card
   const square = variant === 'sq';
   const slug = decodeURIComponent(params.slug);
   const course = { title: (q.get('t') ?? '').slice(0, 160), category: (q.get('c') ?? '').slice(0, 80), categorySlug: q.get('k') ?? '' };
-  const expected = await bannerSignature(slug, course.title, course.category, course.categorySlug);
+  // The hook (Instagram) is part of the signature whenever it's present.
+  const hook = (q.get('h') ?? '').slice(0, 100);
+  const expected = await bannerSignature(slug, course.title, course.category, course.categorySlug, hook);
   if (!course.title || !expected || !sameSignature(q.get('v') ?? '', expected)) {
     return new Response('Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } });
   }
@@ -174,6 +177,54 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
           {/* Shown down to 40px (mega-menu), where a wordmark can't be read: the C tile only. */}
           <div style={{ position: 'absolute', left: 16, bottom: 16, display: 'flex' }}>
             <CTile size={44} />
+          </div>
+        </div>
+      ),
+      { width, height, ...fontOptions },
+    );
+  }
+
+  if (variant === 'ig') {
+    const { width, height } = BANNER_PORTRAIT;
+    const title = shortCourseTitle(course.title);
+    const titleSize = title.length <= 18 ? 92 : title.length <= 30 ? 80 : 68;
+    return new ImageResponse(
+      (
+        <div style={{ width, height, display: 'flex', flexDirection: 'column', position: 'relative', padding: 84, background }}>
+          <Pattern accent={accent} width={width} height={height} />
+          {/* Disc: x 560–1180, y 300–920 (bleeds off the right edge). */}
+          <div style={{ position: 'absolute', right: -100, top: 300, width: 620, height: 620, borderRadius: 310, background: '#005663', border: `4px solid ${accent}` }} />
+          <div style={{ position: 'absolute', right: 110, top: 480, display: 'flex' }}>
+            <Icon shapes={shapes} size={260} color={accent} strokeWidth={1.2} />
+          </div>
+          <Wordmark scale={1.7} />
+          <div
+            style={{
+              display: 'flex',
+              alignSelf: 'flex-start',
+              marginTop: 44,
+              maxWidth: 900,
+              padding: '12px 26px',
+              borderRadius: 999,
+              border: `3px solid ${accent}`,
+              background: 'rgba(10,61,74,0.75)',
+              color: '#ffffff',
+              fontFamily: 'Raleway',
+              fontWeight: 700,
+              fontSize: 34,
+            }}
+          >
+            {course.category}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', marginTop: 'auto' }}>
+            <div style={{ display: 'block', maxWidth: 900, color: '#ffffff', fontFamily: 'Raleway', fontWeight: 800, fontSize: titleSize, lineHeight: 1.08, lineClamp: 3 }}>
+              {title}
+            </div>
+            {hook && (
+              <div style={{ display: 'block', maxWidth: 880, marginTop: 30, color: accent, fontFamily: 'Raleway', fontWeight: 700, fontSize: 44, lineHeight: 1.2, lineClamp: 2 }}>
+                {hook}
+              </div>
+            )}
           </div>
         </div>
       ),

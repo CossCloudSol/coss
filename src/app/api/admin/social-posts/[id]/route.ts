@@ -53,13 +53,20 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
     imageUrl?: string | null;
     imageAltText?: string | null;
     linkUrl?: string | null;
+    courseId?: string | null;
+    hook?: string | null;
+    hashtags?: string | null;
     scheduledFor?: Date;
+    status?: string;
   } = {};
   if (typeof body.content === 'string') data.content = body.content;
   if (typeof body.channels === 'string') data.channels = body.channels;
   if (typeof body.imageUrl === 'string') data.imageUrl = body.imageUrl || null;
   if (typeof body.imageAltText === 'string') data.imageAltText = body.imageAltText || null;
   if (typeof body.linkUrl === 'string') data.linkUrl = body.linkUrl || null;
+  if (typeof body.courseId === 'string') data.courseId = body.courseId || null;
+  if (typeof body.hook === 'string') data.hook = body.hook.trim() || null;
+  if (typeof body.hashtags === 'string') data.hashtags = body.hashtags.trim() || null;
   if (typeof body.scheduledFor === 'string') data.scheduledFor = new Date(body.scheduledFor);
 
   if (Object.keys(data).length === 0) {
@@ -74,6 +81,9 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
   if (validationError) {
     return NextResponse.json({ error: validationError }, { status: 400 });
   }
+
+  // An approved post that's edited needs approving again.
+  if (existing.status === 'queued') data.status = 'draft';
 
   try {
     const socialPost = await prisma.socialPost.update({ where: { id: params.id }, data });

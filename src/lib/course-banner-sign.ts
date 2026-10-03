@@ -41,11 +41,16 @@ function signingKey(): Promise<CryptoKey | null> {
   return keyPromise;
 }
 
-/** Hex signature of a banner's parameters, or null when signing is unavailable. */
-export async function bannerSignature(slug: string, title: string, category: string, categorySlug: string): Promise<string | null> {
+/**
+ * Hex signature of a banner's parameters, or null when signing is unavailable.
+ * `hook` (Instagram portrait only) is signed when present; without it the
+ * signature is unchanged, so existing card and og:image URLs stay valid.
+ */
+export async function bannerSignature(slug: string, title: string, category: string, categorySlug: string, hook = ''): Promise<string | null> {
   const key = await signingKey();
   if (!key) return null;
-  const mac = await crypto.subtle.sign('HMAC', key, encoder.encode([DESIGN_VERSION, slug, title, category, categorySlug].join('\u0000')));
+  const parts = [DESIGN_VERSION, slug, title, category, categorySlug, ...(hook ? [hook] : [])];
+  const mac = await crypto.subtle.sign('HMAC', key, encoder.encode(parts.join('\u0000')));
   return Array.from(new Uint8Array(mac).slice(0, 10), (b) => b.toString(16).padStart(2, '0')).join('');
 }
 
@@ -68,6 +73,24 @@ export async function courseBannerPath(course: { slug: string; title: string; ca
   const v = await bannerSignature(course.slug, title, category, k);
   if (!v) return null;
   const q = new URLSearchParams({ t: title, c: category, k, v });
+  return `/course-banner/${encodeURIComponent(course.slug)}?${q.toString()}`;
+}
+
+/**
+ * Instagram portrait banner (1080×1350): wordmark, course title and the
+ * post's hook line (signed with the rest), or null when banners are disabled.
+ */
+export async function instagramBannerPath(
+  course: { slug: string; title: string; category: string; categorySlug: string | null },
+  hook: string,
+): Promise<string | null> {
+  const title = course.title.trim();
+  const category = course.category.trim();
+  const k = course.categorySlug ?? '';
+  const h = hook.trim();
+  const v = await bannerSignature(course.slug, title, category, k, h);
+  if (!v) return null;
+  const q = new URLSearchParams({ t: title, c: category, k, h, v, s: 'ig' });
   return `/course-banner/${encodeURIComponent(course.slug)}?${q.toString()}`;
 }
 

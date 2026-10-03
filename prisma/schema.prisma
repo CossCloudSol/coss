@@ -606,6 +606,12 @@ model SocialPost {
   id            String    @id @default(cuid())
   content       String
   channels      String    // comma-separated service names: linkedin, facebook, instagram
+  /// Course promoted (optional): Facebook links to its page, Instagram uses its portrait banner.
+  courseId      String?
+  /// Instagram portrait banner's hook line (max 80 chars).
+  hook          String?
+  /// Instagram hashtags, space/comma separated (max 10 used).
+  hashtags      String?
   imageUrl      String?
   /// Required by Buffer whenever imageUrl is set; unused otherwise.
   imageAltText  String?

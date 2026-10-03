@@ -59,3 +59,4 @@ export function squareBannerPath(widePath: string): string {
 
 export const BANNER_WIDE = { width: 800, height: 400 } as const;
 export const BANNER_SQUARE = { width: 256, height: 256 } as const;
+export const BANNER_PORTRAIT = { width: 1080, height: 1350 } as const;
