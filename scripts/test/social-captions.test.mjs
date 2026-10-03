@@ -205,7 +205,9 @@ test('the checker reports every match: all rules, all occurrences, in text order
 
 test('reworded numbers are not the approved claims: employees / professionals', async () => {
   const { findClaimMatches } = await import('../../src/lib/social-captions.ts');
-  assert.deepEqual(findClaimMatches('5,000+ EMPLOYEES TRAINED').map((m) => m.phrase), ['5,000+ EMPLOYEES']);
-  assert.deepEqual(findClaimMatches('10,000+ professionals upskilled').map((m) => m.phrase), ['10,000+ professionals']);
+  assert.deepEqual(findClaimMatches('5,000+ EMPLOYEES TRAINED').map((m) => m.phrase), ['5,000+ EMPLOYEES TRAINED']);
+  assert.deepEqual(findClaimMatches('10,000+ professionals upskilled').map((m) => m.phrase), ['10,000+ professionals upskilled']);
   assert.deepEqual(findClaimMatches('5,000+ STUDENTS TRAINED · Since 2010'), []);
+  // A form's team-size options are not a claim (no verb).
+  assert.deepEqual(findClaimMatches('Team Size 1–5 employees 6–15 employees 16–30 employees 31–50 employees 50+ employees'), []);
 });

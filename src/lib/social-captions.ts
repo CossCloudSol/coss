@@ -144,7 +144,10 @@ const BANNED: Array<[RegExp, string]> = [
   [/life\s*-?\s*time/i,'no "lifetime" (LMS access is 1 year)'],
   [/\bsince\s+(19|20)\d{2}\b/i, 'the only founding year allowed is "since 2010"'],
   // [1-9]: not step numbers like "03 Placement Support".
-  [/\b[1-9][\d,.]*\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|employees|professionals|placements|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training|trust))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+  [/\b[1-9][\d,.]*\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|placements|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training|trust))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+  // Reworded headcounts ("5,000+ employees trained"); a verb makes it a claim, so
+  // a form's team-size options ("1–5 employees", "50+ employees") are not.
+  [/\b[1-9][\d,.]*\s*(\+|k\b)?\s*(employees|professionals)\s+(trained|upskilled|taught|certified|placed|skilled)\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
   // The institute's own experience: "our 15+ years of experience".
   [/\bour\s+[1-9]\d*\+?\s*(?:\w+\s+)?years?\b/i, 'no years-of-experience claims (only "since 2010")'],
   // "Best IT training institute", "a leading IT training institute", "Best SAP FICO Training".
