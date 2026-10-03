@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       course?.excerpt ??
       course?.description ??
-      'Best IT training institute in Hyderabad. Hands-on courses with placement support at Dilsukhnagar & Ameerpet.',
+      'IT training institute in Hyderabad since 2010. Hands-on courses with placement support at Dilsukhnagar & Ameerpet.',
     openGraph: course
       ? {
           images: await courseOgImages(

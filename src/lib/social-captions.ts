@@ -117,24 +117,59 @@ export function buildCaption(channel: SocialChannel, post: { content: string; ha
 // Only these may appear (CCPA): since 2010, 5,000+ students trained,
 // 50+ hiring partners, 1-year LMS access. They're removed before the checks
 // below, so any number/claim left over is not an approved one.
-const APPROVED_CLAIMS = [/\bsince\s+2010\b/gi, /\b5,?000\+\s*students\s+trained\b/gi, /\b50\+\s*hiring\s+partners\b/gi, /\b1[-\s]year\s+LMS\s+access\b/gi];
+const APPROVED_CLAIMS = [
+  /\bsince\s+2010\b/gi,
+  /\b5,?000\+\s*students\s+trained\b/gi,
+  /\btrained\s+5,?000\+\s*students\b/gi,
+  /\b5,?000\+\s*students\s+who\s+(?:have\s+)?trained\b/gi,
+  /\b50\+\s*hiring\s+partners\b/gi,
+  /\b1[-\s]year\s+LMS\s+access\b/gi,
+  // Disclaimers say the opposite of a claim: "Placement is not guaranteed."
+  // Facts that aren't claims: "Fortune 500 companies", "Maximum 20 students per batch".
+  /\bfortune\s+500\b/gi,
+  /\bREST\s+Assured\b/g, // the API-testing library
+  /\b\d+\s*[–-]\s*\d+\s+students\b/gi, // batch-size ranges ("10–20 students")
+  // A learner's experience, not ours: "with 2–3 years of experience you can…".
+  /\b(?:with|have|having|need|needs|requires?|required)\s+[1-9]\d*(?:\s*[–-]\s*\d+)?\+?\s*years?\s+of\s+experience\b/gi,
+  /\b(?:max(?:imum)?|up\s+to|only)\s+\d+\s+students\s+(?:per|in\s+(?:a|each))\s+batch\b/gi,
+  /\b(?:is|are)\s+not\s+guaranteed\b|\bno\s+(?:job\s+|placement\s+)?guarantees?\b|\b(?:do|does|can|will)(?:\s+not|n['’]t)\s+guarantee\b|\bcannot\s+guarantee\b|\bwithout\s+(?:any\s+)?guarantees?\b/gi,
+];
 
 const BANNED: Array<[RegExp, string]> = [
   [/guarant/i, 'no guarantees (e.g. "placement guaranteed", "job guarantee")'],
   [/\bassured\b/i, 'no "assured" placement or job claims'],
   // No \b: hashtags run words together ("#100percentplacement").
   [/\d\s*%|per\s*cent/i, 'no percentages'],
-  [/\brank(ed|ing|s)?\b|#\s*1\b|\bno\.?\s*1\b|\bnumber\s+one\b|\btop[-\s]?(rated|ranked)\b|\bbest\s+(institute|training|course|in\b)|\b(leading|largest)\s+(institute|training)/i, 'no rankings ("#1", "best institute", "top-rated")'],
+  [/\b(?:ranked|ranks?|ranking)\s+(?:as\s+|among\s+(?:the\s+)?)?(?:#|no\.?\s*\d|number\b|first\b|1st\b|top\b|best\b|highest\b|the\s+(?:best|top)\b)|#\s*1\b|\bno\.?\s*1\b|\bnumber\s+one\b|\btop[-\s]?(rated|ranked)\b|\bbest\s+(institute|training|course|in\b)|\b(leading|largest)\s+(institute|training)/i, 'no rankings ("#1", "best institute", "top-rated")'],
   [/life\s*-?\s*time/i,'no "lifetime" (LMS access is 1 year)'],
   [/\bsince\s+(19|20)\d{2}\b/i, 'the only founding year allowed is "since 2010"'],
-  [/\b\d[\d,.]*\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|placements?|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+  // [1-9]: not step numbers like "03 Placement Support".
+  [/\b[1-9][\d,.]*\s*(\+|k\b)?\s*(students?|learners?|alumni|graduates|placements|placed|hires|hiring\s+partners?|partners?|companies|recruiters?|years?\s+of\s+(experience|excellence|training|trust))\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
+  // The institute's own experience: "our 15+ years of experience".
+  [/\bour\s+[1-9]\d*\+?\s*(?:\w+\s+)?years?\b/i, 'no years-of-experience claims (only "since 2010")'],
+  // "Best IT training institute", "a leading IT training institute", "Best SAP FICO Training".
+  [/\b(best|leading|premier|largest|top|no\.?\s*1)\s+(?!practices?\b)(?:[\w&-]+\s+){0,3}?(institutes?|academy|academies|training|courses?|classes|coaching)\b/i, 'no rankings ("best/leading/top … institute/training")'],
+  [/\bhigh[-\s]?pay(ing|ed)?\b|\bhigh[-\s]salar(y|ies|ied)\b/i, 'no salary claims ("high-paying")'],
+  [/\bland(s|ing)?\s+(?:[\w-]+\s+){0,4}?(jobs?|roles?|positions?|offers?)\b/i, 'no job-outcome claims ("land … jobs")'],
+  [/\bget(s|ting)?\s+placed\b/i, 'no job-outcome claims ("get placed")'],
+  [/\bplacement\s+(rates?|records?|percentages?|ratios?|statistics|stats)\b/i, 'no placement rates or records'],
+  [/\bpass(ing)?\s+rates?\b/i, 'no pass rates'],
+  [/\btop\s+(?:[\w-]+\s+){0,2}?(companies|mncs?|firms|recruiters|employers|brands)\b/i, 'no "top companies" claims'],
 ];
+
+/** Each banned claim in the text, with the matched phrase (empty when it's fine). */
+export function findClaimMatches(text: string | null | undefined): Array<{ phrase: string; why: string }> {
+  let rest = text ?? '';
+  for (const re of APPROVED_CLAIMS) rest = rest.replace(re, ' ');
+  return BANNED.flatMap(([re, why]) => {
+    const m = rest.match(re);
+    return m ? [{ phrase: m[0].trim(), why }] : [];
+  });
+}
 
 /** Reasons the text breaks the allowed-claims rule (empty when it's fine). */
 export function findClaimViolations(text: string | null | undefined): string[] {
-  let rest = text ?? '';
-  for (const re of APPROVED_CLAIMS) rest = rest.replace(re, ' ');
-  return BANNED.filter(([re]) => re.test(rest)).map(([, why]) => why);
+  return findClaimMatches(text).map((m) => m.why);
 }
 
 // ── Channel rules ────────────────────────────────────────────────────────

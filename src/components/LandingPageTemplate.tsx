@@ -401,7 +401,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
               Tools &amp; Technologies You Will Master
             </h3>
             <p className="text-sm text-slate-400 mt-2">
-              Used in real production environments at top companies
+              Used in real production environments
             </p>
           </div>
 

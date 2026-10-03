@@ -56,7 +56,7 @@ function capAtWordBoundary(text: string, maxLen: number): string {
   return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated).trim();
 }
 
-const BRAND_TAGLINE = " — Expert IT training insights from COSS Cloud Solutions, Hyderabad's leading IT institute.";
+const BRAND_TAGLINE = " — Expert IT training insights from COSS Cloud Solutions, Hyderabad, since 2010.";
 const BRAND_ANY_RE = /(?:coss\s+cloud\s+solutions?)|(?:\bcoss\b)/gi;
 
 /**

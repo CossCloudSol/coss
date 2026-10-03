@@ -49,11 +49,11 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
   {
     pageSlug: 'home',
     pageTitle: 'Homepage',
-    metaTitle: 'Best IT Training Institute in Hyderabad | Coss Cloud Solutions',
-    metaDescription: 'Coss Cloud Solutions: Top IT training in Hyderabad. AI, Cloud, DevOps & 30+ courses. 5,000+ students trained. Placement assistance included. Enroll now!',
+    metaTitle: 'IT Training Institute in Hyderabad Since 2010 | Coss Cloud Solutions',
+    metaDescription: 'Coss Cloud Solutions: IT training in Hyderabad since 2010. AI, Cloud, DevOps & 30+ courses. 5,000+ students trained. Placement assistance included. Enroll now!',
     focusKeyword: 'IT training institute in Hyderabad',
     keywords: 'IT training institute in Hyderabad, best software training Hyderabad, AI training, cloud computing course, DevOps training Hyderabad, data science training',
-    ogTitle: 'Best IT Training Institute in Hyderabad | Coss Cloud Solutions',
+    ogTitle: 'IT Training Institute in Hyderabad Since 2010 | Coss Cloud Solutions',
     ogDescription: 'Join 5,000+ students trained at Coss Cloud Solutions. AI, Cloud, DevOps, Data Science & 30+ courses with placement assistance in Hyderabad.',
     ogImage: OG_IMAGE,
     canonicalUrl: `${S}/`,
@@ -76,11 +76,11 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     pageSlug: 'about',
     pageTitle: 'About Us',
     metaTitle: 'About Coss Cloud Solutions — IT Training Institute Hyderabad',
-    metaDescription: 'Learn about Coss Cloud Solutions — a leading IT training institute in Hyderabad since 2010. 5,000+ students trained, expert trainers, Dilsukhnagar & Ameerpet branches.',
+    metaDescription: 'Learn about Coss Cloud Solutions — an IT training institute in Hyderabad since 2010. 5,000+ students trained, expert trainers, Dilsukhnagar & Ameerpet branches.',
     focusKeyword: 'Coss Cloud Solutions Hyderabad',
     keywords: 'Coss Cloud Solutions Hyderabad, IT training institute Hyderabad, about us, best software training institute, Dilsukhnagar training centre',
     ogTitle: 'About Coss Cloud Solutions — Hyderabad IT Training',
-    ogDescription: 'Leading IT training institute in Hyderabad since 2010. 5,000+ students trained, 2 centres, 30+ courses, expert trainers with 7 to 20+ years of industry experience.',
+    ogDescription: 'IT training institute in Hyderabad since 2010. 5,000+ students trained, 2 centres, 30+ courses, expert trainers with 7 to 20+ years of industry experience.',
     ogImage: OG_IMAGE,
     canonicalUrl: `${S}/about-us`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'AboutPage', url: `${S}/about-us/`, name: 'About Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'About Us', item: `${S}/about-us/` }), mainEntity: { '@id': ORG }, foundingDate: '2010' }),
@@ -89,11 +89,11 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     pageSlug: 'why-us',
     pageTitle: 'Why Choose Us',
     metaTitle: 'Why Choose Coss Cloud Solutions for IT Training in Hyderabad',
-    metaDescription: 'Discover why 5,000+ students chose Coss Cloud Solutions — industry expert trainers, placement assistance, flexible batches, small batch sizes & affordable fees in Hyderabad.',
+    metaDescription: '5,000+ students trained since 2010 — industry expert trainers, placement assistance, flexible batches, small batch sizes & affordable fees in Hyderabad.',
     focusKeyword: 'why choose Coss Cloud Solutions',
     keywords: 'best IT training institute Hyderabad, why choose Coss Cloud Solutions, placement-focused IT training Hyderabad, expert IT trainers Hyderabad, affordable IT courses Hyderabad',
     ogTitle: 'Why Choose Coss Cloud Solutions for IT Training in Hyderabad',
-    ogDescription: 'Expert trainers, placement assistance, flexible batches, affordable fees & globally recognised certifications. Discover why 5,000+ students chose Coss Cloud Solutions.',
+    ogDescription: 'Expert trainers, placement assistance, flexible batches, affordable fees & globally recognised certifications. 5,000+ students trained since 2010.',
     ogImage: OG_IMAGE,
     canonicalUrl: `${S}/why-us`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@graph': [bc({ name: 'Home', item: `${S}/` }, { name: 'Why Choose Us', item: `${S}/why-us/` }), { '@type': 'FAQPage', mainEntity: [{ '@type': 'Question', name: 'Why should I choose Coss Cloud Solutions for IT training?', acceptedAnswer: { '@type': 'Answer', text: 'Coss Cloud Solutions offers industry expert trainers with 7 to 20+ years of experience, placement assistance, small batch sizes, flexible scheduling, globally recognised certifications and affordable fees.' } }, { '@type': 'Question', name: 'Does Coss Cloud Solutions provide placement support?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, Coss Cloud Solutions provides placement assistance including resume building, mock interviews, company referrals and interview coaching.' } }, { '@type': 'Question', name: 'Does Coss Cloud Solutions offer online training?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, Coss Cloud Solutions offers live interactive online training alongside offline batches at Dilsukhnagar and Ameerpet. All sessions are recorded for review.' } }, { '@type': 'Question', name: 'What certifications does Coss Cloud Solutions prepare students for?', acceptedAnswer: { '@type': 'Answer', text: 'AWS, Microsoft Azure, Google Cloud, CompTIA, CEH, Salesforce, SAP and many more globally recognised IT certifications.' } }] }] }),
@@ -381,7 +381,7 @@ function truncate(str: string, max: number): string {
 
 function blogMetaDescription(title: string): string {
   const clean = title.replace(/–|-|—/g, '').replace(/\s+/g, ' ').trim();
-  const desc = `${clean} — Expert IT training insights from Coss Cloud Solutions, Hyderabad's leading IT institute.`;
+  const desc = `${clean} — Expert IT training insights from Coss Cloud Solutions, Hyderabad, since 2010.`;
   return truncate(desc, 158);
 }
 

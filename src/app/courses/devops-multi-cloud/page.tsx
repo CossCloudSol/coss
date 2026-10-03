@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/devops-multi-cloud"
-        title="Best DevOps and Multi-Cloud Training Institute in Hyderabad"
-        description="Join the best DevOps and multi-cloud training in Hyderabad. CI/CD, Docker, Kubernetes, Terraform, expert trainers, placement support and certification. Enroll now!"
+        title="DevOps and Multi-Cloud Training Institute in Hyderabad"
+        description="Join DevOps and multi-cloud training in Hyderabad. CI/CD, Docker, Kubernetes, Terraform, expert trainers, placement support and certification. Enroll now!"
         category="DevOps & Multi-Cloud"
       />
       <CourseCategoryPage data={courseData['devops-multi-cloud']} breadcrumbSlug="devops-multi-cloud" dbCourses={dbCourses} />

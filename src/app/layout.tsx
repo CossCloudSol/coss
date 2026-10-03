@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     template: '%s | Coss Cloud Solutions',
   },
   description:
-    'Best IT training institute in Hyderabad with expert trainers, hands-on labs, and placement support. Courses in Data Science, AWS, DevOps, SAP, Full Stack & more.',
+    'IT training institute in Hyderabad since 2010, with expert trainers, hands-on labs, and placement support. Courses in Data Science, AWS, DevOps, SAP, Full Stack & more.',
   keywords: ['IT training Hyderabad', 'software training Hyderabad', 'data science course Hyderabad', 'AWS training Hyderabad', 'DevOps training Hyderabad', 'Coss Cloud Solutions'],
   authors: [{ name: 'Coss Cloud Solutions' }],
   creator: 'Coss Cloud Solutions',
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: 'Coss Cloud Solutions',
     title: 'Coss Cloud Solutions — IT Training Institute in Hyderabad',
-    description: 'Best IT training institute in Hyderabad. Expert trainers, hands-on labs, placement support. Join 5,000+ students.',
+    description: 'IT training institute in Hyderabad since 2010. Expert trainers, hands-on labs, placement support. 5,000+ students trained.',
     images: [
       {
         url: '/og-image.jpg',
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
     site: '@DsnrCoss',
     creator: '@DsnrCoss',
     title: 'Coss Cloud Solutions — IT Training Institute in Hyderabad',
-    description: 'Best IT training institute in Hyderabad. Expert trainers, hands-on labs, placement support.',
+    description: 'IT training institute in Hyderabad since 2010. Expert trainers, hands-on labs, placement support.',
     images: ['/og-image.jpg'],
   },
   robots: {

@@ -34,7 +34,7 @@ const cloudCourses: CourseCategoryData = {
     { name: 'Multi-Cloud Engineer', duration: '4 Months', level: 'Advanced', highlights: ['AWS + Azure + GCP', 'Cloud Migration', 'Cost Optimization', 'Multi-Cloud Architecture'], fee: '₹ 25,000–40,000' },
     { name: 'Cloud Architecture', duration: '3 Months', level: 'Advanced', highlights: ['Solution Design', 'High Availability', 'DR & Backup Strategies', 'Cost Management'], fee: '₹ 20,000–35,000' },
   ],
-  whyLearn: ['Cloud jobs growing 30%+ year over year', 'Remote work opportunities worldwide', 'Industry certifications from AWS, Microsoft, Google'],
+  whyLearn: ['Cloud skills are in demand across industries', 'Remote work opportunities worldwide', 'Industry certifications from AWS, Microsoft, Google'],
   tools: ['AWS Console', 'Azure Portal', 'Google Cloud Console', 'Terraform', 'CloudFormation', 'Ansible'],
   careers: ['Cloud Engineer', 'Solutions Architect', 'Cloud Administrator', 'DevOps Engineer', 'Cloud Consultant'],
   faqs: [
@@ -49,7 +49,7 @@ const devopsCourses: CourseCategoryData = {
   slug: 'devops-multi-cloud',
   emoji: '⚙️',
   tagline: 'Master CI/CD, Docker & Kubernetes',
-  description: 'Become a DevOps Engineer with comprehensive training in CI/CD pipelines, containerization, infrastructure automation and multi-cloud deployments. Learn the tools and practices used by top tech companies worldwide.',
+  description: 'Become a DevOps Engineer with comprehensive training in CI/CD pipelines, containerization, infrastructure automation and multi-cloud deployments. Learn the tools and practices used in real production teams.',
   courses: [
     { name: 'AWS DevOps', duration: '3 Months', level: 'Intermediate', highlights: ['CodePipeline & CodeDeploy', 'CloudFormation', 'ECS & EKS', 'Monitoring with CloudWatch'] },
     { name: 'Azure DevOps', duration: '3 Months', level: 'Intermediate', highlights: ['Azure Pipelines', 'Boards & Repos', 'Azure Kubernetes Service', 'ARM Templates'] },
@@ -124,7 +124,7 @@ const cyberCourses: CourseCategoryData = {
     { name: 'CCNA Networking', duration: '2 Months', level: 'Beginner', highlights: ['Network Fundamentals', 'Routing & Switching', 'VLANs', 'CCNA Certification'] },
     { name: 'Network Security', duration: '2 Months', level: 'Intermediate', highlights: ['Firewall Configuration', 'VPN Setup', 'IDS/IPS', 'Security Policies'] },
   ],
-  whyLearn: ['Cyber attacks are increasing — security talent is scarce', 'High-paying roles in banking, government, and IT', 'Work as a freelance penetration tester', 'Globally recognized certifications'],
+  whyLearn: ['Cyber attacks are increasing — security talent is scarce', 'Security roles in banking, government, and IT', 'Work as a freelance penetration tester', 'Globally recognized certifications'],
   tools: ['Kali Linux', 'Metasploit', 'Wireshark', 'Nmap', 'Splunk', 'Burp Suite', 'Nessus'],
   careers: ['Ethical Hacker', 'Penetration Tester', 'SOC Analyst', 'Network Security Engineer', 'CISO', 'Security Consultant'],
   faqs: [

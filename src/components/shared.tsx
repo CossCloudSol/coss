@@ -89,7 +89,7 @@ export function HeroBanner({ badge, titlePre, accentText, titlePost = '', titleL
 export function CorporateHeroBanner() {
   return (
     <HeroBanner
-      badge="TRUSTED BY 500+ COMPANIES ACROSS INDIA"
+      badge="CORPORATE TRAINING SINCE 2010"
       titlePre="Upskill Your "
       accentText="Workforce"
       titleLine2="with Expert-Led Training"

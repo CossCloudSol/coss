@@ -47,7 +47,7 @@ export default function CertificationPage() {
           <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Globally Recognized</div>
           <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,4vw,32px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>Industry Certification Preparation</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.75' }}>
-            Our training programs are aligned with the latest exam objectives of globally recognized certifications. Get certified in your domain and fast-track your IT career with credentials that top companies demand.
+            Our training programs are aligned with the latest exam objectives of globally recognized certifications. Get certified in your domain and fast-track your IT career with credentials employers recognise.
           </p>
         </div>
       </div>

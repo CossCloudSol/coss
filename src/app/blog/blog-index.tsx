@@ -415,7 +415,7 @@ export async function BlogIndexView({
             <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '22px', color: '#fff', marginBottom: '20px' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', marginBottom: '10px', color: '#fff' }}>About Coss Cloud Solutions</h4>
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
-                Leading IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad.
+                IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad, since 2010.
               </p>
               <Link href="/about-us" style={{ color: 'var(--primary)', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
             </div>
