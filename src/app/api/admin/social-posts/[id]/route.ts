@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { approvalChanges, revertedNote } from '@/lib/social-post-state';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -58,6 +59,7 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
     hashtags?: string | null;
     scheduledFor?: Date;
     status?: string;
+    lastError?: string;
   } = {};
   if (typeof body.content === 'string') data.content = body.content;
   if (typeof body.channels === 'string') data.channels = body.channels;
@@ -82,8 +84,15 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
     return NextResponse.json({ error: validationError }, { status: 400 });
   }
 
-  // An approved post that's edited needs approving again.
-  if (existing.status === 'queued') data.status = 'draft';
+  // An approved post whose content really changed needs approving again,
+  // and the row says so. Saving it unchanged leaves it approved.
+  if (existing.status === 'queued') {
+    const changes = approvalChanges(existing, data);
+    if (changes.length > 0) {
+      data.status = 'draft';
+      data.lastError = revertedNote(changes, new Date());
+    }
+  }
 
   try {
     const socialPost = await prisma.socialPost.update({ where: { id: params.id }, data });

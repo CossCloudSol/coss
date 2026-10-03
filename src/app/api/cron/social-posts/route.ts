@@ -1,28 +1,21 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { findDueSocialPosts } from '@/lib/social-post-queries';
-import { bufferChannelId, createPost } from '@/lib/buffer-client';
-import { channelPayload, checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
-import { getSocialPostCourse } from '@/lib/social-post-course';
-import { instagramJpegUrl } from '@/lib/social-post-image';
+import { sendSocialPost } from '@/lib/social-post-send';
+import { skippedNote } from '@/lib/social-post-state';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+// Up to 10 posts × 3 channels, plus Instagram's JPEG upload: well past the 10 s default.
+export const maxDuration = 60;
 
 const MAX_POSTS_PER_RUN = 10;
-const MAX_ATTEMPTS = 5;
-const PAST_DUE_SEND_BUFFER_MS = 5 * 60 * 1000;
 
-/** "linkedin:abc,facebook:def" → channels already sent (ids from before this format have no channel). */
-function sentChannels(bufferPostIds: string | null): Map<string, string> {
-  const sent = new Map<string, string>();
-  for (const entry of (bufferPostIds ?? '').split(',').filter(Boolean)) {
-    const [channel, id] = entry.includes(':') ? entry.split(':', 2) : ['', entry];
-    if (channel) sent.set(channel, id);
-  }
-  return sent;
-}
-
+/**
+ * Daily (vercel.json "0 0 * * *" = 05:30 IST; Hobby plan runs it once a day,
+ * at some point in that hour). Sends every queued post that's due. Admins can
+ * also "Send now" from Admin → Social Posts (same sendSocialPost path).
+ */
 export async function GET(req: NextRequest): Promise<Response> {
   const authHeader = req.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -34,142 +27,52 @@ export async function GET(req: NextRequest): Promise<Response> {
   let failed = 0;
   let skipped = 0;
 
+  // A post left unsent this run says why in its row, instead of sitting silently.
+  async function noteSkipped(postId: string, reason: string) {
+    skipped++;
+    console.log(`[cron/social-posts] post ${postId} skipped: ${reason}`);
+    try {
+      await prisma.socialPost.update({ where: { id: postId }, data: { lastError: skippedNote(reason, new Date()) } });
+    } catch (err) {
+      console.error(`[cron/social-posts] post ${postId}: could not record the skip`, err);
+    }
+  }
+
   try {
     const duePosts = await findDueSocialPosts();
-    const batch = duePosts.slice(0, MAX_POSTS_PER_RUN);
-    skipped += duePosts.length - batch.length;
+    let stopReason: string | null = null;
 
-    let stopRun = false;
-
-    for (const post of batch) {
-      if (stopRun) {
-        skipped++;
-        console.log(`[cron/social-posts] post ${post.id} skipped — run stopped early (channel queue limit reached)`);
+    for (const [i, post] of duePosts.entries()) {
+      if (i >= MAX_POSTS_PER_RUN) {
+        await noteSkipped(post.id, `more than ${MAX_POSTS_PER_RUN} posts were due in this run`);
+        continue;
+      }
+      if (stopReason) {
+        await noteSkipped(post.id, stopReason);
         continue;
       }
 
       processed++;
-      const channels = parseChannels(post.channels);
-      const alreadySent = sentChannels(post.bufferPostIds);
-      const succeededIds: string[] = (post.bufferPostIds ?? '').split(',').filter(Boolean);
-      const errors: string[] = [];
-      let anyRetryable = false;
-      let hitLimit = false;
-
-      if (channels.length === 0) {
-        errors.push('no channels configured on this post');
-      }
-
-      // Course (Facebook link, Instagram banner). A DB error is retryable.
-      let course: Awaited<ReturnType<typeof getSocialPostCourse>> = null;
-      if (post.courseId && channels.length > 0) {
-        try {
-          course = await getSocialPostCourse(post.courseId, post.hook);
-          if (!course) errors.push('the linked course is missing or unpublished');
-        } catch (err) {
-          errors.push(`course lookup failed: ${err instanceof Error ? err.message : String(err)}`);
-          anyRetryable = true;
-        }
-      }
-
-      // Backstop for the approve step: channel rules and allowed claims.
-      const draft = { ...post, channels, hasCourse: Boolean(post.courseId) };
-      if (errors.length === 0) {
-        errors.push(...ruleErrors(checkPost(draft)));
-        if (channels.includes('instagram') && course && !course.igImageUrl) errors.push('instagram: banner generation is unavailable');
-      }
-      const sendable = errors.length === 0 ? channels : [];
-
-      // The cron only ever selects posts where scheduledFor <= now, so
-      // scheduledFor itself always fails Buffer's "must be in the future"
-      // check. Send a few minutes out instead; scheduledFor stays untouched
-      // in the DB since it records intent, not the actual send time.
-      const now = Date.now();
-      const dueAt =
-        post.scheduledFor.getTime() <= now
-          ? new Date(now + PAST_DUE_SEND_BUFFER_MS)
-          : post.scheduledFor;
-
-      for (const channel of sendable) {
-        // Sent on an earlier attempt: don't post it twice.
-        if (alreadySent.has(channel)) continue;
-        const channelId = bufferChannelId(channel);
-        if (!channelId) {
-          errors.push(`${channel}: no Buffer channel configured (set BUFFER_PROFILE_${channel.toUpperCase()})`);
-          continue;
-        }
-
-        let payload = channelPayload(channel, draft, course ?? {});
-        if (channel === 'instagram' && payload.imageUrl) {
-          try {
-            payload = { ...payload, imageUrl: await instagramJpegUrl(payload.imageUrl) };
-          } catch (err) {
-            errors.push(`instagram: JPEG conversion failed: ${err instanceof Error ? err.message : String(err)}`);
-            anyRetryable = true;
-            continue;
-          }
-        }
-
-        const result = await createPost({ ...payload, channelId, dueAt, service: channel });
-
-        if (result.ok) {
-          succeededIds.push(`${channel}:${result.data.id}`);
-          continue;
-        }
-
-        errors.push(`${channel}: ${result.error.message}`);
-        if (result.error.limitReached) {
-          // Free plan queue cap (10/channel) — leave this post queued and stop
-          // burning requests that will all fail the same way this run.
-          hitLimit = true;
-          anyRetryable = true;
-          break;
-        }
-        if (result.retryable) {
-          anyRetryable = true;
-        }
-      }
-
-      const attemptCount = post.attemptCount + 1;
-      let status: 'sent' | 'failed' | 'queued';
-      let lastError: string | null = null;
-
-      if (errors.length === 0) {
-        status = 'sent';
-      } else if (anyRetryable && attemptCount < MAX_ATTEMPTS) {
-        status = 'queued';
-        lastError = errors.join('; ');
-      } else if (anyRetryable) {
-        status = 'failed';
-        lastError = `${errors.join('; ')} — exceeded maximum retry attempts (${MAX_ATTEMPTS})`;
-      } else {
-        status = 'failed';
-        lastError = errors.join('; ');
-      }
-
+      let outcome;
       try {
-        await prisma.socialPost.update({
-          where: { id: post.id },
-          data: {
-            attemptCount,
-            status,
-            lastError,
-            ...(status === 'sent' ? { sentAt: new Date() } : {}),
-            ...(succeededIds.length > 0 ? { bufferPostIds: succeededIds.join(',') } : {}),
-          },
-        });
+        outcome = await sendSocialPost(post);
       } catch (err) {
-        console.error(`[cron/social-posts] post ${post.id} — DB update failed after Buffer call(s):`, err);
+        console.error(`[cron/social-posts] post ${post.id} failed:`, err);
+        failed++;
         continue;
       }
 
-      if (status === 'sent') sent++;
-      else if (status === 'failed') failed++;
+      if (outcome.status === 'skipped') {
+        // Claimed by a concurrent "Send now": nothing to record here.
+        skipped++;
+        continue;
+      }
+      if (outcome.status === 'sent') sent++;
+      else if (outcome.status === 'failed') failed++;
+      console.log(`[cron/social-posts] post ${post.id} -> ${outcome.status}${outcome.lastError ? ` (${outcome.lastError})` : ''}`);
 
-      console.log(`[cron/social-posts] post ${post.id} -> ${status}${lastError ? ` (${lastError})` : ''}`);
-
-      if (hitLimit) {
-        stopRun = true;
+      if (outcome.hitLimit) {
+        stopReason = 'a Buffer channel queue is full (free plan: 10 scheduled posts per channel)';
       }
     }
 

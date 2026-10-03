@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { Plus, Pencil, Trash2, Loader2, Image as ImageIcon, Link2, Send, RotateCcw } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, Image as ImageIcon, Link2, Send, RotateCcw, Zap } from 'lucide-react';
 
 interface SocialPostItem {
   id: string;
@@ -38,6 +38,10 @@ export default function AdminSocialPostsPage() {
   const [posts, setPosts] = useState<SocialPostItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
+  // One request per row at a time (no double-click approve-then-revert).
+  const [busy, setBusy] = useState<string | null>(null);
+  // Result of the last "Send now" per row, shown in that row.
+  const [sendResult, setSendResult] = useState<Record<string, { ok: boolean; message: string }>>({});
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToast({ msg, type });
@@ -80,7 +84,9 @@ export default function AdminSocialPostsPage() {
 
   async function toggleQueueStatus(id: string, currentStatus: string) {
     const action = getQueueAction(currentStatus);
-    if (!action) return;
+    if (!action || busy) return;
+    if (action.next === 'draft' && !confirm('Move this approved post back to Draft? It will not be sent until approved again.')) return;
+    setBusy(id);
     try {
       const res = await fetch(`/api/admin/social-posts/${id}/status`, {
         method: 'PATCH',
@@ -94,6 +100,32 @@ export default function AdminSocialPostsPage() {
       showToast(action.next === 'queued' ? 'Approved: it goes to Buffer at its scheduled time' : 'Post reverted to draft');
       void load();
     } catch (err) { showToast(err instanceof Error ? err.message : 'Failed to update status', 'error'); }
+    finally { setBusy(null); }
+  }
+
+  async function sendNow(post: SocialPostItem) {
+    if (busy) return;
+    if (!confirm(`Send this post to Buffer now (${post.channels})? Buffer publishes it about 5 minutes later.`)) return;
+    setBusy(post.id);
+    try {
+      const res = await fetch(`/api/admin/social-posts/${post.id}/send`, { method: 'POST' });
+      const data = await res.json().catch(() => null);
+      const message: string = data?.message ?? data?.error ?? `Send failed (HTTP ${res.status})`;
+      const ok = res.ok && data?.ok === true;
+      setSendResult((r) => ({ ...r, [post.id]: { ok, message } }));
+      showToast(ok ? 'Sent to Buffer' : message, ok ? 'success' : 'error');
+      void load();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Send failed';
+      setSendResult((r) => ({ ...r, [post.id]: { ok: false, message } }));
+      showToast(message, 'error');
+    } finally { setBusy(null); }
+  }
+
+  function SendResult({ id }: { id: string }) {
+    const r = sendResult[id];
+    if (!r) return null;
+    return <p className={`text-xs mt-1 ${r.ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>{r.message}</p>;
   }
 
   const queued = posts.filter((p) => p.status === 'queued').length;
@@ -157,13 +189,24 @@ export default function AdminSocialPostsPage() {
                   <p className="text-xs text-[#475569] dark:text-[#8b949e] mb-1">Attempts: {post.attemptCount}</p>
                 )}
                 {post.lastError && (
-                  <p className="text-xs text-red-600 dark:text-red-400 mb-2 line-clamp-2">{post.lastError}</p>
+                  <p className="text-xs text-red-600 dark:text-red-400 mb-2 line-clamp-3">{post.lastError}</p>
                 )}
-                <div className="flex gap-2">
+                <SendResult id={post.id} />
+                <div className="flex gap-2 mt-2">
+                  {post.status === 'queued' && (
+                    <button
+                      onClick={() => sendNow(post)}
+                      disabled={busy !== null}
+                      className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#b8531c] disabled:opacity-50"
+                    >
+                      {busy === post.id ? 'Sending…' : 'Send now'}
+                    </button>
+                  )}
                   {getQueueAction(post.status) && (
                     <button
                       onClick={() => toggleQueueStatus(post.id, post.status)}
-                      className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#1d4ed8]"
+                      disabled={busy !== null}
+                      className="flex-1 rounded-lg py-1.5 text-xs font-medium text-white bg-[#1d4ed8] disabled:opacity-50"
                     >
                       {getQueueAction(post.status)?.label}
                     </button>
@@ -208,6 +251,7 @@ export default function AdminSocialPostsPage() {
                         {post.imageUrl && <ImageIcon className="w-3.5 h-3.5" />}
                         {post.linkUrl && <Link2 className="w-3.5 h-3.5" />}
                       </div>
+                      <SendResult id={post.id} />
                     </td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-xs capitalize">{post.channels}</td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-xs whitespace-nowrap">{formatIst(post.scheduledFor)}</td>
@@ -217,13 +261,20 @@ export default function AdminSocialPostsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-xs">{post.attemptCount}</td>
-                    <td className="px-4 py-3 text-red-600 dark:text-red-400 text-xs max-w-[200px] truncate" title={post.lastError ?? ''}>
-                      {post.lastError ?? '—'}
+                    <td className="px-4 py-3 text-red-600 dark:text-red-400 text-xs max-w-[260px]" title={post.lastError ?? ''}>
+                      <span className="line-clamp-3">{post.lastError ?? '—'}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
+                        {post.status === 'queued' && (
+                          <button onClick={() => sendNow(post)} disabled={busy !== null}
+                            className="whitespace-nowrap px-2.5 rounded-lg text-xs font-semibold text-white bg-[#b8531c] hover:bg-[#8f3f14] disabled:opacity-50 transition-colors min-h-[36px] flex items-center gap-1"
+                            title="Send to Buffer now">
+                            {busy === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />} Send now
+                          </button>
+                        )}
                         {getQueueAction(post.status) && (
-                          <button onClick={() => toggleQueueStatus(post.id, post.status)}
+                          <button onClick={() => toggleQueueStatus(post.id, post.status)} disabled={busy !== null}
                             className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                             title={getQueueAction(post.status)?.label}>
                             {post.status === 'draft' ? <Send className="w-3.5 h-3.5" /> : <RotateCcw className="w-3.5 h-3.5" />}
