@@ -40,9 +40,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 1: Data, Analytics & BI ──────────────────────────────────────
   {
     slug: 'big-data-training-institute-in-hyderabad',
-    title: 'Best Big Data Training Institute in Hyderabad',
+    title: 'Big Data Training Institute in Hyderabad',
     metaDescription:
-      'Join the best big data training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join big data training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'big data training in Hyderabad, big data course Hyderabad, Hadoop training, big data analytics certification',
     primaryKeyword: 'Big Data Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -50,9 +50,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'machine-learning-training-institute-in-hyderabad',
-    title: 'Best Machine Learning Training Institute in Hyderabad',
+    title: 'Machine Learning Training Institute in Hyderabad',
     metaDescription:
-      'Join the best machine learning training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join machine learning training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'machine learning training in Hyderabad, ML course Hyderabad, machine learning certification, AI ML training Hyderabad',
     primaryKeyword: 'Machine Learning Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -60,9 +60,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'artificial-intelligence-training-institute-in-hyderabad',
-    title: 'Best Artificial Intelligence Training Institute in Hyderabad',
+    title: 'Artificial Intelligence Training Institute in Hyderabad',
     metaDescription:
-      'Join the best artificial intelligence training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join artificial intelligence training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'artificial intelligence training in Hyderabad, AI course Hyderabad, AI training institute, AI ML certification Hyderabad',
     primaryKeyword: 'Artificial Intelligence Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -70,9 +70,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'power-bi-training-institute-in-hyderabad',
-    title: 'Best Full Stack Power BI Training Institute in Hyderabad',
+    title: 'Full Stack Power BI Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Power BI training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Power BI training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Power BI training in Hyderabad, Microsoft Power BI course, Power BI certification, BI developer training Hyderabad',
     primaryKeyword: 'Power BI Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -80,9 +80,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'sql-training-institute-in-hyderabad',
-    title: 'Best SQL / MySQL / PostgreSQL Training Institute in Hyderabad',
+    title: 'SQL / MySQL / PostgreSQL Training Institute in Hyderabad',
     metaDescription:
-      'Join the best SQL training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join SQL training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'SQL training in Hyderabad, MySQL training Hyderabad, PostgreSQL course, database training Hyderabad',
     primaryKeyword: 'SQL Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -90,9 +90,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'azure-training-institute-in-hyderabad',
-    title: 'Best Microsoft Azure Training Institute in Hyderabad',
+    title: 'Microsoft Azure Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Microsoft Azure training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join Microsoft Azure training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'Microsoft Azure training in Hyderabad, Azure certification Hyderabad, Azure cloud course, Azure administrator training',
     primaryKeyword: 'Microsoft Azure Training in Hyderabad',
     category: 'Cloud Computing',
@@ -100,9 +100,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'google-cloud-training-institute-in-hyderabad',
-    title: 'Best Google Cloud Training Institute in Hyderabad',
+    title: 'Google Cloud Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Google Cloud training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join Google Cloud training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'Google Cloud training in Hyderabad, GCP course Hyderabad, Google Cloud Platform certification, cloud engineer training',
     primaryKeyword: 'Google Cloud Training in Hyderabad',
     category: 'Cloud Computing',
@@ -112,9 +112,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 1: DevOps & Multi-Cloud ──────────────────────────────────────
   {
     slug: 'devops-training-institute-in-hyderabad',
-    title: 'Best DevOps Training Institute in Hyderabad',
+    title: 'DevOps Training Institute in Hyderabad',
     metaDescription:
-      'Join the best DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'DevOps training in Hyderabad, DevOps course Hyderabad, CI CD training, DevOps certification institute Hyderabad',
     primaryKeyword: 'DevOps Training in Hyderabad',
     category: 'DevOps & Multi-Cloud',
@@ -122,9 +122,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'aws-devops-training-institute-in-hyderabad',
-    title: 'Best AWS DevOps Training Institute in Hyderabad',
+    title: 'AWS DevOps Training Institute in Hyderabad',
     metaDescription:
-      'Join the best AWS DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join AWS DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'AWS DevOps training in Hyderabad, AWS DevOps course Hyderabad, cloud DevOps training, AWS pipeline certification',
     primaryKeyword: 'AWS DevOps Training in Hyderabad',
     category: 'DevOps & Multi-Cloud',
@@ -132,9 +132,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'azure-devops-training-institute-in-hyderabad',
-    title: 'Best Azure DevOps Training Institute in Hyderabad',
+    title: 'Azure DevOps Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Azure DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join Azure DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'Azure DevOps training in Hyderabad, Azure DevOps course Hyderabad, Azure pipelines training, Microsoft DevOps certification',
     primaryKeyword: 'Azure DevOps Training in Hyderabad',
     category: 'DevOps & Multi-Cloud',
@@ -144,9 +144,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 2: Programming & Full Stack ──────────────────────────────────
   {
     slug: 'python-training-institute-in-hyderabad',
-    title: 'Best Python Training Institute in Hyderabad',
+    title: 'Python Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Python training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Python training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Python training in Hyderabad, Python course Hyderabad, Python programming certification, Python developer training',
     primaryKeyword: 'Python Training in Hyderabad',
     category: 'Programming & Full Stack',
@@ -154,9 +154,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'java-training-institute-in-hyderabad',
-    title: 'Best Java Training Institute in Hyderabad',
+    title: 'Java Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Java training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Java training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Java training in Hyderabad, Java course Hyderabad, Core Java certification, Java programming institute Hyderabad',
     primaryKeyword: 'Java Training in Hyderabad',
     category: 'Programming & Full Stack',
@@ -164,9 +164,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'python-full-stack-training-institute-in-hyderabad',
-    title: 'Best Python Full Stack Training Institute in Hyderabad',
+    title: 'Python Full Stack Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Python Full Stack training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join Python Full Stack training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'Python Full Stack training in Hyderabad, Python full stack developer course, Django Flask training Hyderabad',
     primaryKeyword: 'Python Full Stack Training in Hyderabad',
     category: 'Programming & Full Stack',
@@ -176,9 +176,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 2: Data Engineering ──────────────────────────────────────────
   {
     slug: 'data-engineering-training-institute-in-hyderabad',
-    title: 'Best Data Engineering Training Institute in Hyderabad',
+    title: 'Data Engineering Training Institute in Hyderabad',
     metaDescription:
-      'Join the best data engineering training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join data engineering training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'data engineering training in Hyderabad, data engineer course Hyderabad, ETL training, data pipeline certification Hyderabad',
     primaryKeyword: 'Data Engineering Training in Hyderabad',
     category: 'Data Engineering',
@@ -186,9 +186,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'azure-data-engineer-training-institute-in-hyderabad',
-    title: 'Best Azure Data Engineer Training Institute in Hyderabad',
+    title: 'Azure Data Engineer Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Azure Data Engineer training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join Azure Data Engineer training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'Azure Data Engineer training in Hyderabad, Azure data engineering course, DP-203 certification Hyderabad, Azure data factory',
     primaryKeyword: 'Azure Data Engineer Training in Hyderabad',
     category: 'Data Engineering',
@@ -198,9 +198,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 2: Cyber Security ─────────────────────────────────────────────
   {
     slug: 'cyber-security-training-institute-in-hyderabad',
-    title: 'Best Cyber Security Training Institute in Hyderabad',
+    title: 'Cyber Security Training Institute in Hyderabad',
     metaDescription:
-      'Join the best cyber security training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join cyber security training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'cyber security training in Hyderabad, cyber security course Hyderabad, information security certification, cybersecurity',
     primaryKeyword: 'Cyber Security Training in Hyderabad',
     category: 'Cyber Security',
@@ -208,9 +208,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'ethical-hacking-training-institute-in-hyderabad',
-    title: 'Best Ethical Hacking Training Institute in Hyderabad',
+    title: 'Ethical Hacking Training Institute in Hyderabad',
     metaDescription:
-      'Join the best ethical hacking training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join ethical hacking training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'ethical hacking training in Hyderabad, ethical hacking course Hyderabad, CEH certification, penetration testing Hyderabad',
     primaryKeyword: 'Ethical Hacking Training in Hyderabad',
     category: 'Cyber Security',
@@ -218,9 +218,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'ccna-training-institute-in-hyderabad',
-    title: 'Best CCNA Networking Training Institute in Hyderabad',
+    title: 'CCNA Networking Training Institute in Hyderabad',
     metaDescription:
-      'Join the best CCNA training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join CCNA training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'CCNA training in Hyderabad, CCNA certification Hyderabad, networking course, Cisco training institute Hyderabad',
     primaryKeyword: 'CCNA Training in Hyderabad',
     category: 'Cyber Security',
@@ -228,9 +228,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'salesforce-training-institute-in-hyderabad',
-    title: 'Best Salesforce CRM Training Institute in Hyderabad',
+    title: 'Salesforce CRM Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Salesforce training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Salesforce training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Salesforce training in Hyderabad, Salesforce CRM course Hyderabad, Salesforce admin certification, Salesforce developer',
     primaryKeyword: 'Salesforce Training in Hyderabad',
     category: 'ERP, CRM & Enterprise',
@@ -238,9 +238,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'tally-erp-training-institute-in-hyderabad',
-    title: 'Best Tally ERP Training Institute in Hyderabad',
+    title: 'Tally ERP Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Tally ERP training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Tally ERP training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Tally ERP training in Hyderabad, Tally course Hyderabad, Tally Prime certification, accounting software training',
     primaryKeyword: 'Tally ERP Training in Hyderabad',
     category: 'ERP, CRM & Enterprise',
@@ -250,9 +250,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 3: Software Testing & OS ─────────────────────────────────────
   {
     slug: 'linux-administration-training-institute-in-hyderabad',
-    title: 'Best Linux Administration Training Institute in Hyderabad',
+    title: 'Linux Administration Training Institute in Hyderabad',
     metaDescription:
-      'Join the best Linux training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Linux training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'Linux training in Hyderabad, Linux administration course Hyderabad, RHEL certification, Linux system admin',
     primaryKeyword: 'Linux Administration Training in Hyderabad',
     category: 'Software Testing & OS',
@@ -260,9 +260,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'software-testing-training-institute-in-hyderabad',
-    title: 'Best Software Testing Training Institute in Hyderabad',
+    title: 'Software Testing Training Institute in Hyderabad',
     metaDescription:
-      'Join the best software testing training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join software testing training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'software testing training in Hyderabad, testing tools course Hyderabad, QA training, Selenium testing certification',
     primaryKeyword: 'Software Testing Training in Hyderabad',
     category: 'Software Testing & OS',
@@ -272,9 +272,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 3: Digital & Design ───────────────────────────────────────────
   {
     slug: 'digital-marketing-training-institute-in-hyderabad',
-    title: 'Best Digital Marketing Training Institute in Hyderabad',
+    title: 'Digital Marketing Training Institute in Hyderabad',
     metaDescription:
-      'Join the best digital marketing training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join digital marketing training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'digital marketing training in Hyderabad, digital marketing course Hyderabad, SEO SEM training, online marketing certification',
     primaryKeyword: 'Digital Marketing Training in Hyderabad',
     category: 'Digital & Design',
@@ -282,9 +282,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'ui-ux-design-training-institute-in-hyderabad',
-    title: 'Best UI/UX Design Training Institute in Hyderabad',
+    title: 'UI/UX Design Training Institute in Hyderabad',
     metaDescription:
-      'Join the best UI UX design training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join UI UX design training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'UI UX design training in Hyderabad, UI UX course Hyderabad, user experience design, Figma Adobe XD certification',
     primaryKeyword: 'UI/UX Design Training in Hyderabad',
     category: 'Digital & Design',
@@ -292,9 +292,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'seo-training-institute-in-hyderabad',
-    title: 'Best SEO Training Institute in Hyderabad',
+    title: 'SEO Training Institute in Hyderabad',
     metaDescription:
-      'Join the best SEO training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join SEO training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'SEO training in Hyderabad, SEO course Hyderabad, search engine optimization certification, on-page off-page SEO',
     primaryKeyword: 'SEO Training in Hyderabad',
     category: 'Digital & Design',
@@ -304,9 +304,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   // ── Session 3: Professional & Soft Skills ─────────────────────────────────
   {
     slug: 'spoken-english-training-institute-in-hyderabad',
-    title: 'Best Spoken English Training Institute in Hyderabad',
+    title: 'Spoken English Training Institute in Hyderabad',
     metaDescription:
-      'Join the best spoken English training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
+      'Join spoken English training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now!',
     keywords: 'spoken English training in Hyderabad, English speaking course Hyderabad, spoken English classes, communication training',
     primaryKeyword: 'Spoken English Training in Hyderabad',
     category: 'Professional & Soft Skills',
@@ -314,9 +314,9 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
   },
   {
     slug: 'ms-office-training-institute-in-hyderabad',
-    title: 'Best MS Office Training Institute in Hyderabad',
+    title: 'MS Office Training Institute in Hyderabad',
     metaDescription:
-      'Join the best MS Office training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join MS Office training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
     keywords: 'MS Office training in Hyderabad, Microsoft Office course Hyderabad, Excel Word PowerPoint training, MS Office cert',
     primaryKeyword: 'MS Office Training in Hyderabad',
     category: 'Professional & Soft Skills',

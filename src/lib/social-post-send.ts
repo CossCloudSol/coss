@@ -1,7 +1,8 @@
 import type { SocialPost } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { bufferChannelId, createPost, realSendsAllowed } from '@/lib/buffer-client';
-import { channelPayload, checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
+import { channelPayload, checkPost, findClaimMatches, parseChannels, ruleErrors } from '@/lib/social-captions';
+import { checkLinkedPages } from '@/lib/page-meta';
 import { getSocialPostCourse } from '@/lib/social-post-course';
 import { instagramJpegUrl } from '@/lib/social-post-image';
 import { sentChannels } from '@/lib/social-post-state';
@@ -74,6 +75,16 @@ export async function sendSocialPost(post: SocialPost): Promise<SendOutcome> {
   if (errors.length === 0) {
     errors.push(...ruleErrors(checkPost(draft)));
     if (channels.includes('instagram') && course && !course.igImageUrl) errors.push('instagram: banner generation is unavailable');
+  }
+  // The link preview (title, description, og:*) of every page this post links
+  // to goes out with it: a banned claim there blocks the send.
+  if (errors.length === 0) {
+    const links = channels.filter((c) => !alreadySent.has(c)).map((c) => channelPayload(c, draft, course ?? {}).linkUrl ?? '');
+    const linked = await checkLinkedPages(links, { fetch, findClaims: findClaimMatches });
+    if (!linked.ok) {
+      errors.push(linked.error);
+      if (linked.retryable) anyRetryable = true;
+    }
   }
   const sendable = errors.length === 0 ? channels : [];
 

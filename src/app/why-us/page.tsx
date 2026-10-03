@@ -37,11 +37,11 @@ export default function WhyUsPage() {
     <>
       <ResponsivePageStyles />
       <HeroBanner
-        badge="WHY 5,000+ STUDENTS CHOOSE COSS CLOUD SOLUTIONS"
+        badge="5,000+ STUDENTS TRAINED SINCE 2010"
         titlePre="The "
         accentText="Smarter Choice"
         titleLine2="for IT Training in Hyderabad"
-        subtitle="Small batches, real-project training, certified trainers with 7 to 20+ years of experience and dedicated placement support — see what sets Coss Cloud Solutions apart."
+        subtitle="Small batches, real-project training, experienced certified trainers and dedicated placement support — see what sets Coss Cloud Solutions apart."
         stats={[
           { value: '5,000+', label: 'STUDENTS TRAINED' },
           { value: '7-20+',  label: 'YEARS EXPERIENCE' },
@@ -56,7 +56,7 @@ export default function WhyUsPage() {
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '44px' }}>
           <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>9 Strong Reasons</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)' }}>Why 5000+ Students Choose Coss Cloud Solutions</h2>
+          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)' }}>Why Students Choose Coss Cloud Solutions</h2>
         </div>
         <div className="why-feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '22px' }}>
           {reasons.map((r, i) => (

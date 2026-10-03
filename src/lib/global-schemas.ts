@@ -123,7 +123,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     },
     image: { '@id': `${SITE_URL}/#logo` },
     description:
-      'Coss Cloud Solutions is a leading IT training institute in Hyderabad offering expert-led courses in AI, Cloud Computing, DevOps, Data Science, Cyber Security, ERP and more, with 50+ hiring partners and 5,000+ students trained since 2010, at Dilsukhnagar and Ameerpet centres.',
+      'Coss Cloud Solutions is an IT training institute in Hyderabad offering expert-led courses in AI, Cloud Computing, DevOps, Data Science, Cyber Security, ERP and more, with 50+ hiring partners and 5,000+ students trained since 2010, at Dilsukhnagar and Ameerpet centres.',
     foundingDate: '2010',
     email: dilsukhnagar.email,
     telephone: dilsukhnagar.phone.replace(/\s/g, ''),
@@ -178,7 +178,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     alternateName: 'COSS IT Training Hyderabad',
     url: SITE_URL,
     description:
-      'Best IT training institute in Hyderabad — AI, Cloud Computing, DevOps, Data Science and 30+ courses with placement support.',
+      'IT training institute in Hyderabad since 2010 — AI, Cloud Computing, DevOps, Data Science and 30+ courses with placement support.',
     publisher: { '@id': `${SITE_URL}/#organization` },
     inLanguage: 'en-IN',
     potentialAction: {

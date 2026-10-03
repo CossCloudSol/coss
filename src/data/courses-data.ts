@@ -39,13 +39,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'DevOps',
     badge: 'CI/CD • DOCKER • KUBERNETES • TERRAFORM',
     description:
-      'Master modern DevOps practices with Docker, Kubernetes, Jenkins, Terraform and AWS. Coss Cloud Solutions is a leading DevOps training institute in Hyderabad delivering job-ready skills, real CI/CD pipelines, and placement support from Dilsukhnagar and Ameerpet.',
+      'Master modern DevOps practices with Docker, Kubernetes, Jenkins, Terraform and AWS. Coss Cloud Solutions offers DevOps training in Hyderabad, delivering job-ready skills, real CI/CD pipelines, and placement support from Dilsukhnagar and Ameerpet.',
     duration: '3-5 Months',
     level: 'Intermediate to Advanced',
     category: 'DevOps & Multi-Cloud',
     metaTitle: 'DevOps Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best DevOps training institute in Hyderabad. Docker, Kubernetes, Jenkins, Terraform & AWS with placement support at Dilsukhnagar & Ameerpet.',
+      'DevOps training institute in Hyderabad. Docker, Kubernetes, Jenkins, Terraform & AWS with placement support at Dilsukhnagar & Ameerpet.',
     keywords:
       'devops training in hyderabad, devops institute dilsukhnagar, kubernetes training, docker training, jenkins, terraform, ci cd course ameerpet',
     topics: [
@@ -119,7 +119,7 @@ export const COURSES: ReadonlyArray<Course> = [
     category: 'Programming & Full Stack',
     metaTitle: 'Python Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best Python training institute in Hyderabad. Core Python, Django, data analysis and automation with certification & placement at Dilsukhnagar & Ameerpet.',
+      'Python training institute in Hyderabad. Core Python, Django, data analysis and automation with certification & placement at Dilsukhnagar & Ameerpet.',
     keywords:
       'python training in hyderabad, python institute dilsukhnagar, django training, python automation, python course ameerpet, python certification',
     topics: [
@@ -187,13 +187,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'Java',
     badge: 'CORE • SPRING BOOT • MICROSERVICES',
     description:
-      'Become a job-ready Java developer with training in Core Java, Spring Boot, Hibernate, and microservices. Coss Cloud Solutions is a leading Java training institute in Hyderabad delivering hands-on practice and placement assistance at our Dilsukhnagar and Ameerpet branches.',
+      'Become a job-ready Java developer with training in Core Java, Spring Boot, Hibernate, and microservices. Coss Cloud Solutions offers Java training in Hyderabad, delivering hands-on practice and placement assistance at our Dilsukhnagar and Ameerpet branches.',
     duration: '3-5 Months',
     level: 'Beginner to Advanced',
     category: 'Programming & Full Stack',
     metaTitle: 'Java Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best Java training institute in Hyderabad. Core Java, Spring Boot, Hibernate, microservices with certification & placement at Dilsukhnagar & Ameerpet.',
+      'Java training institute in Hyderabad. Core Java, Spring Boot, Hibernate, microservices with certification & placement at Dilsukhnagar & Ameerpet.',
     keywords:
       'java training in hyderabad, java institute dilsukhnagar, spring boot training, hibernate, java microservices, java course ameerpet',
     topics: [
@@ -261,13 +261,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'Software Testing',
     badge: 'MANUAL • SELENIUM • API • PERFORMANCE',
     description:
-      'Become a QA engineer with manual testing, Selenium automation, API testing and performance testing. Coss Cloud Solutions is a top software testing training institute in Hyderabad with hands-on practice and placement support at Dilsukhnagar and Ameerpet.',
+      'Become a QA engineer with manual testing, Selenium automation, API testing and performance testing. Coss Cloud Solutions offers software testing training in Hyderabad, with hands-on practice and placement support at Dilsukhnagar and Ameerpet.',
     duration: '2-4 Months',
     level: 'Beginner to Intermediate',
     category: 'Software Testing & OS',
     metaTitle: 'Software Testing Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best software testing training institute in Hyderabad. Manual, Selenium, API, performance testing with certification & placement at Dilsukhnagar & Ameerpet.',
+      'Software testing training institute in Hyderabad. Manual, Selenium, API, performance testing with certification & placement at Dilsukhnagar & Ameerpet.',
     keywords:
       'software testing training in hyderabad, manual testing institute, selenium training dilsukhnagar, api testing, qa course ameerpet',
     topics: [
@@ -335,13 +335,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'AWS',
     badge: 'SOLUTIONS ARCHITECT • DEVOPS • DEVELOPER',
     description:
-      'Get AWS-certified with hands-on training across Solutions Architect, DevOps Engineer, and Developer tracks. Coss Cloud Solutions is a leading AWS training institute in Hyderabad with live AWS console labs and placement support at Dilsukhnagar and Ameerpet.',
+      'Get AWS-certified with hands-on training across Solutions Architect, DevOps Engineer, and Developer tracks. Coss Cloud Solutions offers AWS training in Hyderabad, with live AWS console labs and placement support at Dilsukhnagar and Ameerpet.',
     duration: '2-3 Months',
     level: 'Beginner to Advanced',
     category: 'Cloud Computing',
     metaTitle: 'AWS Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best AWS training institute in Hyderabad. Solutions Architect, DevOps & Developer certification with hands-on labs at Dilsukhnagar & Ameerpet.',
+      'AWS training institute in Hyderabad. Solutions Architect, DevOps & Developer certification with hands-on labs at Dilsukhnagar & Ameerpet.',
     keywords:
       'aws training in hyderabad, aws institute dilsukhnagar, aws solutions architect, aws devops, aws certification course ameerpet',
     topics: [
@@ -409,13 +409,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'Azure',
     badge: 'AZ-104 • AZ-204 • AZ-400',
     description:
-      'Become Azure-certified with focused training across AZ-104 (Administrator), AZ-204 (Developer) and AZ-400 (DevOps). Coss Cloud Solutions is a leading Azure training institute in Hyderabad delivering hands-on labs and placement support at Dilsukhnagar and Ameerpet.',
+      'Become Azure-certified with focused training across AZ-104 (Administrator), AZ-204 (Developer) and AZ-400 (DevOps). Coss Cloud Solutions offers Azure training in Hyderabad, delivering hands-on labs and placement support at Dilsukhnagar and Ameerpet.',
     duration: '2-3 Months',
     level: 'Beginner to Advanced',
     category: 'Cloud Computing',
     metaTitle: 'Azure Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best Azure training institute in Hyderabad. AZ-104, AZ-204, AZ-400 certifications with hands-on labs at Dilsukhnagar & Ameerpet.',
+      'Azure training institute in Hyderabad. AZ-104, AZ-204, AZ-400 certifications with hands-on labs at Dilsukhnagar & Ameerpet.',
     keywords:
       'azure training in hyderabad, azure institute dilsukhnagar, az 104 training, az 204, azure devops, azure course ameerpet',
     topics: [
@@ -482,13 +482,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'Cyber Security',
     badge: 'ETHICAL HACKING • SOC • VAPT • NETWORK',
     description:
-      'Launch your cyber security career with hands-on ethical hacking, SOC analysis, network defense and VAPT training. COSS Cloud Solutions is a leading cyber security training institute in Hyderabad with centres at Dilsukhnagar and Ameerpet offering placement assistance.',
+      'Launch your cyber security career with hands-on ethical hacking, SOC analysis, network defense and VAPT training. COSS Cloud Solutions offers cyber security training in Hyderabad, with centres at Dilsukhnagar and Ameerpet offering placement assistance.',
     duration: '3-5 Months',
     level: 'Beginner to Advanced',
     category: 'Cyber Security & Networking',
     metaTitle: 'Cyber Security Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best cyber security training institute in Hyderabad. Ethical hacking, SOC, VAPT, CEH certification with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
+      'Cyber security training institute in Hyderabad. Ethical hacking, SOC, VAPT, CEH certification with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
     keywords:
       'cyber security training in hyderabad, ethical hacking course, soc analyst training dilsukhnagar, vapt training ameerpet, ceh certification hyderabad, network security course',
     topics: [
@@ -543,7 +543,7 @@ export const COURSES: ReadonlyArray<Course> = [
       'Kali Linux hands-on lab environment',
       'Real VAPT project on test network',
       'CEH & Security+ exam guidance',
-      'Placement support at top IT security firms',
+      'Placement support with 50+ hiring partners',
     ],
     icon: 'Settings',
     color: 'bg-amber-600',
@@ -556,13 +556,13 @@ export const COURSES: ReadonlyArray<Course> = [
     shortTitle: 'Digital Marketing',
     badge: 'SEO • SEM • SOCIAL MEDIA • ANALYTICS',
     description:
-      'Master digital marketing with hands-on training in SEO, Google Ads, Meta Ads, content marketing and web analytics. COSS Cloud Solutions is a top digital marketing training institute in Hyderabad with branches at Dilsukhnagar and Ameerpet and placement assistance.',
+      'Master digital marketing with hands-on training in SEO, Google Ads, Meta Ads, content marketing and web analytics. COSS Cloud Solutions offers digital marketing training in Hyderabad, with branches at Dilsukhnagar and Ameerpet and placement assistance.',
     duration: '2-4 Months',
     level: 'Beginner to Intermediate',
     category: 'Digital & Design',
     metaTitle: 'Digital Marketing Training in Hyderabad | COSS Cloud Solutions',
     metaDescription:
-      'Best digital marketing training institute in Hyderabad. SEO, Google Ads, Meta Ads, social media and analytics with certification & placement at Dilsukhnagar & Ameerpet.',
+      'Digital marketing training institute in Hyderabad. SEO, Google Ads, Meta Ads, social media and analytics with certification & placement at Dilsukhnagar & Ameerpet.',
     keywords:
       'digital marketing training in hyderabad, seo course dilsukhnagar, google ads training ameerpet, social media marketing hyderabad, digital marketing certification, ppc training',
     topics: [
@@ -636,7 +636,7 @@ export const COURSES: ReadonlyArray<Course> = [
     category: 'Professional & Soft Skills',
     metaTitle: 'Soft Skills Training in Hyderabad | Communication | Coss Cloud Solutions',
     metaDescription:
-      'Best soft skills and spoken English training institute in Hyderabad. MS Office, communication, interview prep and personality development at Dilsukhnagar & Ameerpet.',
+      'Soft skills and spoken English training institute in Hyderabad. MS Office, communication, interview prep and personality development at Dilsukhnagar & Ameerpet.',
     keywords:
       'soft skills training in hyderabad, spoken english course dilsukhnagar, communication skills training ameerpet, personality development hyderabad, ms office training, interview preparation',
     topics: [
@@ -701,12 +701,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Big Data Training in Hyderabad',
     shortTitle: 'Big Data',
     badge: 'HADOOP • SPARK • HIVE • KAFKA',
-    description: 'Master Big Data technologies with hands-on training in Hadoop, Apache Spark, Hive, Kafka and HBase. COSS Cloud Solutions is a leading Big Data training institute in Hyderabad with branches in Dilsukhnagar and Ameerpet, delivering job-ready skills and placement support.',
+    description: 'Master Big Data technologies with hands-on training in Hadoop, Apache Spark, Hive, Kafka and HBase. COSS Cloud Solutions offers Big Data training in Hyderabad, with branches in Dilsukhnagar and Ameerpet, delivering job-ready skills and placement support.',
     duration: '3 Months',
     level: 'Intermediate to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'Big Data Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Big Data training institute in Hyderabad. Hadoop, Spark, Hive & Kafka with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
+    metaDescription: 'Big Data training institute in Hyderabad. Hadoop, Spark, Hive & Kafka with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
     keywords: 'big data training in hyderabad, hadoop training hyderabad, apache spark course, big data certification hyderabad, hive training dilsukhnagar',
     topics: [
       'Hadoop Architecture & HDFS',
@@ -742,12 +742,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Machine Learning Training in Hyderabad',
     shortTitle: 'Machine Learning',
     badge: 'PYTHON • SKLEARN • TENSORFLOW • ML OPS',
-    description: 'Become a Machine Learning engineer with comprehensive training in Python, Scikit-Learn, TensorFlow, and Keras. COSS Cloud Solutions is a leading ML training institute in Hyderabad offering practical projects, model deployment skills, and placement support at Dilsukhnagar and Ameerpet.',
+    description: 'Become a Machine Learning engineer with comprehensive training in Python, Scikit-Learn, TensorFlow, and Keras. COSS Cloud Solutions offers ML training in Hyderabad, offering practical projects, model deployment skills, and placement support at Dilsukhnagar and Ameerpet.',
     duration: '3-4 Months',
     level: 'Intermediate to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'Machine Learning Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Machine Learning training institute in Hyderabad. Python, Scikit-Learn, TensorFlow & MLOps with hands-on projects and placement support at Dilsukhnagar & Ameerpet.',
+    metaDescription: 'Machine Learning training institute in Hyderabad. Python, Scikit-Learn, TensorFlow & MLOps with hands-on projects and placement support at Dilsukhnagar & Ameerpet.',
     keywords: 'machine learning training in hyderabad, ml course hyderabad, scikit-learn training, tensorflow course hyderabad, machine learning certification dilsukhnagar',
     topics: [
       'Python for Machine Learning',
@@ -783,12 +783,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Artificial Intelligence Training in Hyderabad',
     shortTitle: 'Artificial Intelligence',
     badge: 'AI • NLP • COMPUTER VISION • GENERATIVE AI',
-    description: 'Master Artificial Intelligence with hands-on training in NLP, Computer Vision, Generative AI, and LLMs. COSS Cloud Solutions is a leading AI training institute in Hyderabad offering industry-focused curriculum, real projects, and placement support at Dilsukhnagar and Ameerpet.',
+    description: 'Master Artificial Intelligence with hands-on training in NLP, Computer Vision, Generative AI, and LLMs. COSS Cloud Solutions offers AI training in Hyderabad, offering industry-focused curriculum, real projects, and placement support at Dilsukhnagar and Ameerpet.',
     duration: '4 Months',
     level: 'Intermediate to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'Artificial Intelligence Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Artificial Intelligence training institute in Hyderabad. NLP, Computer Vision, Generative AI & LLMs with hands-on labs and placement support.',
+    metaDescription: 'Artificial Intelligence training institute in Hyderabad. NLP, Computer Vision, Generative AI & LLMs with hands-on labs and placement support.',
     keywords: 'artificial intelligence training in hyderabad, AI course hyderabad, NLP training hyderabad, generative AI course, AI certification dilsukhnagar',
     topics: [
       'AI Fundamentals & History',
@@ -824,12 +824,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Full Stack Power BI Training in Hyderabad',
     shortTitle: 'Power BI',
     badge: 'POWER BI • DAX • SQL • DATA MODELING',
-    description: 'Become a certified Power BI developer with end-to-end training in Power BI Desktop, DAX, Power Query, and data modeling. COSS Cloud Solutions is a leading Power BI training institute in Hyderabad with placement support at Dilsukhnagar and Ameerpet.',
+    description: 'Become a certified Power BI developer with end-to-end training in Power BI Desktop, DAX, Power Query, and data modeling. COSS Cloud Solutions offers Power BI training in Hyderabad, with placement support at Dilsukhnagar and Ameerpet.',
     duration: '2 Months',
     level: 'Beginner to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'Power BI Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Power BI training institute in Hyderabad. Power BI Desktop, DAX, Power Query & data modeling with hands-on labs and placement support.',
+    metaDescription: 'Power BI training institute in Hyderabad. Power BI Desktop, DAX, Power Query & data modeling with hands-on labs and placement support.',
     keywords: 'power bi training in hyderabad, microsoft power bi course, power bi certification hyderabad, dax training, data visualization course dilsukhnagar',
     topics: [
       'Power BI Desktop & Service',
@@ -865,12 +865,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'SQL / MySQL / PostgreSQL Training in Hyderabad',
     shortTitle: 'SQL & Databases',
     badge: 'SQL • MYSQL • POSTGRESQL • DATABASE DESIGN',
-    description: 'Master SQL, MySQL, and PostgreSQL with hands-on training in database design, query optimization, stored procedures, and real-world projects. COSS Cloud Solutions is a leading SQL training institute in Hyderabad with branches in Dilsukhnagar and Ameerpet.',
+    description: 'Master SQL, MySQL, and PostgreSQL with hands-on training in database design, query optimization, stored procedures, and real-world projects. COSS Cloud Solutions offers SQL training in Hyderabad, with branches in Dilsukhnagar and Ameerpet.',
     duration: '2 Months',
     level: 'Beginner to Advanced',
     category: 'Data, Analytics & BI',
     metaTitle: 'SQL Training in Hyderabad | MySQL & PostgreSQL | COSS Cloud Solutions',
-    metaDescription: 'Best SQL training institute in Hyderabad. MySQL, PostgreSQL & database design with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
+    metaDescription: 'SQL training institute in Hyderabad. MySQL, PostgreSQL & database design with hands-on labs and placement support at Dilsukhnagar & Ameerpet.',
     keywords: 'sql training in hyderabad, mysql training hyderabad, postgresql course hyderabad, database training, sql certification dilsukhnagar',
     topics: [
       'SQL Fundamentals & DDL',
@@ -906,12 +906,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'AWS DevOps Training in Hyderabad',
     shortTitle: 'AWS DevOps',
     badge: 'CODEPIPELINE • ECS • EKS • CLOUDFORMATION',
-    description: 'Master AWS DevOps with hands-on training in CodePipeline, CodeDeploy, ECS, EKS, CloudFormation and CloudWatch. COSS Cloud Solutions is a leading AWS DevOps training institute in Hyderabad with placement support at Dilsukhnagar and Ameerpet.',
+    description: 'Master AWS DevOps with hands-on training in CodePipeline, CodeDeploy, ECS, EKS, CloudFormation and CloudWatch. COSS Cloud Solutions offers AWS DevOps training in Hyderabad, with placement support at Dilsukhnagar and Ameerpet.',
     duration: '3 Months',
     level: 'Intermediate to Advanced',
     category: 'DevOps & Multi-Cloud',
     metaTitle: 'AWS DevOps Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best AWS DevOps training institute in Hyderabad. CodePipeline, ECS, EKS & CloudFormation with hands-on labs and placement support.',
+    metaDescription: 'AWS DevOps training institute in Hyderabad. CodePipeline, ECS, EKS & CloudFormation with hands-on labs and placement support.',
     keywords: 'aws devops training in hyderabad, aws devops course hyderabad, codepipeline training, eks training hyderabad, aws devops certification',
     topics: ['AWS CodePipeline & CodeBuild','AWS CodeDeploy','CloudFormation & CDK','ECS & EKS','ECR & Docker on AWS','CloudWatch & Monitoring','IAM & Security','AWS Lambda & Serverless','Elastic Beanstalk','Blue-Green Deployments'],
     curriculum: [
@@ -929,12 +929,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Azure DevOps Training in Hyderabad',
     shortTitle: 'Azure DevOps',
     badge: 'AZURE PIPELINES • AKS • ARM • BOARDS',
-    description: 'Master Azure DevOps with hands-on training in Azure Pipelines, Boards, Repos, AKS, ARM Templates and Azure Monitor. Coss Cloud Solutions is a leading Azure DevOps training institute in Hyderabad with placement support.',
+    description: 'Master Azure DevOps with hands-on training in Azure Pipelines, Boards, Repos, AKS, ARM Templates and Azure Monitor. Coss Cloud Solutions offers Azure DevOps training in Hyderabad, with placement support.',
     duration: '3 Months',
     level: 'Intermediate to Advanced',
     category: 'DevOps & Multi-Cloud',
     metaTitle: 'Azure DevOps Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Azure DevOps training institute in Hyderabad. Azure Pipelines, AKS, ARM Templates with hands-on labs and placement support.',
+    metaDescription: 'Azure DevOps training institute in Hyderabad. Azure Pipelines, AKS, ARM Templates with hands-on labs and placement support.',
     keywords: 'azure devops training in hyderabad, azure pipelines course, aks training hyderabad, azure devops certification, azure boards training',
     topics: ['Azure Boards & Work Items','Azure Repos & Git','Azure Pipelines CI/CD','Azure Artifacts','Azure Container Registry','AKS — Azure Kubernetes Service','ARM Templates & Bicep','Azure Monitor & Alerts','Azure Key Vault','Release Management'],
     curriculum: [
@@ -952,12 +952,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Ethical Hacking Training in Hyderabad',
     shortTitle: 'Ethical Hacking',
     badge: 'CEH • KALI LINUX • PENETRATION TESTING',
-    description: 'Master Ethical Hacking and penetration testing with hands-on training in Kali Linux, Metasploit, Burp Suite, and network security. Coss Cloud Solutions is a leading Ethical Hacking training institute in Hyderabad with CEH certification guidance.',
+    description: 'Master Ethical Hacking and penetration testing with hands-on training in Kali Linux, Metasploit, Burp Suite, and network security. Coss Cloud Solutions offers Ethical Hacking training in Hyderabad, with CEH certification guidance.',
     duration: '3 Months',
     level: 'Intermediate to Advanced',
     category: 'Cyber Security & Networking',
     metaTitle: 'Ethical Hacking Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Ethical Hacking training institute in Hyderabad. CEH, Kali Linux, Metasploit & penetration testing with hands-on labs and placement support.',
+    metaDescription: 'Ethical Hacking training institute in Hyderabad. CEH, Kali Linux, Metasploit & penetration testing with hands-on labs and placement support.',
     keywords: 'ethical hacking training hyderabad, ceh training hyderabad, penetration testing course, kali linux training hyderabad, ethical hacking certification',
     topics: ['Ethical Hacking Fundamentals','Kali Linux Setup & Tools','Network Scanning & Enumeration','Vulnerability Assessment','Metasploit Framework','Web Application Hacking','SQL Injection & XSS','Password Cracking','Wireless Network Hacking','CEH Exam Preparation'],
     curriculum: [
@@ -975,12 +975,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Tally ERP Training in Hyderabad',
     shortTitle: 'Tally ERP',
     badge: 'TALLY PRIME • GST • ACCOUNTING',
-    description: 'Master Tally ERP and TallyPrime with hands-on training in accounting, GST, payroll, inventory management, and financial reporting. Coss Cloud Solutions is a leading Tally training institute in Hyderabad with job placement support.',
+    description: 'Master Tally ERP and TallyPrime with hands-on training in accounting, GST, payroll, inventory management, and financial reporting. Coss Cloud Solutions offers Tally training in Hyderabad, with job placement support.',
     duration: '1-2 Months',
     level: 'Beginner',
     category: 'ERP, CRM & Enterprise Tools',
     metaTitle: 'Tally ERP Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Tally ERP training institute in Hyderabad. TallyPrime, GST, accounting & payroll with hands-on practice and placement support.',
+    metaDescription: 'Tally ERP training institute in Hyderabad. TallyPrime, GST, accounting & payroll with hands-on practice and placement support.',
     keywords: 'tally training hyderabad, tally prime course hyderabad, gst tally training, tally erp certification hyderabad, tally classes dilsukhnagar',
     topics: ['TallyPrime Interface & Setup','Company Creation & Configuration','Accounting Vouchers','GST Configuration & Returns','Payroll Management','Inventory Management','Bank Reconciliation','MIS Reports','Cost Centres & Budgets','Tally Certification Prep'],
     curriculum: [
@@ -998,12 +998,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'UI / UX Design Training in Hyderabad',
     shortTitle: 'UI / UX Design',
     badge: 'FIGMA • ADOBE XD • USER RESEARCH • PROTOTYPING',
-    description: 'Master UI/UX Design with hands-on training in Figma, Adobe XD, user research, wireframing, and prototyping. Coss Cloud Solutions is a leading UI/UX Design training institute in Hyderabad with portfolio development and placement support.',
+    description: 'Master UI/UX Design with hands-on training in Figma, Adobe XD, user research, wireframing, and prototyping. Coss Cloud Solutions offers UI/UX Design training in Hyderabad, with portfolio development and placement support.',
     duration: '2-3 Months',
     level: 'Beginner to Intermediate',
     category: 'Digital & Design',
     metaTitle: 'UI UX Design Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best UI/UX Design training institute in Hyderabad. Figma, Adobe XD, wireframing & prototyping with portfolio development and placement support.',
+    metaDescription: 'UI/UX Design training institute in Hyderabad. Figma, Adobe XD, wireframing & prototyping with portfolio development and placement support.',
     keywords: 'ui ux design training hyderabad, figma training hyderabad, adobe xd course, ui design course hyderabad, ux design certification dilsukhnagar',
     topics: ['Design Thinking & UX Process','User Research & Personas','Information Architecture','Wireframing & Sketching','Prototyping with Figma','Visual Design Principles','Color Theory & Typography','Adobe XD','Usability Testing','Portfolio Development'],
     curriculum: [
@@ -1021,12 +1021,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Spoken English Training in Hyderabad',
     shortTitle: 'Spoken English',
     badge: 'SPOKEN ENGLISH • COMMUNICATION • FLUENCY',
-    description: 'Improve your spoken English with practical training in grammar, pronunciation, conversation, and presentation skills. Coss Cloud Solutions is a leading Spoken English training institute in Hyderabad with job-ready communication coaching.',
+    description: 'Improve your spoken English with practical training in grammar, pronunciation, conversation, and presentation skills. Coss Cloud Solutions offers Spoken English training in Hyderabad, with job-ready communication coaching.',
     duration: '1-2 Months',
     level: 'Beginner to Intermediate',
     category: 'Professional & Soft Skills',
     metaTitle: 'Spoken English Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Spoken English training institute in Hyderabad. Grammar, pronunciation, conversation & presentation skills with placement support.',
+    metaDescription: 'Spoken English training institute in Hyderabad. Grammar, pronunciation, conversation & presentation skills with placement support.',
     keywords: 'spoken english training hyderabad, english speaking course hyderabad, communication skills training, english fluency course dilsukhnagar',
     topics: ['English Grammar Fundamentals','Vocabulary Building','Pronunciation & Accent','Conversation Practice','Reading & Comprehension','Writing Skills','Presentation Skills','Group Discussions','Interview English','Public Speaking'],
     curriculum: [
@@ -1049,7 +1049,7 @@ export const COURSES: ReadonlyArray<Course> = [
     level: 'Beginner to Intermediate',
     category: 'Professional & Soft Skills',
     metaTitle: 'Communication Skills Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Communication Skills training in Hyderabad. Verbal communication, body language, email writing & personality development with placement support.',
+    metaDescription: 'Communication Skills training in Hyderabad. Verbal communication, body language, email writing & personality development with placement support.',
     keywords: 'communication skills training hyderabad, soft skills course hyderabad, personality development training, communication course dilsukhnagar',
     topics: ['Verbal & Non-verbal Communication','Active Listening','Body Language & Posture','Email & Business Writing','Presentation Skills','Conflict Resolution','Team Communication','Negotiation Skills','Time Management','Interview Preparation'],
     curriculum: [
@@ -1067,12 +1067,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'MS Office Training in Hyderabad',
     shortTitle: 'MS Office',
     badge: 'WORD • EXCEL • POWERPOINT • OUTLOOK',
-    description: 'Master Microsoft Office with hands-on training in Word, Excel, PowerPoint, Outlook, and Access. Coss Cloud Solutions is a leading MS Office training institute in Hyderabad with MOS certification guidance and job placement support.',
+    description: 'Master Microsoft Office with hands-on training in Word, Excel, PowerPoint, Outlook, and Access. Coss Cloud Solutions offers MS Office training in Hyderabad, with MOS certification guidance and job placement support.',
     duration: '1 Month',
     level: 'Beginner',
     category: 'Professional & Soft Skills',
     metaTitle: 'MS Office Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best MS Office training institute in Hyderabad. Word, Excel, PowerPoint & Outlook with hands-on practice and MOS certification guidance.',
+    metaDescription: 'MS Office training institute in Hyderabad. Word, Excel, PowerPoint & Outlook with hands-on practice and MOS certification guidance.',
     keywords: 'ms office training hyderabad, microsoft office course hyderabad, excel training hyderabad, mos certification training, ms office classes dilsukhnagar',
     topics: ['MS Word — Documents & Formatting','MS Excel — Formulas & Functions','Excel Charts & Pivot Tables','MS PowerPoint — Presentations','MS Outlook — Email Management','MS Access — Database Basics','Excel Advanced Functions (VLOOKUP, IF)','Data Analysis with Excel','Mail Merge','MOS Certification Prep'],
     curriculum: [
@@ -1090,12 +1090,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Google Cloud Training in Hyderabad',
     shortTitle: 'Google Cloud',
     badge: 'GCP • BIGQUERY • GKE • ACE CERTIFICATION',
-    description: 'Master Google Cloud Platform with hands-on training in Compute Engine, GKE, BigQuery, Cloud Storage, and IAM. COSS Cloud Solutions is a leading Google Cloud training institute in Hyderabad with Associate Cloud Engineer certification guidance.',
+    description: 'Master Google Cloud Platform with hands-on training in Compute Engine, GKE, BigQuery, Cloud Storage, and IAM. COSS Cloud Solutions offers Google Cloud training in Hyderabad, with Associate Cloud Engineer certification guidance.',
     duration: '2-3 Months',
     level: 'Beginner to Advanced',
     category: 'Cloud Computing',
     metaTitle: 'Google Cloud Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Google Cloud training institute in Hyderabad. GCP, BigQuery, GKE & ACE certification with hands-on labs and placement support.',
+    metaDescription: 'Google Cloud training institute in Hyderabad. GCP, BigQuery, GKE & ACE certification with hands-on labs and placement support.',
     keywords: 'google cloud training hyderabad, gcp course hyderabad, google cloud certification hyderabad, bigquery training, gke training dilsukhnagar',
     topics: ['GCP Core Infrastructure','Compute Engine & App Engine','Google Kubernetes Engine (GKE)','Cloud Storage & Databases','BigQuery & Data Analytics','Cloud IAM & Security','VPC & Networking','Cloud Functions & Serverless','Cloud Monitoring & Logging','ACE Exam Preparation'],
     curriculum: [
@@ -1113,12 +1113,12 @@ export const COURSES: ReadonlyArray<Course> = [
     title: 'Data Engineering Training in Hyderabad',
     shortTitle: 'Data Engineering',
     badge: 'SPARK • HADOOP • ETL • PIPELINE ENGINEERING',
-    description: 'Master Data Engineering with hands-on training in Apache Spark, Hadoop, ETL pipelines, Kafka, and cloud data platforms. COSS Cloud Solutions is a leading Data Engineering training institute in Hyderabad with placement support at Dilsukhnagar and Ameerpet.',
+    description: 'Master Data Engineering with hands-on training in Apache Spark, Hadoop, ETL pipelines, Kafka, and cloud data platforms. COSS Cloud Solutions offers Data Engineering training in Hyderabad, with placement support at Dilsukhnagar and Ameerpet.',
     duration: '3-4 Months',
     level: 'Intermediate to Advanced',
     category: 'Data Engineering',
     metaTitle: 'Data Engineering Training in Hyderabad | COSS Cloud Solutions',
-    metaDescription: 'Best Data Engineering training institute in Hyderabad. Apache Spark, Hadoop, ETL pipelines & Kafka with hands-on labs and placement support.',
+    metaDescription: 'Data Engineering training institute in Hyderabad. Apache Spark, Hadoop, ETL pipelines & Kafka with hands-on labs and placement support.',
     keywords: 'data engineering training hyderabad, apache spark course hyderabad, hadoop training hyderabad, etl pipeline training, data engineering certification dilsukhnagar',
     topics: [
       'Data Engineering Fundamentals',

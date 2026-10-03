@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/cloud-computing"
-        title="Best Cloud Computing Training Institute in Hyderabad"
-        description="Join the best cloud computing training in Hyderabad. AWS, Azure, Google Cloud, expert trainers, hands-on labs, placement support and certification. Enroll now!"
+        title="Cloud Computing Training Institute in Hyderabad"
+        description="Join cloud computing training in Hyderabad. AWS, Azure, Google Cloud, expert trainers, hands-on labs, placement support and certification. Enroll now!"
         category="Cloud Computing"
       />
       <CourseCategoryPage data={courseData['cloud-computing']} breadcrumbSlug="cloud-computing" dbCourses={dbCourses} />

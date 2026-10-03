@@ -29,8 +29,8 @@ export default function AboutUsPage() {
     <>
       <ResponsivePageStyles />
       <HeroBanner
-        badge="LEADING IT INSTITUTE IN HYDERABAD SINCE 2010"
-        titlePre="15+ Years of Building "
+        badge="IT TRAINING IN HYDERABAD SINCE 2010"
+        titlePre="Since 2010, Building "
         accentText="IT Careers"
         titleLine2="in Hyderabad"
         subtitle="COSS Cloud Solutions has trained 5,000+ students across Cloud, DevOps, Data Science & more — with industry-certified trainers & dedicated placement support."
@@ -53,10 +53,10 @@ export default function AboutUsPage() {
                 Who We Are
               </div>
               <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,32px)', fontWeight: 700, color: 'var(--text)', marginBottom: '16px' }}>
-                Leading IT Training Institute in Hyderabad
+                IT Training Institute in Hyderabad Since 2010
               </h2>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.85', marginBottom: '16px', fontSize: '15px' }}>
-                Coss Cloud Solutions stands among the best software training institutes in Dilsukhnagar and Ameerpet, Hyderabad. Since 2010, we have been on a mission to make quality IT education accessible to every aspiring technology professional.
+                Coss Cloud Solutions is a software training institute in Dilsukhnagar and Ameerpet, Hyderabad. Since 2010, we have been on a mission to make quality IT education accessible to every aspiring technology professional.
               </p>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.85', marginBottom: '20px', fontSize: '15px' }}>
                 Our programs include Artificial Intelligence, Data Science, Cloud Computing, DevOps, Cyber Security, Full Stack Development, SAP, Digital Marketing, and 40+ more courses — all designed to make you job-ready from day one.
@@ -109,7 +109,7 @@ export default function AboutUsPage() {
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Journey</div>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>15+ Years of Excellence</h2>
+            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Training IT Professionals Since 2010</h2>
           </div>
           <div style={{ position: 'relative', paddingLeft: '30px' }}>
             <div style={{ position: 'absolute', left: '0', top: '0', bottom: '0', width: '2px', background: 'var(--border)' }} />

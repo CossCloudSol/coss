@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/data-engineering"
-        title="Best Data Engineering Training Institute in Hyderabad"
-        description="Join the best data engineering training in Hyderabad. Azure Data Engineer, Spark, Hadoop, ETL, expert trainers, placement support and certification. Enroll now!"
+        title="Data Engineering Training Institute in Hyderabad"
+        description="Join data engineering training in Hyderabad. Azure Data Engineer, Spark, Hadoop, ETL, expert trainers, placement support and certification. Enroll now!"
         category="Data Engineering"
       />
       <CourseCategoryPage data={courseData['data-engineering']} breadcrumbSlug="data-engineering" dbCourses={dbCourses} />
