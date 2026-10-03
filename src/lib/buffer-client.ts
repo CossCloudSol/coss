@@ -44,10 +44,33 @@ export function bufferChannelId(service: BufferService): string | null {
 
 export type BufferError = {
   message: string;
+  /** Refused locally: not the production deployment (see realSendsAllowed). */
+  blocked?: boolean;
   authFailure?: boolean;
   /** LimitReachedError — the channel's scheduled-post queue is full (free plan: 10/channel). */
   limitReached?: boolean;
 };
+
+/**
+ * Buffer writes (create/delete posts) only from the production deployment.
+ * A local `next start` or script can point at the production database, where
+ * approved posts are waiting: one cron call or "Send now" from a laptop (or a
+ * Vercel preview) would publish them for real. Refused unless VERCEL_ENV is
+ * "production", or ALLOW_LOCAL_SENDS=1 is set on purpose. Reads (channels)
+ * are always allowed.
+ */
+export function realSendsAllowed(env: Record<string, string | undefined> = process.env): { ok: true } | { ok: false; reason: string } {
+  if (env.VERCEL_ENV === 'production' || env.ALLOW_LOCAL_SENDS === '1') return { ok: true };
+  return {
+    ok: false,
+    reason: `Buffer sends are disabled outside production (VERCEL_ENV=${env.VERCEL_ENV || 'unset'}). Nothing was sent. Set ALLOW_LOCAL_SENDS=1 only to send from here on purpose.`,
+  };
+}
+
+function blockedResult<T>(): BufferResult<T> | null {
+  const guard = realSendsAllowed();
+  return guard.ok ? null : { ok: false, error: { message: guard.reason, blocked: true }, retryable: false };
+}
 
 export type BufferResult<T> =
   | { ok: true; data: T }
@@ -233,6 +256,9 @@ type CreatePostPayload =
 export async function createPost(
   input: CreatePostInput
 ): Promise<BufferResult<CreatePostResult>> {
+  const blocked = blockedResult<CreatePostResult>();
+  if (blocked) return blocked;
+
   const { text, channelId, dueAt, imageUrl, imageAltText, linkUrl, service = 'linkedin', saveToDraft } = input;
 
   // Media (assets) and a link preview attachment are mutually exclusive.
@@ -325,6 +351,9 @@ type DeletePostPayload =
 
 /** Deletes a scheduled post from Buffer. */
 export async function deletePost(id: string): Promise<BufferResult<{ id: string }>> {
+  const blocked = blockedResult<{ id: string }>();
+  if (blocked) return blocked;
+
   const query = `
     mutation DeletePost($input: DeletePostInput!) {
       deletePost(input: $input) {

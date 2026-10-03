@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { realSendsAllowed } from '@/lib/buffer-client';
 import { sendSocialPost } from '@/lib/social-post-send';
 import { formatIst } from '@/lib/social-post-state';
 
@@ -21,6 +22,9 @@ export async function POST(req: NextRequest, { params }: Ctx): Promise<Response>
   const session = await getSession(req, probe);
   if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
+  const guard = realSendsAllowed();
+  if (!guard.ok) return NextResponse.json({ ok: false, blocked: true, error: guard.reason, message: guard.reason }, { status: 503 });
+
   const post = await prisma.socialPost.findUnique({ where: { id: params.id } });
   if (!post) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (post.status !== 'queued') {
@@ -29,6 +33,9 @@ export async function POST(req: NextRequest, { params }: Ctx): Promise<Response>
 
   try {
     const outcome = await sendSocialPost(post);
+    if (outcome.status === 'blocked') {
+      return NextResponse.json({ ok: false, blocked: true, error: outcome.lastError, message: outcome.lastError }, { status: 503 });
+    }
     if (outcome.status === 'skipped') {
       return NextResponse.json({ error: 'This post is already being sent (by the cron or another admin). Refresh in a minute.' }, { status: 409 });
     }
