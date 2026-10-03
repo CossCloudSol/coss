@@ -1,18 +1,33 @@
-/**
- * Live Google rating for the Dilsukhnagar listing.
- *
- * Returns null until the Places API integration (queue item Q5) is built and
- * GOOGLE_PLACES_API_KEY / GOOGLE_PLACE_ID_DILSUKHNAGAR are configured. Every
- * caller must hide its rating UI on null. Never hard-code a rating here or
- * anywhere else: a rating may only come live from Google.
- */
-export interface GoogleRating {
-  /** Average rating, e.g. 4.7. */
-  rating: number;
-  /** Number of Google reviews behind the average. */
-  count: number;
-}
+import 'server-only';
+import { unstable_cache } from 'next/cache';
+import { isDynamicServerError } from 'next/dist/client/components/hooks-server-context';
+import { isDynamicUsageError } from 'next/dist/export/helpers/is-dynamic-usage-error';
+import { dedupeInFlight, fetchPlaceRating, isNextInternalError, ratingGetter, type GoogleRating } from '@/lib/google-places';
 
-export async function getGoogleRating(): Promise<GoogleRating | null> {
-  return null;
-}
+export type { GoogleRating };
+
+/**
+ * Live Google rating for the Dilsukhnagar listing (Places API (New),
+ * GOOGLE_PLACES_API_KEY + GOOGLE_PLACE_ID_DILSUKHNAGAR, server-only).
+ *
+ * Only successes are cached (revalidate 86400 s, tag 'google-rating'): the
+ * cached function THROWS on a missing env var, non-OK response, network error,
+ * timeout (5 s) or bad data, and unstable_cache doesn't store a rejected call,
+ * so a failure is retried on the next render instead of being kept for 24 h.
+ * Outside the cache an ordinary failure becomes null (rating hidden; one
+ * console.warn line per process, no key, no URL). Next.js internals
+ * (DYNAMIC_SERVER_USAGE etc.) are rethrown, never swallowed.
+ *
+ * Every caller hides its rating UI on null, and shows it only with "on
+ * Google" and a link to mapsUri (Google's attribution rule). Never
+ * hard-code a rating; no Review/AggregateRating schema anywhere.
+ */
+const loadCached = unstable_cache(() => fetchPlaceRating(process.env), ['google-rating-dilsukhnagar'], {
+  revalidate: 86_400,
+  tags: ['google-rating'],
+});
+
+const isNextInternal = (err: unknown) => isDynamicServerError(err) || isDynamicUsageError(err) || isNextInternalError(err);
+
+// Concurrent renders in one worker process share one request.
+export const getGoogleRating: () => Promise<GoogleRating | null> = ratingGetter(dedupeInFlight(loadCached), { isInternal: isNextInternal });
