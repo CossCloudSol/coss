@@ -211,3 +211,18 @@ test('reworded numbers are not the approved claims: employees / professionals', 
   // A form's team-size options are not a claim (no verb).
   assert.deepEqual(findClaimMatches('Team Size 1–5 employees 6–15 employees 16–30 employees 31–50 employees 50+ employees'), []);
 });
+
+test('disclaimers and section numbers are not claims; real ones still are', async () => {
+  const { findClaimMatches } = await import('../../src/lib/social-captions.ts');
+  for (const ok of [
+    'Submitting a request does not automatically guarantee approval.',
+    'Certificates are training completion certificates and do not represent employment guarantees.',
+    '1. Student Cancellation Before Course Commencement',
+    '2. Students must attend 75% … ',
+  ]) {
+    assert.deepEqual(findClaimMatches(ok).filter((m) => !/%/.test(m.phrase)), [], ok);
+  }
+  for (const bad of ['Not only training, guaranteed placement.', 'We do guarantee placement', '1500 students placed', '1,500+ students']) {
+    assert.ok(findClaimMatches(bad).length > 0, bad);
+  }
+});
