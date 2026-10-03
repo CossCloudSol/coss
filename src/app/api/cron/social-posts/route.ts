@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { findDueSocialPosts } from '@/lib/social-post-queries';
+import { realSendsAllowed } from '@/lib/buffer-client';
 import { sendSocialPost } from '@/lib/social-post-send';
 import { skippedNote } from '@/lib/social-post-state';
 
@@ -20,6 +21,13 @@ export async function GET(req: NextRequest): Promise<Response> {
   const authHeader = req.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Outside production: no Buffer calls and no DB writes (not even skip notes).
+  const guard = realSendsAllowed();
+  if (!guard.ok) {
+    console.warn(`[cron/social-posts] ${guard.reason}`);
+    return NextResponse.json({ ok: false, blocked: true, error: guard.reason }, { status: 503 });
   }
 
   let processed = 0;
@@ -62,6 +70,10 @@ export async function GET(req: NextRequest): Promise<Response> {
         continue;
       }
 
+      if (outcome.status === 'blocked') {
+        // Checked above; kept so a blocked send can never be counted as anything else.
+        return NextResponse.json({ ok: false, blocked: true, error: outcome.lastError }, { status: 503 });
+      }
       if (outcome.status === 'skipped') {
         // Claimed by a concurrent "Send now": nothing to record here.
         skipped++;

@@ -1,6 +1,6 @@
 import type { SocialPost } from '@prisma/client';
 import { prisma } from '@/lib/db';
-import { bufferChannelId, createPost } from '@/lib/buffer-client';
+import { bufferChannelId, createPost, realSendsAllowed } from '@/lib/buffer-client';
 import { channelPayload, checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
 import { getSocialPostCourse } from '@/lib/social-post-course';
 import { instagramJpegUrl } from '@/lib/social-post-image';
@@ -11,8 +11,11 @@ export const MAX_ATTEMPTS = 5;
 const SEND_LEAD_MS = 5 * 60 * 1000;
 
 export type SendOutcome = {
-  /** 'skipped': someone else (cron or another admin) is already sending it, or it's no longer queued. */
-  status: 'sent' | 'queued' | 'failed' | 'skipped';
+  /**
+   * 'skipped': someone else (cron or another admin) is already sending it, or it's no longer queued.
+   * 'blocked': not the production deployment; nothing was sent and the post wasn't touched.
+   */
+  status: 'sent' | 'queued' | 'failed' | 'skipped' | 'blocked';
   lastError: string | null;
   /** Buffer's per-channel queue cap was hit: the cron stops the run. */
   hitLimit: boolean;
@@ -31,6 +34,11 @@ export type SendOutcome = {
  * channel that already succeeded on an earlier attempt is never re-sent.
  */
 export async function sendSocialPost(post: SocialPost): Promise<SendOutcome> {
+  // Before anything else, including the claim: a local run must not even
+  // bump attemptCount on a production row.
+  const guard = realSendsAllowed();
+  if (!guard.ok) return { status: 'blocked', lastError: guard.reason, hitLimit: false, bufferPostIds: post.bufferPostIds, dueAt: null };
+
   const claim = await prisma.socialPost.updateMany({
     where: { id: post.id, status: 'queued', attemptCount: post.attemptCount },
     data: { attemptCount: { increment: 1 } },
