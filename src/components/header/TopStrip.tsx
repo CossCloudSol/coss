@@ -38,11 +38,12 @@ export default function TopStrip({ data }: { data: TopStripData }): JSX.Element 
       Live Online
     </span>
   );
-  const rating = data.rating ? (
-    <span className="flex items-center gap-1.5">
+  // Google's attribution rule: "on Google" + a link to the listing, or nothing.
+  const rating = data.rating?.mapsUri ? (
+    <a href={data.rating.mapsUri} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline" data-google-rating="">
       <Star className={`${ICON} fill-[#f3a57a] text-[#f3a57a]`} aria-hidden="true" />
-      {data.rating.rating.toFixed(1)}/5 on Google
-    </span>
+      {data.rating.rating.toFixed(1)}/5 on Google ({data.rating.count.toLocaleString('en-IN')} {data.rating.count === 1 ? 'review' : 'reviews'})
+    </a>
   ) : null;
   const students = (
     <span className="flex items-center gap-1.5">

@@ -2,13 +2,17 @@ import type { Metadata } from 'next';
 import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { GBP_SAME_AS } from '@/lib/get-branch-settings';
+import { getGoogleRating } from '@/lib/google-rating';
+import GoogleRatingBadge from '@/components/GoogleRatingBadge';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('student-reviews');
 }
 
-export default function StudentReviewsPage() {
+export default async function StudentReviewsPage() {
+  // Live from Google (Places API, cached 24 h); null hides the line.
+  const rating = await getGoogleRating();
   return (
     <>
       <ResponsivePageStyles />
@@ -31,6 +35,11 @@ export default function StudentReviewsPage() {
         <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.8', maxWidth: '620px', margin: '0 auto 32px' }}>
           Every review for Coss Cloud Solutions is posted by students directly on Google, tied to their own Google account — we don&apos;t write, edit, or select which ones appear. Read them on either centre&apos;s listing below.
         </p>
+        <GoogleRatingBadge
+          rating={rating}
+          style={{ display: 'inline-block', marginBottom: '24px', color: 'var(--text)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '16px', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+        />
+        {rating && <p style={{ margin: '-18px 0 24px', color: 'var(--text-muted)', fontSize: '12px' }}>Dilsukhnagar centre, live from Google</p>}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center', marginBottom: '8px' }}>
           <a href={GBP_SAME_AS.dilsukhnagar} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
             📍 Dilsukhnagar Centre Reviews
