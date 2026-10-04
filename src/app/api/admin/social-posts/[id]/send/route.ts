@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { realSendsAllowed } from '@/lib/buffer-client';
 import { sendSocialPost } from '@/lib/social-post-send';
 import { formatIst } from '@/lib/social-post-state';
@@ -18,9 +18,8 @@ type Ctx = { params: { id: string } };
  * (sendSocialPost); Buffer publishes it about 5 minutes later.
  */
 export async function POST(req: NextRequest, { params }: Ctx): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const admin = await requireAdmin(req);
+  if (admin instanceof Response) return admin;
 
   const guard = realSendsAllowed();
   if (!guard.ok) return NextResponse.json({ ok: false, blocked: true, error: guard.reason, message: guard.reason }, { status: 503 });

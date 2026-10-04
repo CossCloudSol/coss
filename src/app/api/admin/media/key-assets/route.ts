@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
 import { uploadAsset } from '@/lib/cloudinary-admin'
 
@@ -13,11 +13,8 @@ const ALLOWED_SLOTS = [
 type Slot = typeof ALLOWED_SLOTS[number]
 
 export async function GET(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const settings = await prisma.siteSettings.findFirst({
     select: {
@@ -31,11 +28,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const form = await req.formData()
   const slot = form.get('slot') as Slot

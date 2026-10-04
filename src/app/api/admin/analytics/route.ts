@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -80,11 +80,8 @@ function isoDateKey(d: Date): string {
 /* -------------------------------------------------------------------------- */
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const now = new Date();
   const monthStart = startOfMonth(now);

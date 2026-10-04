@@ -17,7 +17,7 @@ import { revalidateTag } from 'next/cache';
 import { ZodError } from 'zod';
 
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import {
   announcementBarSchema,
   announcementBarPatchSchema,
@@ -30,16 +30,6 @@ import {
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/* helper: authenticate or return 403 */
-async function requireAdmin(req: NextRequest): Promise<true | Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
-  return true;
-}
-
 /* helper: parse JSON body or return 400 */
 async function parseBody(req: NextRequest): Promise<[unknown, null] | [null, Response]> {
   try {
@@ -51,8 +41,8 @@ async function parseBody(req: NextRequest): Promise<[unknown, null] | [null, Res
 
 // GET /api/admin/announcement-bar
 export async function GET(req: NextRequest): Promise<Response> {
-  const auth = await requireAdmin(req);
-  if (auth !== true) return auth;
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     let row = await prisma.announcementBar.findFirst();
@@ -78,8 +68,8 @@ export async function GET(req: NextRequest): Promise<Response> {
 // PUT /api/admin/announcement-bar
 // Full replacement upsert -- all 6 spec fields required.
 export async function PUT(req: NextRequest): Promise<Response> {
-  const auth = await requireAdmin(req);
-  if (auth !== true) return auth;
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const [raw, parseErr] = await parseBody(req);
   if (parseErr) return parseErr;
@@ -112,8 +102,8 @@ export async function PUT(req: NextRequest): Promise<Response> {
 // PATCH /api/admin/announcement-bar
 // Partial update -- any subset of spec fields accepted.
 export async function PATCH(req: NextRequest): Promise<Response> {
-  const auth = await requireAdmin(req);
-  if (auth !== true) return auth;
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const [raw, parseErr] = await parseBody(req);
   if (parseErr) return parseErr;

@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { randomBytes } from 'crypto'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { listAssets, uploadAsset } from '@/lib/cloudinary-admin'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const { searchParams } = req.nextUrl
   const cursor        = searchParams.get('cursor') ?? undefined
@@ -85,14 +82,8 @@ function sanitizeBaseName(filename: string): string {
 }
 
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    console.warn('[media/assets POST] rejected — no admin session', {
-      path: req.nextUrl.pathname,
-    })
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   let form: FormData
   try {

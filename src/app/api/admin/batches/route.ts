@@ -1,16 +1,15 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { revalidatePaths, getBatchRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const { searchParams } = new URL(req.url);
   const status   = (searchParams.get('status')   ?? '').trim();
@@ -38,9 +37,8 @@ export async function GET(req: NextRequest): Promise<Response> {
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: Record<string, unknown>;
   try {

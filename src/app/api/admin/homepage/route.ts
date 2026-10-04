@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/db'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -26,11 +26,8 @@ export async function GET(req: NextRequest): Promise<Response> {
 }
 
 export async function PUT(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   try {
     const body = await req.json() as Record<string, unknown>

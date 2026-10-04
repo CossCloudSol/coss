@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
@@ -8,9 +8,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session?.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const { slug: rawSlug } = await params
   const slug = decodeURIComponent(rawSlug)

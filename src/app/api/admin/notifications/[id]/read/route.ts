@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { markAsRead } from '@/lib/notifications';
 
 export const runtime = 'nodejs';
@@ -9,11 +9,8 @@ interface RouteContext {
 }
 
 export async function POST(req: NextRequest, { params }: RouteContext) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   await markAsRead(params.id);
   return NextResponse.json({ success: true });

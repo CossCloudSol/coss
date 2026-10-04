@@ -86,7 +86,7 @@ export default function AdminShell({ children, permissions, role }: AdminShellPr
       </div>
 
       {/* Mobile bottom nav — outside scroll container, fixed to viewport */}
-      <BottomNav />
+      <BottomNav permissions={permissions} role={role} />
     </div>
   );
 }

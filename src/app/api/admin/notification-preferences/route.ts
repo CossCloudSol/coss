@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { prisma } from '@/lib/db';
 import { getVisibleEventTypesForRole } from '@/lib/notifications';
 
@@ -7,10 +7,9 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 async function resolveSession(req: NextRequest) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin || !session.userId) return null;
-  return session;
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response || !guard.session.userId) return null;
+  return guard.session;
 }
 
 // GET /api/admin/notification-preferences

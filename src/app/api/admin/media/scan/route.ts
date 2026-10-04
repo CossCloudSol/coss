@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
 import { runImageScan, runQuickScan } from '@/lib/media-scanner'
 
@@ -7,11 +7,8 @@ export const dynamic = 'force-dynamic'
 export const maxDuration = 60 // seconds — Vercel Hobby plan max
 
 export async function GET(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const latest = await prisma.mediaScanResult.findFirst({
     orderBy: { scannedAt: 'desc' },
@@ -21,11 +18,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   try {
     const result = await runQuickScan()

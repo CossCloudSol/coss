@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { getAdminStats } from '@/lib/admin-stats';
 
 export type { AdminStatsResponse } from '@/lib/admin-stats';
@@ -10,13 +10,9 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest): Promise<Response> {
-  // Session check — middleware guards `/admin/*` but `/api/admin/*` is not
-  // covered by that matcher, so we validate here too.
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  // Second layer behind the middleware: a fresh user check plus the area permission.
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     return NextResponse.json(await getAdminStats());

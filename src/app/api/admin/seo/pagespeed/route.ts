@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -60,11 +60,8 @@ function extract(result: PsiResult): SpeedMetrics {
 }
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const apiKey = process.env.GOOGLE_PAGESPEED_API_KEY;
   if (!apiKey || apiKey.trim() === '') {

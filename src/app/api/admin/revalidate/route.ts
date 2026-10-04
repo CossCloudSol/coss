@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { revalidatePaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
@@ -9,14 +9,13 @@ export const dynamic = 'force-dynamic'
 // cleared by calling revalidatePath() directly. Not wired into any deploy
 // hook — trigger by hand after a deploy that changed content on these paths.
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  const caller = session?.email ?? session?.name ?? (session?.isAdmin ? 'superadmin' : null)
-
-  if (!session?.isAdmin) {
-    console.warn('[revalidate] Unauthorized attempt', { paths: null, caller: null })
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) {
+    console.warn('[revalidate] Refused', { status: guard.status })
+    return guard
   }
+  const session = guard.session
+  const caller = session.email ?? session.name ?? 'superadmin'
 
   const body = await req.json().catch(() => null)
   const rawPaths = body?.paths ?? (body?.path ? [body.path] : null)

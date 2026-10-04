@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { createNotification } from '@/lib/notifications';
 import { checkPublishRedirectCollision, type RedirectCollision } from '@/lib/redirect-collision';
 import { revalidatePaths, getCourseRevalidationPaths } from '@/lib/revalidate';
@@ -11,11 +11,8 @@ export const dynamic = 'force-dynamic';
 type Ctx = { params: { id: string } };
 
 export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: Record<string, unknown>;
   try {

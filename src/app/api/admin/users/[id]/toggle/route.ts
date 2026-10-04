@@ -1,19 +1,14 @@
 import { NextResponse } from 'next/server';
-import { withAdminAuth, getSession } from '@/lib/session';
+import { withAdminAuth } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { prisma as db } from '@/lib/db';
 
 type Ctx = { params: { id: string } };
 
-function isSuperAdmin(session: { role?: string }): boolean {
-  return !session.role || session.role === 'SUPER_ADMIN';
-}
-
 export const PATCH = withAdminAuth<{ id: string }>(async (req, ctx) => {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!isSuperAdmin(session)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
+  const session = guard.session;
 
   const { id } = (ctx as Ctx).params;
 

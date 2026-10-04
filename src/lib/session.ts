@@ -19,6 +19,9 @@ export interface SessionData {
 
 export const SESSION_COOKIE_NAME = 'coss_admin_session';
 
+/** Sessions end 12 hours after sign-in (iron-session sets the cookie maxAge from this). */
+export const SESSION_TTL_SECONDS = 12 * 60 * 60;
+
 /**
  * Session options are consumed by iron-session. We read the secret from env at
  * every call (rather than throwing at module load) so that `next build` still
@@ -27,6 +30,7 @@ export const SESSION_COOKIE_NAME = 'coss_admin_session';
 export const sessionOptions: SessionOptions = {
   cookieName: SESSION_COOKIE_NAME,
   password: process.env.ADMIN_SESSION_SECRET ?? '',
+  ttl: SESSION_TTL_SECONDS,
   cookieOptions: {
     httpOnly: true,
     sameSite: 'lax',

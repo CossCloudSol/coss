@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 
 // Prisma uses Node built-ins — cannot run on Edge.
 export const runtime = 'nodejs';
@@ -28,11 +28,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: RouteContext,
 ): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: unknown;
   try {
@@ -100,11 +97,8 @@ export async function DELETE(
   req: NextRequest,
   { params }: RouteContext,
 ): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     await prisma.corporateLead.delete({ where: { id: params.id } });

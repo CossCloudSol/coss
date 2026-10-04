@@ -36,9 +36,10 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { AdminRole, Permission } from '@/lib/permissions';
+import { requiredAccess, isAllowed } from '@/lib/admin-access';
 
-// permissionKey and superAdminOnly must mirror ROUTE_PERMISSIONS in
-// src/middleware.ts: a null entry there is superAdminOnly here.
+// permissionKey and superAdminOnly mirror ROUTE_PERMISSIONS in src/lib/admin-access.ts
+// (a null entry there is superAdminOnly here); canSee() also checks that table.
 type NavItem = {
   href: string;
   label: string;
@@ -135,6 +136,7 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
   function canSee(item: NavItem): boolean {
     if (isSuperAdmin) return true;
     if (item.superAdminOnly) return false;
+    if (!isAllowed(requiredAccess(item.href), { role, permissions })) return false;
     if (item.permissionKey === null) return true;
     return permissions.includes(item.permissionKey);
   }
@@ -222,13 +224,15 @@ export default function Sidebar({ onNavigate, permissions, role }: SidebarProps)
 
       {/* Logout */}
       <div className="border-t border-[#e2e8f0] dark:border-[#21262d] p-3">
-        <a
-          href="/api/admin/auth"
-          className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-600 dark:text-gray-400 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white"
-        >
-          <LogOut className="h-4 w-4 shrink-0 text-gray-400 dark:text-gray-500" aria-hidden="true" />
-          <span>Logout</span>
-        </a>
+        <form method="post" action="/api/admin/auth/logout">
+          <button
+            type="submit"
+            className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-gray-600 dark:text-gray-400 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white"
+          >
+            <LogOut className="h-4 w-4 shrink-0 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+            <span>Logout</span>
+          </button>
+        </form>
       </div>
     </aside>
   );
