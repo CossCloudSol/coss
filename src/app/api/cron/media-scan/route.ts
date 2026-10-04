@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { runImageScan } from '@/lib/media-scanner'
+import { isAuthorizedCron } from '@/lib/cron-auth'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization')
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isAuthorizedCron(req.headers.get('authorization'))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

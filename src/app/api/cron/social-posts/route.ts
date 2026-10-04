@@ -4,6 +4,7 @@ import { findDueSocialPosts } from '@/lib/social-post-queries';
 import { realSendsAllowed } from '@/lib/buffer-client';
 import { sendSocialPost } from '@/lib/social-post-send';
 import { skippedNote } from '@/lib/social-post-state';
+import { isAuthorizedCron } from '@/lib/cron-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -18,8 +19,7 @@ const MAX_POSTS_PER_RUN = 10;
  * also "Send now" from Admin → Social Posts (same sendSocialPost path).
  */
 export async function GET(req: NextRequest): Promise<Response> {
-  const authHeader = req.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!isAuthorizedCron(req.headers.get('authorization'))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

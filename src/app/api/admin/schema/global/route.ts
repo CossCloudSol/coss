@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { pickFields, SITE_SETTINGS_FIELDS } from '@/lib/pick-fields'
+import type { Prisma } from '@prisma/client'
 import { buildGlobalSchemas } from '@/lib/global-schemas'
 
 export const dynamic = 'force-dynamic'
@@ -27,7 +29,9 @@ export async function PATCH(req: NextRequest) {
   const guard = await requireAdmin(req)
   if (guard instanceof Response) return guard
 
-  const body = await req.json()
+  const picked = pickFields(await req.json().catch(() => null), SITE_SETTINGS_FIELDS)
+  if ('error' in picked) return NextResponse.json({ error: picked.error }, { status: 400 })
+  const body = picked.data as Record<string, string | null | undefined>
   const existing = await prisma.siteSettings.findFirst()
 
   const overrideFields = [
@@ -47,12 +51,12 @@ export async function PATCH(req: NextRequest) {
   if (existing) {
     const updated = await prisma.siteSettings.update({
       where: { id: existing.id },
-      data: body,
+      data: body as Prisma.SiteSettingsUpdateInput,
     })
     revalidateTag('site-settings')
     return NextResponse.json(updated)
   }
-  const created = await prisma.siteSettings.create({ data: body })
+  const created = await prisma.siteSettings.create({ data: body as Prisma.SiteSettingsCreateInput })
   revalidateTag('site-settings')
   return NextResponse.json(created)
 }
