@@ -132,6 +132,8 @@ const APPROVED_CLAIMS = [
   // A learner's experience, not ours: "with 2–3 years of experience you can…".
   /\b(?:with|have|having|need|needs|requires?|required)\s+[1-9]\d*(?:\s*[–-]\s*\d+)?\+?\s*years?\s+of\s+experience\b/gi,
   /\b(?:max(?:imum)?|up\s+to|only)\s+\d+\s+students\s+(?:per|in\s+(?:a|each))\s+batch\b/gi,
+  // Data-security disclaimer (privacy policy): "No method of transmitting or storing data can be guaranteed …".
+  /\bno\s+method\s+of\s+[^.]{0,80}?\bcan\s+be\s+guaranteed\b/gi,
   /\b(?:is|are)\s+not\s+guaranteed\b|\bno\s+(?:job\s+|placement\s+)?guarantees?\b|\b(?:do|does|can|will)(?:\s+not|n['’]t)\s+(?:\w+\s+)?guarantee\b|\bnot\s+(?!only\b|just\b)(?:\w+\s+){0,3}?guarantees?\b|\bcannot\s+guarantee\b|\bwithout\s+(?:any\s+)?guarantees?\b/gi,
 ];
 
@@ -150,14 +152,20 @@ const BANNED: Array<[RegExp, string]> = [
   [/\b[1-9](?:[\d,.]*\d)?\s*(\+|k\b)?\s*(employees|professionals)\s+(trained|upskilled|taught|certified|placed|skilled)\b/i, 'numbers other than "5,000+ students trained" and "50+ hiring partners"'],
   // The institute's own experience: "our 15+ years of experience".
   [/\bour\s+[1-9]\d*\+?\s*(?:\w+\s+)?years?\b/i, 'no years-of-experience claims (only "since 2010")'],
-  // "Best IT training institute", "a leading IT training institute", "Best SAP FICO Training".
-  [/\b(best|leading|premier|largest|top|no\.?\s*1)\s+(?!practices?\b)(?:[\w&-]+\s+){0,3}?(institutes?|academy|academies|training|courses?|classes|coaching)\b/i, 'no rankings ("best/leading/top … institute/training")'],
+  // "Best IT training institute", "a leading IT training institute", "Best SAP FICO Training",
+  // "Best SQL/MySQL/PostgreSQL Training", "the best programming and full stack development training".
+  [/\b(best|leading|premier|largest|top|no\.?\s*1)\s+(?!practices?\b)(?:[\w&/.+-]+\s+){0,5}?(institutes?|academy|academies|training|courses?|classes|coaching)\b/i, 'no rankings ("best/leading/top … institute/training")'],
   [/\bhigh[-\s]?pay(ing|ed)?\b|\bhigh[-\s]salar(y|ies|ied)\b/i, 'no salary claims ("high-paying")'],
   [/\bland(s|ing)?\s+(?:[\w-]+\s+){0,4}?(jobs?|roles?|positions?|offers?)\b/i, 'no job-outcome claims ("land … jobs")'],
   [/\bget(s|ting)?\s+placed\b/i, 'no job-outcome claims ("get placed")'],
   [/\bplacement\s+(rates?|records?|percentages?|ratios?|statistics|stats)\b/i, 'no placement rates or records'],
   [/\bpass(ing)?\s+rates?\b/i, 'no pass rates'],
-  [/\btop\s+(?:[\w-]+\s+){0,2}?(companies|mncs?|firms|recruiters|employers|brands)\b/i, 'no "top companies" claims'],
+  [/\b(top|leading)\s+(?:[\w-]+\s+){0,2}?(companies|mncs?|firms|recruiters|employers|brands)\b/i, 'no "top/leading companies" claims'],
+  // About the institute only: "Hyderabad's most trusted IT training institute". "One of the most
+  // trusted accounting software" describes the software, so the rule needs an institute/training noun.
+  [/\bmost\s+trusted\s+(?:[\w&/.+-]+\s+){0,4}?(institutes?|institutions?|academy|academies|training|courses?|classes|coaching|centres?|centers?|providers?|names?|brands?)\b/i, 'no rankings ("most trusted … institute")'],
+  // Job outcomes: "for top IT jobs", "secure top cybersecurity roles". Not careers: "the top IT career move" is advice.
+  [/\btop\s+(?:[\w/.+-]+\s+){0,2}?(jobs?|roles?|positions?)\b/i, 'no job-outcome claims ("top jobs")'],
 ];
 
 // Every rule as a global regex: every occurrence is reported, not just the first.

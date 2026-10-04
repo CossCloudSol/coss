@@ -128,8 +128,8 @@ export default function EnrollPage() {
                     <line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
                   </svg>
                   <div>
-                    <div className="text-white font-bold text-sm">15+ Years</div>
-                    <div className="text-slate-500 text-xs">of Excellence</div>
+                    <div className="text-white font-bold text-sm">Since 2010</div>
+                    <div className="text-slate-500 text-xs">Training in Hyderabad</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

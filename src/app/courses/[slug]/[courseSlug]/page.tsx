@@ -23,6 +23,7 @@ import { safeJsonLd } from '@/lib/safe-json-ld';
 import PromoBanner from '@/components/PromoBanner';
 import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners';
 import { bannerForSlot } from '@/lib/promo-banner-slots';
+import { publicBadge } from '@/lib/course-badge';
 
 export const revalidate = 86400;
 
@@ -131,9 +132,9 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
             <span style={{ color: 'rgba(255,255,255,0.4)', margin: '0 8px' }}>›</span>
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>{course.title}</span>
           </div>
-          {course.badge && (
+          {publicBadge(course.badge) && (
             <div style={{ display: 'inline-block', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 12px', borderRadius: '12px', marginBottom: '12px', fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {course.badge}
+              {publicBadge(course.badge)}
             </div>
           )}
           <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>

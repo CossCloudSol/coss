@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSession } from '@/lib/session'
+import { CONTENT_RULES } from '@/lib/ai-content-rules'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -11,15 +12,7 @@ const CATEGORY_PROMPT = `You write short, specific category descriptions for a H
 No generic phrases. Each description must mention: what roles it leads to.
 Under 120 words. Professional but not corporate.
 
-FACTUAL CLAIMS (non-negotiable):
-Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
-- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
-- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
-- Placement rates or percentages (no "100% placement", no "X% placed")
-- Ratings, review counts, or testimonial counts
-- Hiring-partner counts (no "50+ hiring partners")
-- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
-Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.
+${CONTENT_RULES}
 
 Return ONLY valid JSON: {"description":"...","seoTitle":"...","seoDesc":"...","suggestedSlug":"..."}`
 

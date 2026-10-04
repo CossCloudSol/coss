@@ -28,6 +28,7 @@ import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
 import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 import { safeJsonLd } from '@/lib/safe-json-ld';
+import { publicBadge } from '@/lib/course-badge';
 
 export const revalidate = 86400;
 
@@ -87,8 +88,6 @@ const BADGE_MAP: Record<string, string> = {
   'trending': 'Trending',
   'new': 'New',
   'newly added': 'New',
-  'bestseller': 'Bestseller',
-  'best seller': 'Bestseller',
   'updated 2026': 'Updated',
   'hot': 'Trending',
 }
@@ -100,8 +99,6 @@ const BADGE_VARIANT_MAP: Record<string, CourseCardProps['badgeVariant']> = {
   'trending': 'teal',
   'new': 'green',
   'newly added': 'green',
-  'bestseller': 'amber',
-  'best seller': 'amber',
   'updated 2026': 'amber',
   'hot': 'teal',
 }
@@ -252,9 +249,9 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
             <span style={{ color: 'rgba(255,255,255,0.4)', margin: '0 8px' }}>›</span>
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>{course.category}</span>
           </div>
-          {course.badge && (
+          {publicBadge(course.badge) && (
             <div style={{ display: 'inline-block', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 12px', borderRadius: '12px', marginBottom: '12px', fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {course.badge}
+              {publicBadge(course.badge)}
             </div>
           )}
           <h1 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>

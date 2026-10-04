@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/digital-design"
-        title="Best Digital Marketing and Design Training Institute in Hyderabad"
-        description="Join the best digital marketing and design training in Hyderabad. SEO, UI/UX, graphic design, expert trainers, placement support and certification. Enroll now!"
+        title="Digital Marketing and Design Training Institute in Hyderabad"
+        description="Join digital marketing and design training in Hyderabad. SEO, UI/UX, graphic design, expert trainers, placement support and certification. Enroll now!"
         category="Digital & Design"
       />
       <CourseCategoryPage data={courseData['digital-design']} breadcrumbSlug="digital-design" dbCourses={dbCourses} />

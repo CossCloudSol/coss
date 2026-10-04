@@ -6,12 +6,10 @@ import { memoDuringBuild } from '@/lib/build-memo';
 import { courseBannerPath } from '@/lib/course-banner-sign';
 import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 import { COURSE_CATALOG_TAG, parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
+import { publicBadge } from '@/lib/course-badge';
 
 // next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
 const OPTIMISABLE_IMAGE = /^https:\/\/res\.cloudinary\.com\/dfditihuw\//;
-
-/** Admin badges that read as placement or ranking claims are not shown. */
-export const DISALLOWED_BADGE = /placement|guarant|bestseller|rank|#\s*1\b|\bno\.?\s*1\b/i;
 
 function todayMidnightIST(): Date {
   const istOffset = 5.5 * 60 * 60 * 1000;
@@ -97,7 +95,7 @@ async function loadSearchIndex(): Promise<SearchIndex> {
       thumbnail,
       // Admin thumbnail first; otherwise the generated, category-branded banner.
       banner: thumbnail ? null : await courseBannerPath({ slug: c.slug, title: c.title, category, categorySlug }),
-      badge: badge && !DISALLOWED_BADGE.test(badge) ? badge : null,
+      badge: publicBadge(badge),
       syllabusHref: syllabusLinkFor(c).href,
     };
   }));

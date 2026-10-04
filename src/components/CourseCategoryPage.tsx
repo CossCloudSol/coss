@@ -48,8 +48,6 @@ const BADGE_MAP: Record<string, string> = {
   'trending': 'Trending',
   'new': 'New',
   'newly added': 'New',
-  'bestseller': 'Bestseller',
-  'best seller': 'Bestseller',
   'updated 2026': 'Updated',
   'hot': 'Trending',
 }
@@ -61,8 +59,6 @@ const BADGE_VARIANT_MAP: Record<string, CourseCardProps['badgeVariant']> = {
   'trending': 'teal',
   'new': 'green',
   'newly added': 'green',
-  'bestseller': 'amber',
-  'best seller': 'amber',
   'updated 2026': 'amber',
   'hot': 'teal',
 }

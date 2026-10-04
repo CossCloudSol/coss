@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/programming-full-stack"
-        title="Best Programming and Full Stack Development Training Institute in Hyderabad"
-        description="Join the best programming and full stack development training in Hyderabad. Java, Python, React, Node.js, expert trainers, placement support. Enroll now!"
+        title="Programming and Full Stack Development Training Institute in Hyderabad"
+        description="Join programming and full stack development training in Hyderabad. Java, Python, React, Node.js, expert trainers, placement support. Enroll now!"
         category="Programming & Full Stack"
       />
       <CourseCategoryPage data={courseData['programming-full-stack']} breadcrumbSlug="programming-full-stack" dbCourses={dbCourses} />

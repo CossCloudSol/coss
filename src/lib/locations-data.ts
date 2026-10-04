@@ -63,9 +63,6 @@ export interface BranchLocalityConfig {
   mapEmbed: string
   directionsHref: string
   nearbyCatchmentSlugs: string[]
-  /** Owner-confirmed count for the hero stat tile ("N+ STUDENTS TRAINED").
-   *  When unset, the page falls back to reviewCount labelled "GOOGLE REVIEWS". */
-  studentsTrained?: number
 }
 
 export interface CatchmentLocalityConfig {
@@ -129,7 +126,6 @@ export const LOCALITIES: LocalityConfig[] = [
     mapEmbed: BRANCH_MAP_EMBED.dilsukhnagar,
     directionsHref: BRANCH_DIRECTIONS_HREF.dilsukhnagar,
     nearbyCatchmentSlugs: ['kukatpally'],
-    studentsTrained: 3500,
   },
 
   /* ─────────────────────────── Ameerpet (branch) ─────────────────────────── */
@@ -141,7 +137,7 @@ export const LOCALITIES: LocalityConfig[] = [
     metaTitle: 'IT Training Institute in Ameerpet, Hyderabad',
     metaDescription:
       'Coss Cloud Solutions Ameerpet branch — Hyderabad\'s IT-training hub. Classroom batches in Cloud, DevOps, Data Science & more, steps from Ameerpet Metro interchange. Free demo class.',
-    keywords: 'IT training institute Ameerpet, software training institute Ameerpet Hyderabad, best training institute Ameerpet, Coss Cloud Solutions Ameerpet',
+    keywords: 'IT training institute Ameerpet, software training institute Ameerpet Hyderabad, IT training institute near Ameerpet Metro, Coss Cloud Solutions Ameerpet',
     badge: 'AMEERPET BRANCH — HYDERABAD\'S IT TRAINING HUB',
     h1Pre: 'IT Training Institute in ',
     h1Accent: 'Ameerpet',
@@ -166,7 +162,6 @@ export const LOCALITIES: LocalityConfig[] = [
     mapEmbed: BRANCH_MAP_EMBED.ameerpet,
     directionsHref: BRANCH_DIRECTIONS_HREF.ameerpet,
     nearbyCatchmentSlugs: ['kukatpally', 'madhapur-hitec-city'],
-    studentsTrained: 1500,
   },
 
   /* ────────────────────────── Kukatpally (catchment) ─────────────────────── */

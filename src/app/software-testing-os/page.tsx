@@ -11,8 +11,8 @@ export default function Page() {
     <>
       <CoursePageSeo
         slug="software-testing-os"
-        title="Best Software Testing and OS Training Institute in Hyderabad"
-        description="Join the best software testing and OS training in Hyderabad. Manual testing, Selenium, Linux, expert trainers, placement support and certification. Enroll now!"
+        title="Software Testing and OS Training Institute in Hyderabad"
+        description="Join software testing and OS training in Hyderabad. Manual testing, Selenium, Linux, expert trainers, placement support and certification. Enroll now!"
         category="Software Testing & OS"
       />
       <CourseCategoryPage data={courseData['software-testing-os']} breadcrumbSlug="software-testing-os" />
