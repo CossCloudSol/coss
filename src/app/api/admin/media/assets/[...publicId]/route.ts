@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
 import { deleteAsset } from '@/lib/cloudinary-admin'
 import { publicIdFromUrl } from '@/lib/cloudinary'
@@ -78,11 +78,8 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { publicId: string[] } }
 ) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   // Reconstruct the full Cloudinary publicId (may contain folder slashes)
   const publicId = params.publicId.map(decodeURIComponent).join('/')

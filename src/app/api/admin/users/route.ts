@@ -1,21 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { withAdminAuth, getSession } from '@/lib/session';
+import { withAdminAuth } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { prisma as db } from '@/lib/db';
 import { hashPassword } from '@/lib/auth';
 import { ROLE_PERMISSIONS, isAdminRole } from '@/lib/permissions';
 
-// No role in session = old cookie (env-var admin) → always SUPER_ADMIN.
-// DB users always get a role written on login, so undefined = env-var path.
-function isSuperAdmin(session: { role?: string }): boolean {
-  return !session.role || session.role === 'SUPER_ADMIN';
-}
-
 export const GET = withAdminAuth(async (req) => {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!isSuperAdmin(session)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     const adminUserModel = (db as unknown as Record<string, unknown>).adminUser;
@@ -47,11 +39,8 @@ export const GET = withAdminAuth(async (req) => {
 });
 
 export const POST = withAdminAuth(async (req) => {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!isSuperAdmin(session)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: unknown;
   try {

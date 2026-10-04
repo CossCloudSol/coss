@@ -109,11 +109,11 @@ export default function AdminLoginForm({ hasAdminEmail }: Props) {
           </div>
         ) : (
           <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800">
-            <p className="font-semibold">Using env-var admin (no ADMIN_EMAIL set)?</p>
+            <p className="font-semibold">ADMIN_EMAIL is not set</p>
             <p className="mt-0.5">
-              Leave the <strong>email field empty</strong> and enter only the{' '}
-              <code className="rounded bg-amber-100 px-1">ADMIN_PASSWORD</code> from your{' '}
-              <code className="rounded bg-amber-100 px-1">.env</code> file.
+              Only team accounts can sign in. To use the env-var admin, set{' '}
+              <code className="rounded bg-amber-100 px-1">ADMIN_EMAIL</code> next to{' '}
+              <code className="rounded bg-amber-100 px-1">ADMIN_PASSWORD</code>.
             </p>
           </div>
         )}

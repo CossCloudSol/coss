@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { getSocialPostCourse } from '@/lib/social-post-course';
 
 export const runtime = 'nodejs';
@@ -12,9 +12,8 @@ export const dynamic = 'force-dynamic';
  * shows what Buffer will receive.
  */
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const { searchParams } = new URL(req.url);
   const courseId = searchParams.get('courseId') ?? '';

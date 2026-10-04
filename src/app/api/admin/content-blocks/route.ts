@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { pickFields, CONTENT_BLOCK_FIELDS } from '@/lib/pick-fields'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session?.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const { searchParams } = req.nextUrl
   const page      = searchParams.get('page')
@@ -26,11 +26,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session?.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
-  const body = await req.json()
-  const block = await (prisma as any).contentBlock.create({ data: body })
+  const picked = pickFields(await req.json().catch(() => null), CONTENT_BLOCK_FIELDS)
+  if ('error' in picked) return NextResponse.json({ error: picked.error }, { status: 400 })
+  const block = await (prisma as any).contentBlock.create({ data: picked.data })
   return NextResponse.json(block)
 }

@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { PROMO_BANNER_BLOCK_TYPE, promoBannerInputSchema } from '@/lib/promo-banner-schema';
 import { PROMO_BANNERS_TAG } from '@/lib/promo-banners';
 
@@ -16,9 +16,8 @@ function notFound() {
 }
 
 export async function PATCH(req: NextRequest, { params }: Ctx) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: unknown;
   try {
@@ -49,9 +48,8 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
 }
 
 export async function DELETE(req: NextRequest, { params }: Ctx) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     const { count } = await prisma.contentBlock.deleteMany({

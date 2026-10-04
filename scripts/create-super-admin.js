@@ -4,6 +4,7 @@
  *
  * Uses the same crypto.scrypt hashing as src/lib/auth.ts so the user can log in.
  */
+require('./lib/write-guard.cjs'); // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
 

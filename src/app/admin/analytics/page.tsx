@@ -5,6 +5,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Bell, Download, Loader2, RefreshCw } from 'lucide-react';
 import type { AnalyticsResponse } from '@/app/api/admin/analytics/route';
 import { conversionDisplay, MIN_SAMPLE_FOR_PERCENT } from '@/lib/conversion-display';
+import { csvCell } from '@/lib/csv';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers / palettes                                                        */
@@ -721,9 +722,6 @@ function ExportCsvButton({ onClick }: { onClick: () => void }): JSX.Element {
 }
 
 /** Wrap value in `"…"` and double any internal `"`. */
-function csvCell(value: string): string {
-  return `"${value.replace(/"/g, '""')}"`;
-}
 
 /** YYYY-MM-DD in local time for the filename suffix. */
 function todayIsoDate(): string {

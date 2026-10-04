@@ -1,12 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { NAV_GROUPS, getActiveGroup, type NavGroup } from './navGroups';
 import MobileDrawer from './MobileDrawer';
+import { requiredAccess, isAllowed } from '@/lib/admin-access';
+import type { AdminRole } from '@/lib/permissions';
 
-export default function BottomNav(): JSX.Element {
+type BottomNavProps = { permissions: readonly string[]; role?: AdminRole };
+
+export default function BottomNav({ permissions, role }: BottomNavProps): JSX.Element {
   const pathname = usePathname() ?? '';
+  // Only the sections this user may open (the same table the routes enforce);
+  // a group with none left is not shown.
+  const groups = useMemo(
+    () =>
+      NAV_GROUPS.map((g) => ({ ...g, items: g.items.filter((item) => isAllowed(requiredAccess(item.href), { role, permissions })) })).filter(
+        (g) => g.items.length > 0,
+      ),
+    [permissions, role],
+  );
   const [openGroupId, setOpenGroupId] = useState<string | null>(null);
   const [currentGroup, setCurrentGroup] = useState<NavGroup | null>(null);
 
@@ -37,7 +50,7 @@ export default function BottomNav(): JSX.Element {
   const activeGroupId = getActiveGroup(pathname);
 
   const handleTabPress = (id: string): void => {
-    const group = NAV_GROUPS.find(g => g.id === id) ?? null;
+    const group = groups.find(g => g.id === id) ?? null;
     if (group !== null) setCurrentGroup(group);
     setOpenGroupId(prev => (prev === id ? null : id));
   };
@@ -51,7 +64,7 @@ export default function BottomNav(): JSX.Element {
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="flex h-14">
-          {NAV_GROUPS.map((group) => {
+          {groups.map((group) => {
             const Icon = group.icon;
             const isActive = activeGroupId === group.id;
 

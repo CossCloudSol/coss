@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session?.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const hookUrl = process.env.VERCEL_DEPLOY_HOOK_URL
   if (!hookUrl) {

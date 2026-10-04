@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -22,11 +22,8 @@ function isPatchableKey(key: string): key is PatchableKey {
 }
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const row = await prisma.seoSettings.findFirst();
   if (!row) {
@@ -43,11 +40,8 @@ export async function GET(req: NextRequest): Promise<Response> {
  * If none exists yet we create it; otherwise we update the existing row.
  */
 export async function PATCH(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: unknown;
   try {

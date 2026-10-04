@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/db'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { normalizeJsonArray } from '@/lib/get-branch-settings'
 
 export const runtime = 'nodejs'
@@ -11,9 +11,8 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { branchKey: string } }
 ) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const row = await prisma.branchSettings.findUnique({ where: { branchKey: params.branchKey } })
   if (!row) return NextResponse.json({ error: 'Not found' }, { status: 404 })
@@ -27,9 +26,8 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { branchKey: string } }
 ) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   try {
     const body = await req.json()

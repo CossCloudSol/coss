@@ -27,6 +27,7 @@
  * overwrites) run; it does not imply --apply for Step 2.
  */
 
+import '../../scripts/lib/write-guard.cjs'; // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 

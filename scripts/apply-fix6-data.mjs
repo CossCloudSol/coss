@@ -29,6 +29,7 @@
  *   node scripts/apply-fix6-data.mjs --write   # apply
  */
 
+import './lib/write-guard.cjs'; // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';

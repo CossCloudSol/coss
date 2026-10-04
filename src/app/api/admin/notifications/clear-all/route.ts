@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { deleteAllForRole, sessionRoleToFilter } from '@/lib/notifications';
 
 export const runtime = 'nodejs';
 
 export async function DELETE(req: NextRequest) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    console.log('[DELETE /api/admin/notifications/clear-all] rejected: no admin session');
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
+  const session = guard.session;
 
   const userRole = sessionRoleToFilter(session.role);
   const result = await deleteAllForRole(userRole);

@@ -103,6 +103,9 @@ export async function POST(req: NextRequest): Promise<Response> {
       ? (body as { password: string }).password
       : '';
 
+  if (email.length === 0) {
+    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+  }
   if (submitted.length === 0) {
     return NextResponse.json({ error: 'Password is required' }, { status: 400 });
   }
@@ -122,9 +125,8 @@ export async function POST(req: NextRequest): Promise<Response> {
   // can always log in even if a DB user with the same email was created (e.g. via the
   // User Roles panel) that would otherwise shadow the env-var credentials.
   if (adminPassword) {
-    const envEmailMatch = adminEmail
-      ? timingSafeStringEqual(email, adminEmail.toLowerCase())
-      : email.length === 0;
+    // An email is always required: without ADMIN_EMAIL the env-var login is off.
+    const envEmailMatch = adminEmail ? timingSafeStringEqual(email, adminEmail.toLowerCase()) : false;
     if (envEmailMatch && timingSafeStringEqual(submitted, adminPassword)) {
       const res = NextResponse.json({ ok: true });
       const session = await getSession(req, res);
@@ -151,14 +153,16 @@ export async function POST(req: NextRequest): Promise<Response> {
   if (email.length > 0) {
     try {
       const user = await db.adminUser.findUnique({ where: { email } });
-      if (user && !user.isActive) {
-        return NextResponse.json(
-          { error: 'Your account has been disabled. Contact your administrator.' },
-          { status: 403 },
-        );
-      }
-      if (user && user.isActive) {
+      if (user) {
+        // The password first: whether an account exists or is disabled is only
+        // revealed to someone who knows its password.
         const valid = await verifyPassword(submitted, user.passwordHash);
+        if (valid && !user.isActive) {
+          return NextResponse.json(
+            { error: 'Your account has been disabled. Contact your administrator.' },
+            { status: 403 },
+          );
+        }
         if (valid) {
           const res = NextResponse.json({ ok: true });
           const session = await getSession(req, res);
@@ -188,14 +192,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   return fail();
 }
 
-/**
- * GET /api/admin/auth
- * Logs out the current admin and redirects to /admin/login.
- */
-export async function GET(req: NextRequest): Promise<Response> {
-  const loginUrl = new URL('/admin/login', req.url);
-  const res = NextResponse.redirect(loginUrl);
-  const session = await getSession(req, res);
-  session.destroy();
-  return res;
+/** Logout is POST /api/admin/auth/logout (a link must not be able to sign anyone out). */
+export function GET(): Response {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405, headers: { Allow: 'POST' } });
 }

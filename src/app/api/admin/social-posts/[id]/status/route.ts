@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { manualDraftNote } from '@/lib/social-post-state';
 import { bufferChannelId } from '@/lib/buffer-client';
 import { checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
@@ -55,11 +55,8 @@ async function validateQueueReadiness(post: {
 }
 
 export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: Record<string, unknown>;
   try {

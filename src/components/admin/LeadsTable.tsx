@@ -28,6 +28,8 @@ import type {
   AdminLeadsListResponse,
 } from '@/app/api/admin/leads/route';
 import LeadDrawer from '@/components/admin/LeadDrawer';
+import { csvCell } from '@/lib/csv';
+import { nameLooksOff } from '@/lib/name-quality';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants / typed enums                                                   */
@@ -658,7 +660,9 @@ function LeadRow({
       <td className="px-4 py-3 text-xs text-gray-400 dark:text-gray-500">{index}</td>
 
       <td className="px-4 py-3">
-        <p className="font-semibold text-gray-900 dark:text-white">{lead.name}</p>
+        <p className="font-semibold text-gray-900 dark:text-white">{lead.name}{nameLooksOff(lead.name) && (
+            <span title="This name looks typed at random: check it before calling" className="ml-1.5 rounded bg-amber-100 px-1.5 py-0.5 align-middle text-[10px] font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">Check name</span>
+          )}</p>
         <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{lead.phone}</p>
       </td>
 
@@ -974,7 +978,9 @@ function MobileLeadCard({
       {/* Row 1: name + status badge */}
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{lead.name}</p>
+          <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{lead.name}{nameLooksOff(lead.name) && (
+            <span title="This name looks typed at random: check it before calling" className="ml-1.5 rounded bg-amber-100 px-1.5 py-0.5 align-middle text-[10px] font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">Check name</span>
+          )}</p>
           <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{lead.phone}</p>
         </div>
         <StatusBadgeMenu lead={lead} onStatusChange={onStatusChange} />
@@ -1048,9 +1054,4 @@ function MobileLeadCard({
 /*  CSV helpers                                                               */
 /* -------------------------------------------------------------------------- */
 
-function csvEscape(value: string): string {
-  if (/[",\r\n]/.test(value)) {
-    return `"${value.replace(/"/g, '""')}"`;
-  }
-  return value;
-}
+const csvEscape = csvCell;

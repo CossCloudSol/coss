@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse, type NextRequest } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { CONTENT_RULES } from '@/lib/ai-content-rules'
 
 export const runtime = 'nodejs'
@@ -64,11 +64,8 @@ OUTPUT: Return ONLY valid JSON with no markdown fences, no explanation, no pream
 }`
 
 export async function POST(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   let body: { title?: string; categoryName?: string }
   try {

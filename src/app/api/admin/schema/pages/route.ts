@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
@@ -16,9 +16,8 @@ const SCHEMA_PAGES = [
 ]
 
 export async function GET(req: NextRequest) {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session?.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   const dbRows = await prisma.pageSeo.findMany({
     select: { pageSlug: true, schemaEnabled: true, schemaOverride: true },

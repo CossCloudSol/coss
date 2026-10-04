@@ -21,6 +21,7 @@
 // Usage (local/dev DB instead):
 //   npx dotenv-cli -e .env.development.local -- node scripts/fix-course-descriptions-batch4.mjs
 
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()

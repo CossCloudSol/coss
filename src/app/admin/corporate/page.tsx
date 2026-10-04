@@ -15,6 +15,7 @@ import type {
   AdminCorporateLeadItem,
   AdminCorporateLeadsListResponse,
 } from '@/app/api/admin/corporate/route';
+import { csvCell } from '@/lib/csv';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants                                                                 */
@@ -819,9 +820,6 @@ const CSV_HEADERS: ReadonlyArray<string> = [
 ];
 
 /** Wrap every value in `"…"` and escape internal `"` as `""` per the spec. */
-function csvCell(value: string): string {
-  return `"${value.replace(/"/g, '""')}"`;
-}
 
 /** Format an ISO timestamp as `26 Apr 2026 14:30` in the user's local TZ. */
 function formatExportDate(iso: string): string {

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 
 // Prisma uses Node built-ins — cannot run on the Edge runtime.
 export const runtime = 'nodejs';
@@ -61,12 +61,9 @@ const MAX_LIMIT = 100;
 /* -------------------------------------------------------------------------- */
 
 export async function GET(req: NextRequest): Promise<Response> {
-  // Session check — middleware guards `/admin/*` but not `/api/admin/*`.
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-  }
+  // Second layer behind the middleware: a fresh user check plus the area permission.
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const { searchParams } = new URL(req.url);
 

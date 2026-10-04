@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 import fs from 'fs'
 import path from 'path'
 
@@ -40,9 +40,8 @@ export default function robots(): MetadataRoute.Robots {
 `
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   let content = DEFAULT_ROBOTS_CONTENT
   try {
@@ -56,9 +55,8 @@ export async function GET(req: NextRequest): Promise<Response> {
 }
 
 export async function POST(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   let body: { rules?: Array<{ userAgent: string; allow?: string[]; disallow?: string[] }> }
   try {

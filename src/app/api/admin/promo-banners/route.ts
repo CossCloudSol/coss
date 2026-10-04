@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { PROMO_BANNER_BLOCK_TYPE, promoBannerInputSchema } from '@/lib/promo-banner-schema';
 import { PROMO_BANNERS_TAG } from '@/lib/promo-banners';
 
@@ -12,9 +12,8 @@ export const dynamic = 'force-dynamic';
 // /api/admin guard via the /admin/promo-banners route map entry.
 
 export async function GET(req: NextRequest) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   const banners = await prisma.contentBlock.findMany({
     where: { blockType: PROMO_BANNER_BLOCK_TYPE },
@@ -25,9 +24,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: unknown;
   try {

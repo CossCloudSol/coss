@@ -1,3 +1,4 @@
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()

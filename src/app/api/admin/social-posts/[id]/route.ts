@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getSession } from '@/lib/session';
+import { requireAdmin } from '@/lib/admin-guard';
 import { approvalChanges, revertedNote } from '@/lib/social-post-state';
 
 export const runtime = 'nodejs';
@@ -19,9 +19,8 @@ function validateAssetRules(imageUrl: string | null, imageAltText: string | null
 }
 
 export async function GET(req: NextRequest, { params }: Ctx): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     const socialPost = await prisma.socialPost.findUnique({ where: { id: params.id } });
@@ -34,9 +33,8 @@ export async function GET(req: NextRequest, { params }: Ctx): Promise<Response> 
 }
 
 export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   let body: Record<string, unknown>;
   try {
@@ -104,9 +102,8 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
 }
 
 export async function DELETE(req: NextRequest, { params }: Ctx): Promise<Response> {
-  const probe = NextResponse.next();
-  const session = await getSession(req, probe);
-  if (!session.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const guard = await requireAdmin(req);
+  if (guard instanceof Response) return guard;
 
   try {
     await prisma.socialPost.delete({ where: { id: params.id } });

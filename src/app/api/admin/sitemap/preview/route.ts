@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { getSession } from '@/lib/session'
+import { requireAdmin } from '@/lib/admin-guard'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -7,9 +7,8 @@ export const dynamic = 'force-dynamic'
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com'
 
 export async function GET(req: NextRequest): Promise<Response> {
-  const probe = NextResponse.next()
-  const session = await getSession(req, probe)
-  if (!session.isAdmin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const guard = await requireAdmin(req)
+  if (guard instanceof Response) return guard
 
   try {
     // Call the sitemap function directly to avoid circular HTTP fetching in dev

@@ -9,6 +9,7 @@ import {
   Send,
   X,
 } from 'lucide-react';
+import { nameLooksOff } from '@/lib/name-quality';
 
 /* -------------------------------------------------------------------------- */
 /*  Public types — mirror app/api/admin/leads/[id]/route.ts                   */
@@ -425,6 +426,9 @@ function DrawerHeader({
         <div className="min-w-0 flex-1">
           <h2 className="truncate text-lg font-semibold text-gray-900 dark:text-white">
             {lead.name}
+            {nameLooksOff(lead.name) && (
+              <span title="This name looks typed at random: check it before calling" className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 align-middle text-[10px] font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">Check name</span>
+            )}
           </h2>
           <p className="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400">{lead.phone}</p>
 
