@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { WA_NUMBER as WA_NUMBER_DIGITS } from '@/lib/whatsapp';
+import { normalizeIndianMobile } from '@/lib/lead-validation';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -22,7 +23,7 @@ const DEVICE_TYPE_VALUES = ['mobile', 'desktop'] as const;
 // 6-9. <WhatsAppLink> is responsible for normalizing to this before it ever
 // calls this endpoint; the server does not attempt to reformat, only accept
 // or reject.
-const PHONE_REGEX = /^\+91[6-9]\d{9}$/;
+// (normalizeIndianMobile from src/lib/lead-validation.ts: the one shared phone rule)
 
 // Pathname only (no query string — UTM params travel in their own fields).
 const PATH_REGEX = /^\/[a-zA-Z0-9\-_/]*$/;
@@ -41,7 +42,7 @@ const whatsAppClickSchema = z.object({
       (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
       z.string().trim().max(100).optional(),
     ),
-  phoneNumber: z.string().trim().regex(PHONE_REGEX, 'phoneNumber must be canonical +91XXXXXXXXXX'),
+  phoneNumber: z.string().trim().refine((v) => normalizeIndianMobile(v) === v, 'phoneNumber must be canonical +91XXXXXXXXXX'),
   hadPrefill: z.boolean(),
   deviceType: z.enum(DEVICE_TYPE_VALUES),
   referrer: z
