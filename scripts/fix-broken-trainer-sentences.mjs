@@ -2,6 +2,7 @@
 // Fixes grammatically broken sentences left by the previous naive [TRAINER_NAME] replacement.
 // Each fix is context-specific — not another blind find-replace.
 // Run: node --env-file=.env scripts/fix-broken-trainer-sentences.mjs
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()

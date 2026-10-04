@@ -8,6 +8,7 @@
  *
  * Usage: node scripts/seed-gsc-404-fixes.mjs && node scripts/run-sync-redirects.mjs
  */
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()

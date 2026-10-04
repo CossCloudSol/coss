@@ -11,6 +11,7 @@
  *
  * Prints full before/after rows and a field-by-field diff as an audit trail.
  */
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()

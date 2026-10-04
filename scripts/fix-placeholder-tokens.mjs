@@ -2,6 +2,7 @@
 // Site-wide sweep for [BRACKET_PLACEHOLDER] tokens in all course records.
 // Reports every affected course+field, then replaces tokens with real copy.
 // Run: node --env-file=.env scripts/fix-placeholder-tokens.mjs
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()

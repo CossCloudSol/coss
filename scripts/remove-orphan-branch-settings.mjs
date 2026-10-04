@@ -10,6 +10,7 @@
  * Prints each row's full contents before deletion as an audit trail — these
  * were real GBP listings, not test data.
  */
+import './lib/write-guard.cjs' // refuses unless the dev DB or ALLOW_PROD_WRITE=1
 import { PrismaClient } from '@prisma/client'
 
 const db = new PrismaClient()
