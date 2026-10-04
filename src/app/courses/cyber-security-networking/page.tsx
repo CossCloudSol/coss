@@ -15,8 +15,8 @@ export default function Page() {
     <>
       <CoursePageSeo
         slug="courses/cyber-security-networking"
-        title="Best Cyber Security and Networking Training Institute in Hyderabad"
-        description="Join the best cyber security and networking training in Hyderabad. Ethical hacking, CCNA, SOC, expert trainers, placement support and certification. Enroll now!"
+        title="Cyber Security and Networking Training Institute in Hyderabad"
+        description="Join cyber security and networking training in Hyderabad. Ethical hacking, CCNA, SOC, expert trainers, placement support and certification. Enroll now!"
         category="Cyber Security & Networking"
       />
       <CourseCategoryPage data={courseData['cyber-security-networking']} breadcrumbSlug="cyber-security-networking" />

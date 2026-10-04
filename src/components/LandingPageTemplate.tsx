@@ -339,7 +339,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
           <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
             Why Choose Coss Cloud Solutions for {titleWithoutTraining}?
           </h2>
-          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">Hyderabad&apos;s most trusted IT training institute since 2010</p>
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mb-10">IT training institute in Hyderabad since 2010</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {([
               {

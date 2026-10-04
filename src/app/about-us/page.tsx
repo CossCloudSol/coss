@@ -79,7 +79,7 @@ export default function AboutUsPage() {
                 </div>
                 <div>
                   <div style={{ color: '#e8401c', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🌟 Our Vision</div>
-                  <p style={{ color: '#ccc', fontSize: '14px', lineHeight: '1.7' }}>To become the most trusted IT training institute in South India, known for transforming careers through quality education, innovation, and unwavering student support.</p>
+                  <p style={{ color: '#ccc', fontSize: '14px', lineHeight: '1.7' }}>To become a trusted IT training institute across South India, known for transforming careers through quality education, innovation, and unwavering student support.</p>
                 </div>
               </div>
             </div>

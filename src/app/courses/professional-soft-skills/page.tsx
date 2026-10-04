@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/professional-soft-skills"
-        title="Best Professional and Soft Skills Training Institute in Hyderabad"
-        description="Join the best professional and soft skills training in Hyderabad. MS Office, spoken English, communication skills, expert trainers, placement support. Enroll now!"
+        title="Professional and Soft Skills Training Institute in Hyderabad"
+        description="Join professional and soft skills training in Hyderabad. MS Office, spoken English, communication skills, expert trainers, placement support. Enroll now!"
         category="Professional & Soft Skills"
       />
       <CourseCategoryPage data={courseData['professional-soft-skills']} breadcrumbSlug="professional-soft-skills" dbCourses={dbCourses} />

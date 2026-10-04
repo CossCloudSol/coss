@@ -36,6 +36,12 @@ const JSON_OUT = opt('--json');
 const EXTRA = (opt('--extra') ?? '').split(',').map((s) => s.trim()).filter(Boolean);
 const BASE = (args[0] ?? 'https://www.cosscloudsol.com').replace(/\/$/, '');
 const RUN = Date.now().toString(36);
+// Protected Vercel previews: the automation bypass header, from the environment, only
+// for *.vercel.app hosts (never sent to production, never printed).
+const HEADERS = { 'user-agent': 'Mozilla/5.0 (claims-audit)' };
+if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET && /\.vercel\.app$/.test(new URL(BASE).hostname)) {
+  HEADERS['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+}
 
 const decode = (s) =>
   (s ?? '')
@@ -59,6 +65,7 @@ export function pageFields(html, { body }) {
   const fields = {
     title: decode(html.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1] ?? ''),
     'meta description': meta(html, 'name', 'description'),
+    'meta keywords': meta(html, 'name', 'keywords'),
     'og:title': meta(html, 'property', 'og:title'),
     'og:description': meta(html, 'property', 'og:description'),
     'twitter:title': meta(html, 'name', 'twitter:title'),
@@ -98,9 +105,9 @@ function context(text, phrase) {
 const isCoursePage = (path) => path.startsWith('/courses/') || /^\/[a-z0-9-]*(training|course|institute|certification)[a-z0-9-]*$/.test(path);
 
 async function main() {
-  const sitemap = await (await fetch(`${BASE}/sitemap.xml?cb=${RUN}`)).text();
+  const sitemap = await (await fetch(`${BASE}/sitemap.xml?cb=${RUN}`, { headers: HEADERS })).text();
   const fromSitemap = [...new Set([...sitemap.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => new URL(decode(m[1])).pathname))];
-  const coursesHtml = await (await fetch(`${BASE}/courses?cb=${RUN}`)).text();
+  const coursesHtml = await (await fetch(`${BASE}/courses?cb=${RUN}`, { headers: HEADERS })).text();
   const fromCourses = [...new Set([...coursesHtml.matchAll(/href="(\/courses\/[a-z0-9/-]+)"/g)].map((m) => m[1]))];
   const paths = [...new Set([...fromSitemap, ...fromCourses, ...EXTRA])];
   const urls = paths.map((p) => `${BASE}${p}`);
@@ -121,7 +128,7 @@ async function main() {
         const path = new URL(url).pathname;
         const target = `${BASE}${path}${path.includes('?') ? '&' : '?'}cb=${RUN}`;
         try {
-          const res = await fetch(target, { redirect: 'follow', headers: { 'user-agent': 'Mozilla/5.0 (claims-audit)' }, signal: AbortSignal.timeout(30_000) });
+          const res = await fetch(target, { redirect: 'follow', headers: HEADERS, signal: AbortSignal.timeout(30_000) });
           const html = await res.text();
           const fields = res.status === 200 ? pageFields(html, { body: isCoursePage(path) }) : {};
           const hits = [];

@@ -169,9 +169,9 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
           titlePost={config.h1Post}
           subtitle={config.heroSubtitle}
           stats={[
-            config.studentsTrained
-              ? { value: `${config.studentsTrained}+`, label: 'STUDENTS TRAINED' }
-              : { value: `${branch.reviewCount}+`, label: 'GOOGLE REVIEWS' },
+            // Allowed claims only: no per-branch student counts, and a Google rating or review
+            // count only ever live from the Places API (the header strip), never a stored number.
+            { value: 'Since 2010', label: 'TRAINING IN HYDERABAD' },
             { value: String(branch.serviceAreas.length), label: 'AREAS SERVED' },
             { value: branch.workingDays.replace('-', '–'), label: `${branch.workingHoursOpen}–${branch.workingHoursClose}` },
           ]}

@@ -24,8 +24,8 @@ export default async function Page() {
     <>
       <CoursePageSeo
         slug="courses/erp-crm-enterprise-tools"
-        title="Best ERP, CRM and Enterprise Tools Training Institute in Hyderabad"
-        description="Join the best ERP, CRM and enterprise tools training in Hyderabad. SAP, Salesforce, Oracle Fusion HCM, expert trainers, placement support. Enroll now!"
+        title="ERP, CRM and Enterprise Tools Training Institute in Hyderabad"
+        description="Join ERP, CRM and enterprise tools training in Hyderabad. SAP, Salesforce, Oracle Fusion HCM, expert trainers, placement support. Enroll now!"
         category="ERP, CRM & Enterprise Tools"
       />
       <CourseCategoryPage data={courseData['erp-crm-enterprise-tools']} breadcrumbSlug="erp-crm-enterprise-tools" dbCourses={dbCourses} />

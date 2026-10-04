@@ -1,32 +1,23 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSession } from '@/lib/session'
+import { CONTENT_RULES } from '@/lib/ai-content-rules'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
-const FACTUAL_CLAIMS_BLOCK = `FACTUAL CLAIMS (non-negotiable):
-Do NOT invent or estimate any of the following — the business has not confirmed these numbers and false claims are a compliance risk:
-- Salary figures, salary ranges, or CTC/package numbers (no LPA, no lakh amounts, no ₹ salary figures)
-- Student, enrolment, or alumni counts (no "500+", "5,000+", "hundreds of", "thousands of")
-- Placement rates or percentages (no "100% placement", no "X% placed")
-- Ratings, review counts, or testimonial counts
-- Hiring-partner counts (no "50+ hiring partners")
-- Named employers as destinations for COSS students (never state or imply that graduates work at, or are hired by, any specific company)
-Write about course content, skills taught, and career paths WITHOUT quantifying outcomes. Describe what a student will be able to do, not how much they'll earn or how many people got hired or placed.`
-
 const FIELD_PROMPTS: Record<string, string> = {
   slug: 'Return ONLY valid JSON: {"value": "seo-slug-5-8-words-in-hyderabad"}. SEO-friendly slug, 5-8 words, ends with -in-hyderabad.',
   description: 'Return ONLY valid JSON: {"value": "200-300 word course description in human trainer voice with Hyderabad context"}. Direct, second-person, no banned words (comprehensive, cutting-edge, robust, leverage, etc.).',
   excerpt: 'Return ONLY valid JSON: {"value": "max 160 char excerpt"}. One punchy sentence.',
-  highlights: 'Return ONLY valid JSON: {"value": ["highlight 1", "highlight 2", ...]}. 6-8 specific, concrete highlights.',
+  highlights: 'Return ONLY valid JSON: {"value": ["highlight 1", "highlight 2", ...]}. 6-8 specific, concrete highlights about what the course covers (no claims, no invented numbers).',
   syllabus: 'Return ONLY valid JSON: {"value": [{"module": "Module Name", "topics": ["topic1", "topic2", "topic3", "topic4"]}]}. 5-8 modules, 4-6 topics each.',
   tools: 'Return ONLY valid JSON: {"value": ["Tool1", "Tool2", ...]}. 6-10 specific tools with versions where relevant.',
   seoTitle: 'Return ONLY valid JSON: {"value": "SEO Title under 60 chars | Coss Cloud Solutions"}.',
   seoDesc: 'Return ONLY valid JSON: {"value": "Meta description under 155 chars with keyword + Hyderabad + benefit"}.',
-  content: 'Return ONLY valid JSON: {"value": "full markdown blog post 850-1000 words"}. Use H2s as questions. Open with scenario, not definition.',
+  content: 'Return ONLY valid JSON: {"value": "full markdown blog post 850-1000 words"}. Use H2s as questions. Open with the question the reader is asking, not a definition and not an invented story.',
   tags: 'Return ONLY valid JSON: {"value": ["tag1", "tag2", "tag3", "tag4"]}. 4-6 relevant tags.',
   readTime: 'Return ONLY valid JSON: {"value": "X min read"}.',
 }
@@ -65,7 +56,7 @@ Institute: COSS, Hyderabad${body.currentContent ? `\nCurrent content to improve:
       model: 'gemini-2.5-flash',
       systemInstruction: `You are a content writer at COSS Hyderabad training institute.
 
-${FACTUAL_CLAIMS_BLOCK}
+${CONTENT_RULES}
 
 ${fieldPrompt}`,
       generationConfig: { responseMimeType: 'application/json' },

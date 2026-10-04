@@ -14,8 +14,8 @@
  *       <>
  *         <CoursePageSeo
  *           slug="big-data-training-institute-in-hyderabad"
- *           title="Best Big Data Training Institute in Hyderabad"
- *           description="Join the best big data training in Hyderabad..."
+ *           title="Big Data Training Institute in Hyderabad"
+ *           description="Join big data training in Hyderabad..."
  *           category="Data, Analytics & BI"
  *           faqs={[
  *             { q: 'How long is the course?', a: 'The course duration is 2–3 months.' },

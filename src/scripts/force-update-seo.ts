@@ -49,21 +49,21 @@ import { prisma } from '@/lib/db';
 // ── Exact replacement data for key pages ─────────────────────────────────────
 
 const HOME_UPDATE = {
-  metaTitle:       'Best IT Training Institute in Hyderabad',
-  metaDescription: 'Coss Cloud Solutions: Top IT training in Hyderabad. Cloud, DevOps & 30+ courses. 5,000+ students trained. Placement assistance included. Centres in Dilsukhnagar & Ameerpet.',
-  ogTitle:         'Best IT Training Institute in Hyderabad | Coss Cloud Solutions',
-  ogDescription:   'Join 5,000+ students who launched IT careers at Coss Cloud Solutions. Cloud, DevOps, Data Science & 30+ courses with placement assistance in Hyderabad.',
+  metaTitle:       'IT Training Institute in Hyderabad Since 2010',
+  metaDescription: 'Coss Cloud Solutions: IT training in Hyderabad since 2010. Cloud, DevOps & 30+ courses. 5,000+ students trained. Placement assistance included. Centres in Dilsukhnagar & Ameerpet.',
+  ogTitle:         'IT Training Institute in Hyderabad Since 2010 | Coss Cloud Solutions',
+  ogDescription:   '5,000+ students trained since 2010 at Coss Cloud Solutions. Cloud, DevOps, Data Science & 30+ courses with placement assistance in Hyderabad.',
   canonicalUrl:    'https://www.cosscloudsol.com',
-  keywords:        'IT training institute in Hyderabad, best software training Hyderabad, cloud computing course Hyderabad, DevOps training Hyderabad, data science training Hyderabad',
+  keywords:        'IT training institute in Hyderabad, software training Hyderabad, cloud computing course Hyderabad, DevOps training Hyderabad, data science training Hyderabad',
 };
 
 const ABOUT_UPDATE = {
   metaTitle:       'About Coss Cloud Solutions — IT Training Institute Hyderabad',
-  metaDescription: 'Learn about Coss Cloud Solutions — a leading IT training institute in Hyderabad since 2010. 5,000+ students trained. Expert trainers at Dilsukhnagar & Ameerpet.',
+  metaDescription: 'Learn about Coss Cloud Solutions — an IT training institute in Hyderabad since 2010. 5,000+ students trained. Expert trainers at Dilsukhnagar & Ameerpet.',
   ogTitle:         'About Coss Cloud Solutions — IT Training Institute Hyderabad',
-  ogDescription:   'Coss Cloud Solutions: 15+ years of IT training excellence in Hyderabad. Expert trainers, hands-on labs, placement assistance.',
+  ogDescription:   'Coss Cloud Solutions: IT training in Hyderabad since 2010. Expert trainers, hands-on labs, placement assistance.',
   canonicalUrl:    'https://www.cosscloudsol.com/about-us',
-  keywords:        'Coss Cloud Solutions Hyderabad, IT training institute Hyderabad, about us, best software training Hyderabad, Dilsukhnagar training centre, Ameerpet training centre',
+  keywords:        'Coss Cloud Solutions Hyderabad, IT training institute Hyderabad, about us, software training Hyderabad, Dilsukhnagar training centre, Ameerpet training centre',
 };
 
 const BLOG_UPDATE = {
