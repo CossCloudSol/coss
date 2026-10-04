@@ -20,7 +20,7 @@
 -- Local dev server: PostgreSQL 16.13 (server_version_num 160013).
 --
 -- Each change and the production migration it mirrors:
---   AdminRole + CONTENT_SEO_MANAGER   (none in this folder: added in code by 265dbcf, 2026-09-26)
+--   AdminRole + CONTENT_SEO_MANAGER   2026-09-25-add-content-seo-manager-role.sql (applied by hand 25 Sep, record added 4 Oct)
 --   CorporateLead.requirements        2026-09-26-corporate-lead-requirements.sql
 --   HomepageSettings.stat4Value       2026-08-25-fix-stat4-default.sql  (old schema default "200+")
 --   Lead.consentAt, jobCompany, jobId, jobTitle + Lead_jobId_idx
