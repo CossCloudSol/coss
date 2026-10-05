@@ -1,12 +1,13 @@
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { getCourseUrl, CATEGORY_SLUG_MAP } from '@/lib/course-url';
+import { CATEGORY_SLUG_MAP } from '@/lib/course-url';
 import { syllabusLinkFor } from '@/lib/promo-banners';
 import { memoDuringBuild } from '@/lib/build-memo';
 import { courseBannerPath } from '@/lib/course-banner-sign';
 import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 import { COURSE_CATALOG_TAG, parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
 import { publicBadge } from '@/lib/course-badge';
+import { courseCanonicalPath } from '@/lib/course-canonical';
 
 // next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
 const OPTIMISABLE_IMAGE = /^https:\/\/res\.cloudinary\.com\/dfditihuw\//;
@@ -79,7 +80,7 @@ async function loadSearchIndex(): Promise<SearchIndex> {
       id: c.id,
       slug: c.slug,
       title: c.title.trim(),
-      url: getCourseUrl(c),
+      url: courseCanonicalPath(c),
       category,
       categorySlug,
       tab: tabForCategory(categorySlug),

@@ -8,8 +8,8 @@
  *   3. Dynamic course pages (from courses-data.ts         → COURSES)
  *   4. Static site pages    (from all-pages-registry.ts  → STATIC_PAGES)
  *   5. Blog posts           (from content/posts via getAllPosts)
- *   6. DB courses at their getCourseUrl() canonical, excluding the ones already
- *      covered by group 1's flat-legacy SLUG_MAP pages (from database)
+ *   6. DB courses at their one canonical /courses URL; a course canonical at a
+ *      flat-legacy SLUG_MAP page (group 1) is not listed again (from database)
  *   7. DB category pages    (new categories not in CATEGORY_PAGES)
  *   8. DB blog posts        (published posts from admin panel)
  */
@@ -20,7 +20,7 @@ import { COURSE_PAGES, CATEGORY_PAGES, STATIC_PAGES } from '@/lib/all-pages-regi
 import { getAllPosts } from '@/lib/posts';
 import { getCourseUrl } from '@/lib/course-url';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
-import { NESTED_CANONICAL_OVERRIDES } from '@/lib/flat-url';
+import { sitemapCoursePaths } from '@/lib/flat-url';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -170,23 +170,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { prisma } = await import('@/lib/db')
 
-    // 6 — DB courses, at their getCourseUrl() canonical only.
-    // Courses whose own slug is a SLUG_MAP key are excluded here: that slug is
-    // one of the 30 flat-legacy money pages (group 1, self-canonicalizing),
-    // and the DB route resolves the exact same row — including both would put
-    // two sitemap entries for identical content. Exception: a course on the
-    // NESTED_CANONICAL_OVERRIDES allowlist has a nested canonical that
-    // *differs* from its flat URL, so it must still get its own group-6 entry.
+    // 6 — DB courses, one URL each: the canonical path (src/lib/flat-url.ts). A course
+    // whose canonical is its flat landing page is left out here; group 1 lists the flat page.
     const dbCourses = await prisma.course.findMany({
       where: { status: 'published' },
       select: { slug: true, urlType: true, categorySlug: true, updatedAt: true },
     })
-    dbCourseEntries = dbCourses
-      .filter((course) => !(course.slug in SLUG_MAP) || course.slug in NESTED_CANONICAL_OVERRIDES)
-      .map((course) => {
+    dbCourseEntries = sitemapCoursePaths(dbCourses, getCourseUrl, SLUG_MAP)
+      .map(({ course, path }) => {
         const db = getDbOverride(course.slug)
         return {
-          url: `${BASE_URL}${getCourseUrl(course)}`,
+          url: `${BASE_URL}${path}`,
           lastModified: course.updatedAt,
           changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
           priority: db?.sitemapPriority ?? 0.75,
