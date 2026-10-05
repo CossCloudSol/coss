@@ -1,6 +1,13 @@
 -- 2026-10-04 Row Level Security on the public tables that don't have it yet.
 -- Run in the Supabase SQL Editor (production). Not run by Claude.
 --
+-- APPLIED 2026-10-05 by Subodh (record only; do not run again). STEP 0: postgres has
+-- rolbypassrls = true. STEP 1 listed only 2 tables without RLS: SocialPost and Trainer;
+-- the other 8 already had RLS on (enabled outside the repo's SQL files), so STEP 3 changed
+-- 2 tables. STEP 4: 0 public tables without RLS; reads still work (trainers 2,
+-- site_settings 1, testimonials 44, redirects 308).
+--
+--
 -- Same shape as 2026-08-19-enable-rls.sql (19 tables): RLS on, ZERO policies.
 -- With RLS on and no policy, the Supabase API roles (anon, authenticated) get no
 -- rows. The app never uses them: there is no supabase-js client in the code, and
