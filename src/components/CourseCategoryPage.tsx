@@ -12,6 +12,7 @@ import { getPromoBanners } from '@/lib/promo-banners';
 import type { CourseCardProps } from '@/components/CourseCard';
 import { prisma } from '@/lib/db';
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
+import { canonicalCourseLink } from '@/lib/course-canonical';
 
 const COMPANY_ALT_MAP: Record<string, string> = {
   google: 'Google',
@@ -198,7 +199,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                           originalPrice: String(course.originalPrice ?? course.mrp ?? ''),
                           discountedPrice: String(course.price ?? course.fee ?? course.discountedPrice ?? ''),
                           emi: course.emi ?? 'Easy EMI available',
-                          href: course.href ?? '#',
+                          href: course.href ? canonicalCourseLink(course.href) : '#',
                           animationIndex: i,
                         }
                       })}

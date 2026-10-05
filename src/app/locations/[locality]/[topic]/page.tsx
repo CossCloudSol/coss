@@ -16,11 +16,11 @@ import {
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import { getCourseUrl } from '@/lib/course-url';
 import { formatBatchDate } from '@/lib/batch-utils';
 import { prisma } from '@/lib/db';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { safeJsonLd } from '@/lib/safe-json-ld';
+import { courseCanonicalPath } from '@/lib/course-canonical';
 
 export const revalidate = 86400;
 
@@ -195,7 +195,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
       '@type': 'ListItem',
       position: i + 1,
       name: c.title,
-      url: `${SITE_URL}${getCourseUrl(c)}`,
+      url: `${SITE_URL}${courseCanonicalPath(c)}`,
     })),
   } : null;
 
@@ -291,7 +291,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {courses.map((c) => (
                     c.nextBatchDate ? (
-                      <Link key={c.slug} href={getCourseUrl(c)}
+                      <Link key={c.slug} href={courseCanonicalPath(c)}
                         style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)' }}>
                         <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{c.title}</span>
                         <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)' }}>Next batch: {formatBatchDate(c.nextBatchDate)}</span>

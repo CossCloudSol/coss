@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
-import { getCourseUrl } from '@/lib/course-url';
 import { courseCanonicalUrl } from '@/lib/course-canonical';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 import { batchBookingMessage } from '@/lib/whatsapp';
@@ -29,6 +28,7 @@ import DemoSidebarForm from '@/components/DemoSidebarForm';
 import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { publicBadge } from '@/lib/course-badge';
+import { courseCanonicalPath } from '@/lib/course-canonical';
 
 export const revalidate = 86400;
 
@@ -542,7 +542,7 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
                     return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
                   })(),
                 emi: course.emi ?? 'Easy EMI available',
-                href: getCourseUrl({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
+                href: courseCanonicalPath({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
                 animationIndex: i,
               }
             })}

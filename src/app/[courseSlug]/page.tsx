@@ -8,13 +8,11 @@ import { buildPageMetadataWithFallback } from '@/lib/get-page-seo'
 import { appendTrainingInHyderabad } from '@/lib/build-title'
 import { getRelatedCourses } from '@/lib/related-courses'
 import { getFlatSiblingSlugs } from '@/lib/flat-siblings'
-import { getFlatCourseUrl, NESTED_CANONICAL_OVERRIDES } from '@/lib/flat-url'
+import { getFlatCourseUrl } from '@/lib/flat-url'
 import LandingPageTemplate from '@/components/LandingPageTemplate'
 import type { FlatSiblingLink } from '@/components/LandingPageTemplate'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com'
-
-// NESTED_CANONICAL_OVERRIDES lives in lib/flat-url (course canonicals and the sitemap use it too).
 
 export const revalidate = 86400
 
@@ -51,11 +49,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           ),
         }
       : undefined,
-  }
-
-  const nestedCanonical = NESTED_CANONICAL_OVERRIDES[slug]
-  if (nestedCanonical) {
-    fallback.alternates = { canonical: `${SITE_URL}${nestedCanonical}` }
+    // A flat landing page is always its own canonical (and og:url). Passed as the
+    // computed canonical so a stale PageSeo.canonicalUrl can't point it elsewhere.
+    alternates: { canonical: `${SITE_URL}${getFlatCourseUrl(slug)}` },
   }
 
   return buildPageMetadataWithFallback(slug, fallback)

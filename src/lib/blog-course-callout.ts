@@ -1,7 +1,7 @@
 import { SLUG_MAP } from '@/lib/get-landing-page-data'
 import { getFlatCourseUrl } from '@/lib/flat-url'
-import { getCourseUrl } from '@/lib/course-url'
 import { LOCALITY_TOPIC_PAGES, getLocalityBySlug } from '@/lib/locations-data'
+import { courseCanonicalPath } from '@/lib/course-canonical'
 
 export interface CalloutPostInput {
   slug: string
@@ -86,13 +86,13 @@ function getFlatCandidates(): FlatCandidate[] {
   }))
 }
 
-/** Single source of truth for a course callout's copy — used for both the OVERRIDES 'course' branch and the token-match resolveCourse() path, so the two can never drift. href always comes from getCourseUrl(), never a hardcoded path. */
+/** Single source of truth for a course callout's copy — used for both the OVERRIDES 'course' branch and the token-match resolveCourse() path, so the two can never drift. href always comes from courseCanonicalPath(), never a hardcoded path. */
 function buildCourseCallout(course: CalloutCourseInput): CalloutTarget {
   return {
     kind: 'course',
     title: course.title,
     description: `Learn more about our ${course.title} course — structured curriculum with placement support.`,
-    href: getCourseUrl(course),
+    href: courseCanonicalPath(course),
   }
 }
 
@@ -185,7 +185,7 @@ function bestMatch<T>(candidates: T[], getTokens: (item: T) => string[], getSlug
 }
 
 // A course-shaped override stores the course's DB slug, never a hardcoded
-// href — the href is always computed live via getCourseUrl() in
+// href — the href is always computed live via courseCanonicalPath() in
 // resolveOverride(), so a urlType change (legacy <-> nested category path)
 // can never desync it again. Path-shaped overrides (flat-legacy pages and
 // /locations/ pages) have no single DB row backing them the same way, so

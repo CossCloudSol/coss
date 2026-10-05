@@ -8,10 +8,10 @@ import { LOCALITIES, getLocalityBySlug, BRANCH_GEO, LOCALITY_TOPIC_PAGES, TOPIC_
 import { getBranchSettings } from '@/lib/get-branch-settings';
 import { buildLocalBusinessSchema } from '@/lib/global-schemas';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import { getCourseUrl } from '@/lib/course-url';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import { safeJsonLd } from '@/lib/safe-json-ld';
+import { courseCanonicalPath } from '@/lib/course-canonical';
 
 export const revalidate = 86400;
 
@@ -256,7 +256,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {courses.map((c) => (
-                      <Link key={c.slug} href={getCourseUrl(c)}
+                      <Link key={c.slug} href={courseCanonicalPath(c)}
                         style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
                         {c.title}
                       </Link>
@@ -429,7 +429,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '14px' }}>
                   {courses.map((c) => (
-                    <Link key={c.slug} href={getCourseUrl(c)}
+                    <Link key={c.slug} href={courseCanonicalPath(c)}
                       style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>
                       {c.title}
                     </Link>
