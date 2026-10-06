@@ -8,6 +8,9 @@ import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsA
 import { submitLead } from '@/lib/submitLead';
 import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import { openPendingWindow, navigatePendingWindow } from '@/lib/pending-window';
+import { goToThankYou } from '@/lib/lead-thank-you';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
 
 /* ─────────────────────────────────────────────────────────────── */
 /*  Constants                                                      */
@@ -189,6 +192,8 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
     e.preventDefault();
     if (!validate()) return;
 
+    // Opened on the click itself so pop-up blockers allow it; pointed at WhatsApp below.
+    const pending = openPendingWindow();
     setSubmitting(true);
     const result = await submitLead({
       name:     form.name.trim(),
@@ -205,7 +210,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
 
     setSubmitted(true);
     const message = buildFormMessage(form.name, form.course, form.branch);
-    window.open(buildWaUrl(message), '_blank', 'noopener,noreferrer');
+    navigatePendingWindow(pending, buildWaUrl(message));
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
       ctaType: ctaOrigin,
@@ -217,7 +222,9 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       // buildFormMessage() above; nothing is lost operationally.
       branchKey: form.branch === 'Online' ? undefined : form.branch.toLowerCase(),
     }));
-    setTimeout(() => setPanelOpen(false), 1400);
+    // WhatsApp still opens when the lead couldn't be saved; only a saved lead goes to /thank-you.
+    if (result.ok) goToThankYou('whatsapp_widget');
+    else setTimeout(() => setPanelOpen(false), 1400);
   }
 
   function handleSkip() {
@@ -380,6 +387,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
                   </>
                 )}
               </button>
+              <FormPrivacyNote />
 
               {/* Skip */}
               <button

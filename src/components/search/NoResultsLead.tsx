@@ -6,6 +6,8 @@ import { submitLead } from '@/lib/submitLead';
 import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation';
 import { trackFormStart, trackFormSubmit } from '@/lib/click-tracking';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 type State = { kind: 'idle' } | { kind: 'submitting' } | { kind: 'success' } | { kind: 'error'; message: string };
 
@@ -55,6 +57,7 @@ export default function NoResultsLead({
     if (result.ok) {
       trackFormSubmit(formId);
       setState({ kind: 'success' });
+      goToThankYou('course_search');
     } else {
       setState({ kind: 'error', message: result.message });
     }
@@ -110,6 +113,7 @@ export default function NoResultsLead({
           <button type="submit" disabled={busy} className="h-12 rounded-[10px] bg-[#b8531c] text-[15px] font-bold text-white hover:bg-[#8f3f14] disabled:opacity-60">
             {busy ? 'Sending…' : 'Call me back'}
           </button>
+          <FormPrivacyNote />
         </form>
       )}
       {children}

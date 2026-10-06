@@ -7,6 +7,9 @@ import { NAME_ERROR, nameField } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import { attachmentUrl } from '@/lib/cloudinary';
 import { trackBrochureDownload } from '@/lib/click-tracking';
+import { openPendingWindow, navigatePendingWindow, closePendingWindow } from '@/lib/pending-window';
+import { goToThankYou } from '@/lib/lead-thank-you';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
 
 /* -------------------------------------------------------------------------- */
 /*  "Download Brochure" trigger + popup. Two paths: enter a WhatsApp number   */
@@ -71,6 +74,8 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
       return;
     }
 
+    // Opened on the click itself so pop-up blockers allow it; pointed at WhatsApp below.
+    const pending = openPendingWindow();
     setSubmitting(true);
     setError(null);
     const result = await submitLead({
@@ -84,13 +89,14 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
     setSubmitting(false);
 
     if (!result.ok) {
+      closePendingWindow(pending);
       setError(result.message);
       return;
     }
 
     setSent(true);
-    window.open(delivery.waLink, '_blank', 'noopener,noreferrer');
-    setTimeout(close, 1400);
+    navigatePendingWindow(pending, delivery.waLink);
+    goToThankYou('brochure_request');
   }
 
   function handleSkip() {
@@ -182,6 +188,7 @@ function BrochureModal({ courseTitle, modal }: { courseTitle: string; modal: Bro
               >
                 {submitting ? 'Sending…' : 'Send via WhatsApp'}
               </button>
+              <FormPrivacyNote />
             </form>
 
             <button

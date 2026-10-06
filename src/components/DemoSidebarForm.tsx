@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,6 +8,8 @@ import { submitLead, type Branch } from '@/lib/submitLead';
 import type { CourseGroup } from '@/data/course-options';
 import { nameField, phoneField } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 /* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
@@ -34,6 +36,7 @@ const BRANCH_API_VALUE: Record<DemoFormValues['branch'], Branch> = {
 
 const sidebarInput: React.CSSProperties = {
   width: '100%',
+  minHeight: '44px',
   padding: '10px 12px',
   borderRadius: '6px',
   border: '1px solid rgba(255,255,255,0.15)',
@@ -82,6 +85,7 @@ const fieldErrorStyle: React.CSSProperties = {
    cross-browser-safe solution for a dark-card select. */
 const selectStyle: React.CSSProperties = {
   width: '100%',
+  minHeight: '44px',
   padding: '10px 12px',
   borderRadius: '6px',
   border: '1px solid rgba(255,255,255,0.25)',
@@ -145,6 +149,8 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const selectedBranch = watch('branch');
   const { honeypotRef, botFields } = useBotGuard();
+  // Unique per instance: a page can render the form twice (sidebar + mobile inline).
+  const branchLabelId = useId();
 
   async function onSubmit(values: DemoFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -157,6 +163,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       bot: botFields(),
     });
     if (result.ok) {
+      goToThankYou('demo');
       setState({ kind: 'success' });
       reset();
     } else {
@@ -277,7 +284,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       )}
 
       <label
-        id="demo-branch-label"
+        id={branchLabelId}
         style={{
           display: 'block',
           color: 'rgba(255,255,255,0.85)',
@@ -290,7 +297,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       </label>
       <div
         role="radiogroup"
-        aria-labelledby="demo-branch-label"
+        aria-labelledby={branchLabelId}
         style={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -318,6 +325,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
                 gap: '5px',
                 cursor: 'pointer',
                 textAlign: 'center',
+                minHeight: '44px',
                 padding: '8px 4px',
                 borderRadius: '6px',
                 border: `1px solid ${isSelected ? 'var(--primary)' : 'rgba(255,255,255,0.15)'}`,
@@ -377,6 +385,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
           <>Book my free demo</>
         )}
       </button>
+      <FormPrivacyNote />
 
       {state.kind === 'error' ? (
         <p

@@ -5,6 +5,8 @@ import { getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
 import { trackLeadEvent } from '@/lib/submitLead';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 const labelStyle: React.CSSProperties = {
   display: 'block', fontSize: '13px', fontFamily: 'Poppins, sans-serif',
@@ -60,6 +62,7 @@ export default function ContactForm() {
           utmSource: firstTouch?.utmSource,
           landingPage: firstTouch?.landingPage,
         });
+        goToThankYou('contact');
       } else {
         const errs = data.errors
           ? (Object.values(data.errors) as string[][]).flat().join(', ')
@@ -138,6 +141,7 @@ export default function ContactForm() {
       >
         {status === 'loading' ? '⏳ Sending…' : 'Send Message →'}
       </button>
+      <FormPrivacyNote />
     </form>
   );
 }

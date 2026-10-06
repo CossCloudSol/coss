@@ -21,6 +21,8 @@ import { prisma } from '@/lib/db';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { courseCanonicalPath } from '@/lib/course-canonical';
+import MobileInlineDemo from '@/components/MobileInlineDemo';
+import { COURSE_GROUPS } from '@/data/course-options';
 
 export const revalidate = 86400;
 
@@ -230,6 +232,12 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
           { label: localityConfig.name, href: `/locations/${config.localitySlug}` },
           { label: topicLabel, href: `/locations/${config.localitySlug}/${config.slug}` },
         ]}
+      />
+      <MobileInlineDemo
+        {...(courses.length > 0
+          ? { courseGroups: [{ category: topicLabel, courses: courses.map((c) => ({ shortTitle: c.title, slug: c.slug })) }] }
+          : { courseGroups: COURSE_GROUPS })}
+        subtitle={`${topicLabel} · ${localityConfig.name} · see a class before you decide`}
       />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>

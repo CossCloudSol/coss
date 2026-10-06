@@ -5,6 +5,9 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { nameField, phoneField } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
+import { trackLeadEvent } from '@/lib/submitLead';
 
 const corporateFormSchema = z.object({
   companyName:   z.string().min(2, 'Company name is required'),
@@ -111,6 +114,8 @@ export default function CorporateForm(): JSX.Element {
     }
     setState({ kind: 'success' });
     reset();
+    trackLeadEvent({ formType: 'corporate', submitPath: window.location.pathname, leadId: '' });
+    goToThankYou('corporate');
   }
 
   if (state.kind === 'success') {
@@ -189,6 +194,7 @@ export default function CorporateForm(): JSX.Element {
         )}
         {isSubmitting ? 'Sending…' : 'Request Training Proposal'}
       </button>
+      <FormPrivacyNote />
     </form>
   );
 }

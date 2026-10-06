@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
 import { nameField, phoneField } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 /* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
@@ -85,6 +87,7 @@ export default function HeroEnrollForm(): JSX.Element {
       bot: botFields(),
     });
     if (result.ok) {
+      goToThankYou('hero_demo');
       setState({ kind: 'success' });
       reset();
     } else {
@@ -290,6 +293,7 @@ export default function HeroEnrollForm(): JSX.Element {
           <>Book my free demo</>
         )}
       </button>
+      <FormPrivacyNote />
 
       {state.kind === 'error' ? (
         <p

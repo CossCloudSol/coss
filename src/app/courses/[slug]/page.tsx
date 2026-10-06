@@ -25,6 +25,7 @@ import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
+import MobileInlineDemo from '@/components/MobileInlineDemo';
 import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { publicBadge } from '@/lib/course-badge';
@@ -280,6 +281,8 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
         </div>
       </div>
 
+      <MobileInlineDemo course={course.title} subtitle={`${course.title} · see a class before you decide`} />
+
       {/* Promo banner, below the hero */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 20px 0' }}>
         <PromoBanner placement="course-page" banner={bannerForSlot(await getPromoBanners('course-page'), 0)} syllabus={syllabusLinkFor(course)} />
@@ -501,6 +504,13 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
           </span>
         </div>
       </div>
+
+      {category.courses.length > 0 && (
+        <MobileInlineDemo
+          courseGroups={[{ category: category.name, courses: category.courses.map((c: { title: string; slug: string }) => ({ shortTitle: c.title, slug: c.slug })) }]}
+          subtitle={`${category.name} · see a class before you decide`}
+        />
+      )}
 
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto mb-10 text-center">

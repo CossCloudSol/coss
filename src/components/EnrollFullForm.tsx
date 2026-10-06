@@ -8,6 +8,8 @@ import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
 import { nameField, phoneField } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 // `?course=` arrives from a URL and is written to the database as the lead's
 // `course` value — it must be a slug shape only, never arbitrary user-editable
@@ -128,6 +130,7 @@ function EnrollFullFormFields({
       bot:      botFields(),
     });
     if (result.ok) {
+      goToThankYou('full');
       setState({ kind: 'success' });
       reset();
     } else {
@@ -269,6 +272,7 @@ function EnrollFullFormFields({
           </>
         )}
       </button>
+      <FormPrivacyNote />
 
       {/* Error */}
       {state.kind === 'error' && (

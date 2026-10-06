@@ -12,6 +12,8 @@ import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { courseCanonicalPath } from '@/lib/course-canonical';
+import MobileInlineDemo from '@/components/MobileInlineDemo';
+import { COURSE_GROUPS } from '@/data/course-options';
 
 export const revalidate = 86400;
 
@@ -178,6 +180,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
           ctaText={`${branch.addressLine2 || branch.city}, Hyderabad · Free career counselling`}
           breadcrumb={[{ label: config.name, href: `/locations/${config.slug}` }]}
         />
+        <MobileInlineDemo courseGroups={COURSE_GROUPS} subtitle={`${config.name} · see a class before you decide`} />
 
         <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
           <div className="page-with-sidebar">
@@ -358,6 +361,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
         ctaText="No branch in this area — honest commute guidance below · Free counselling"
         breadcrumb={[{ label: config.name, href: `/locations/${config.slug}` }]}
       />
+      <MobileInlineDemo courseGroups={COURSE_GROUPS} subtitle={`${config.name} · see a class before you decide`} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div className="page-with-sidebar">

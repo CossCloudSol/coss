@@ -1034,6 +1034,8 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 .page-with-sidebar { display: grid; grid-template-columns: 1fr 300px; gap: 36px; align-items: start; }
+/* The demo form shown under the hero on phones (the sidebar copy is hidden there). */
+.mobile-inline-demo { display: none; }
 
 /* Prose / Blog content */
 .prose-content { color: var(--text-muted); }
@@ -1215,6 +1217,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
   .page-with-sidebar { grid-template-columns: 1fr !important; }
   .page-with-sidebar > div:last-child { display: none !important; }
+  .mobile-inline-demo { display: block; padding: 20px 16px 0; }
+  /* 16px: iOS Safari zooms the page when a smaller input gets focus. */
+  .mobile-inline-demo input, .mobile-inline-demo select { font-size: 16px !important; }
   .course-feat-grid { grid-template-columns: repeat(2,1fr) !important; }
   .course-list-grid { grid-template-columns: repeat(2,1fr) !important; }
   .page-two-col { grid-template-columns: 1fr !important; gap: 24px !important; }

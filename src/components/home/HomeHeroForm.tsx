@@ -9,6 +9,8 @@ import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import CallLink from '@/components/CallLink';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { PREFILL_COURSE_EVENT } from '@/components/home/TrackedCta';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 const FORM_ID = 'home_hero';
 
@@ -78,6 +80,7 @@ export default function HomeHeroForm(): JSX.Element {
     if (result.ok) {
       trackFormSubmit(FORM_ID, course || undefined);
       setState({ kind: 'success' });
+      goToThankYou('hero');
     } else {
       setState({ kind: 'error', message: result.message });
     }
@@ -209,6 +212,7 @@ export default function HomeHeroForm(): JSX.Element {
         {busy ? 'Booking…' : 'Book My Free Demo'}
         {!busy && <ArrowRight className="h-5 w-5" aria-hidden="true" />}
       </button>
+      <FormPrivacyNote />
 
       {/* font-sans on the small flowing lines: no shift when the web font swaps in. */}
       <p className="flex flex-wrap justify-center gap-x-5 gap-y-1 font-sans text-[13px] text-[#4a5c61]">

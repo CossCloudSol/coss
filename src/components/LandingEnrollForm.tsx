@@ -5,6 +5,8 @@ import { submitLead, type Branch } from '@/lib/submitLead'
 import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation'
 import WhatsAppLink from '@/components/WhatsAppLink'
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField'
+import FormPrivacyNote from '@/components/FormPrivacyNote'
+import { goToThankYou } from '@/lib/lead-thank-you'
 
 interface Props {
   courseTitle: string
@@ -50,6 +52,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
       bot: botFields(),
     })
     setState(result.ok ? { kind: 'success' } : { kind: 'error', message: result.message })
+    if (result.ok) goToThankYou('demo')
   }
 
   if (state.kind === 'success') {
@@ -156,6 +159,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
           </svg>
         </button>
+        <FormPrivacyNote />
 
       </form>
 

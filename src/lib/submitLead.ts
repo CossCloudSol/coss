@@ -10,7 +10,7 @@ import { normalizeIndianMobile } from '@/lib/lead-validation';
 import type { BotFields } from '@/components/HoneypotField';
 
 export type Branch = 'Dilsukhnagar' | 'Ameerpet' | 'Online';
-export type FormType = 'hero' | 'hero_demo' | 'full' | 'demo' | 'whatsapp_widget' | 'contact' | 'brochure_request' | 'course_search';
+export type FormType = 'hero' | 'hero_demo' | 'full' | 'demo' | 'whatsapp_widget' | 'contact' | 'brochure_request' | 'course_search' | 'corporate';
 
 export interface LeadSubmitInput {
   name: string;
@@ -53,6 +53,8 @@ export function trackLeadEvent(params: {
     const eventParams: Record<string, string> = {
       form_type: params.formType,
       submit_path: params.submitPath,
+      // The thank-you redirect follows right after; beacon lets the hit survive it.
+      transport_type: 'beacon',
     };
     if (params.leadId) eventParams.lead_id = params.leadId;
     if (params.utmSource) eventParams.utm_source = params.utmSource;
