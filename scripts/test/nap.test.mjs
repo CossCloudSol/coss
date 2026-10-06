@@ -6,13 +6,20 @@ import { execFileSync } from 'node:child_process';
 import { BRAND_NAME, PRIMARY_PHONE, PRIMARY_PHONE_LABEL, formatIndianPhone } from '../../src/lib/nap.ts';
 import { groupPeriods, openingHoursSpecification, periodsFromSettings, to12h } from '../../src/lib/opening-hours.ts';
 
-const grep = (pattern) => {
+const grep = (pattern, where = ['src']) => {
   try {
-    return execFileSync('git', ['grep', '-n', '-E', pattern, '--', 'src'], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
-  } catch {
-    return []; // git grep exits 1 when nothing matches
+    return execFileSync('git', ['grep', '-n', '-E', pattern, '--', ...where], { encoding: 'utf8' }).trim().split('\n').filter(Boolean);
+  } catch (err) {
+    if (err.status === 1) return []; // git grep exits 1 when nothing matches
+    throw err; // a bad pattern (exit 2) must fail the test, not pass it
   }
 };
+
+test('the grep helper finds what is there (guards against a pattern that silently matches nothing)', () => {
+  assert.ok(grep(String.raw`\bBRAND_NAME\b`).length > 0);
+  assert.ok(grep(String.raw`Coss Cloud Solutions\b`, ['content']).length > 0);
+  assert.ok(grep(String.raw`\]\(https?://`, ['content']).length > 0);
+});
 
 test('the main number: one copy in src/lib/nap.ts, label and E.164 agree', () => {
   assert.equal(BRAND_NAME, 'Coss Cloud Solutions');
@@ -20,8 +27,13 @@ test('the main number: one copy in src/lib/nap.ts, label and E.164 agree', () =>
   assert.deepEqual(grep('88851[ -]?66007|8885166007').filter((l) => !l.startsWith('src/lib/nap.ts:')), []);
 });
 
-test('the retired second number appears nowhere in src/', () => {
-  assert.deepEqual(grep('77807[ -]?27374|7780727374'), []);
+test('the retired second number appears nowhere in src/ or the blog posts', () => {
+  assert.deepEqual(grep('77807[ -]?27374|7780727374', ['src', 'content']), []);
+});
+
+test('blog posts: brand spelled Coss Cloud Solutions; no ChatGPT citation chips', () => {
+  assert.deepEqual(grep(String.raw`COSS Cloud Solutions?|Coss Cloud Solution\b[^s]|\bCOSS\b`, ['content']), []);
+  assert.deepEqual(grep(String.raw`\+[0-9]+\]\(https?://`, ['content']), []);
 });
 
 test('brand spelling: no "COSS Cloud Solutions" outside the brand-matching regexes and comments', () => {
@@ -63,7 +75,8 @@ test('groupPeriods: consecutive days with the same hours, closed days, split day
   assert.deepEqual(groupPeriods([]), []);
 });
 
-test('openingHoursSpecification: one entry per distinct span', () => {
+test('openingHoursSpecification: one entry per distinct span, Monday first', () => {
+  assert.deepEqual(openingHoursSpecification([{ day: 'Sunday', opens: '07:00', closes: '21:00' }, { day: 'Monday', opens: '07:00', closes: '21:00' }])[0].dayOfWeek, ['Monday', 'Sunday']);
   const spec = openingHoursSpecification([
     ...periodsFromSettings('Mon-Fri', '09:00', '19:00'),
     { day: 'Saturday', opens: '10:00', closes: '14:00' },

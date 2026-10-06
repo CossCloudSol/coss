@@ -71,7 +71,8 @@ export function groupPeriods(periods: HoursPeriod[]): HoursGroup[] {
 /** schema.org openingHoursSpecification, one entry per distinct span. */
 export function openingHoursSpecification(periods: HoursPeriod[]) {
   const bySpan = new Map<string, Weekday[]>()
-  for (const p of periods) {
+  // Monday first, whatever order the source used (Google lists Sunday first).
+  for (const p of [...periods].sort((a, b) => WEEK.indexOf(a.day) - WEEK.indexOf(b.day))) {
     const key = `${p.opens}|${p.closes}`
     bySpan.set(key, [...(bySpan.get(key) ?? []), p.day])
   }
