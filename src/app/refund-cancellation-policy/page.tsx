@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import { BRAND_NAME, CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL, REGISTERED_ADDRESS } from '@/lib/nap';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -110,9 +111,9 @@ const sections: Section[] = [
       <>
         <p style={{ margin: '0 0 6px' }}>Refund or cancellation requests must be submitted in writing to:</p>
         <p style={{ margin: '0 0 10px' }}>
-          <strong style={labelStyle}>Email:</strong> info@cosscloudsol.com
+          <strong style={labelStyle}>Email:</strong> {CONTACT_EMAIL}
           <br />
-          <strong style={labelStyle}>Phone:</strong> +91 88851 66007
+          <strong style={labelStyle}>Phone:</strong> {PRIMARY_PHONE_LABEL}
         </p>
         <p style={{ margin: '0 0 10px' }}>The request should include:</p>
         <ul style={{ margin: '0 0 12px', paddingLeft: '20px' }}>
@@ -175,7 +176,7 @@ const sections: Section[] = [
   },
   {
     title: '15. Contact Us',
-    content: 'For questions about cancellations, course transfers or refunds, please contact us before enrolling: Coss Cloud Solutions, Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar, Dilsukhnagar, Hyderabad, Telangana 500060. Email: info@cosscloudsol.com | Phone: +91 88851 66007',
+    content: `For questions about cancellations, course transfers or refunds, please contact us before enrolling: ${BRAND_NAME}, ${REGISTERED_ADDRESS}. Email: ${CONTACT_EMAIL} | Phone: ${PRIMARY_PHONE_LABEL}`,
   },
 ];
 
@@ -211,7 +212,7 @@ export default function RefundCancellationPolicyPage() {
           <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '10px' }}>Have Questions?</h3>
           <p style={{ color: '#ccc', fontSize: '14px', marginBottom: '18px' }}>Our team is happy to clarify any of these terms before you enroll.</p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <CallLink number="+918885166007" pageType="static" style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            <CallLink number={PRIMARY_PHONE} pageType="static" style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               📞 Call Us
             </CallLink>
             <a href="mailto:info@cosscloudsol.com" style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '11px 24px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.3)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>

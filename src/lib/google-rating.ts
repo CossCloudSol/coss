@@ -7,7 +7,7 @@ import { dedupeInFlight, fetchPlaceRating, isNextInternalError, pauseAfterFailur
 export type { GoogleRating };
 
 /**
- * Live Google rating for the Dilsukhnagar listing (Places API (New),
+ * Live Google rating and opening hours for the Dilsukhnagar listing (Places API (New),
  * GOOGLE_PLACES_API_KEY + GOOGLE_PLACE_ID_DILSUKHNAGAR, server-only).
  *
  * Only successes are cached (revalidate 86400 s, tag 'google-rating'): the
@@ -31,7 +31,7 @@ const isNextInternal = (err: unknown) => isDynamicServerError(err) || isDynamicU
 // Runs only on a cache miss; throws while paused (never cached).
 const loadFromGoogle = pauseAfterFailure(() => fetchPlaceRating(process.env), { isInternal: isNextInternal });
 
-const loadCached = unstable_cache(loadFromGoogle, ['google-rating-dilsukhnagar'], {
+const loadCached = unstable_cache(loadFromGoogle, ['google-place-dilsukhnagar-v2'] /* v2: + opening hours; the old entry lacks them */, {
   revalidate: 86_400,
   tags: ['google-rating'],
 });

@@ -1,5 +1,5 @@
 /**
- * Google Places API (New) Place Details: the live rating for one listing.
+ * Google Places API (New) Place Details: the live rating and opening hours for one listing.
  * Dependency-free so `node --test` can import it (scripts/test/google-places.test.mjs);
  * src/lib/google-rating.ts adds the cache and the server-only guard.
  *
@@ -14,6 +14,48 @@ export interface GoogleRating {
   count: number;
   /** The listing on Google Maps: the attribution link. */
   mapsUri: string;
+  /** Opening hours from the same listing; null when Google has none or they don't parse. */
+  hours: PlaceHours | null;
+}
+
+/** Opening hours as the Google Business Profile lists them. */
+export interface PlaceHours {
+  /** Google's own text, one line per day, Monday first: "Monday: 7:00 AM – 9:00 PM". */
+  weekdayDescriptions: string[];
+  /** For schema.org openingHoursSpecification: day name, "HH:MM" opens/closes. */
+  periods: Array<{ day: SchemaDay; opens: string; closes: string }>;
+}
+
+const SCHEMA_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+export type SchemaDay = (typeof SCHEMA_DAYS)[number];
+
+const hhmm = (p: unknown): string | null => {
+  const { hour, minute } = (p ?? {}) as { hour?: unknown; minute?: unknown };
+  const h = typeof hour === 'number' ? hour : 0;
+  const m = typeof minute === 'number' ? minute : 0;
+  if (!Number.isInteger(h) || !Number.isInteger(m) || h < 0 || h > 24 || m < 0 || m > 59) return null;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+};
+
+/**
+ * regularOpeningHours from Places (New). Lenient: anything unexpected gives
+ * null, so a hours problem can never hide the rating. A period without a
+ * close (open 24 hours) closes at 23:59.
+ */
+export function parsePlaceHours(raw: unknown): PlaceHours | null {
+  const { weekdayDescriptions, periods } = (raw ?? {}) as { weekdayDescriptions?: unknown; periods?: unknown };
+  if (!Array.isArray(weekdayDescriptions) || weekdayDescriptions.length !== 7 || !weekdayDescriptions.every((d) => typeof d === 'string' && d.trim())) return null;
+  if (!Array.isArray(periods) || periods.length === 0) return null;
+  const out: PlaceHours['periods'] = [];
+  for (const p of periods as Array<{ open?: { day?: unknown }; close?: unknown }>) {
+    const day = p?.open?.day;
+    if (typeof day !== 'number' || !Number.isInteger(day) || day < 0 || day > 6) return null;
+    const opens = hhmm(p.open);
+    const closes = p.close === undefined ? '23:59' : hhmm(p.close);
+    if (!opens || !closes) return null;
+    out.push({ day: SCHEMA_DAYS[day], opens, closes });
+  }
+  return { weekdayDescriptions: weekdayDescriptions.map((d: string) => d.trim()), periods: out };
 }
 
 /** A slow Google response must not stall a build or a render. */
@@ -50,7 +92,7 @@ export async function fetchPlaceRating(env: Env, fetchImpl: typeof fetch = fetch
     // while an explicit cache: 'no-store' during static/ISR generation throws
     // DynamicServerError before the request is made (patch-fetch).
     res = await fetchImpl(`https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`, {
-      headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'rating,userRatingCount,googleMapsUri' },
+      headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'rating,userRatingCount,googleMapsUri,regularOpeningHours' },
       signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (err) {
@@ -60,7 +102,7 @@ export async function fetchPlaceRating(env: Env, fetchImpl: typeof fetch = fetch
   }
   if (!res.ok || res.status !== 200) throw new Error(`Places API HTTP ${res.status}`);
 
-  let body: { rating?: unknown; userRatingCount?: unknown; googleMapsUri?: unknown };
+  let body: { rating?: unknown; userRatingCount?: unknown; googleMapsUri?: unknown; regularOpeningHours?: unknown };
   try {
     body = await res.json();
   } catch {
@@ -70,7 +112,7 @@ export async function fetchPlaceRating(env: Env, fetchImpl: typeof fetch = fetch
   if (typeof rating !== 'number' || !Number.isFinite(rating) || rating < 1 || rating > 5) throw new Error('Places API: rating missing or out of range');
   if (typeof userRatingCount !== 'number' || !Number.isInteger(userRatingCount) || userRatingCount < 1) throw new Error('Places API: userRatingCount missing or invalid');
   if (typeof googleMapsUri !== 'string' || !MAPS_URI.test(googleMapsUri)) throw new Error('Places API: googleMapsUri missing or not a Google Maps link');
-  return { rating, count: userRatingCount, mapsUri: googleMapsUri };
+  return { rating, count: userRatingCount, mapsUri: googleMapsUri, hours: parsePlaceHours(body.regularOpeningHours) };
 }
 
 /** One line, no URL (place id), nothing key-shaped. */

@@ -11,6 +11,7 @@ import WhatsAppLink from '@/components/WhatsAppLink';
 import { PREFILL_COURSE_EVENT } from '@/components/home/TrackedCta';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
+import { PRIMARY_PHONE } from '@/lib/nap';
 
 const FORM_ID = 'home_hero';
 
@@ -242,7 +243,7 @@ export default function HomeHeroForm(): JSX.Element {
           WhatsApp us
         </WhatsAppLink>
         <CallLink
-          number="+918885166007"
+          number={PRIMARY_PHONE}
           pageType="static"
           className="flex h-[46px] items-center justify-center gap-2 rounded-[10px] border border-[#cfdadd] text-sm font-bold text-[#005663] hover:border-[#005663]"
         >

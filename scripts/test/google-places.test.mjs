@@ -2,7 +2,7 @@
 // All numbers below are test fixtures; the site only ever shows Google's live values.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { dedupeInFlight, failureLine, fetchPlaceRating, isNextInternalError, ratingGetter, ratingLabel } from '../../src/lib/google-places.ts';
+import { dedupeInFlight, failureLine, fetchPlaceRating, isNextInternalError, parsePlaceHours, ratingGetter, ratingLabel } from '../../src/lib/google-places.ts';
 
 const ENV = { GOOGLE_PLACES_API_KEY: 'test-key', GOOGLE_PLACE_ID_DILSUKHNAGAR: 'ChIJtest' };
 const OK = { rating: 4.66, userRatingCount: 1234, googleMapsUri: 'https://maps.google.com/?cid=123' };
@@ -12,10 +12,10 @@ const nextError = (digest) => Object.assign(new Error(`internal ${digest}`), { d
 test('success: rating, count and the Maps link; the request is the Places API (New) shape', async () => {
   let seen;
   const r = await fetchPlaceRating(ENV, async (url, init) => { seen = { url, init }; return new Response(JSON.stringify(OK)); });
-  assert.deepEqual(r, { rating: 4.66, count: 1234, mapsUri: 'https://maps.google.com/?cid=123' });
+  assert.deepEqual(r, { rating: 4.66, count: 1234, mapsUri: 'https://maps.google.com/?cid=123', hours: null });
   assert.equal(seen.url, 'https://places.googleapis.com/v1/places/ChIJtest');
   assert.equal(seen.init.headers['X-Goog-Api-Key'], 'test-key');
-  assert.equal(seen.init.headers['X-Goog-FieldMask'], 'rating,userRatingCount,googleMapsUri');
+  assert.equal(seen.init.headers['X-Goog-FieldMask'], 'rating,userRatingCount,googleMapsUri,regularOpeningHours');
   assert.ok(seen.init.signal instanceof AbortSignal, 'request has a timeout signal');
   // Regression: an explicit cache option makes Next throw DynamicServerError
   // inside unstable_cache during static generation (the rating vanished on the preview).
@@ -95,8 +95,8 @@ test('failures become null (logged once) and are not cached; a later success is'
   assert.equal(calls, 2, 'each failure goes back to Google: nothing was cached');
   assert.deepEqual(logs, ['[google-rating] hidden: Places API HTTP 403'], 'the same failure is logged once');
 
-  assert.deepEqual(await get(), { rating: 4.66, count: 1234, mapsUri: OK.googleMapsUri });
-  assert.deepEqual(await get(), { rating: 4.66, count: 1234, mapsUri: OK.googleMapsUri });
+  assert.deepEqual(await get(), { rating: 4.66, count: 1234, mapsUri: OK.googleMapsUri, hours: null });
+  assert.deepEqual(await get(), { rating: 4.66, count: 1234, mapsUri: OK.googleMapsUri, hours: null });
   assert.equal(calls, 3, 'the success is served from the cache');
 });
 
@@ -193,4 +193,28 @@ test('failure pause: Next internals pass through and do not start a pause', asyn
   await assert.rejects(paused(), (err) => err === dyn);
   assert.equal(await paused(), 'ok', 'not paused by an internal error');
   assert.equal(calls, 2);
+});
+
+// Fixture shaped like Places (New) regularOpeningHours; not the listing's real hours.
+const HOURS = {
+  periods: [1, 2, 3, 4, 5, 6].map((day) => ({ open: { day, hour: 9, minute: 0 }, close: { day, hour: 19, minute: 30 } })).concat([{ open: { day: 0, hour: 10 }, close: { day: 0, hour: 14 } }]),
+  weekdayDescriptions: ['Monday: 9:00 AM – 7:30 PM', 'Tuesday: 9:00 AM – 7:30 PM', 'Wednesday: 9:00 AM – 7:30 PM', 'Thursday: 9:00 AM – 7:30 PM', 'Friday: 9:00 AM – 7:30 PM', 'Saturday: 9:00 AM – 7:30 PM', 'Sunday: 10:00 AM – 2:00 PM'],
+};
+
+test('opening hours: parsed from the same Places response, for the page and schema.org', async () => {
+  const r = await fetchPlaceRating(ENV, reply(200, { ...OK, regularOpeningHours: HOURS }));
+  assert.deepEqual(r.hours.weekdayDescriptions, HOURS.weekdayDescriptions);
+  assert.deepEqual(r.hours.periods[0], { day: 'Monday', opens: '09:00', closes: '19:30' });
+  assert.deepEqual(r.hours.periods[6], { day: 'Sunday', opens: '10:00', closes: '14:00' });
+  // Open 24 hours: no close.
+  assert.deepEqual(parsePlaceHours({ ...HOURS, periods: [{ open: { day: 0, hour: 0, minute: 0 } }] }).periods, [{ day: 'Sunday', opens: '00:00', closes: '23:59' }]);
+});
+
+test('opening hours: bad or missing data gives null and never hides the rating', async () => {
+  for (const bad of [undefined, null, {}, { ...HOURS, weekdayDescriptions: ['Monday: x'] }, { ...HOURS, periods: [] }, { ...HOURS, periods: [{ open: { day: 9 } }] }, { ...HOURS, periods: [{ open: { day: 1, hour: 25 } }] }]) {
+    assert.equal(parsePlaceHours(bad), null, JSON.stringify(bad));
+    const r = await fetchPlaceRating(ENV, reply(200, { ...OK, regularOpeningHours: bad }));
+    assert.equal(r.rating, 4.66);
+    assert.equal(r.hours, null);
+  }
 });

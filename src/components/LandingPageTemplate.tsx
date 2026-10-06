@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import { LandingPageCourse, safeParseJson } from '@/lib/get-landing-page-data'
-import { BranchSettings } from '@/lib/get-branch-settings'
+import { BranchSettings, FALLBACK } from '@/lib/get-branch-settings'
 import { BRANCH_MAP_EMBED, type BranchKey } from '@/lib/locations-data'
 import { sanitizeDescription } from '@/lib/sanitizeDescription'
 import type { RelatedCourseItem } from '@/lib/related-courses'
@@ -17,6 +17,7 @@ import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
 import PromoBanner from '@/components/PromoBanner'
 import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners'
 import { bannerForSlot } from '@/lib/promo-banner-slots'
+import { PRIMARY_PHONE_LABEL } from '@/lib/nap'
 
 interface HiringPartner {
   id: string
@@ -83,8 +84,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
   const dilsukhnagar = branches.find(b => b.branchKey === 'dilsukhnagar')
   const ameerpet = branches.find(b => b.branchKey === 'ameerpet')
 
-  const phone1 = dilsukhnagar?.phone ?? '+91 88851 66007'
-  const phone2 = ameerpet?.phone ?? '+91 88851 66007'
+  const phone1 = dilsukhnagar?.phone ?? PRIMARY_PHONE_LABEL
+  const phone2 = ameerpet?.phone ?? PRIMARY_PHONE_LABEL
   const waMessage = `Hi Coss Cloud Solutions Team, I'm interested in the ${course.title} course. Could you share the batch details?`
 
   const h1 = `${course.title} in Hyderabad`
@@ -124,7 +125,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
         location: {
           '@type': 'Place',
           name: 'Coss Cloud Solutions Dilsukhnagar',
-          address: { '@type': 'PostalAddress', streetAddress: dilsukhnagar?.addressLine1 ?? 'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar', addressLocality: 'Dilsukhnagar', addressRegion: 'Telangana', postalCode: dilsukhnagar?.pincode ?? '500060', addressCountry: 'IN' },
+          address: { '@type': 'PostalAddress', streetAddress: dilsukhnagar?.addressLine1 ?? FALLBACK.dilsukhnagar.addressLine1, addressLocality: 'Dilsukhnagar', addressRegion: 'Telangana', postalCode: dilsukhnagar?.pincode ?? '500060', addressCountry: 'IN' },
         },
       },
       {
@@ -164,16 +165,16 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
       branchObj: dilsukhnagar,
       branchKey: 'dilsukhnagar',
       fallbackName: 'Coss Cloud Solutions — Dilsukhnagar',
-      fallbackAddr1: 'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar',
-      fallbackAddr2: 'Dilsukhnagar, Hyderabad – 500060',
+      fallbackAddr1: FALLBACK.dilsukhnagar.addressLine1,
+      fallbackAddr2: `${FALLBACK.dilsukhnagar.addressLine2}, ${FALLBACK.dilsukhnagar.city} – ${FALLBACK.dilsukhnagar.pincode}`,
       fallbackPhone: phone1,
     },
     {
       branchObj: ameerpet,
       branchKey: 'ameerpet',
       fallbackName: 'Coss Cloud Solutions — Ameerpet',
-      fallbackAddr1: '#502, Sree Swathi Ankur Building',
-      fallbackAddr2: 'Besides Aditya Trade Center, Ameerpet, Hyderabad – 500016',
+      fallbackAddr1: FALLBACK.ameerpet.addressLine1,
+      fallbackAddr2: `${FALLBACK.ameerpet.addressLine2}, ${FALLBACK.ameerpet.city} – ${FALLBACK.ameerpet.pincode}`,
       fallbackPhone: phone2,
     },
   ]

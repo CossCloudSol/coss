@@ -30,6 +30,7 @@ import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { publicBadge } from '@/lib/course-badge';
 import { courseCanonicalPath } from '@/lib/course-canonical';
+import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 
 export const revalidate = 86400;
 
@@ -458,7 +459,7 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <CallLink number="+918885166007" pageType="course" courseSlug={courseSlug} style={{ color: '#e47538', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
+          <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={courseSlug} style={{ color: '#e47538', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
           <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
         </p>
       </div>

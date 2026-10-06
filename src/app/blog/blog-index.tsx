@@ -115,7 +115,7 @@ function BlogCard({
         >
           {dateLabel}
         </div>
-        <p className="blog-card-brand">COSS CLOUD SOLUTIONS</p>
+        <p className="blog-card-brand" style={{ textTransform: 'uppercase' }}>Coss Cloud Solutions</p>
         <h3 className="blog-card-img-title">{category}</h3>
         <span className="blog-card-pill">Training in Hyderabad</span>
       </div>

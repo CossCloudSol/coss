@@ -59,7 +59,6 @@ export interface BranchLocalityConfig {
   intro: string[]
   directionsHeading: string
   directionsBody: string[]
-  addressLines: string[]
   mapEmbed: string
   directionsHref: string
   nearbyCatchmentSlugs: string[]
@@ -119,10 +118,6 @@ export const LOCALITIES: LocalityConfig[] = [
       'By road, we\'re just off the Dilsukhnagar main junction, close to the Chaitanyapuri and Kothapet bus stops — most LB Nagar-bound and Uppal-bound city buses stop within walking distance.',
       'Landmark directions: above Bank of Maharashtra in Srinagar Colony, opposite Chai Vaai Cafe and beside Anjana Function Hall.',
     ],
-    addressLines: [
-      'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar,',
-      'Dilsukhnagar, Hyderabad – 500060',
-    ],
     mapEmbed: BRANCH_MAP_EMBED.dilsukhnagar,
     directionsHref: BRANCH_DIRECTIONS_HREF.dilsukhnagar,
     nearbyCatchmentSlugs: ['kukatpally'],
@@ -153,11 +148,6 @@ export const LOCALITIES: LocalityConfig[] = [
       'Ameerpet Metro Station is the interchange for the Red Line (Miyapur–LB Nagar) and Blue Line (Raidurg–Nagole) — whichever line you\'re on, you don\'t need to change trains to reach it.',
       'From the station, the centre is a short walk toward Aditya Trade Center — look for Sree Swathi Ankur Building.',
       'By road, we\'re easily reached from SR Nagar and Punjagutta via the Ameerpet main road, with frequent city bus services stopping nearby.',
-    ],
-    addressLines: [
-      '#502, Sree Swathi Ankur Building,',
-      'Besides Aditya Trade Center,',
-      'Ameerpet, Hyderabad – 500016',
     ],
     mapEmbed: BRANCH_MAP_EMBED.ameerpet,
     directionsHref: BRANCH_DIRECTIONS_HREF.ameerpet,
