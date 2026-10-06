@@ -31,6 +31,8 @@ import { safeJsonLd } from '@/lib/safe-json-ld';
 import { publicBadge } from '@/lib/course-badge';
 import { courseCanonicalPath } from '@/lib/course-canonical';
 import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
+import { courseJsonLd } from '@/lib/course-jsonld';
+import { breadcrumbList, collectionPage, jsonLdGraph } from '@/lib/structured-data';
 
 export const revalidate = 86400;
 
@@ -212,13 +214,14 @@ export default async function CourseOrCategoryPage({ params }: { params: { slug:
   // Check course first (legacy URLs), then category for new dynamic categories
   const course = await getCourse(params.slug);
   if (course) {
-    const customSchema = await getPageSchemaMarkup(`courses/${params.slug}`);
+    // The page's own graph covers Course, FAQ and breadcrumb; the stored markup may only add other types.
+    const customSchema = await getPageSchemaMarkup(`courses/${params.slug}`, ['BreadcrumbList']);
     return <CourseDetailView course={course} customSchema={customSchema} />;
   }
 
   const category = await getCategory(params.slug);
   if (category) {
-    const customSchema = await getPageSchemaMarkup(`courses/${params.slug}`);
+    const customSchema = await getPageSchemaMarkup(`courses/${params.slug}`, ['BreadcrumbList', 'CollectionPage', 'ItemList']);
     return <CategoryLandingView category={category} customSchema={customSchema} />;
   }
 
@@ -230,13 +233,18 @@ export default async function CourseOrCategoryPage({ params }: { params: { slug:
 async function CourseDetailView({ course, customSchema }: { course: CourseDetail; customSchema: object | null }) {
   const syllabusItems: SyllabusItem[] = Array.isArray(course.syllabus) ? course.syllabus : [];
 
-  const [batches, related] = await Promise.all([
+  const [batches, related, courseGraph] = await Promise.all([
     getCourseBatches(course.id),
     getRelatedCourses(course.categorySlug, course.id),
+    courseJsonLd(course, {
+      url: courseCanonicalUrl(course),
+      category: course.categorySlug ? { name: course.category, slug: course.categorySlug } : null,
+    }),
   ]);
 
   return (
     <>
+      {courseGraph && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(courseGraph) }} />}
       {customSchema && (
         <script
           type="application/ld+json"
@@ -471,8 +479,23 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
 
 async function CategoryLandingView({ category, customSchema }: { category: CategoryDetail; customSchema: object | null }) {
   const courseGridBanners = await getPromoBanners('course-grid');
+  const pageUrl = `${SITE_URL}/courses/${category.slug}`;
+  const categoryGraph = jsonLdGraph([
+    ...collectionPage({
+      url: pageUrl,
+      name: `${category.name} Training in Hyderabad`,
+      description: category.description ? sanitizeDescription(category.description) : undefined,
+      items: (category.courses ?? []).map((c) => ({ name: c.title, url: courseCanonicalUrl(c) })),
+    }),
+    breadcrumbList(pageUrl, [
+      { name: 'Home', url: SITE_URL },
+      { name: 'Courses', url: `${SITE_URL}/courses` },
+      { name: category.name, url: pageUrl },
+    ]),
+  ]);
   return (
     <>
+      {categoryGraph && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(categoryGraph) }} />}
       {customSchema && (
         <script
           type="application/ld+json"

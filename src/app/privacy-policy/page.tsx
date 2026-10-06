@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { BRAND_NAME, CONTACT_EMAIL, PRIMARY_PHONE_LABEL, REGISTERED_ADDRESS } from '@/lib/nap';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -180,6 +181,7 @@ const sections: Section[] = [
 export default function PrivacyPolicyPage() {
   return (
     <>
+      <PageSchema slug="privacy-policy" />
       <ResponsivePageStyles />
       <PageBanner title="Privacy Policy" breadcrumb={[{ label: 'Privacy Policy', href: '/privacy-policy' }]} />
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '56px 20px' }}>

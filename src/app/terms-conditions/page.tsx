@@ -3,6 +3,7 @@ import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { BRAND_NAME, CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL, REGISTERED_ADDRESS } from '@/lib/nap';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -75,6 +76,7 @@ const sections = [
 export default function TermsPage() {
   return (
     <>
+      <PageSchema slug="terms-conditions" />
       <ResponsivePageStyles />
       <PageBanner title="Terms & Conditions" breadcrumb={[{ label: 'Terms & Conditions', href: '/terms-conditions' }]} />
 

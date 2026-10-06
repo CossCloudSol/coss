@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { buildCategoryPageMetadata } from '@/lib/build-category-page-metadata';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import CoursePageSeo from '@/components/CoursePageSeo';
 import CourseCategoryPage from '@/components/CourseCategoryPage';
 import { courseData } from '@/lib/courseData';
 import { prisma } from '@/lib/db';
@@ -22,12 +21,6 @@ export default async function Page() {
 
   return (
     <>
-      <CoursePageSeo
-        slug="courses/cloud-computing"
-        title="Cloud Computing Training Institute in Hyderabad"
-        description="Join cloud computing training in Hyderabad. AWS, Azure, Google Cloud, expert trainers, hands-on labs, placement support and certification. Enroll now!"
-        category="Cloud Computing"
-      />
       <CourseCategoryPage data={courseData['cloud-computing']} breadcrumbSlug="cloud-computing" dbCourses={dbCourses} />
     </>
   );

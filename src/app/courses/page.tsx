@@ -5,6 +5,7 @@ import { getPromoBanners } from '@/lib/promo-banners';
 import { bannerForSlot } from '@/lib/promo-banner-slots';
 import { COURSE_FILTER_PARAMS } from '@/lib/course-search';
 import CoursesExplorer from '@/components/courses/CoursesExplorer';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 
@@ -25,6 +26,7 @@ export default async function CoursesPage() {
   const [index, banners] = await Promise.all([getSearchIndex(), getPromoBanners('course-grid')]);
   return (
     <>
+      <PageSchema slug="courses" />
       <script dangerouslySetInnerHTML={{ __html: PENDING_SCRIPT }} />
       <CoursesExplorer courses={index.courses} banner={bannerForSlot(banners, 0)} />
     </>

@@ -23,6 +23,7 @@ import PromoBanner from '@/components/PromoBanner';
 import { getPromoBanners } from '@/lib/promo-banners';
 import { bannerForSlot, splitAfterSecondSection } from '@/lib/promo-banner-slots';
 import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
+import { blogPosting, jsonLdGraph } from '@/lib/structured-data';
 
 export const revalidate = 86400;
 
@@ -216,16 +217,15 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: safeJsonLd({
-              '@context': 'https://schema.org',
-              '@type': 'BlogPosting',
-              headline: dbPost.title,
-              datePublished: dbDateIso,
-              dateModified: dbDateIso,
-              author: { '@type': 'Organization', name: 'Coss Cloud Solutions' },
-              publisher: { '@type': 'Organization', name: 'Coss Cloud Solutions', url: SITE_URL },
-              url: `${SITE_URL}/blog/${params.slug}`,
-            }),
+            __html: safeJsonLd(jsonLdGraph([
+              blogPosting({
+                url: `${SITE_URL}/blog/${params.slug}`,
+                headline: dbPost.title,
+                image: dbPost.thumbnail,
+                datePublished: dbDateIso,
+                dateModified: dbPost.updatedAt ? new Date(dbPost.updatedAt).toISOString() : dbDateIso,
+              }),
+            ])),
           }}
         />
         <ResponsivePageStyles />
@@ -325,16 +325,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: safeJsonLd({
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: titleStr,
-            datePublished: mdxMeta?.frontmatter.date ?? '',
-            dateModified: mdxMeta?.frontmatter.date ?? '',
-            author: { '@type': 'Organization', name: 'Coss Cloud Solutions' },
-            publisher: { '@type': 'Organization', name: 'Coss Cloud Solutions', url: SITE_URL },
-            url: `${SITE_URL}/blog/${params.slug}`,
-          }),
+          __html: safeJsonLd(jsonLdGraph([
+            blogPosting({
+              url: `${SITE_URL}/blog/${params.slug}`,
+              headline: titleStr,
+              datePublished: mdxMeta?.frontmatter.date || null,
+            }),
+          ])),
         }}
       />
       <ResponsivePageStyles />

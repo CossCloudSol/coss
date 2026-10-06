@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -35,6 +36,7 @@ const comparisons = [
 export default function WhyUsPage() {
   return (
     <>
+      <PageSchema slug="why-us" />
       <ResponsivePageStyles />
       <HeroBanner
         badge="5,000+ STUDENTS TRAINED SINCE 2010"

@@ -4,6 +4,7 @@ import { buildPageMetadata } from '@/lib/get-page-seo';
 import { GBP_SAME_AS } from '@/lib/get-branch-settings';
 import { getGoogleRating } from '@/lib/google-rating';
 import GoogleRatingBadge from '@/components/GoogleRatingBadge';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,6 +16,7 @@ export default async function StudentReviewsPage() {
   const rating = await getGoogleRating();
   return (
     <>
+      <PageSchema slug="student-reviews" />
       <ResponsivePageStyles />
       <HeroBanner
         badge="STUDENT REVIEWS"

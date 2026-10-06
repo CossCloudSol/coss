@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { BlogIndexView } from './blog-index';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 
@@ -12,5 +13,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function BlogPage() {
-  return <BlogIndexView activeCategory="All" currentPage={1} />;
+  return (
+    <>
+      <PageSchema slug="blog" />
+      <BlogIndexView activeCategory="All" currentPage={1} />
+    </>
+  );
 }

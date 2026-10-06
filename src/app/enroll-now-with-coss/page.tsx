@@ -5,6 +5,7 @@ import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { getAllBranchSettings } from '@/lib/get-branch-settings';
 import { CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -84,6 +85,7 @@ export default async function EnrollPage() {
   const branches = await getAllBranchSettings();
   return (
     <>
+      <PageSchema slug="enroll-now-with-coss" />
       {/* ── HERO ── */}
       <section id="top" className="bg-[#0D1B2A] py-16 px-4">
         <div className="max-w-6xl mx-auto">

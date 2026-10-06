@@ -9,6 +9,7 @@ import { buildPageMetadata } from '@/lib/get-page-seo';
 import { getAllBranchSettings, type BranchSettings } from '@/lib/get-branch-settings';
 import { getBranchHours } from '@/lib/branch-hours';
 import { CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,6 +35,7 @@ export default async function ContactUsPage() {
   const firstGroup = hours[0]?.groups[0];
   return (
     <>
+      <PageSchema slug="contact" />
       <ResponsivePageStyles />
       <HeroBanner
         badge="GET IN TOUCH — WE RESPOND IN 2 HOURS"

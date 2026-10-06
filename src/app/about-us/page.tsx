@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,6 +28,7 @@ const values = [
 export default function AboutUsPage() {
   return (
     <>
+      <PageSchema slug="about" />
       <ResponsivePageStyles />
       <HeroBanner
         badge="IT TRAINING IN HYDERABAD SINCE 2010"

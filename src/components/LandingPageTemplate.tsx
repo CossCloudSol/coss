@@ -18,6 +18,9 @@ import PromoBanner from '@/components/PromoBanner'
 import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners'
 import { bannerForSlot } from '@/lib/promo-banner-slots'
 import { PRIMARY_PHONE_LABEL } from '@/lib/nap'
+import { courseJsonLd } from '@/lib/course-jsonld'
+import { SITE_URL } from '@/lib/structured-data'
+import { getFlatCourseUrl } from '@/lib/flat-url'
 
 interface HiringPartner {
   id: string
@@ -59,7 +62,7 @@ const WaIcon = ({ cls }: { cls?: string }) => (
   </svg>
 )
 
-export default async function LandingPageTemplate({ course, branches, pageSlug: _pageSlug, related, siblings }: Props) {
+export default async function LandingPageTemplate({ course, branches, pageSlug, related, siblings }: Props) {
   const coursePageBanners = await getPromoBanners('course-page')
   const hiringPartners: HiringPartner[] = PLACEMENT_PROVIDERS_CONFIRMED
     ? await prisma.hiringPartner.findMany({
@@ -112,43 +115,10 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
     { q: `What kind of companies does Coss Cloud Solutions place ${course.title} graduates with?`, a: 'We refer graduates to our network of 50+ hiring partners across IT services, product companies, and startups in Hyderabad, through placement drives and direct referrals. Placement is not guaranteed.' },
   ]
 
-  const courseSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Course',
-    name: `${titleWithoutTraining} Training in Hyderabad`,
-    description: desc,
-    provider: { '@type': 'Organization', name: 'Coss Cloud Solutions', sameAs: 'https://www.cosscloudsol.com' },
-    hasCourseInstance: [
-      {
-        '@type': 'CourseInstance',
-        courseMode: 'Blended',
-        location: {
-          '@type': 'Place',
-          name: 'Coss Cloud Solutions Dilsukhnagar',
-          address: { '@type': 'PostalAddress', streetAddress: dilsukhnagar?.addressLine1 ?? FALLBACK.dilsukhnagar.addressLine1, addressLocality: 'Dilsukhnagar', addressRegion: 'Telangana', postalCode: dilsukhnagar?.pincode ?? '500060', addressCountry: 'IN' },
-        },
-      },
-      {
-        '@type': 'CourseInstance',
-        courseMode: 'Blended',
-        location: {
-          '@type': 'Place',
-          name: 'Coss Cloud Solutions Ameerpet',
-          address: { '@type': 'PostalAddress', streetAddress: ameerpet?.addressLine1 ?? '#502, Sree Swathi Ankur Building', addressLocality: 'Ameerpet', addressRegion: 'Telangana', postalCode: ameerpet?.pincode ?? '500016', addressCountry: 'IN' },
-        },
-      },
-    ],
-  }
-
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqItems.slice(0, 5).map(item => ({
-      '@type': 'Question',
-      name: item.q,
-      acceptedAnswer: { '@type': 'Answer', text: item.a },
-    })),
-  }
+  // One Course graph (src/lib/course-jsonld.ts): the course, every FAQ shown below, the breadcrumb.
+  // A flat landing page is its own canonical URL.
+  const pageUrl = `${SITE_URL}${getFlatCourseUrl(pageSlug)}`
+  const courseGraph = await courseJsonLd(course, { url: pageUrl, category: course.courseCategory, faqs: faqItems })
 
   const projectCards =
     course.highlights.length >= 4
@@ -182,8 +152,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug: 
   return (
     <div>
       {/* JSON-LD */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(courseSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }} />
+      {courseGraph && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(courseGraph) }} />}
 
       {/* ── SECTION 1: HERO ─────────────────────────────────────────────── */}
       <section className="pt-10 pb-0" style={{ background: 'linear-gradient(135deg, #012530 0%, #021e2b 60%, #011820 100%)' }}>

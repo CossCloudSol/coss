@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,6 +28,7 @@ const certs = [
 export default function CertificationPage() {
   return (
     <>
+      <PageSchema slug="certification" />
       <ResponsivePageStyles />
       <HeroBanner
         badge="GLOBALLY RECOGNISED CERTIFICATIONS"

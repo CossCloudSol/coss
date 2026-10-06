@@ -12,6 +12,7 @@ import {
 } from '@/lib/career-support';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import EnrollFullForm from '@/components/EnrollFullForm';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -33,6 +34,7 @@ export default async function PlacementsPage() {
 
   return (
     <>
+      <PageSchema slug="placements" />
       {/* Hero */}
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '56px 20px 48px', color: '#fff' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
