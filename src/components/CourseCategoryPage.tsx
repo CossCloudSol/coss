@@ -13,6 +13,7 @@ import type { CourseCardProps } from '@/components/CourseCard';
 import { prisma } from '@/lib/db';
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import { canonicalCourseLink } from '@/lib/course-canonical';
+import MobileInlineDemo from '@/components/MobileInlineDemo';
 
 const COMPANY_ALT_MAP: Record<string, string> = {
   google: 'Google',
@@ -105,6 +106,14 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
       })
     : [];
 
+  // This category's courses, for the mobile demo form's course select.
+  const cardSource = (dbCourses && dbCourses.length > 0) ? dbCourses : courseCardDataMap[breadcrumbSlug];
+  const demoCourses: string[] = Array.from(new Set(
+    ((cardSource && cardSource.length > 0) ? cardSource : (data.courses ?? []) as Array<{ title?: string }>)
+      .map((c) => c.title ?? '')
+      .filter(Boolean),
+  ));
+
   return (
     <>
       <ResponsivePageStyles />
@@ -112,6 +121,13 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
         title={`${data.name} Training in Hyderabad`}
         breadcrumb={[{ label: 'Courses', href: '/courses' }, { label: data.name, href: '#' }]}
       />
+
+      {demoCourses.length > 0 && (
+        <MobileInlineDemo
+          courseGroups={[{ category: data.name, courses: demoCourses.map((title) => ({ shortTitle: title, slug: title })) }]}
+          subtitle={`${data.name} · see a class before you decide`}
+        />
+      )}
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 20px' }}>
         <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>

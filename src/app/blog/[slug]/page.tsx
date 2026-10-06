@@ -12,10 +12,11 @@ import { renderMarkdownToSafeHtml } from '@/lib/render-markdown';
 import { prisma } from '@/lib/db';
 import BlogViewBeacon from '@/components/BlogViewBeacon';
 import { getPublishedCoursesForMatching } from '@/lib/course-queries';
-import { matchPostToCallout } from '@/lib/blog-course-callout';
+import { matchPostToCallout, type CalloutTarget } from '@/lib/blog-course-callout';
 import BlogCourseCallout from '@/components/BlogCourseCallout';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
+import MobileInlineDemo from '@/components/MobileInlineDemo';
 import { COURSE_GROUPS } from '@/data/course-options';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import PromoBanner from '@/components/PromoBanner';
@@ -235,6 +236,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {dbPost.title}
           </h1>
         </div>
+        <BlogMobileDemo target={dbCalloutTarget} />
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 20px 48px' }}>
           <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>
             <article>
@@ -356,6 +358,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           {titleStr}
         </h1>
       </div>
+      <BlogMobileDemo target={mdxCalloutTarget} />
 
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px 20px 48px' }}>
         <div className="page-with-sidebar" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '36px', alignItems: 'start' }}>
@@ -470,4 +473,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       </div>
     </>
   );
+}
+
+/** Mobile demo form under the post title: keeps the post's matched course when there is one. */
+function BlogMobileDemo({ target }: { target: CalloutTarget | null }) {
+  return target && target.kind !== 'locality'
+    ? <MobileInlineDemo course={target.title} subtitle={`${target.title} · see a class before you decide`} />
+    : <MobileInlineDemo courseGroups={COURSE_GROUPS} />;
 }

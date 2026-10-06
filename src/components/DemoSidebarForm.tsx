@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -8,6 +8,8 @@ import { submitLead, type Branch } from '@/lib/submitLead';
 import type { CourseGroup } from '@/data/course-options';
 import { nameField, phoneField } from '@/lib/lead-validation';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
+import FormPrivacyNote from '@/components/FormPrivacyNote';
+import { goToThankYou } from '@/lib/lead-thank-you';
 
 /* -------------------------------------------------------------------------- */
 /*  Validation                                                                */
@@ -145,6 +147,8 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const selectedBranch = watch('branch');
   const { honeypotRef, botFields } = useBotGuard();
+  // Unique per instance: a page can render the form twice (sidebar + mobile inline).
+  const branchLabelId = useId();
 
   async function onSubmit(values: DemoFormValues): Promise<void> {
     setState({ kind: 'submitting' });
@@ -157,6 +161,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       bot: botFields(),
     });
     if (result.ok) {
+      goToThankYou('demo');
       setState({ kind: 'success' });
       reset();
     } else {
@@ -277,7 +282,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       )}
 
       <label
-        id="demo-branch-label"
+        id={branchLabelId}
         style={{
           display: 'block',
           color: 'rgba(255,255,255,0.85)',
@@ -290,7 +295,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       </label>
       <div
         role="radiogroup"
-        aria-labelledby="demo-branch-label"
+        aria-labelledby={branchLabelId}
         style={{
           display: 'flex',
           flexWrap: 'wrap',
@@ -377,6 +382,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
           <>Book my free demo</>
         )}
       </button>
+      <FormPrivacyNote />
 
       {state.kind === 'error' ? (
         <p

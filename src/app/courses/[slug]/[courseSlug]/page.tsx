@@ -17,6 +17,7 @@ import RelatedCourses from '@/components/RelatedCourses';
 import { prisma } from '@/lib/db';
 import CallLink from '@/components/CallLink';
 import DemoSidebarForm from '@/components/DemoSidebarForm';
+import MobileInlineDemo from '@/components/MobileInlineDemo';
 import BrochureButton, { BrochureMobileTab } from '@/components/BrochureButton';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import PromoBanner from '@/components/PromoBanner';
@@ -161,6 +162,8 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
           </div>
         </div>
       </div>
+
+      <MobileInlineDemo course={course.title} subtitle={`${course.title} · see a class before you decide`} />
 
       {/* Promo banner, below the hero */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '24px 20px 0' }}>
