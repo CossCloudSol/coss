@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
+import { findClaimMatches } from '@/lib/social-captions';
 
 const postsDirectory = path.join(process.cwd(), 'content/posts');
 
@@ -88,6 +89,50 @@ function cleanShortcodes(raw: string): string {
     .trim();
 }
 
+/**
+ * A WP-export excerpt is unusable when it's short or still holds shortcode text
+ * after cleanShortcodes(): many were cut off mid-shortcode at the source (no
+ * closing "]"), so a stray "[" is the signal. Same test as the post page's meta
+ * description.
+ */
+export function isUsableExcerpt(excerpt: string): boolean {
+  return excerpt.length > 20 && !excerpt.includes('[');
+}
+
+// A cut-off excerpt can lose the noun the claim rules look for ("…stands tall as
+// the best Digital…"), so a generated excerpt also may not hold these words at all.
+const EXCERPT_BANNED_WORD = /\b(?:best|top|leading|number\s+one|most\s+trusted|guarantee\w*|lifetime|high[-\s]paying)\b|#\s?1\b|\bno\.?\s?1\b/i;
+
+/**
+ * The first prose paragraph of a cleaned markdown body as plain text, capped at a
+ * word boundary. A paragraph whose excerpt would carry a banned claim (ranking,
+ * guarantee, …) is skipped: the excerpt shows on blog cards and in the meta description.
+ */
+export function excerptFromBody(markdown: string, maxLen = 160): string {
+  for (const block of markdown.split(/\r?\n\s*\r?\n/)) {
+    const b = block.trim();
+    if (!b || /^(#|>|\||[-*+] |\d+\. |!\[|<)/.test(b)) continue;
+    const text = b
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .replace(/<[^>]+>/g, '')
+      .replace(/[*_`~]+/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (text.length < 40 || text.includes('[')) continue;
+    const cut = text.slice(0, maxLen);
+    const space = cut.lastIndexOf(' ');
+    const excerpt = text.length <= maxLen ? text : `${(space > 0 ? cut.slice(0, space) : cut).replace(/[,;:.\s]+$/, '')}…`;
+    if (findClaimMatches(excerpt).length === 0 && !EXCERPT_BANNED_WORD.test(excerpt)) return excerpt;
+  }
+  return '';
+}
+
+function excerptFor(rawExcerpt: unknown, cleanedBody: string): string {
+  const excerpt = cleanShortcodes(sanitizeValue(rawExcerpt));
+  return isUsableExcerpt(excerpt) ? excerpt : excerptFromBody(cleanedBody);
+}
+
 function cleanContent(raw: string): string {
   let text = raw;
 
@@ -127,6 +172,7 @@ export async function getAllPosts(): Promise<Post[]> {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data, content } = matter(fileContents);
       const fileMtime = fs.statSync(fullPath).mtime;
+      const cleaned = cleanContent(content);
 
       const titleStr = sanitizeValue(data.title) || slug;
       const rawTags  = sanitizeArray(data.tags);
@@ -140,14 +186,14 @@ export async function getAllPosts(): Promise<Post[]> {
           date: data.date ? new Date(sanitizeValue(data.date)).toLocaleDateString('en-IN', {
             year: 'numeric', month: 'long', day: 'numeric',
           }) : '',
-          excerpt: cleanShortcodes(sanitizeValue(data.excerpt)),
+          excerpt: excerptFor(data.excerpt, cleaned),
           author: sanitizeValue(data.author),
           tags: rawTags.length > 0 ? rawTags : deriveTagsFromSlug(slug, titleStr),
           categories: rawCats.length > 0 ? rawCats : [],
           featuredImage: sanitizeValue(data.featuredImage),
           readingTime: sanitizeValue(data.readingTime),
         } as PostFrontmatter,
-        content: cleanContent(content),
+        content: cleaned,
       };
     });
 
@@ -205,7 +251,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
         date: data.date ? new Date(sanitizeValue(data.date)).toLocaleDateString('en-IN', {
           year: 'numeric', month: 'long', day: 'numeric',
         }) : '',
-        excerpt: cleanShortcodes(sanitizeValue(data.excerpt)),
+        excerpt: excerptFor(data.excerpt, cleaned),
         author: sanitizeValue(data.author),
         tags: rawTags.length > 0 ? rawTags : deriveTagsFromSlug(slug, titleStr),
         categories: rawCats.length > 0 ? rawCats : [],
