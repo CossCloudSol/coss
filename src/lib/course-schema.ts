@@ -91,7 +91,7 @@ export async function buildCourseSchemas(input: CourseSchemaInput): Promise<obje
   const provider = {
     '@type': 'EducationalOrganization',
     '@id': `${SITE_URL}/#organization`,
-    name: 'COSS Cloud Solutions',
+    name: 'Coss Cloud Solutions',
     url: SITE_URL,
     logo: LOGO_URL,
     address: branchAddresses,
@@ -126,7 +126,7 @@ export async function buildCourseSchemas(input: CourseSchemaInput): Promise<obje
       inLanguage: 'en-IN',
       location: [dilsukhnagar, ameerpet].map((b) => ({
         '@type': 'Place',
-        name: `COSS Cloud Solutions — ${BRANCH_AREA_LABEL[b.branchKey] ?? b.branchKey}`,
+        name: `Coss Cloud Solutions — ${BRANCH_AREA_LABEL[b.branchKey] ?? b.branchKey}`,
         address: toPostalAddress(b),
       })),
     },

@@ -12,6 +12,7 @@ import { prisma } from './db';
 import { COURSES } from '@/data/courses-data';
 import { CATEGORY_PAGES } from '@/lib/all-pages-registry';
 import { getFlatCourseUrl } from '@/lib/flat-url';
+import { CONTACT_EMAIL, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 
 const S = 'https://www.cosscloudsol.com';
 const ORG = `${S}/#organization`;
@@ -102,11 +103,11 @@ const STATIC_PAGE_DATA: ReadonlyArray<{
     pageSlug: 'contact',
     pageTitle: 'Contact Us',
     metaTitle: 'Contact Coss Cloud Solutions — Hyderabad IT Training',
-    metaDescription: 'Contact Coss Cloud Solutions for IT course enquiries. Dilsukhnagar & Ameerpet, Hyderabad. Call +91 88851 66007 or email info@cosscloudsol.com.',
+    metaDescription: `Contact Coss Cloud Solutions for IT course enquiries. Dilsukhnagar & Ameerpet, Hyderabad. Call ${PRIMARY_PHONE_LABEL} or email ${CONTACT_EMAIL}.`,
     focusKeyword: 'contact Coss Cloud Solutions Hyderabad',
     keywords: 'contact Coss Cloud Solutions, IT training enquiry Hyderabad, Dilsukhnagar training centre, Ameerpet IT training, IT course admission Hyderabad',
     ogTitle: 'Contact Coss Cloud Solutions — Hyderabad',
-    ogDescription: 'Reach us at Dilsukhnagar or Ameerpet, Hyderabad. Call +91 88851 66007 or email info@cosscloudsol.com for course enquiries and admissions.',
+    ogDescription: `Reach us at Dilsukhnagar or Ameerpet, Hyderabad. Call ${PRIMARY_PHONE_LABEL} or email ${CONTACT_EMAIL} for course enquiries and admissions.`,
     ogImage: OG_IMAGE,
     canonicalUrl: `${S}/contact-us`,
     schemaMarkup: JSON.stringify({ '@context': 'https://schema.org', '@type': 'ContactPage', url: `${S}/contact-us/`, name: 'Contact Coss Cloud Solutions', breadcrumb: bc({ name: 'Home', item: `${S}/` }, { name: 'Contact Us', item: `${S}/contact-us/` }), mainEntity: { '@id': ORG } }),

@@ -864,11 +864,11 @@ function SettingsTab({
             type="text"
             value={siteTitle}
             onChange={(e) => setSiteTitle(e.target.value)}
-            placeholder="COSS Cloud Solutions"
+            placeholder="Coss Cloud Solutions"
             className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Added to all page titles: <code>Courses | COSS Cloud Solutions</code>
+            Added to all page titles: <code>Courses | Coss Cloud Solutions</code>
           </p>
         </Field>
         <Field label="Twitter Handle">

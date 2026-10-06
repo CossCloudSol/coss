@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { PageBanner, ResponsivePageStyles } from '@/components/shared';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import { BRAND_NAME, CONTACT_EMAIL, PRIMARY_PHONE_LABEL, REGISTERED_ADDRESS } from '@/lib/nap';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -155,8 +156,8 @@ const sections: Section[] = [
           <p style={{ margin: '0 0 6px' }}><strong style={labelStyle}>Name:</strong> P. Ramchandra Reddy</p>
           <p style={{ margin: '0 0 6px' }}><strong style={labelStyle}>Designation:</strong> Grievance Officer</p>
           <p style={{ margin: '0 0 6px' }}><strong style={labelStyle}>Email:</strong> support@cosscloudsol.com</p>
-          <p style={{ margin: '0 0 6px' }}><strong style={labelStyle}>Phone:</strong> +91 88851 66007</p>
-          <p style={{ margin: 0 }}><strong style={labelStyle}>Address:</strong> Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar, Dilsukhnagar, Hyderabad, Telangana 500060</p>
+          <p style={{ margin: '0 0 6px' }}><strong style={labelStyle}>Phone:</strong> {PRIMARY_PHONE_LABEL}</p>
+          <p style={{ margin: 0 }}><strong style={labelStyle}>Address:</strong> {REGISTERED_ADDRESS}</p>
         </div>
         <p style={{ margin: 0 }}>We will acknowledge your grievance within 48 hours of receiving it and aim to resolve it within 30 days.</p>
       </>
@@ -172,7 +173,7 @@ const sections: Section[] = [
   },
   {
     title: 'Contact Us',
-    content: 'Coss Cloud Solutions, Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar, Dilsukhnagar, Hyderabad, Telangana 500060. Email: info@cosscloudsol.com | Phone: +91 88851 66007. This Privacy Policy should be read together with our Terms & Conditions and our Refund and Cancellation Policy.',
+    content: `${BRAND_NAME}, ${REGISTERED_ADDRESS}. Email: ${CONTACT_EMAIL} | Phone: ${PRIMARY_PHONE_LABEL}. This Privacy Policy should be read together with our Terms & Conditions and our Refund and Cancellation Policy.`,
   },
 ];
 

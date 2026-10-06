@@ -6,26 +6,32 @@ import CallLink from '@/components/CallLink';
 import WhatsAppLink from '@/components/WhatsAppLink';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import { getAllBranchSettings, type BranchSettings } from '@/lib/get-branch-settings';
+import { getBranchHours } from '@/lib/branch-hours';
+import { CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('contact');
 }
 
-const contactInfo = [
-  { icon: '📍', title: 'Dilsukhnagar Branch', lines: ['Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar,', 'Dilsukhnagar, Hyderabad – 500060'] },
-  { icon: '📍', title: 'Ameerpet Branch', lines: ['#502, Sree Swathi Ankur Building,', 'Besides Aditya Trade Center,', 'Ameerpet, Hyderabad – 500016'] },
-  { icon: '📞', title: 'Phone Numbers', lines: ['+91 88851 66007', '+91 77807 27374'] },
-  { icon: '✉️', title: 'Email Address', lines: ['info@cosscloudsol.com'] },
-];
+/** "Flat No. 109, …, Dilsukhnagar, Hyderabad – 500060" from the centre's settings. */
+function addressLines(b: BranchSettings): string[] {
+  return [`${b.addressLine1},`, `${b.addressLine2}, ${b.city} – ${b.pincode}`];
+}
 
-const timings = [
-  { day: 'Monday – Friday', time: '8:00 AM – 8:00 PM' },
-  { day: 'Saturday', time: '8:00 AM – 6:00 PM' },
-  { day: 'Sunday', time: '10:00 AM – 4:00 PM' },
-];
+const branchTitle = (b: BranchSettings) => `${b.branchKey.charAt(0).toUpperCase()}${b.branchKey.slice(1)} Branch`;
 
-export default function ContactUsPage() {
+export default async function ContactUsPage() {
+  const branches = await getAllBranchSettings();
+  const hours = await Promise.all(branches.map(getBranchHours));
+  const contactInfo = [
+    ...branches.map((b) => ({ icon: '📍', title: branchTitle(b), lines: addressLines(b) })),
+    { icon: '📞', title: 'Phone Number', lines: [PRIMARY_PHONE_LABEL] },
+    { icon: '✉️', title: 'Email Address', lines: [CONTACT_EMAIL] },
+  ];
+  // The hero shows the first centre's hours; the timings card lists every centre.
+  const firstGroup = hours[0]?.groups[0];
   return (
     <>
       <ResponsivePageStyles />
@@ -34,12 +40,12 @@ export default function ContactUsPage() {
         titlePre="Talk to a "
         accentText="Training Expert"
         titleLine2="We'll Call You Back"
-        subtitle="Have questions about courses, fees, or batch schedules? Our counsellors are available Mon–Sat, 9 am–7 pm across 2 branches in Hyderabad."
+        subtitle="Have questions about courses, fees, or batch schedules? Our counsellors are available at both our centres in Hyderabad — see the timings below."
         stats={[
           { value: '2',       label: 'BRANCHES IN HYD' },
           { value: '<2 hrs',  label: 'RESPONSE TIME' },
           { value: 'Free',    label: 'COUNSELLING' },
-          { value: 'Mon–Sat', label: '9 AM – 7 PM' },
+          ...(firstGroup ? [{ value: firstGroup.days, label: firstGroup.time.toUpperCase() }] : []),
         ]}
         ctaText="Dilsukhnagar & Ameerpet, Hyderabad · Free career counselling"
         breadcrumb={[{ label: 'Contact Us', href: '/contact-us' }]}
@@ -74,15 +80,20 @@ export default function ContactUsPage() {
           <div>
             {/* Timings */}
             <div style={{ background: '#1a1a2e', borderRadius: '14px', padding: '28px', color: '#fff', marginBottom: '20px' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '18px' }}>🕐 Training Timings</h3>
-              {timings.map(t => (
-                <div key={t.day} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: '13px' }}>
-                  <span style={{ color: '#ccc' }}>{t.day}</span>
-                  <span style={{ color: '#e8401c', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{t.time}</span>
+              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '18px' }}>🕐 Centre Timings</h3>
+              {branches.map((b, i) => hours[i].groups.length > 0 && (
+                <div key={b.branchKey} style={{ marginBottom: '8px' }}>
+                  <div style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', paddingTop: '6px' }}>{branchTitle(b)}</div>
+                  {hours[i].groups.map(g => (
+                    <div key={g.days} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: '13px' }}>
+                      <span style={{ color: '#ccc' }}>{g.days}</span>
+                      <span style={{ color: '#e8401c', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
+                    </div>
+                  ))}
                 </div>
               ))}
               <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(232,64,28,0.1)', borderRadius: '8px', fontSize: '12px', color: '#aaa', lineHeight: '1.6' }}>
-                📞 For urgent queries, call us directly at <CallLink number="+918885166007" pageType="static" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink>
+                📞 For urgent queries, call us directly at <CallLink number={PRIMARY_PHONE} pageType="static" style={{ color: 'var(--primary)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/db'
+import { CONTACT_EMAIL, PRIMARY_PHONE_LABEL } from '@/lib/nap'
 
 /**
  * BranchSettings.serviceAreas is stored as a JSON-encoded string column.
@@ -72,7 +73,7 @@ export const FALLBACK: Record<string, BranchSettings> = {
     addressLine1: 'Flat No. 109, Eastern Home, C.B, Srinagar Colony, Kamala Nagar',
     addressLine2: 'Dilsukhnagar',
     city: 'Hyderabad', state: 'Telangana', pincode: '500060',
-    phone: '+91 88851 66007', email: 'info@cosscloudsol.com',
+    phone: PRIMARY_PHONE_LABEL, email: CONTACT_EMAIL,
     latitude: 17.3677756, longitude: 78.5283118,
     workingHoursOpen: '09:00', workingHoursClose: '19:00',
     workingDays: 'Monday-Sunday', mapEmbedUrl: '',
@@ -86,7 +87,7 @@ export const FALLBACK: Record<string, BranchSettings> = {
     addressLine1: '#502, Sree Swathi Ankur Building',
     addressLine2: 'Besides Aditya Trade Center, Ameerpet',
     city: 'Hyderabad', state: 'Telangana', pincode: '500016',
-    phone: '+91 88851 66007', email: 'info@cosscloudsol.com',
+    phone: PRIMARY_PHONE_LABEL, email: CONTACT_EMAIL,
     latitude: 17.4369572, longitude: 78.4471186,
     workingHoursOpen: '09:00', workingHoursClose: '19:00',
     workingDays: 'Monday-Sunday', mapEmbedUrl: '',

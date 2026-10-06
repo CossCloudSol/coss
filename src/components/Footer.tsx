@@ -6,6 +6,7 @@ import CallLink from './CallLink'
 import WhatsAppLink from './WhatsAppLink'
 import { getBranchSettings, FALLBACK, type BranchSettings } from '@/lib/get-branch-settings'
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
+import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap'
 
 const CATEGORIES = [
   { label: 'Data, Analytics & BI',               href: '/courses/data-analytics-bi' },
@@ -156,11 +157,11 @@ export default async function Footer() {
 
           {/* Desktop: full contact links (hidden on mobile via CSS) */}
           <div className="footer-clinks">
-            <CallLink number="+918885166007" className="footer-clink">
+            <CallLink number={PRIMARY_PHONE} className="footer-clink">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
-              +91 88851 66007
+              {PRIMARY_PHONE_LABEL}
             </CallLink>
             <a href="mailto:info@cosscloudsol.com" className="footer-clink">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -173,7 +174,7 @@ export default async function Footer() {
 
           {/* Mobile: compact quick-action buttons (hidden on desktop via CSS) */}
           <div className="footer-mquick">
-            <CallLink number="+918885166007" className="footer-maction">
+            <CallLink number={PRIMARY_PHONE} className="footer-maction">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>

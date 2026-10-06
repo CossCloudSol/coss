@@ -42,7 +42,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'big-data-training-institute-in-hyderabad',
     title: 'Big Data Training Institute in Hyderabad',
     metaDescription:
-      'Join big data training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join big data training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'big data training in Hyderabad, big data course Hyderabad, Hadoop training, big data analytics certification',
     primaryKeyword: 'Big Data Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -52,7 +52,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'machine-learning-training-institute-in-hyderabad',
     title: 'Machine Learning Training Institute in Hyderabad',
     metaDescription:
-      'Join machine learning training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join machine learning training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'machine learning training in Hyderabad, ML course Hyderabad, machine learning certification, AI ML training Hyderabad',
     primaryKeyword: 'Machine Learning Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -72,7 +72,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'power-bi-training-institute-in-hyderabad',
     title: 'Full Stack Power BI Training Institute in Hyderabad',
     metaDescription:
-      'Join Power BI training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Power BI training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'Power BI training in Hyderabad, Microsoft Power BI course, Power BI certification, BI developer training Hyderabad',
     primaryKeyword: 'Power BI Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -82,7 +82,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'sql-training-institute-in-hyderabad',
     title: 'SQL / MySQL / PostgreSQL Training Institute in Hyderabad',
     metaDescription:
-      'Join SQL training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join SQL training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'SQL training in Hyderabad, MySQL training Hyderabad, PostgreSQL course, database training Hyderabad',
     primaryKeyword: 'SQL Training in Hyderabad',
     category: 'Data, Analytics & BI',
@@ -114,7 +114,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'devops-training-institute-in-hyderabad',
     title: 'DevOps Training Institute in Hyderabad',
     metaDescription:
-      'Join DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join DevOps training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'DevOps training in Hyderabad, DevOps course Hyderabad, CI CD training, DevOps certification institute Hyderabad',
     primaryKeyword: 'DevOps Training in Hyderabad',
     category: 'DevOps & Multi-Cloud',
@@ -146,7 +146,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'python-training-institute-in-hyderabad',
     title: 'Python Training Institute in Hyderabad',
     metaDescription:
-      'Join Python training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Python training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'Python training in Hyderabad, Python course Hyderabad, Python programming certification, Python developer training',
     primaryKeyword: 'Python Training in Hyderabad',
     category: 'Programming & Full Stack',
@@ -156,7 +156,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'java-training-institute-in-hyderabad',
     title: 'Java Training Institute in Hyderabad',
     metaDescription:
-      'Join Java training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Java training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'Java training in Hyderabad, Java course Hyderabad, Core Java certification, Java programming institute Hyderabad',
     primaryKeyword: 'Java Training in Hyderabad',
     category: 'Programming & Full Stack',
@@ -220,7 +220,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'ccna-training-institute-in-hyderabad',
     title: 'CCNA Networking Training Institute in Hyderabad',
     metaDescription:
-      'Join CCNA training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join CCNA training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'CCNA training in Hyderabad, CCNA certification Hyderabad, networking course, Cisco training institute Hyderabad',
     primaryKeyword: 'CCNA Training in Hyderabad',
     category: 'Cyber Security',
@@ -230,7 +230,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'salesforce-training-institute-in-hyderabad',
     title: 'Salesforce CRM Training Institute in Hyderabad',
     metaDescription:
-      'Join Salesforce training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Salesforce training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'Salesforce training in Hyderabad, Salesforce CRM course Hyderabad, Salesforce admin certification, Salesforce developer',
     primaryKeyword: 'Salesforce Training in Hyderabad',
     category: 'ERP, CRM & Enterprise',
@@ -240,7 +240,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'tally-erp-training-institute-in-hyderabad',
     title: 'Tally ERP Training Institute in Hyderabad',
     metaDescription:
-      'Join Tally ERP training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Tally ERP training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'Tally ERP training in Hyderabad, Tally course Hyderabad, Tally Prime certification, accounting software training',
     primaryKeyword: 'Tally ERP Training in Hyderabad',
     category: 'ERP, CRM & Enterprise',
@@ -252,7 +252,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'linux-administration-training-institute-in-hyderabad',
     title: 'Linux Administration Training Institute in Hyderabad',
     metaDescription:
-      'Join Linux training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join Linux training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'Linux training in Hyderabad, Linux administration course Hyderabad, RHEL certification, Linux system admin',
     primaryKeyword: 'Linux Administration Training in Hyderabad',
     category: 'Software Testing & OS',
@@ -294,7 +294,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'seo-training-institute-in-hyderabad',
     title: 'SEO Training Institute in Hyderabad',
     metaDescription:
-      'Join SEO training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join SEO training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'SEO training in Hyderabad, SEO course Hyderabad, search engine optimization certification, on-page off-page SEO',
     primaryKeyword: 'SEO Training in Hyderabad',
     category: 'Digital & Design',
@@ -316,7 +316,7 @@ export const COURSE_PAGES: ReadonlyArray<CoursePage> = [
     slug: 'ms-office-training-institute-in-hyderabad',
     title: 'MS Office Training Institute in Hyderabad',
     metaDescription:
-      'Join MS Office training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at COSS Cloud Solutions!',
+      'Join MS Office training in Hyderabad. Expert trainers, live projects, placement support & certification. Enroll now at Coss Cloud Solutions!',
     keywords: 'MS Office training in Hyderabad, Microsoft Office course Hyderabad, Excel Word PowerPoint training, MS Office cert',
     primaryKeyword: 'MS Office Training in Hyderabad',
     category: 'Professional & Soft Skills',

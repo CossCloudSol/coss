@@ -8,9 +8,10 @@ import CallLink from './CallLink';
 import HeaderSearch, { MOBILE_SEARCH_ID } from './HeaderSearch';
 import { CalendarCheck, ChevronDown, LayoutGrid, Menu, Moon, Phone, Search, Sun, X } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
+import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 
-const PHONE = '+918885166007';
-const PHONE_LABEL = '+91 88851 66007';
+const PHONE = PRIMARY_PHONE;
+const PHONE_LABEL = PRIMARY_PHONE_LABEL;
 const DEMO_HREF = '/free-demo-class';
 const MENU_ID = 'explore-menu';
 

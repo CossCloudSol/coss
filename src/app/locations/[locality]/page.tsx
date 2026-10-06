@@ -14,6 +14,7 @@ import { safeJsonLd } from '@/lib/safe-json-ld';
 import { courseCanonicalPath } from '@/lib/course-canonical';
 import MobileInlineDemo from '@/components/MobileInlineDemo';
 import { COURSE_GROUPS } from '@/data/course-options';
+import { getBranchHours } from '@/lib/branch-hours';
 
 export const revalidate = 86400;
 
@@ -153,7 +154,8 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
       getBranchSettings(config.branchKey),
       getBranchBatches(config.branchKey),
     ]);
-    const schema = branch.schemaEnabled ? buildLocalBusinessSchema(branch) : null;
+    const hours = await getBranchHours(branch);
+    const schema = branch.schemaEnabled ? buildLocalBusinessSchema(branch, hours.periods) : null;
 
     return (
       <>
@@ -175,7 +177,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
             // count only ever live from the Places API (the header strip), never a stored number.
             { value: 'Since 2010', label: 'TRAINING IN HYDERABAD' },
             { value: String(branch.serviceAreas.length), label: 'AREAS SERVED' },
-            { value: branch.workingDays.replace('-', '–'), label: `${branch.workingHoursOpen}–${branch.workingHoursClose}` },
+            ...(hours.groups[0] ? [{ value: hours.groups[0].days, label: hours.groups[0].time.toUpperCase() }] : []),
           ]}
           ctaText={`${branch.addressLine2 || branch.city}, Hyderabad · Free career counselling`}
           breadcrumb={[{ label: config.name, href: `/locations/${config.slug}` }]}
@@ -196,15 +198,15 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                 </h2>
                 <div className="page-two-col" style={{ gap: '24px', alignItems: 'start' }}>
                   <div>
-                    {config.addressLines.map((line, i) => (
+                    {[`${branch.addressLine1},`, `${branch.addressLine2}, ${branch.city} – ${branch.pincode}`].map((line, i) => (
                       <p key={i} style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.8' }}>{line}</p>
                     ))}
                     <p style={{ marginTop: '12px', fontSize: '13.5px', color: 'var(--text)' }}>
                       📞 <CallLink number={branch.phone} pageType="locality" branchKey={config.branchKey} style={{ color: 'var(--primary)', fontWeight: 600 }}>{branch.phone}</CallLink>
                     </p>
-                    <p style={{ fontSize: '13.5px', color: 'var(--text)' }}>
-                      🕐 {branch.workingDays}, {branch.workingHoursOpen}–{branch.workingHoursClose}
-                    </p>
+                    {hours.groups.map((g) => (
+                      <p key={g.days} style={{ fontSize: '13.5px', color: 'var(--text)' }}>🕐 {g.days}, {g.time}</p>
+                    ))}
                     <a href={config.directionsHref} target="_blank" rel="noopener noreferrer"
                       style={{ display: 'inline-block', marginTop: '12px', fontSize: '13px', fontWeight: 600, color: 'var(--primary)' }}>
                       Get directions →

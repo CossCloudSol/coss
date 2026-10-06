@@ -18,6 +18,7 @@
 import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/db'
 import { getAllBranchSettings, GBP_SAME_AS, type BranchSettings } from '@/lib/get-branch-settings'
+import { openingHoursSpecification, periodsFromSettings, type HoursPeriod } from '@/lib/opening-hours'
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -45,7 +46,9 @@ function parseOverride(raw: string | null | undefined): object | null {
  * branch. Shared by the sitewide global schema injection (buildGlobalSchemas)
  * and the /locations/{branch} landing pages, so the two never drift apart.
  */
-export function buildLocalBusinessSchema(branch: BranchSettings): object {
+/** hours: the centre's resolved opening hours (getBranchHours); omitted → its BranchSettings hours. */
+export function buildLocalBusinessSchema(branch: BranchSettings, hours?: HoursPeriod[]): object {
+  const spec = openingHoursSpecification(hours ?? periodsFromSettings(branch.workingDays, branch.workingHoursOpen, branch.workingHoursClose))
   return {
     '@context': 'https://schema.org',
     '@type': ['LocalBusiness', 'EducationalOrganization'],
@@ -69,14 +72,7 @@ export function buildLocalBusinessSchema(branch: BranchSettings): object {
       latitude: branch.latitude,
       longitude: branch.longitude,
     },
-    openingHoursSpecification: [{
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: [
-        'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
-      ],
-      opens: branch.workingHoursOpen,
-      closes: branch.workingHoursClose,
-    }],
+    ...(spec.length ? { openingHoursSpecification: spec } : {}),
     // No aggregateRating: Google disallows self-serving review markup (rating
     // schema on your own business without genuine third-party on-page reviews).
     // The on-page "★ Google rating" text is fine — only the schema must omit it.

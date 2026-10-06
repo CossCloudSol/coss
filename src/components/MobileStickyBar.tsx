@@ -1,9 +1,10 @@
 'use client'
 
 import CallLink from './CallLink'
+import { PRIMARY_PHONE } from '@/lib/nap'
 
 export default function MobileStickyBar() {
-  const phone = '+918885166007'
+  const phone = PRIMARY_PHONE
 
   function openWhatsApp() {
     window.dispatchEvent(new CustomEvent('coss:open-whatsapp', { detail: { origin: 'sticky' } }))

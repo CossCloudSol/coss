@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { normalizeIndianMobile } from '@/lib/lead-validation';
+import { PRIMARY_PHONE } from '@/lib/nap';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -64,15 +65,12 @@ const callClickSchema = z.object({
 /*  Phone allowlist                                                           */
 /*                                                                            */
 /*  phoneNumber is NOT free text — it must be one of the site's own known     */
-/*  numbers. Primary/secondary are the two hardcoded numbers actually used   */
-/*  by <CallLink> call sites; branch numbers come live from BranchSettings   */
+/*  numbers. PRIMARY_PHONE (src/lib/nap.ts) is the number <CallLink> call   */
+/*  sites use; branch numbers come live from BranchSettings                  */
 /*  so an admin changing a centre's number doesn't need a code deploy to     */
 /*  keep click-tracking working. Cached briefly — BranchSettings changes     */
 /*  rarely, and this endpoint may see far more traffic than the admin table. */
 /* -------------------------------------------------------------------------- */
-
-const PRIMARY_PHONE = '+918885166007';
-const SECONDARY_PHONE = '+917780727374';
 
 const ALLOWLIST_TTL_MS = 60_000;
 let allowlistCache: { numbers: Set<string>; expiresAt: number } | null = null;
@@ -90,7 +88,7 @@ async function getPhoneAllowlist(): Promise<Set<string>> {
   }
 
   const branches = await prisma.branchSettings.findMany({ select: { phone: true } });
-  const numbers = new Set<string>([PRIMARY_PHONE, SECONDARY_PHONE]);
+  const numbers = new Set<string>([PRIMARY_PHONE]);
   for (const b of branches) {
     if (b.phone) numbers.add(normalizePhone(b.phone));
   }

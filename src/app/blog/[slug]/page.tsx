@@ -22,6 +22,7 @@ import { safeJsonLd } from '@/lib/safe-json-ld';
 import PromoBanner from '@/components/PromoBanner';
 import { getPromoBanners } from '@/lib/promo-banners';
 import { bannerForSlot, splitAfterSecondSection } from '@/lib/promo-banner-slots';
+import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 
 export const revalidate = 86400;
 
@@ -57,7 +58,7 @@ function capAtWordBoundary(text: string, maxLen: number): string {
   return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated).trim();
 }
 
-const BRAND_TAGLINE = " — Expert IT training insights from COSS Cloud Solutions, Hyderabad, since 2010.";
+const BRAND_TAGLINE = " — Expert IT training insights from Coss Cloud Solutions, Hyderabad, since 2010.";
 const BRAND_ANY_RE = /(?:coss\s+cloud\s+solutions?)|(?:\bcoss\b)/gi;
 
 /**
@@ -166,7 +167,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: titleStr,
       description,
       url: canonicalUrl,
-      siteName: 'COSS Cloud Solutions',
+      siteName: 'Coss Cloud Solutions',
       type: 'article',
       images: undefined,
     },
@@ -221,8 +222,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               headline: dbPost.title,
               datePublished: dbDateIso,
               dateModified: dbDateIso,
-              author: { '@type': 'Organization', name: 'COSS Cloud Solutions' },
-              publisher: { '@type': 'Organization', name: 'COSS Cloud Solutions', url: SITE_URL },
+              author: { '@type': 'Organization', name: 'Coss Cloud Solutions' },
+              publisher: { '@type': 'Organization', name: 'Coss Cloud Solutions', url: SITE_URL },
               url: `${SITE_URL}/blog/${params.slug}`,
             }),
           }}
@@ -283,7 +284,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
                 <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                  <CallLink number="+918885166007" pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
+                  <CallLink number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                   <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
                 </p>
               </div>
@@ -330,8 +331,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             headline: titleStr,
             datePublished: mdxMeta?.frontmatter.date ?? '',
             dateModified: mdxMeta?.frontmatter.date ?? '',
-            author: { '@type': 'Organization', name: 'COSS Cloud Solutions' },
-            publisher: { '@type': 'Organization', name: 'COSS Cloud Solutions', url: SITE_URL },
+            author: { '@type': 'Organization', name: 'Coss Cloud Solutions' },
+            publisher: { '@type': 'Organization', name: 'Coss Cloud Solutions', url: SITE_URL },
             url: `${SITE_URL}/blog/${params.slug}`,
           }),
         }}
@@ -463,7 +464,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
               <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                <CallLink number="+918885166007" pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>+91 88851 66007</CallLink><br />
+                <CallLink number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                 <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
               </p>
             </div>

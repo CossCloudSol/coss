@@ -23,6 +23,7 @@ import { safeJsonLd } from '@/lib/safe-json-ld';
 import { courseCanonicalPath } from '@/lib/course-canonical';
 import MobileInlineDemo from '@/components/MobileInlineDemo';
 import { COURSE_GROUPS } from '@/data/course-options';
+import { getBranchHours } from '@/lib/branch-hours';
 
 export const revalidate = 86400;
 
@@ -187,7 +188,8 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
   const courseWhatsAppMessage = (courseTitle: string) =>
     `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${courseTitle} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
 
-  const localBusinessSchema = branch.schemaEnabled ? buildLocalBusinessSchema(branch) : null;
+  const hours = await getBranchHours(branch);
+  const localBusinessSchema = branch.schemaEnabled ? buildLocalBusinessSchema(branch, hours.periods) : null;
   const itemListSchema = courses.length > 0 ? {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -225,7 +227,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
         accentText=""
         subtitle={config.intro[0]}
         stats={[
-          { value: branch.workingDays.replace('-', '–'), label: `${branch.workingHoursOpen}–${branch.workingHoursClose}` },
+          ...(hours.groups[0] ? [{ value: hours.groups[0].days, label: hours.groups[0].time.toUpperCase() }] : []),
         ]}
         ctaText={`${branch.addressLine2 || branch.city}, Hyderabad · Free career counselling`}
         breadcrumb={[

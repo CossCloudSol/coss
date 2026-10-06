@@ -43,6 +43,7 @@ import PromoBanner from '@/components/PromoBanner';
 import HomeHeroForm from '@/components/home/HomeHeroForm';
 import CourseTile, { BANNER_FILLS } from '@/components/courses/CourseTile';
 import TrackedCta from '@/components/home/TrackedCta';
+import { PRIMARY_PHONE } from '@/lib/nap';
 
 /*
  * Homepage built for lead generation (approved mockup "COSS Homepage Mockup"):
@@ -62,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const FORM_ANCHOR = '#enroll-form';
-const PHONE = '+918885166007';
+const PHONE = PRIMARY_PHONE;
 
 const ORANGE_BUTTON = 'bg-[#b8531c] text-white hover:bg-[#8f3f14]';
 const EYEBROW = 'text-xs font-bold uppercase tracking-[1.4px] text-[#b8531c] md:text-[13px] dark:text-[#f3a57a]';
@@ -637,7 +638,7 @@ export default async function HomePage() {
                       <Image src={a.image} alt="" fill sizes="(min-width: 1024px) 384px, (min-width: 768px) 33vw, 260px" className="object-cover" />
                     ) : (
                       <span className="flex flex-col gap-1">
-                        <span className="text-[10px] font-bold tracking-[1.2px] text-white/60">COSS CLOUD SOLUTIONS</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[1.2px] text-white/60">Coss Cloud Solutions</span>
                         <span className="font-heading text-lg font-extrabold leading-tight text-white md:text-xl">{a.category}</span>
                       </span>
                     )}

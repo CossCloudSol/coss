@@ -1,9 +1,10 @@
 import { normalizeIndianMobile, PHONE_ERROR } from '@/lib/lead-validation'
+import { PRIMARY_PHONE } from '@/lib/nap'
 
-// The ONLY place '918885166007' appears as a literal in application code.
+// WhatsApp defaults to the main number (src/lib/nap.ts), digits only.
 // Every WhatsApp CTA resolves its number through this export (directly, or
 // via <WhatsAppLink>'s default) instead of hardcoding its own copy.
-export const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '918885166007'
+export const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? PRIMARY_PHONE.replace(/D/g, '')
 
 export function batchBookingMessage(params: {
   courseName: string
