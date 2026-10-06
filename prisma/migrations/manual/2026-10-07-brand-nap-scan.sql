@@ -364,6 +364,46 @@ SELECT 'Testimonial' AS tbl, 'quote' AS col,
   count(*) FILTER (WHERE "quote"::text ~ '77807|7780727374') AS second_number,
   count(*) AS rows_in_table
 FROM "Testimonial"
+UNION ALL
+SELECT 'Trainer' AS tbl, 'name' AS col,
+  count(*) FILTER (WHERE "name"::text ~ 'COSS Cloud Solution') AS upper_brand,
+  count(*) FILTER (WHERE "name"::text ~ 'Coss Cloud Solution\M') AS singular_brand,
+  count(*) FILTER (WHERE "name"::text ~ '\mCOSS\M(?! Cloud)') AS bare_coss,
+  count(*) FILTER (WHERE "name"::text ~ '77807|7780727374') AS second_number,
+  count(*) AS rows_in_table
+FROM "Trainer"
+UNION ALL
+SELECT 'Trainer' AS tbl, 'title' AS col,
+  count(*) FILTER (WHERE "title"::text ~ 'COSS Cloud Solution') AS upper_brand,
+  count(*) FILTER (WHERE "title"::text ~ 'Coss Cloud Solution\M') AS singular_brand,
+  count(*) FILTER (WHERE "title"::text ~ '\mCOSS\M(?! Cloud)') AS bare_coss,
+  count(*) FILTER (WHERE "title"::text ~ '77807|7780727374') AS second_number,
+  count(*) AS rows_in_table
+FROM "Trainer"
+UNION ALL
+SELECT 'Trainer' AS tbl, 'skills' AS col,
+  count(*) FILTER (WHERE "skills"::text ~ 'COSS Cloud Solution') AS upper_brand,
+  count(*) FILTER (WHERE "skills"::text ~ 'Coss Cloud Solution\M') AS singular_brand,
+  count(*) FILTER (WHERE "skills"::text ~ '\mCOSS\M(?! Cloud)') AS bare_coss,
+  count(*) FILTER (WHERE "skills"::text ~ '77807|7780727374') AS second_number,
+  count(*) AS rows_in_table
+FROM "Trainer"
+UNION ALL
+SELECT 'Trainer' AS tbl, 'teaches' AS col,
+  count(*) FILTER (WHERE "teaches"::text ~ 'COSS Cloud Solution') AS upper_brand,
+  count(*) FILTER (WHERE "teaches"::text ~ 'Coss Cloud Solution\M') AS singular_brand,
+  count(*) FILTER (WHERE "teaches"::text ~ '\mCOSS\M(?! Cloud)') AS bare_coss,
+  count(*) FILTER (WHERE "teaches"::text ~ '77807|7780727374') AS second_number,
+  count(*) AS rows_in_table
+FROM "Trainer"
+UNION ALL
+SELECT 'Trainer' AS tbl, 'bio' AS col,
+  count(*) FILTER (WHERE "bio"::text ~ 'COSS Cloud Solution') AS upper_brand,
+  count(*) FILTER (WHERE "bio"::text ~ 'Coss Cloud Solution\M') AS singular_brand,
+  count(*) FILTER (WHERE "bio"::text ~ '\mCOSS\M(?! Cloud)') AS bare_coss,
+  count(*) FILTER (WHERE "bio"::text ~ '77807|7780727374') AS second_number,
+  count(*) AS rows_in_table
+FROM "Trainer"
 ) s
 WHERE upper_brand + singular_brand + bare_coss + second_number > 0
 ORDER BY tbl, col;
