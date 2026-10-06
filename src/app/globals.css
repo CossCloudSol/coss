@@ -1218,6 +1218,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .page-with-sidebar { grid-template-columns: 1fr !important; }
   .page-with-sidebar > div:last-child { display: none !important; }
   .mobile-inline-demo { display: block; padding: 20px 16px 0; }
+  /* 16px: iOS Safari zooms the page when a smaller input gets focus. */
+  .mobile-inline-demo input, .mobile-inline-demo select { font-size: 16px !important; }
   .course-feat-grid { grid-template-columns: repeat(2,1fr) !important; }
   .course-list-grid { grid-template-columns: repeat(2,1fr) !important; }
   .page-two-col { grid-template-columns: 1fr !important; gap: 24px !important; }

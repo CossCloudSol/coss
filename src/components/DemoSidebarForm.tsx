@@ -36,6 +36,7 @@ const BRANCH_API_VALUE: Record<DemoFormValues['branch'], Branch> = {
 
 const sidebarInput: React.CSSProperties = {
   width: '100%',
+  minHeight: '44px',
   padding: '10px 12px',
   borderRadius: '6px',
   border: '1px solid rgba(255,255,255,0.15)',
@@ -84,6 +85,7 @@ const fieldErrorStyle: React.CSSProperties = {
    cross-browser-safe solution for a dark-card select. */
 const selectStyle: React.CSSProperties = {
   width: '100%',
+  minHeight: '44px',
   padding: '10px 12px',
   borderRadius: '6px',
   border: '1px solid rgba(255,255,255,0.25)',
@@ -323,6 +325,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
                 gap: '5px',
                 cursor: 'pointer',
                 textAlign: 'center',
+                minHeight: '44px',
                 padding: '8px 4px',
                 borderRadius: '6px',
                 border: `1px solid ${isSelected ? 'var(--primary)' : 'rgba(255,255,255,0.15)'}`,
