@@ -1,49 +1,37 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Briefcase, MapPin, Users } from 'lucide-react';
-import JobCard, { type JobCardJob } from '@/components/JobCard';
+import JobsBoard from './JobsBoard';
+import { findActiveJobs } from '@/lib/job-queries';
+import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
+import type { JobCardJob } from '@/components/JobCard';
 
-const CATEGORY_FILTERS = [
-  'All',
-  'Cloud',
-  'DevOps',
-  'Data',
-  'Full Stack',
-  'HR',
-  'Cybersecurity',
-  'Remote',
-  'ERP',
-  'SAP',
-];
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
-export default function JobsPage() {
-  const [jobs, setJobs] = useState<JobCardJob[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeFilter, setActiveFilter] = useState('All');
+// Server-rendered and cached; admin job edits revalidate it (src/lib/revalidate.ts).
+export const revalidate = 600;
 
-  useEffect(() => {
-    fetch('/api/jobs')
-      .then((r) => r.json())
-      .then((data) => {
-        setJobs(data.jobs ?? []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+export async function generateMetadata(): Promise<Metadata> {
+  // Admin SEO for "jobs" wins when set; this is the fallback.
+  return buildPageMetadataWithFallback('jobs', {
+    title: 'IT Job Openings in Hyderabad',
+    description:
+      'Current IT job openings in Hyderabad shared with Coss Cloud Solutions students: cloud, DevOps, data, full stack, SAP and more, updated by our placement team.',
+    alternates: { canonical: `${SITE_URL}/jobs` },
+  });
+}
 
-  const filteredJobs = activeFilter === 'All'
-    ? jobs
-    : jobs.filter((j) =>
-        j.category.toLowerCase().includes(activeFilter.toLowerCase()) ||
-        j.mode.toLowerCase().includes(activeFilter.toLowerCase())
-      );
-
+export default async function JobsPage() {
+  const rows = await findActiveJobs();
+  const jobs: JobCardJob[] = rows.map((j) => ({
+    id: j.id, title: j.title, slug: j.slug, company: j.company, companyLogo: j.companyLogo,
+    location: j.location, type: j.type, mode: j.mode, category: j.category, experience: j.experience,
+    salary: j.salary, skills: j.skills, featured: j.featured, postedAt: j.postedAt.toISOString(),
+  }));
   const companies = new Set(jobs.map((j) => j.company)).size;
 
+  // No main element here: the root layout already wraps every page in one.
   return (
-    <main>
+    <div>
       {/* Hero */}
       <section
         className="relative overflow-hidden py-16 px-4 md:px-8"
@@ -79,51 +67,7 @@ export default function JobsPage() {
         </div>
       </section>
 
-      <div className="max-w-[1100px] mx-auto px-4 md:px-8 py-10">
-        {/* Filter pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {CATEGORY_FILTERS.map((f) => (
-            <button
-              key={f}
-              onClick={() => setActiveFilter(f)}
-              className="px-4 py-2 rounded-full text-sm font-medium transition-all border min-h-[44px]"
-              style={
-                activeFilter === f
-                  ? { background: '#e47538', borderColor: '#e47538', color: '#fff' }
-                  : { background: 'var(--bg-card,#fff)', borderColor: '#e5e7eb', color: 'var(--text,#111)' }
-              }
-            >
-              {f}
-            </button>
-          ))}
-        </div>
-
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-64 rounded-2xl bg-gray-100 dark:bg-gray-700 animate-pulse" />
-            ))}
-          </div>
-        ) : filteredJobs.length === 0 ? (
-          <div className="text-center py-20">
-            <Briefcase className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" aria-hidden="true" />
-            <p className="text-gray-500 dark:text-gray-400 text-base">
-              No jobs in this category right now — check back soon
-            </p>
-            <Link href="/courses" className="inline-block mt-4 text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline">
-              Browse our courses to get job-ready →
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredJobs.map((job) => (
-              <Link key={job.id} href={`/jobs/${job.slug}`} className="block group" style={{ textDecoration: 'none' }}>
-                <JobCard job={job} showCourseLink />
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </main>
+      <JobsBoard jobs={jobs} />
+    </div>
   );
 }

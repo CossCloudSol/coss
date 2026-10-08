@@ -97,7 +97,7 @@ interface BatchRevalidationInput {
  * paths. A revalidation failure must not fail the caller's write.
  */
 export async function getBatchRevalidationPaths(batch: BatchRevalidationInput): Promise<string[]> {
-  const paths = ['/', '/placements', '/free-demo-class', SEARCH_INDEX_PATH];
+  const paths = ['/', '/batches', '/placements', '/free-demo-class', SEARCH_INDEX_PATH];
 
   if (!batch.courseId) return paths;
 
@@ -136,4 +136,11 @@ export function getBlogRevalidationPaths(post: BlogRevalidationInput): string[] 
 /** The faculty roster has no per-trainer detail page — every write invalidates the same two listing pages. */
 export function getTrainerRevalidationPaths(): string[] {
   return ['/faculty', '/about-us'];
+}
+
+/** A job's detail page and the listing; old slug too when an edit changed it. */
+export function getJobRevalidationPaths(job: { slug: string }, previousSlug?: string | null): string[] {
+  const paths = ['/jobs', `/jobs/${job.slug}`];
+  if (previousSlug && previousSlug !== job.slug) paths.push(`/jobs/${previousSlug}`);
+  return paths;
 }

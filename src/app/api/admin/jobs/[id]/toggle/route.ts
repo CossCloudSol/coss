@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { revalidatePaths, getJobRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -26,6 +27,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       where: { id: params.id },
       data: { [field]: value },
     });
+    await revalidatePaths(getJobRevalidationPaths(job));
     return NextResponse.json(job);
   } catch (err) {
     console.error('[PATCH /api/admin/jobs/[id]/toggle]', err);

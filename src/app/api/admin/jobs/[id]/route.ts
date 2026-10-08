@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { revalidatePaths, getJobRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,6 +32,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 
   try {
+    const before = await prisma.job.findUnique({ where: { id: params.id }, select: { slug: true } });
     const job = await prisma.job.update({
       where: { id: params.id },
       data: {
@@ -53,6 +55,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         expiresAt:       body.expiresAt ? new Date(body.expiresAt as string) : null,
       },
     });
+    await revalidatePaths(getJobRevalidationPaths(job, before?.slug));
     return NextResponse.json(job);
   } catch (err) {
     console.error('[PUT /api/admin/jobs/[id]]', err);
@@ -65,7 +68,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   if (guard instanceof Response) return guard;
 
   try {
-    await prisma.job.delete({ where: { id: params.id } });
+    const deleted = await prisma.job.delete({ where: { id: params.id } });
+    await revalidatePaths(getJobRevalidationPaths(deleted));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[DELETE /api/admin/jobs/[id]]', err);
