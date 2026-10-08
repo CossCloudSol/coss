@@ -8,6 +8,7 @@ import { BLOG_POSTS_TAG } from '@/lib/revalidate';
 import PromoBanner from '@/components/PromoBanner';
 import { getPromoBanners } from '@/lib/promo-banners';
 import { bannerForSlot, PROMO_EVERY_N_ITEMS } from '@/lib/promo-banner-slots';
+import { deriveCategoryFromSlug, matchesCategory } from '@/lib/blog-categories';
 
 /**
  * Shared /blog index UI + data. Rendered statically by:
@@ -57,31 +58,6 @@ const CARD_GRADIENTS = [
   'linear-gradient(135deg, #5c2a0a, #b0552a)',
   'linear-gradient(135deg, #1a3a4a, #0d5c72)',
 ];
-
-const CATEGORY_KEYWORDS: [string, string[]][] = [
-  ['Cloud Computing', ['aws', 'azure', 'gcp', 'cloud', 's3', 'ec2', 'lambda', 'multicloud', 'multi-cloud']],
-  ['DevOps', ['devops', 'docker', 'kubernetes', 'k8s', 'jenkins', 'ansible', 'terraform', 'cicd', 'ci-cd', 'devsecops']],
-  ['Data Science', ['data-science', 'machine-learning', 'artificial-intelligence', 'ai', 'ml', 'data-analytics', 'data-engineer', 'big-data', 'tableau', 'power-bi']],
-  ['Cyber Security', ['cyber', 'security', 'ethical-hacking', 'network-security', 'ceh', 'cissp', 'penetration']],
-  ['Digital Marketing', ['digital-marketing', 'seo', 'social-media', 'google-ads', 'ppc']],
-  ['Linux', ['linux', 'ubuntu', 'centos', 'redhat', 'rhel', 'shell', 'bash']],
-  ['Programming', ['python', 'java', 'javascript', 'react', 'nodejs', 'node-js', 'php', 'programming', 'fullstack', 'full-stack', 'web-development']],
-];
-
-function deriveCategoryFromSlug(slug: string, title: string): string {
-  const haystack = `${slug} ${title}`.toLowerCase();
-  for (const [cat, keywords] of CATEGORY_KEYWORDS) {
-    if (keywords.some(kw => haystack.includes(kw))) return cat;
-  }
-  return 'Cloud Computing';
-}
-
-function matchesCategory(postCat: string, activeCategory: string): boolean {
-  return (
-    postCat.toLowerCase().includes(activeCategory.toLowerCase()) ||
-    activeCategory.toLowerCase().includes(postCat.toLowerCase())
-  );
-}
 
 export const POSTS_PER_PAGE = 12;
 

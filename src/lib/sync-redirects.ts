@@ -2,7 +2,7 @@ import { prisma } from '@/lib/db'
 import fs from 'fs'
 import path from 'path'
 
-// Infrastructure redirects that must always be written to next.config.mjs regardless of DB state.
+// Infrastructure redirects that must always be written to redirects.config.mjs regardless of DB state.
 // These are not stored in the Redirect table — managing them via DB would require a DB read on
 // every Next.js request before the rewrites layer even fires, which defeats the purpose.
 const INFRA_REDIRECTS = [
@@ -48,7 +48,7 @@ const INFRA_REDIRECTS = [
 const INFRA_SOURCES = new Set(INFRA_REDIRECTS.map(r => r.source))
 
 /**
- * Serialises a value as a JS string literal for next.config.mjs, which runs at
+ * Serialises a value as a JS string literal for redirects.config.mjs (loaded by next.config.mjs), which runs at
  * build time with every secret in scope. JSON.stringify escapes quotes,
  * backslashes and newlines, so a DB value can't end the literal early.
  * Brackets and braces are also \u-escaped: the regexes above re-read this
@@ -63,9 +63,25 @@ function redirectLine(r: { source: string; destination: string; permanent: boole
   return `      { source: ${jsString(r.source)}, destination: ${jsString(r.destination)}, permanent: ${r.permanent} }`
 }
 
-/** Returns everything between the outer `[` and `]` of `async redirects() { return [...] }` */
+/** The comment block at the top of redirects.config.mjs (keep in sync with scripts/run-sync-redirects.mjs). */
+const REDIRECTS_FILE_HEADER = `// Every redirect the site serves, in match order: Next.js uses the first rule that
+// matches, so exact rules come before the wildcard ones. next.config.mjs serves this list,
+// and src/app/sitemap.ts resolves every sitemap URL through it, so the sitemap only lists
+// final URLs (scripts/test/sitemap-final-urls.test.mjs).
+//
+// Generated: Admin → Redirects (src/lib/sync-redirects.ts) and scripts/run-sync-redirects.mjs
+// rewrite this file from the Redirect table plus the infrastructure rules. A rule added
+// here by hand also needs its Redirect row, or the next sync drops it.
+`
+
+/** A Redirect row's status as a Next.js rule: 301 and 308 are permanent (served as 308), anything else temporary. */
+export function isPermanentStatus(statusCode: number): boolean {
+  return statusCode === 301 || statusCode === 308
+}
+
+/** Returns everything between the outer `[` and `]` of `export const REDIRECTS = [...]` */
 function extractRedirectsArrayContent(source: string): string | null {
-  const match = source.match(/async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[/)
+  const match = source.match(/export\s+const\s+REDIRECTS\s*=\s*\[/)
   if (!match) return null
   const start = (match.index ?? 0) + match[0].length
   let depth = 1
@@ -100,7 +116,7 @@ function splitTopLevelObjects(content: string): string[] {
 }
 
 export async function syncRedirectsToConfig(): Promise<void> {
-  const configPath = path.join(process.cwd(), 'next.config.mjs')
+  const configPath = path.join(process.cwd(), 'redirects.config.mjs')
   const original = fs.readFileSync(configPath, 'utf-8')
 
   // Read existing redirects and keep only those with a `has:` property (e.g. bare-domain → www).
@@ -149,7 +165,7 @@ export async function syncRedirectsToConfig(): Promise<void> {
   if (dbRedirects.length > 0) {
     lines.push('      // DB-managed rules')
     for (const r of dbRedirects) {
-      lines.push(redirectLine({ source: r.source, destination: r.destination, permanent: r.statusCode === 301 }))
+      lines.push(redirectLine({ source: r.source, destination: r.destination, permanent: isPermanentStatus(r.statusCode) }))
     }
   }
 
@@ -164,19 +180,5 @@ export async function syncRedirectsToConfig(): Promise<void> {
     : `[\n${lines.join(',\n')},\n    ]`
 
   fs.writeFileSync(configPath + '.bak', original, 'utf-8')
-
-  const updated = original.replace(
-    /async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[[\s\S]*?\]\s*;?\s*\}/,
-    `async redirects() {\n    return ${redirectsArray};\n  }`
-  )
-
-  if (updated === original && !original.includes('async redirects')) {
-    const withRedirects = original.replace(
-      /const nextConfig\s*=\s*\{/,
-      `const nextConfig = {\n  async redirects() {\n    return ${redirectsArray};\n  },`
-    )
-    fs.writeFileSync(configPath, withRedirects, 'utf-8')
-  } else {
-    fs.writeFileSync(configPath, updated, 'utf-8')
-  }
+  fs.writeFileSync(configPath, `${REDIRECTS_FILE_HEADER}export const REDIRECTS = ${redirectsArray};\n`, 'utf-8')
 }

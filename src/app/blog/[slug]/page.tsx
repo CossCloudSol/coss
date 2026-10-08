@@ -24,6 +24,8 @@ import { getPromoBanners } from '@/lib/promo-banners';
 import { bannerForSlot, splitAfterSecondSection } from '@/lib/promo-banner-slots';
 import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 import { blogPosting, jsonLdGraph } from '@/lib/structured-data';
+import { deriveCategoryFromSlug, relatedPosts } from '@/lib/blog-categories';
+import { getBlogIndexData } from '../blog-index';
 
 export const revalidate = 86400;
 
@@ -182,13 +184,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return buildPageMetadataWithFallback(`blog/${params.slug}`, fallback);
 }
 
-const RELATED = [
-  { title: 'SOC Analyst Course Training in Dilsukhnagar',  href: '/blog/soc-analyst-training-hyderabad' },
-  { title: 'AWS DevOps Multi-Cloud Certification Course',   href: '/blog/aws-devops-multi-cloud-course-dilsukhnagar' },
-  { title: 'Cyber Security Course Training in Hyderabad',  href: '/blog/cyber-security-training-dilsukhnagar-hyderabad' },
-  { title: 'Digital Marketing Course Training',             href: '/blog/digital-marketing-course-training-dilsukhnagar-hyderabad' },
-];
-
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   // One blog-page banner, after the post's 2nd section; null shows the fallback card.
   const blogPageBanner = bannerForSlot(await getPromoBanners('blog-page'), 0);
@@ -299,12 +294,18 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const post = found.value;
   const [mdxBodyBefore, mdxBodyAfter] = splitAfterSecondSection(post.contentHtml ?? '');
 
-  // Use spread date from getAllPosts so the post page matches the blog grid
-  const allMdxPosts = await getAllPosts();
-  const mdxMeta = allMdxPosts.find(p => p.slug === params.slug);
-
   const titleStr   = tagToString(post.frontmatter.title) || params.slug;
-  const dateStr    = mdxMeta?.frontmatter.dateFormatted ?? tagToString(post.frontmatter.date);
+
+  // Related Articles: posts sharing this post's category, newest first (src/lib/blog-categories.ts).
+  const { dbPosts: indexDbPosts, mdxPosts: indexMdxPosts } = await getBlogIndexData();
+  const related = relatedPosts(
+    { slug: params.slug, category: deriveCategoryFromSlug(params.slug, titleStr) },
+    [
+      ...indexMdxPosts.map((p) => ({ slug: p.slug, title: p.title, category: p.category, date: p.date })),
+      ...indexDbPosts.map((p) => ({ slug: p.slug, title: p.title, category: p.category, date: (p.publishedAt ?? p.createdAt).toISOString().slice(0, 10) })),
+    ],
+  );
+  const dateStr    = post.frontmatter.dateFormatted ?? '';
   const readingStr = tagToString(post.frontmatter.readingTime);
   const categories = Array.isArray(post.frontmatter.categories)
     ? post.frontmatter.categories
@@ -329,7 +330,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             blogPosting({
               url: `${SITE_URL}/blog/${params.slug}`,
               headline: titleStr,
-              datePublished: mdxMeta?.frontmatter.date || null,
+              datePublished: post.frontmatter.date || null,
+              dateModified: post.frontmatter.dateModified || null,
             }),
           ])),
         }}
@@ -450,8 +452,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 Related Articles
               </h4>
               <div style={{ marginTop: '10px' }}>
-                {RELATED.map(p => (
-                  <Link key={p.href} href={p.href} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                {related.map(p => (
+                  <Link key={p.slug} href={`/blog/${p.slug}`} style={{ display: 'block', padding: '10px 0', borderBottom: '1px solid var(--border)', fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
                     &rsaquo; {p.title}
                   </Link>
                 ))}

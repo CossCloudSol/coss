@@ -1,6 +1,6 @@
 /**
  * Standalone script to call syncRedirectsToConfig() without TypeScript path aliases.
- * Reads all active DB redirects and writes them to next.config.mjs.
+ * Reads all active DB redirects and writes them to redirects.config.mjs (served by next.config.mjs).
  * Usage: node scripts/run-sync-redirects.mjs
  */
 import { PrismaClient } from '@prisma/client'
@@ -62,8 +62,23 @@ function redirectLine(r) {
   return `      { source: ${jsString(r.source)}, destination: ${jsString(r.destination)}, permanent: ${r.permanent} }`
 }
 
+// Keep in sync with REDIRECTS_FILE_HEADER / isPermanentStatus() in src/lib/sync-redirects.ts.
+const REDIRECTS_FILE_HEADER = `// Every redirect the site serves, in match order: Next.js uses the first rule that
+// matches, so exact rules come before the wildcard ones. next.config.mjs serves this list,
+// and src/app/sitemap.ts resolves every sitemap URL through it, so the sitemap only lists
+// final URLs (scripts/test/sitemap-final-urls.test.mjs).
+//
+// Generated: Admin → Redirects (src/lib/sync-redirects.ts) and scripts/run-sync-redirects.mjs
+// rewrite this file from the Redirect table plus the infrastructure rules. A rule added
+// here by hand also needs its Redirect row, or the next sync drops it.
+`
+
+function isPermanentStatus(statusCode) {
+  return statusCode === 301 || statusCode === 308
+}
+
 function extractRedirectsArrayContent(source) {
-  const match = source.match(/async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[/)
+  const match = source.match(/export\s+const\s+REDIRECTS\s*=\s*\[/)
   if (!match) return null
   const start = (match.index ?? 0) + match[0].length
   let depth = 1
@@ -97,7 +112,7 @@ function splitTopLevelObjects(content) {
 }
 
 async function main() {
-  const configPath = path.join(__dirname, '..', 'next.config.mjs')
+  const configPath = path.join(__dirname, '..', 'redirects.config.mjs')
   const original = fs.readFileSync(configPath, 'utf-8')
 
   // Keep has: rules (e.g. bare domain → www)
@@ -143,7 +158,7 @@ async function main() {
   if (dbRedirects.length > 0) {
     lines.push('      // DB-managed rules')
     for (const r of dbRedirects) {
-      lines.push(redirectLine({ source: r.source, destination: r.destination, permanent: r.statusCode === 301 }))
+      lines.push(redirectLine({ source: r.source, destination: r.destination, permanent: isPermanentStatus(r.statusCode) }))
     }
   }
 
@@ -157,14 +172,8 @@ async function main() {
     : `[\n${lines.join(',\n')},\n    ]`
 
   fs.writeFileSync(configPath + '.bak', original, 'utf-8')
-
-  const updated = original.replace(
-    /async\s+redirects\s*\(\s*\)\s*\{[\s\S]*?return\s+\[[\s\S]*?\]\s*;?\s*\}/,
-    `async redirects() {\n    return ${redirectsArray};\n  }`
-  )
-
-  fs.writeFileSync(configPath, updated, 'utf-8')
-  console.log(`next.config.mjs updated — ${lines.filter(l => l.trim().startsWith('{')).length} redirect rules written`)
+  fs.writeFileSync(configPath, `${REDIRECTS_FILE_HEADER}export const REDIRECTS = ${redirectsArray};\n`, 'utf-8')
+  console.log(`redirects.config.mjs updated — ${lines.filter(l => l.trim().startsWith('{')).length} redirect rules written`)
 }
 
 main()

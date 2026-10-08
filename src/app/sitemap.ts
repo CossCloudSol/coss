@@ -21,6 +21,8 @@ import { getAllPosts } from '@/lib/posts';
 import { getCourseUrl } from '@/lib/course-url';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
 import { sitemapCoursePaths } from '@/lib/flat-url';
+import { toFinalSitemap } from '@/lib/redirect-resolve';
+import { REDIRECTS } from '../../redirects.config.mjs';
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
@@ -134,10 +136,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
 
   // 5 -- Blog posts (dynamic, from content/posts)
-  // lastModified: the admin PageSeo updatedAt wins if tracked; otherwise the
-  // source .mdx file's real filesystem mtime — NOT post.frontmatter.date,
-  // which getAllPosts() synthesizes as an evenly-spread fake publish date
-  // (see src/lib/posts.ts) and is not an honest "last changed" signal.
+  // lastModified: the post's last content change from git history
+  // (content/posts/_dates.json, the same date its BlogPosting dateModified shows).
   let blogEntries: MetadataRoute.Sitemap = [];
   const fsBlogSlugs = new Set<string>();
   try {
@@ -149,9 +149,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         fsBlogSlugs.add(post.slug);
         return {
           url: `${BASE_URL}/blog/${post.slug}`,
-          ...(db?.updatedAt || post.fileMtime
-            ? { lastModified: db?.updatedAt ?? post.fileMtime }
-            : {}),
+          ...(post.frontmatter.dateModified ? { lastModified: post.frontmatter.dateModified } : {}),
           changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
           priority: db?.sitemapPriority ?? 0.7,
         }
@@ -215,7 +213,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         const db = getDbOverride(`blog/${post.slug}`)
         return {
           url: `${BASE_URL}/blog/${post.slug}`,
-          lastModified: post.publishedAt ?? post.updatedAt,
+          lastModified: post.updatedAt,
           changeFrequency: (db?.changeFreq ?? 'monthly') as MetadataRoute.Sitemap[0]['changeFrequency'],
           priority: db?.sitemapPriority ?? 0.7,
         }
@@ -224,7 +222,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // DB unavailable — skip dynamic entries
   }
 
-  return [
+  // Only final URLs: an entry whose URL redirects is replaced by the page it lands on
+  // (redirects.config.mjs, the list next.config.mjs serves); duplicates keep their first entry.
+  return toFinalSitemap([
     ...seoPageEntries,
     ...categoryEntries,
     ...dynamicCourseEntriesDeduped,
@@ -233,5 +233,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dbCourseEntries,
     ...dbCategoryEntries,
     ...dbBlogEntries,
-  ];
+  ], BASE_URL, REDIRECTS);
 }

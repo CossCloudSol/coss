@@ -247,7 +247,6 @@ export const OVERRIDES: Record<string, OverrideValue> = {
   'best-certification-course-institute-in-ameerpet-hyderabad-coss-cloud-solutions': { kind: 'path', href: '/locations/ameerpet/cloud-computing' },
 
   // Junk posts — no callout
-  '77674-2': null,
   a: null,
 }
 

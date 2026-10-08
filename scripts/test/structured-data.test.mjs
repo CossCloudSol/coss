@@ -106,7 +106,9 @@ test('blogPosting: image, publisher logo, mainEntityOfPage; no #organization red
   assert.equal(node.publisher.logo.url, `${SITE_URL}/logo.png`);
   assert.equal(node.publisher['@id'], undefined);
   assert.ok(node.headline.length <= 110);
-  assert.equal(node.dateModified, '2026-01-01');
+  assert.equal(node.datePublished, '2026-01-01T00:00:00+05:30', 'a bare date gets a time and timezone (Rich Results warning)');
+  assert.equal(node.dateModified, '2026-01-01T00:00:00+05:30');
+  assert.equal(sd.isoDateTime('2026-10-06T18:30:46.000Z'), '2026-10-06T18:30:46.000Z');
 });
 
 test('jobPosting: valid employmentType, validThrough, identifier', () => {
