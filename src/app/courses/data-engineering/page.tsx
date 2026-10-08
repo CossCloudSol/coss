@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { buildCategoryPageMetadata } from '@/lib/build-category-page-metadata';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import CoursePageSeo from '@/components/CoursePageSeo';
 import CourseCategoryPage from '@/components/CourseCategoryPage';
 import { courseData } from '@/lib/courseData';
 import { prisma } from '@/lib/db';
@@ -22,12 +21,6 @@ export default async function Page() {
 
   return (
     <>
-      <CoursePageSeo
-        slug="courses/data-engineering"
-        title="Data Engineering Training Institute in Hyderabad"
-        description="Join data engineering training in Hyderabad. Azure Data Engineer, Spark, Hadoop, ETL, expert trainers, placement support and certification. Enroll now!"
-        category="Data Engineering"
-      />
       <CourseCategoryPage data={courseData['data-engineering']} breadcrumbSlug="data-engineering" dbCourses={dbCourses} />
     </>
   );

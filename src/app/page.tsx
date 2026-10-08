@@ -44,6 +44,7 @@ import HomeHeroForm from '@/components/home/HomeHeroForm';
 import CourseTile, { BANNER_FILLS } from '@/components/courses/CourseTile';
 import TrackedCta from '@/components/home/TrackedCta';
 import { PRIMARY_PHONE } from '@/lib/nap';
+import PageSchema from '@/components/PageSchema';
 
 /*
  * Homepage built for lead generation (approved mockup "COSS Homepage Mockup"):
@@ -212,6 +213,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <PageSchema slug="home" />
       {/* ── Hero: course search + free demo form ── */}
       <section aria-label="Book a free demo class" className="bg-[#0a3d4a] px-4 pb-8 pt-7 md:px-8 md:pb-[72px] md:pt-16">
         <div className={`${CONTAINER} grid gap-4 lg:grid-cols-[minmax(0,1fr)_480px] lg:gap-x-16 lg:gap-y-6`}>

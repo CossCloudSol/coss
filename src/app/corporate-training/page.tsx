@@ -7,6 +7,7 @@ import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import { optimizeCldUrl } from '@/lib/cloudinary';
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -52,6 +53,7 @@ export default async function CorporateTrainingPage() {
     : [];
   return (
     <>
+      <PageSchema slug="corporate-training" />
       <ResponsivePageStyles />
       <CorporateHeroBanner />
 

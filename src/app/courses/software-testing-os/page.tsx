@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { buildCategoryPageMetadata } from '@/lib/build-category-page-metadata';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import CoursePageSeo from '@/components/CoursePageSeo';
 import CourseCategoryPage from '@/components/CourseCategoryPage';
 import { courseData } from '@/lib/courseData';
 import { prisma } from '@/lib/db';
@@ -22,12 +21,6 @@ export default async function Page() {
 
   return (
     <>
-      <CoursePageSeo
-        slug="courses/software-testing-os"
-        title="Software Testing and OS Training Institute in Hyderabad"
-        description="Join software testing and OS training in Hyderabad. Manual testing, Selenium, Linux, expert trainers, placement support and certification. Enroll now!"
-        category="Software Testing & OS"
-      />
       <CourseCategoryPage data={courseData['software-testing-os']} breadcrumbSlug="software-testing-os" dbCourses={dbCourses} />
     </>
   );

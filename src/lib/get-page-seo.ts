@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import type { SeoSettings } from '@prisma/client';
 import { prisma } from './db';
 import { buildTitle } from './build-title';
+import { filterSeedSchema } from '@/lib/structured-data';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 const DEFAULT_SITE_TITLE = 'Coss Cloud Solutions';
@@ -145,17 +146,19 @@ export const getPageSeo = cache(async (slug: string): Promise<PageSeoBundle> => 
 });
 
 /**
- * Parses a PageSeo row's admin-authored custom schemaMarkup JSON, if any.
- * Returns null (and logs) on missing row or invalid JSON — never throws, so
- * a page can always safely render the result as an extra JSON-LD block.
+ * A PageSeo row's admin-authored schemaMarkup, filtered by filterSeedSchema():
+ * invalid JSON, nodes that redeclare #organization, duplicate a builder's
+ * output or carry ratings are dropped, and redirecting (trailing-slash) site
+ * URLs are fixed. alsoDrop: types the page already emits itself. Never throws;
+ * null when nothing is left, so a page can always render the result as an
+ * extra JSON-LD block.
  */
-export async function getPageSchemaMarkup(slug: string): Promise<object | null> {
+export async function getPageSchemaMarkup(slug: string, alsoDrop: ReadonlyArray<string> = []): Promise<object | null> {
   try {
     const { seo } = await getPageSeo(slug);
-    if (!seo?.schemaMarkup || seo.schemaMarkup.trim() === '') return null;
-    return JSON.parse(seo.schemaMarkup);
+    return filterSeedSchema(seo?.schemaMarkup, alsoDrop);
   } catch (error) {
-    console.log(`[SEO] Invalid schemaMarkup JSON for "${slug}", skipping:`, error);
+    console.log(`[SEO] schemaMarkup for "${slug}" could not be loaded, skipping:`, error);
     return null;
   }
 }

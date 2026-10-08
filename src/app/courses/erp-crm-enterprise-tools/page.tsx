@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { buildCategoryPageMetadata } from '@/lib/build-category-page-metadata';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
-import CoursePageSeo from '@/components/CoursePageSeo';
 import CourseCategoryPage from '@/components/CourseCategoryPage';
 import { courseData } from '@/lib/courseData';
 import { prisma } from '@/lib/db';
@@ -22,12 +21,6 @@ export default async function Page() {
 
   return (
     <>
-      <CoursePageSeo
-        slug="courses/erp-crm-enterprise-tools"
-        title="ERP, CRM and Enterprise Tools Training Institute in Hyderabad"
-        description="Join ERP, CRM and enterprise tools training in Hyderabad. SAP, Salesforce, Oracle Fusion HCM, expert trainers, placement support. Enroll now!"
-        category="ERP, CRM & Enterprise Tools"
-      />
       <CourseCategoryPage data={courseData['erp-crm-enterprise-tools']} breadcrumbSlug="erp-crm-enterprise-tools" dbCourses={dbCourses} />
     </>
   );

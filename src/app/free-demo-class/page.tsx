@@ -5,6 +5,7 @@ import WhatsAppLink from '@/components/WhatsAppLink';
 import BatchCard, { type BatchCardBatch } from '@/components/BatchCard';
 import { findBatches } from '@/lib/batch-queries';
 import { buildPageMetadata } from '@/lib/get-page-seo';
+import PageSchema from '@/components/PageSchema';
 
 export const revalidate = 86400;
 export async function generateMetadata(): Promise<Metadata> {
@@ -142,6 +143,7 @@ export default async function FreeDemoClassPage() {
 
   return (
     <>
+      <PageSchema slug="free-demo-class" />
       {/* ── HERO ── */}
       <section id="top" className="bg-[#0D1B2A] py-16 px-4">
         <div className="max-w-6xl mx-auto">

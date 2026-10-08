@@ -6,7 +6,7 @@
  * Sitelinks Search Box, and AI-engine entity recognition (GEO):
  *
  *   1. Organization + EducationalOrganization  → entity anchor for all pages
- *   2. WebSite + SearchAction                  → Sitelinks Search Box
+ *   2. WebSite                                 → site name for search results
  *
  * Branch LocalBusiness schema is intentionally NOT included here — each
  * /locations/{branch} page emits its own single LocalBusiness block via
@@ -108,7 +108,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     '@type': ['Organization', 'EducationalOrganization'],
     '@id': `${SITE_URL}/#organization`,
     name: 'Coss Cloud Solutions',
-    alternateName: ['COSS', 'Coss Cloud Solutions Hyderabad'],
+    alternateName: ['Coss', 'Coss Cloud Solutions Hyderabad'],
     url: SITE_URL,
     logo: {
       '@type': 'ImageObject',
@@ -171,20 +171,13 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     '@type': 'WebSite',
     '@id': `${SITE_URL}/#website`,
     name: 'Coss Cloud Solutions',
-    alternateName: 'COSS IT Training Hyderabad',
+    alternateName: 'Coss IT Training Hyderabad',
     url: SITE_URL,
     description:
       'IT training institute in Hyderabad since 2010 — AI, Cloud Computing, DevOps, Data Science and 30+ courses with placement support.',
     publisher: { '@id': `${SITE_URL}/#organization` },
     inLanguage: 'en-IN',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${SITE_URL}/?s={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
+    // No SearchAction: the site has no search results URL for it to point at.
   }
 
   return [
@@ -193,7 +186,7 @@ export async function buildGlobalSchemas(): Promise<object[]> {
       parseOverride(settings.schemaOrgOverride) ?? orgSchema
     ] : []),
 
-    // ── 2. WebSite + SearchAction ────────────────────────────────────────────
+    // ── 2. WebSite ───────────────────────────────────────────────────────────
     ...(settings.schemaWebSiteEnabled ? [
       parseOverride(settings.schemaWebSiteOverride) ?? webSiteSchema
     ] : []),

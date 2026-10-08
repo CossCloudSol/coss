@@ -40,6 +40,8 @@ export default async function FacultyPage() {
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: t.name,
+      // Each trainer's card on this page (id below), the one public URL for them.
+      url: `${SITE_URL}/faculty#trainer-${t.id}`,
       jobTitle: t.title,
       worksFor: { '@id': `${SITE_URL}/#organization` },
       ...(skills.length > 0 ? { knowsAbout: skills } : {}),
@@ -76,7 +78,7 @@ export default async function FacultyPage() {
                 const skills = splitCommaList(t.skills);
                 const teaches = splitCommaList(t.teaches);
                 return (
-                  <li key={t.id} className="flex flex-col gap-4 rounded-2xl border border-[#e3eaec] bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
+                  <li key={t.id} id={`trainer-${t.id}`} className="scroll-mt-24 flex flex-col gap-4 rounded-2xl border border-[#e3eaec] bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
                     <div className="flex items-center gap-4">
                       <span className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#e6f0f1] font-heading text-xl font-extrabold text-[#005663]">
                         {t.photoUrl ? (

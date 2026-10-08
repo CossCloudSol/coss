@@ -7,6 +7,7 @@ import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getActiveJobBySlug } from '@/lib/job-queries';
 import { prisma } from '@/lib/db';
 import { safeJsonLd } from '@/lib/safe-json-ld';
+import { SITE_URL, jobPosting, jsonLdGraph } from '@/lib/structured-data';
 
 export const revalidate = 600;
 
@@ -75,28 +76,20 @@ export default async function JobDetailPage({ params }: { params: { slug: string
 
   const waMessage = jobApplyMessage({ jobTitle: job.title, company: job.company });
 
-  const jobSchema = {
-    '@context': 'https://schema.org/',
-    '@type': 'JobPosting',
-    title: job.title,
-    description: job.description,
-    hiringOrganization: {
-      '@type': 'Organization',
-      name: job.company,
-    },
-    jobLocation: {
-      '@type': 'Place',
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Hyderabad',
-        addressRegion: 'Telangana',
-        addressCountry: 'IN',
-      },
-    },
-    employmentType: job.type.toUpperCase().replace(/ /g, '_'),
-    datePosted: job.postedAt,
-    validThrough: job.expiresAt,
-  };
+  const jobSchema = jsonLdGraph([
+    jobPosting({
+      url: `${SITE_URL}/jobs/${job.slug}`,
+      id: job.id,
+      title: job.title,
+      description: job.description,
+      company: job.company,
+      location: job.location,
+      type: job.type,
+      mode: job.mode,
+      postedAt: job.postedAt,
+      expiresAt: job.expiresAt,
+    }),
+  ]);
 
   const categorySlug = job.category
     .toLowerCase()

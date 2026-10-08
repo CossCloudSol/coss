@@ -25,6 +25,7 @@ import { getPromoBanners, syllabusLinkFor } from '@/lib/promo-banners';
 import { bannerForSlot } from '@/lib/promo-banner-slots';
 import { publicBadge } from '@/lib/course-badge';
 import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
+import { courseJsonLd } from '@/lib/course-jsonld';
 
 export const revalidate = 86400;
 
@@ -107,15 +108,21 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
   const course = await getCourse(params.slug, params.courseSlug);
   if (!course) notFound();
 
-  const [related, courseBatches, customSchema] = await Promise.all([
+  const [related, courseBatches, customSchema, courseGraph] = await Promise.all([
     getRelatedCourses(course.categorySlug, course.id),
     getCourseBatches2(course.id),
-    getPageSchemaMarkup(`courses/${params.slug}/${params.courseSlug}`),
+    // The page's own graph covers Course, FAQ and breadcrumb; the stored markup may only add other types.
+    getPageSchemaMarkup(`courses/${params.slug}/${params.courseSlug}`, ['BreadcrumbList']),
+    courseJsonLd(course, {
+      url: courseCanonicalUrl(course),
+      category: course.categorySlug ? { name: course.category, slug: course.categorySlug } : null,
+    }),
   ]);
   const syllabusItems: SyllabusItem[] = Array.isArray(course.syllabus) ? course.syllabus : [];
 
   return (
     <>
+      {courseGraph && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(courseGraph) }} />}
       {customSchema && (
         <script
           type="application/ld+json"

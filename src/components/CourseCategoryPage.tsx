@@ -14,6 +14,8 @@ import { prisma } from '@/lib/db';
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import { canonicalCourseLink } from '@/lib/course-canonical';
 import MobileInlineDemo from '@/components/MobileInlineDemo';
+import { safeJsonLd } from '@/lib/safe-json-ld';
+import { SITE_URL, breadcrumbList, collectionPage, faqPage, jsonLdGraph } from '@/lib/structured-data';
 
 const COMPANY_ALT_MAP: Record<string, string> = {
   google: 'Google',
@@ -114,8 +116,31 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
       .filter(Boolean),
   ));
 
+  // Structured data: the category is a CollectionPage whose ItemList is the courses shown
+  // below, plus every FAQ shown and the breadcrumb.
+  const pageUrl = `${SITE_URL}/courses/${breadcrumbSlug}`;
+  const absolute = (href: string) => (href.startsWith('http') ? href : `${SITE_URL}${href}`);
+  const listed = (cardSource && cardSource.length > 0)
+    ? cardSource.map((c) => ({ name: c.title, href: c.href }))
+    : ((data.courses ?? []) as Array<{ title?: string; href?: string }>).map((c) => ({ name: c.title ?? '', href: c.href ? canonicalCourseLink(c.href) : '' }));
+  const categoryGraph = jsonLdGraph([
+    ...collectionPage({
+      url: pageUrl,
+      name: `${data.name} Training in Hyderabad`,
+      description: data.description,
+      items: listed.filter((c) => c.name && c.href && c.href !== '#').map((c) => ({ name: c.name, url: absolute(c.href) })),
+    }),
+    faqPage(pageUrl, data.faqs ?? []),
+    breadcrumbList(pageUrl, [
+      { name: 'Home', url: SITE_URL },
+      { name: 'Courses', url: `${SITE_URL}/courses` },
+      { name: data.name, url: pageUrl },
+    ]),
+  ]);
+
   return (
     <>
+      {categoryGraph && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(categoryGraph) }} />}
       <ResponsivePageStyles />
       <PageBanner
         title={`${data.name} Training in Hyderabad`}
