@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { revalidatePaths, getJobRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -96,6 +97,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         expiresAt:       body.expiresAt ? new Date(body.expiresAt as string) : null,
       },
     });
+    await revalidatePaths(getJobRevalidationPaths(job));
     return NextResponse.json(job, { status: 201 });
   } catch (err: unknown) {
     const e = err as { code?: string };

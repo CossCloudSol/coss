@@ -164,6 +164,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let dbCategoryEntries: MetadataRoute.Sitemap = [];
   // 8 ── Published DB blog posts not already in FS blog entries
   let dbBlogEntries: MetadataRoute.Sitemap = [];
+  // 9 ── The job board, the batch schedule and each active job's page
+  const listingEntries: MetadataRoute.Sitemap = ['jobs', 'batches']
+    .filter((slug) => !isExcluded(slug))
+    .map((slug) => ({
+      url: `${BASE_URL}/${slug}`,
+      changeFrequency: 'daily' as MetadataRoute.Sitemap[0]['changeFrequency'],
+      priority: 0.6,
+    }));
+  let jobEntries: MetadataRoute.Sitemap = [];
 
   try {
     const { prisma } = await import('@/lib/db')
@@ -218,6 +227,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: db?.sitemapPriority ?? 0.7,
         }
       })
+
+    // 9 — Active, unexpired jobs (the /jobs board links to each)
+    const { findActiveJobs } = await import('@/lib/job-queries')
+    jobEntries = (await findActiveJobs())
+      .filter((job) => !isExcluded(`jobs/${job.slug}`))
+      .map((job) => ({
+        url: `${BASE_URL}/jobs/${job.slug}`,
+        lastModified: job.updatedAt,
+        changeFrequency: 'weekly' as MetadataRoute.Sitemap[0]['changeFrequency'],
+        priority: 0.5,
+      }))
   } catch {
     // DB unavailable — skip dynamic entries
   }
@@ -233,5 +253,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dbCourseEntries,
     ...dbCategoryEntries,
     ...dbBlogEntries,
+    ...listingEntries,
+    ...jobEntries,
   ], BASE_URL, REDIRECTS);
 }
