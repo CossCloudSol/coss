@@ -1,5 +1,16 @@
 import type { Metadata } from 'next';
-import { Raleway, Roboto } from 'next/font/google';
+import { Poppins, Raleway, Roboto } from 'next/font/google';
+
+// Headings and labels across the site are styled 'Poppins' (inline styles and CSS).
+// Served by next/font from /_next/static; not preloaded so the weights don't
+// compete with the first paint (display: swap shows the fallback until it loads).
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-poppins',
+  display: 'swap',
+  preload: false,
+});
 
 const raleway = Raleway({
   subsets: ['latin'],
@@ -155,7 +166,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const globalSchemas = await buildGlobalSchemas();
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${raleway.variable} ${roboto.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${poppins.variable} ${raleway.variable} ${roboto.variable}`}>
       <head>
         {/* Theme init — synchronous, prevents dark-mode flash on first paint */}
         <script
@@ -179,12 +190,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Coss Cloud Solutions" />
 
-        {/* Fonts are served by next/font from /_next/static — no external requests */}
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* The viewport meta tag comes from Next.js (one per page); don't add another here. */}
 
         {/* Global JSON-LD schemas: Organization, WebSite.
-            Injected on every page — powers Knowledge Panel, Sitelinks Search
-            Box, and AI-engine entity resolution (GEO). Branch LocalBusiness
+            Injected on every page — powers Knowledge Panel and AI-engine
+            entity resolution (GEO). Branch LocalBusiness
             schema is emitted per-page on /locations/{branch} only. */}
         {globalSchemas.map((schema, i) => (
           <script

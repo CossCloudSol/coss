@@ -221,7 +221,7 @@ export async function BlogIndexView({
                   padding: '7px 18px',
                   borderRadius: '20px',
                   fontSize: '13px',
-                  fontFamily: 'Poppins, sans-serif',
+                  fontFamily: 'var(--font-poppins), Poppins, sans-serif',
                   fontWeight: 500,
                   cursor: 'pointer',
                   textDecoration: 'none',
@@ -240,12 +240,12 @@ export async function BlogIndexView({
 
         {activeCategory !== 'All' && (
           <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: '14px', color: 'var(--text-muted)' }}>
+            <span style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: '14px', color: 'var(--text-muted)' }}>
               Showing{' '}
               <strong style={{ color: 'var(--text)' }}>{filteredDbPosts.length + filteredMdxPosts.length}</strong>{' '}
               post{(filteredDbPosts.length + filteredMdxPosts.length) !== 1 ? 's' : ''} in
             </span>
-            <span style={{ background: 'var(--primary)', color: '#fff', padding: '3px 12px', borderRadius: '12px', fontSize: '13px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>
+            <span style={{ background: 'var(--primary)', color: '#fff', padding: '3px 12px', borderRadius: '12px', fontSize: '13px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>
               {activeCategory}
             </span>
             <Link href="/blog" style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'underline' }}>
@@ -262,7 +262,7 @@ export async function BlogIndexView({
               <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
                 <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>No Posts Found</h3>
                 <p style={{ marginBottom: '16px' }}>No articles in &ldquo;{activeCategory}&rdquo; yet. Check back soon!</p>
-                <Link href="/blog" style={{ display: 'inline-block', background: 'var(--primary)', color: '#fff', padding: '9px 22px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', textDecoration: 'none' }}>
+                <Link href="/blog" style={{ display: 'inline-block', background: 'var(--primary)', color: '#fff', padding: '9px 22px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', textDecoration: 'none' }}>
                   View All Posts
                 </Link>
               </div>
@@ -389,7 +389,7 @@ export async function BlogIndexView({
           {/* ── Sidebar ── */}
           <div>
             <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '22px', color: '#fff', marginBottom: '20px' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', marginBottom: '10px', color: '#fff' }}>About Coss Cloud Solutions</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', marginBottom: '10px', color: '#fff' }}>About Coss Cloud Solutions</h4>
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
                 IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad, since 2010.
               </p>
@@ -397,17 +397,17 @@ export async function BlogIndexView({
             </div>
 
             <div style={{ background: 'var(--primary-light)', borderRadius: '12px', padding: '22px', border: '1px solid rgba(228,117,56,0.2)', marginBottom: '20px' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>
                 {'🎓'} Enroll Now
               </h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', marginBottom: '14px' }}>Book a free demo class and start your IT career today.</p>
-              <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+              <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
                 Book Free Demo Class
               </Link>
             </div>
 
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>
                 Popular Categories
               </h4>
               <div style={{ marginTop: '10px' }}>
@@ -427,7 +427,7 @@ export async function BlogIndexView({
                         textDecoration: 'none',
                         color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                         fontWeight: isActive ? 600 : 400,
-                        fontFamily: 'Poppins, sans-serif',
+                        fontFamily: 'var(--font-poppins), Poppins, sans-serif',
                         transition: 'color 0.15s ease',
                       }}
                     >

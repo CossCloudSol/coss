@@ -11,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: '/',
     display: 'browser',
     background_color: '#ffffff',
-    theme_color: '#024c57',
+    theme_color: '#005663', // same as the theme-color meta in the root layout
     icons: [
       { src: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
       { src: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },

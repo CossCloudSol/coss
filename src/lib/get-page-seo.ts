@@ -4,6 +4,7 @@ import type { SeoSettings } from '@prisma/client';
 import { prisma } from './db';
 import { buildTitle } from './build-title';
 import { filterSeedSchema } from '@/lib/structured-data';
+import { PAGE_SLUG_PATHS, pickOgImage } from '@/lib/page-seo-rules';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 const DEFAULT_SITE_TITLE = 'Coss Cloud Solutions';
@@ -185,7 +186,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
     const ogDescription = seo?.ogDescription ?? description;
     const ogImage = seo?.ogImage ?? settings?.defaultOgImage ?? DEFAULT_OG_IMAGE;
 
-    const defaultCanonical = slug === 'home' ? SITE_URL : `${SITE_URL}/${slug}`;
+    const defaultCanonical = slug === 'home' ? SITE_URL : `${SITE_URL}/${PAGE_SLUG_PATHS[slug] ?? slug}`;
     const canonicalUrl = normalizeCanonical(seo?.canonicalUrl?.trim() || defaultCanonical);
 
     return {
@@ -211,9 +212,7 @@ export async function buildPageMetadata(slug: string): Promise<Metadata> {
         follow: !(seo?.noFollow ?? false),
       },
       alternates: { canonical: canonicalUrl },
-      other: settings?.googleSearchConsoleId
-        ? { 'google-site-verification': sanitizeGscVerificationId(settings.googleSearchConsoleId) }
-        : undefined,
+      // The Search Console verification tag is rendered once, by the root layout.
     };
   } catch (error) {
     console.warn(`[SEO] buildPageMetadata failed for "${slug}":`, error);
@@ -257,8 +256,10 @@ export async function buildPageMetadataWithFallback(
       seo?.ogDescription ?? (fallbackOg as { description?: string }).description ?? description;
     const fallbackImage = firstImageUrl((fallbackOg as { images?: unknown }).images);
     // The page's own image (e.g. a course thumbnail or generated banner) beats
-    // the site-wide default; an admin per-page OG image beats both.
-    const ogImage = seo?.ogImage ?? fallbackImage ?? settings?.defaultOgImage ?? DEFAULT_OG_IMAGE;
+    // the site-wide default; an admin per-page OG image beats both. A stored
+    // per-page value that is just the site default (the SEO seed wrote it into
+    // every row) is not a real override, so the page's image still wins.
+    const ogImage = pickOgImage(seo?.ogImage, fallbackImage, settings?.defaultOgImage, DEFAULT_OG_IMAGE);
     const ogType = (fallbackOg as { type?: string }).type ?? 'website';
 
     const fallbackCanonical =

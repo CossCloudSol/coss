@@ -60,7 +60,7 @@ export default async function ContactUsPage() {
           {contactInfo.map(c => (
             <div key={c.title} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '22px', boxShadow: '0 2px 14px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', textAlign: 'center' }}>
               <div style={{ fontSize: '28px', marginBottom: '10px' }}>{c.icon}</div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>{c.title}</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>{c.title}</h4>
               {c.lines.map((line, i) => (
                 <p key={i} style={{ color: 'var(--text-muted)', fontSize: '12.5px', lineHeight: '1.7' }}>{line}</p>
               ))}
@@ -72,7 +72,7 @@ export default async function ContactUsPage() {
         <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'start' }}>
           {/* Form */}
           <div>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: 'clamp(20px,3.5vw,26px)', color: 'var(--text)', marginBottom: '8px' }}>Send Us a Message</h2>
+            <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: 'clamp(20px,3.5vw,26px)', color: 'var(--text)', marginBottom: '8px' }}>Send Us a Message</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Our team will get back to you within 24 hours.</p>
 
             <ContactForm />
@@ -82,14 +82,14 @@ export default async function ContactUsPage() {
           <div>
             {/* Timings */}
             <div style={{ background: '#1a1a2e', borderRadius: '14px', padding: '28px', color: '#fff', marginBottom: '20px' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '18px' }}>🕐 Centre Timings</h3>
+              <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '18px' }}>🕐 Centre Timings</h3>
               {branches.map((b, i) => hours[i].groups.length > 0 && (
                 <div key={b.branchKey} style={{ marginBottom: '8px' }}>
-                  <div style={{ color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', paddingTop: '6px' }}>{branchTitle(b)}</div>
+                  <div style={{ color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', paddingTop: '6px' }}>{branchTitle(b)}</div>
                   {hours[i].groups.map(g => (
                     <div key={g.days} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: '13px' }}>
                       <span style={{ color: '#ccc' }}>{g.days}</span>
-                      <span style={{ color: '#e8401c', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
+                      <span style={{ color: '#e8401c', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
                     </div>
                   ))}
                 </div>
@@ -102,13 +102,13 @@ export default async function ContactUsPage() {
             {/* WhatsApp */}
             <div style={{ background: '#25D366', borderRadius: '14px', padding: '22px', color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>💬</div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px' }}>Chat on WhatsApp</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px' }}>Chat on WhatsApp</h4>
               <p style={{ fontSize: '13px', opacity: 0.9, marginBottom: '14px' }}>Get instant answers to your queries</p>
               <WhatsAppLink
                 ctaType="contact_page"
                 pageType="static"
                 message="Hi Coss Cloud Solutions Team, I'd like to know more about your courses. Could you help me?"
-                style={{ display: 'block', background: 'var(--bg-card)', color: '#25D366', padding: '10px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}
+                style={{ display: 'block', background: 'var(--bg-card)', color: '#25D366', padding: '10px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}
               >
                 Chat Now on WhatsApp
               </WhatsAppLink>
@@ -116,7 +116,7 @@ export default async function ContactUsPage() {
 
             {/* Quick links */}
             <div style={{ background: 'var(--bg-alt)', borderRadius: '14px', padding: '22px' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '14px' }}>Quick Links</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '14px' }}>Quick Links</h4>
               {[
                 { label: '📚 View All Courses', href: '/courses' },
                 { label: '🎓 Enroll Now', href: '/enroll-now-with-coss' },
@@ -134,7 +134,7 @@ export default async function ContactUsPage() {
 
         {/* Maps */}
         <div style={{ marginTop: '48px' }}>
-          <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '20px', textAlign: 'center' }}>Find Our Branches</h3>
+          <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '20px', textAlign: 'center' }}>Find Our Branches</h3>
           <div className="contact-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             {[
               { title: 'Dilsukhnagar Branch', src: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3807.916716367894!2d78.5283118!3d17.3677756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb99fcaf898051%3A0xa63d61bd6b7fd4e2!2sCoss%20Cloud%20Solutions!5e0!3m2!1sen!2sin!4v1779166538650!5m2!1sen!2sin' },
@@ -142,7 +142,7 @@ export default async function ContactUsPage() {
             ].map(b => (
               <div key={b.title} style={{ background: 'var(--bg-card)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 14px rgba(0,0,0,0.08)' }}>
                 <div style={{ background: '#1a1a2e', padding: '14px 18px' }}>
-                  <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: '#fff' }}>{b.title}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: '#fff' }}>{b.title}</h4>
                 </div>
                 <iframe
                   src={b.src}
@@ -157,8 +157,8 @@ export default async function ContactUsPage() {
         {/* ── Pay Course Fee Online ── */}
         <div style={{ marginTop: '56px' }}>
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.12)', color: '#F97316', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Online Payment</div>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>Pay Course Fee Online</h2>
+            <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.12)', color: '#F97316', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Online Payment</div>
+            <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>Pay Course Fee Online</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Secure payment via Razorpay — pay anytime, anywhere</p>
           </div>
 
@@ -176,7 +176,7 @@ export default async function ContactUsPage() {
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
                   background: '#F97316', color: '#fff',
                   padding: '16px 36px', borderRadius: '10px',
-                  fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '17px',
+                  fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '17px',
                   textDecoration: 'none', marginBottom: '22px',
                   boxShadow: '0 4px 18px rgba(249,115,22,0.45)',
                   transition: 'transform 0.15s',
@@ -193,7 +193,7 @@ export default async function ContactUsPage() {
               {/* Payment method badges */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginBottom: '22px' }}>
                 {['UPI', 'Visa', 'Mastercard', 'Net Banking', 'EMI'].map(m => (
-                  <span key={m} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontSize: '11.5px', padding: '5px 12px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{m}</span>
+                  <span key={m} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontSize: '11.5px', padding: '5px 12px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 500 }}>{m}</span>
                 ))}
               </div>
 

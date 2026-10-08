@@ -46,8 +46,8 @@ export default function CertificationPage() {
 
       <div style={{ background: 'var(--bg-alt)', padding: '48px 20px' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Globally Recognized</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,4vw,32px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>Industry Certification Preparation</h2>
+          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Globally Recognized</div>
+          <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(22px,4vw,32px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>Industry Certification Preparation</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.75' }}>
             Our training programs are aligned with the latest exam objectives of globally recognized certifications. Get certified in your domain and fast-track your IT career with credentials employers recognise.
           </p>
@@ -61,13 +61,13 @@ export default function CertificationPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <span style={{ fontSize: '26px' }}>{c.icon}</span>
                 <div>
-                  <span style={{ background: 'var(--bg-alt)', color: 'var(--text-muted)', fontSize: '11px', padding: '2px 8px', borderRadius: '10px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{c.vendor}</span>
+                  <span style={{ background: 'var(--bg-alt)', color: 'var(--text-muted)', fontSize: '11px', padding: '2px 8px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 500 }}>{c.vendor}</span>
                 </div>
               </div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px', lineHeight: '1.35' }}>{c.name}</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px', lineHeight: '1.35' }}>{c.name}</h4>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '12px', color: 'var(--text-light)' }}>Level: {c.level}</span>
-                <Link href="/enroll-now-with-coss" style={{ color: '#e8401c', fontSize: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}>Enroll →</Link>
+                <Link href="/enroll-now-with-coss" style={{ color: '#e8401c', fontSize: '12px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700 }}>Enroll →</Link>
               </div>
             </div>
           ))}

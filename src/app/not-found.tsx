@@ -21,7 +21,7 @@ export default function NotFound() {
       <ResponsivePageStyles />
       <PageBanner title="Page Not Found" />
       <div style={{ maxWidth: '640px', margin: '0 auto', padding: '56px 20px', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '12px' }}>
+        <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '12px' }}>
           We couldn&apos;t find that page.
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.7, marginBottom: '28px' }}>
@@ -32,7 +32,7 @@ export default function NotFound() {
             <li key={l.href}>
               <Link
                 href={l.href}
-                style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 20px', borderRadius: '8px', border: '1.5px solid #024c57', color: '#024c57', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}
+                style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 20px', borderRadius: '8px', border: '1.5px solid #024c57', color: '#024c57', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}
               >
                 {l.label}
               </Link>
@@ -41,7 +41,7 @@ export default function NotFound() {
         </ul>
         <Link
           href="/"
-          style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 22px', borderRadius: '8px', background: '#e8401c', color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
+          style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 22px', borderRadius: '8px', background: '#e8401c', color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
         >
           Back to Home
         </Link>

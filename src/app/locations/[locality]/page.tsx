@@ -193,7 +193,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
 
               {/* NAP + Map */}
               <div className="inner-card" style={{ marginBottom: '24px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
                   📍 Visit Our {config.name} Branch
                 </h2>
                 <div className="page-two-col" style={{ gap: '24px', alignItems: 'start' }}>
@@ -228,7 +228,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
 
               {/* Directions */}
               <div style={{ marginBottom: '28px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
                   🚇 {config.directionsHeading}
                 </h2>
                 {config.directionsBody.map((line, i) => (
@@ -240,7 +240,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
               {batches.length > 0 && (
                 <div style={{ marginBottom: '28px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                    <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
+                    <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
                       Upcoming Batches at {config.name}
                     </h2>
                     <Link href="/batches" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
@@ -256,7 +256,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
               {/* Courses */}
               {courses.length > 0 && (
                 <div style={{ marginBottom: '28px' }}>
-                  <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
+                  <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
                     Courses Running at This Branch
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -273,7 +273,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
               {/* Outbound links to this branch's locality x topic pages */}
               {LOCALITY_TOPIC_PAGES.filter((t) => t.localitySlug === config.slug).length > 0 && (
                 <div style={{ marginBottom: '24px' }}>
-                  <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
+                  <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
                     Explore by Course Area
                   </h2>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -289,7 +289,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
 
               {/* Areas served */}
               <div style={{ marginBottom: '8px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
                   Areas We Serve from {config.name}
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
@@ -373,7 +373,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
             ))}
 
             <div style={{ marginBottom: '28px' }}>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
                 {config.audienceHeading}
               </h2>
               {config.audienceBody.map((p, i) => (
@@ -383,7 +383,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
 
             {config.secondaryHeading && config.secondaryBody && (
               <div style={{ marginBottom: '28px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
                   {config.secondaryHeading}
                 </h2>
                 {config.secondaryBody.map((p, i) => (
@@ -394,14 +394,14 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
 
             {/* Nearest branches */}
             <div style={{ marginBottom: '28px' }}>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
                 🚇 Nearest Branches &amp; Commute
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {config.nearestBranches.map((nb) => (
                   <div key={nb.branchKey} className="inner-card">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '8px', marginBottom: '6px' }}>
-                      <Link href={`/locations/${nb.branchKey}`} style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--primary)' }}>
+                      <Link href={`/locations/${nb.branchKey}`} style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--primary)' }}>
                         {nb.label} →
                       </Link>
                       <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text)' }}>{nb.travelTime}</span>
@@ -419,7 +419,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
             {/* Batches at nearest branch */}
             {batches.length > 0 && (
               <div style={{ marginBottom: '28px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
                   Upcoming Batches at Your Nearest Branch ({branchDisplay})
                 </h2>
                 <div className="course-list-grid">
@@ -430,7 +430,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
 
             {courses.length > 0 && (
               <div style={{ marginBottom: '8px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', color: 'var(--text)', marginBottom: '10px' }}>
                   Popular Courses for This Area
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '14px' }}>
@@ -445,7 +445,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
             )}
 
             <div>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '10px' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '10px' }}>
                 Areas We Cover
               </h2>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>

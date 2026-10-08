@@ -176,7 +176,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
           <div>
             {/* Description */}
             <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)', marginBottom: '24px' }}>
-              <h2 style={{ fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px', fontFamily: 'Poppins, sans-serif' }}>
+              <h2 style={{ fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
                 Job Description
               </h2>
               <div
@@ -189,12 +189,12 @@ export default async function JobDetailPage({ params }: { params: { slug: string
             {/* Skills */}
             {job.skills.length > 0 && (
               <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)' }}>
-                <h2 style={{ fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px', fontFamily: 'Poppins, sans-serif' }}>
+                <h2 style={{ fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
                   Required Skills
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {job.skills.map((s) => (
-                    <span key={s} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+                    <span key={s} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '12px', padding: '5px 12px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 500 }}>
                       {s}
                     </span>
                   ))}

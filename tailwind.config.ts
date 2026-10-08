@@ -17,6 +17,7 @@ const config: Config = {
         primary: '#e8401c',
       },
       fontFamily: {
+        display: ['var(--font-poppins)', 'Poppins', 'sans-serif'],
         heading: ['var(--font-raleway)', 'Raleway', 'sans-serif'],
         body: ['var(--font-roboto)', 'Roboto', 'sans-serif'],
         button: ['var(--font-raleway)', 'Raleway', 'sans-serif'],

@@ -192,7 +192,7 @@ export default function PrivacyPolicyPage() {
         </div>
         {sections.map(s => (
           <div key={s.title} style={{ marginBottom: '32px' }}>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '10px', paddingLeft: '14px', borderLeft: '3px solid #e8401c' }}>
+            <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '10px', paddingLeft: '14px', borderLeft: '3px solid #e8401c' }}>
               {s.title}
             </h2>
             {typeof s.content === 'string'

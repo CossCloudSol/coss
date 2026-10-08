@@ -16,6 +16,14 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 
   // /courses filtered views (?q=, ?cat=, …) are the same static page filtered
   // on the client: keep them out of the index but let crawlers follow links.
+  // /blog?tag=… shows the same post list as /blog (the tag isn't a page of its own):
+  // keep those URLs out of the index, but let crawlers follow the post links.
+  if (pathname === '/blog') {
+    const res = NextResponse.next();
+    if (req.nextUrl.searchParams.has('tag')) res.headers.set('X-Robots-Tag', 'noindex, follow');
+    return res;
+  }
+
   if (pathname === '/courses') {
     const res = NextResponse.next();
     if (COURSE_FILTER_PARAMS.some((p) => req.nextUrl.searchParams.has(p))) {
@@ -53,9 +61,9 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 
 export const config = {
   /**
-   * Run on every /admin/* page and /api/admin/* route, plus /courses (noindex
-   * header on filtered views). Static assets served by Next under /_next/*
+   * Run on every /admin/* page and /api/admin/* route, plus /courses and /blog
+   * (noindex header on filtered and tag views). Static assets served by Next under /_next/*
    * are excluded automatically by the App Router.
    */
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/courses'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/courses', '/blog'],
 };
