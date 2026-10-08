@@ -31,4 +31,9 @@ test('deriveCategoryFromSlug', () => {
   assert.equal(deriveCategoryFromSlug('master-aws-devops-in-hyderabad', 'Master AWS DevOps'), 'Cloud Computing');
   assert.equal(deriveCategoryFromSlug('learn-linux-basics', 'Learn Linux'), 'Linux');
   assert.equal(deriveCategoryFromSlug('soft-skills', 'Soft skills'), 'Cloud Computing', 'the default bucket');
+  // The brand name and word fragments don't decide the topic.
+  assert.equal(deriveCategoryFromSlug('best-linux-training-institute-in-dilsukhnagarhyderabad', 'Best Linux Training Institute – Coss Cloud Solutions'), 'Linux', '"cloud" in the brand');
+  assert.equal(deriveCategoryFromSlug('learn-tally-erp', 'Learn Tally in Hyderabad – Coss Cloud Solution'), 'Cloud Computing', '"ai" inside "training"/"tally" is not AI');
+  assert.equal(deriveCategoryFromSlug('artificial-intelligence-training-in-hyderabad', 'AI Training'), 'Data Science');
+  assert.equal(deriveCategoryFromSlug('data-analytics-training', 'Data Analytics'), 'Data Science', 'hyphenated keywords still match');
 });

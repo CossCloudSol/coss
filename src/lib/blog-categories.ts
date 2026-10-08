@@ -11,11 +11,16 @@ const CATEGORY_KEYWORDS: [string, string[]][] = [
   ['Programming', ['python', 'java', 'javascript', 'react', 'nodejs', 'node-js', 'php', 'programming', 'fullstack', 'full-stack', 'web-development']],
 ];
 
-/** An MDX post's category, from keywords in its slug and title (MDX posts carry no category of their own). */
+/**
+ * An MDX post's category, from keywords in its slug and title (MDX posts carry no category
+ * of their own). Keywords match whole words ("ai" is not in "training") and the brand name
+ * is ignored ("cloud" in "Coss Cloud Solutions" says nothing about the topic).
+ */
 export function deriveCategoryFromSlug(slug: string, title: string): string {
-  const haystack = `${slug} ${title}`.toLowerCase();
+  const text = `${slug.replace(/-/g, ' ')} ${title}`.toLowerCase().replace(/\bcoss[\s-]+cloud[\s-]+solutions?\b/g, ' ');
+  const words = `-${text.split(/[^a-z0-9]+/).filter(Boolean).join('-')}-`;
   for (const [cat, keywords] of CATEGORY_KEYWORDS) {
-    if (keywords.some((kw) => haystack.includes(kw))) return cat;
+    if (keywords.some((kw) => words.includes(`-${kw}-`))) return cat;
   }
   return 'Cloud Computing';
 }
