@@ -44,11 +44,14 @@ const FIELD_LABEL: Record<keyof ApprovalFields, string> = {
   scheduledFor: 'schedule',
 };
 
+// Compared the way the edit form can express them: the schedule input has minute
+// precision (a stored time with seconds would otherwise always look "changed"), and a
+// textarea gives back \n line endings even when the stored text has \r\n.
 function norm(key: keyof ApprovalFields, value: ApprovalFields[keyof ApprovalFields]): string {
   if (value == null) return '';
-  if (value instanceof Date) return String(value.getTime());
+  if (value instanceof Date) return String(Math.floor(value.getTime() / 60000));
   if (key === 'channels') return value.split(',').map((c) => c.trim().toLowerCase()).filter(Boolean).sort().join(',');
-  return value.trim();
+  return value.replace(/\r\n?/g, '\n').trim();
 }
 
 /**
@@ -68,6 +71,23 @@ export function revertedNote(changes: string[], at: Date): string {
 
 export function manualDraftNote(at: Date): string {
   return `Moved back to Draft ${formatIst(at)} by an admin ("To Draft"). Approve again to queue it.`;
+}
+
+export type StatusChange = {
+  id: string;
+  from: string | null; // null: the post was just created
+  to: string | null; // null: the post was deleted
+  /** Who changed it: 'admin-create', 'admin-edit', 'admin-status', 'admin-delete', 'send'. */
+  by: string;
+  reason?: string | null;
+};
+
+/**
+ * One searchable runtime-log line per status write ("[social-post-status]" in Vercel
+ * logs), so a post that went back to Draft shows when, from where and why.
+ */
+export function statusChangeLine(change: StatusChange, at = new Date()): string {
+  return `[social-post-status] ${JSON.stringify({ ...change, reason: change.reason ?? null, at: at.toISOString() })}`;
 }
 
 export function skippedNote(reason: string, at: Date): string {

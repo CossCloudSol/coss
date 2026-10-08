@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { statusChangeLine } from '@/lib/social-post-state';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -74,6 +75,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         status: 'draft',
       },
     });
+    console.info(statusChangeLine({ id: socialPost.id, from: null, to: socialPost.status, by: 'admin-create' }));
     return NextResponse.json(socialPost, { status: 201 });
   } catch (err) {
     console.error('[POST /api/admin/social-posts]', err);

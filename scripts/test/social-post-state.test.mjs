@@ -1,7 +1,7 @@
 // Run with: npm test   (Node's built-in runner; Node 24 imports .ts directly)
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { approvalChanges, formatIst, manualDraftNote, revertedNote, sentChannels, skippedNote } from '../../src/lib/social-post-state.ts';
+import { approvalChanges, formatIst, manualDraftNote, revertedNote, sentChannels, skippedNote, statusChangeLine } from '../../src/lib/social-post-state.ts';
 
 const approved = {
   content: 'Cyber Security batch starts Monday.',
@@ -60,4 +60,21 @@ test('channels already sent are read from bufferPostIds (old untagged ids ignore
   assert.deepEqual([...sentChannels('linkedin:a1,facebook:b2')], [['linkedin', 'a1'], ['facebook', 'b2']]);
   assert.deepEqual([...sentChannels('oldid123')], []);
   assert.deepEqual([...sentChannels(null)], []);
+});
+
+test('item 17: an unchanged re-save stays approved even when the stored row has seconds or \r\n', () => {
+  const stored = { ...approved, content: 'Line one.\r\nLine two.', scheduledFor: new Date('2026-10-03T09:51:42.517Z') };
+  // The form shows minutes only and its textarea gives back \n line endings.
+  const resave = { ...formResave, content: 'Line one.\nLine two.', scheduledFor: new Date('2026-10-03T09:51:00.000Z') };
+  assert.deepEqual(approvalChanges(stored, resave), []);
+  // A real change of one minute still counts.
+  assert.deepEqual(approvalChanges(stored, { ...resave, scheduledFor: new Date('2026-10-03T09:52:00.000Z') }), ['schedule']);
+  assert.deepEqual(approvalChanges(stored, { ...resave, content: 'Line one.\nLine 2.' }), ['post text']);
+});
+
+test('item 17: statusChangeLine is one searchable JSON log line', () => {
+  const line = statusChangeLine({ id: 'p1', from: 'queued', to: 'draft', by: 'admin-edit', reason: 'edited' }, new Date('2026-10-09T00:00:00Z'));
+  assert.ok(line.startsWith('[social-post-status] '));
+  assert.deepEqual(JSON.parse(line.slice('[social-post-status] '.length)), { id: 'p1', from: 'queued', to: 'draft', by: 'admin-edit', reason: 'edited', at: '2026-10-09T00:00:00.000Z' });
+  assert.ok(!line.includes('\n'));
 });

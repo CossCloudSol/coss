@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
-import { approvalChanges, revertedNote } from '@/lib/social-post-state';
+import { approvalChanges, revertedNote, statusChangeLine } from '@/lib/social-post-state';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -94,6 +94,9 @@ export async function PUT(req: NextRequest, { params }: Ctx): Promise<Response> 
 
   try {
     const socialPost = await prisma.socialPost.update({ where: { id: params.id }, data });
+    if (socialPost.status !== existing.status) {
+      console.info(statusChangeLine({ id: socialPost.id, from: existing.status, to: socialPost.status, by: 'admin-edit', reason: data.lastError }));
+    }
     return NextResponse.json(socialPost);
   } catch (err) {
     console.error('[PUT /api/admin/social-posts/[id]]', err);
@@ -106,7 +109,8 @@ export async function DELETE(req: NextRequest, { params }: Ctx): Promise<Respons
   if (guard instanceof Response) return guard;
 
   try {
-    await prisma.socialPost.delete({ where: { id: params.id } });
+    const deleted = await prisma.socialPost.delete({ where: { id: params.id } });
+    console.info(statusChangeLine({ id: deleted.id, from: deleted.status, to: null, by: 'admin-delete' }));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[DELETE /api/admin/social-posts/[id]]', err);
