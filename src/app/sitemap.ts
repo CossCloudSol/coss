@@ -164,8 +164,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let dbCategoryEntries: MetadataRoute.Sitemap = [];
   // 8 ── Published DB blog posts not already in FS blog entries
   let dbBlogEntries: MetadataRoute.Sitemap = [];
-  // 9 ── The job board, the batch schedule and each active job's page
-  const listingEntries: MetadataRoute.Sitemap = ['jobs', 'batches']
+  // 9 ── The job board, the batch schedule, the centres index and each active job's page
+  const listingEntries: MetadataRoute.Sitemap = ['jobs', 'batches', 'locations']
     .filter((slug) => !isExcluded(slug))
     .map((slug) => ({
       url: `${BASE_URL}/${slug}`,

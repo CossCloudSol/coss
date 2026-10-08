@@ -31,7 +31,7 @@ test('one <main> per page: only the root layout renders it', () => {
 
 test('the sitemap lists /jobs, /batches and every active job page', () => {
   const s = fs.readFileSync('src/app/sitemap.ts', 'utf8');
-  assert.match(s, /\['jobs', 'batches'\]/);
+  assert.match(s, /\['jobs', 'batches', 'locations'\]/);
   assert.match(s, /findActiveJobs/);
   assert.match(s, /\.\.\.listingEntries,\s*\.\.\.jobEntries,/);
 });
