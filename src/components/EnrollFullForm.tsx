@@ -2,11 +2,9 @@
 
 import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
-import { nameField, phoneField } from '@/lib/lead-validation';
+import { rules } from '@/lib/lead-form-rules';
+import { useLeadForm } from '@/lib/use-lead-form';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -21,13 +19,19 @@ function sanitizeCourseSlug(raw: string | null): string | undefined {
   return COURSE_SLUG_PATTERN.test(raw) ? raw : undefined;
 }
 
-const fullFormSchema = z.object({
-  name:   nameField,
-  phone:  phoneField,
-  branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, 'Please select a branch'),
-});
+const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 
-type FullFormValues = z.infer<typeof fullFormSchema>;
+type FullFormValues = {
+  name: string;
+  phone: string;
+  branch: (typeof BRANCHES)[number];
+};
+
+const fullFormSchema = {
+  name: [rules.name()],
+  phone: [rules.phone()],
+  branch: [rules.oneOf(BRANCHES, 'Please select a branch')],
+};
 
 const BRANCH_API_VALUE: Record<FullFormValues['branch'], Branch> = {
   dilsukhnagar: 'Dilsukhnagar',
@@ -111,10 +115,7 @@ function EnrollFullFormFields({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FullFormValues>({
-    resolver: zodResolver(fullFormSchema),
-    mode: 'onSubmit',
-  });
+  } = useLeadForm<FullFormValues>(fullFormSchema);
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const { honeypotRef, botFields } = useBotGuard();

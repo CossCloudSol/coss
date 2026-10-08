@@ -1,25 +1,31 @@
 'use client';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useState } from 'react';
-import { nameField, phoneField } from '@/lib/lead-validation';
+import { rules } from '@/lib/lead-form-rules';
+import { useLeadForm } from '@/lib/use-lead-form';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
 import { trackLeadEvent } from '@/lib/submitLead';
 
-const corporateFormSchema = z.object({
-  companyName:   z.string().min(2, 'Company name is required'),
-  contactPerson: nameField,
-  phone:         phoneField,
-  email:       z.string().email('Enter a valid email address'),
-  trainingTopic: z.string().min(2, 'Please mention the training topic'),
-  teamSize:    z.string().min(1, 'Team size is required'),
-  requirements: z.string().max(1000, 'Requirements must be 1000 characters or fewer').optional(),
-});
+type CorporateFormValues = {
+  companyName: string;
+  contactPerson: string;
+  phone: string;
+  email: string;
+  trainingTopic: string;
+  teamSize: string;
+  requirements: string;
+};
 
-type CorporateFormValues = z.infer<typeof corporateFormSchema>;
+const corporateFormSchema = {
+  companyName:   [rules.minLength(2, 'Company name is required')],
+  contactPerson: [rules.name()],
+  phone:         [rules.phone()],
+  email:         [rules.email('Enter a valid email address')],
+  trainingTopic: [rules.minLength(2, 'Please mention the training topic')],
+  teamSize:      [rules.minLength(1, 'Team size is required')],
+  requirements:  [rules.maxLength(1000, 'Requirements must be 1000 characters or fewer')],
+};
 
 type FormState =
   | { kind: 'idle' }
@@ -65,10 +71,7 @@ export default function CorporateForm(): JSX.Element {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CorporateFormValues>({
-    resolver: zodResolver(corporateFormSchema),
-    mode: 'onSubmit',
-  });
+  } = useLeadForm<CorporateFormValues>(corporateFormSchema);
 
   const [state, setState] = useState<FormState>({ kind: 'idle' });
   const { honeypotRef, botFields } = useBotGuard();

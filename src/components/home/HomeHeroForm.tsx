@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, CalendarCheck, Check, Lock, MapPin, MessageCircle, Monitor, Phone, Star, User, X } from 'lucide-react';
 import { submitLead, type Branch } from '@/lib/submitLead';
-import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation';
+import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
 import { trackFormStart, trackFormSubmit } from '@/lib/click-tracking';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import CallLink from '@/components/CallLink';
@@ -67,7 +67,7 @@ export default function HomeHeroForm(): JSX.Element {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     markStarted();
-    if (!nameField.safeParse(name).success) return setState({ kind: 'error', message: NAME_ERROR });
+    if (!isValidName(name)) return setState({ kind: 'error', message: NAME_ERROR });
     if (normalizeIndianMobile(phone) === null) return setState({ kind: 'error', message: PHONE_ERROR });
     setState({ kind: 'submitting' });
     const result = await submitLead({

@@ -1,4 +1,4 @@
-import { normalizeIndianMobile, PHONE_ERROR } from '@/lib/lead-validation'
+import { normalizeIndianMobile, PHONE_ERROR } from '@/lib/lead-checks'
 import { PRIMARY_PHONE } from '@/lib/nap'
 
 // WhatsApp defaults to the main number (src/lib/nap.ts), digits only.
