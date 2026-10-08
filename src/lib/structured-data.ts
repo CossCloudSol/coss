@@ -250,6 +250,11 @@ export function collectionPage(input: { url: string; name: string; description?:
 
 /* ── Blog ─────────────────────────────────────────────────────────────── */
 
+/** A bare date ("2026-05-17") as the start of that day in India; Google wants a time and timezone. */
+export function isoDateTime(value: string): string {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00+05:30` : value
+}
+
 export function blogPosting(input: {
   url: string
   headline: string
@@ -265,8 +270,8 @@ export function blogPosting(input: {
     headline: input.headline.length > 110 ? `${input.headline.slice(0, 109).trimEnd()}…` : input.headline,
     ...(input.description ? { description: input.description } : {}),
     image: [input.image || DEFAULT_IMAGE],
-    ...(input.datePublished ? { datePublished: input.datePublished } : {}),
-    ...(input.dateModified || input.datePublished ? { dateModified: input.dateModified || input.datePublished } : {}),
+    ...(input.datePublished ? { datePublished: isoDateTime(input.datePublished) } : {}),
+    ...(input.dateModified || input.datePublished ? { dateModified: isoDateTime(input.dateModified || input.datePublished!) } : {}),
     author: { '@type': 'Organization', name: BRAND_NAME, url: SITE_URL },
     // Named here (no @id) so the article carries the logo Google asks for without redeclaring #organization.
     publisher: { '@type': 'Organization', name: BRAND_NAME, url: SITE_URL, logo: { '@type': 'ImageObject', url: LOGO_URL } },

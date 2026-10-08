@@ -8,8 +8,11 @@ const postsDirectory = path.join(process.cwd(), 'content/posts');
 
 export interface PostFrontmatter {
   title: string;
+  /** Publish date, YYYY-MM-DD: the post's first commit (content/posts/_dates.json); '' when unknown. */
   date: string;
   dateFormatted?: string;
+  /** Last content change, YYYY-MM-DD: the post's last commit; '' when unknown. */
+  dateModified?: string;
   excerpt?: string;
   author?: string;
   tags?: string[];
@@ -23,10 +26,35 @@ export interface Post {
   frontmatter: PostFrontmatter;
   content: string;
   contentHtml?: string;
-  /** Filesystem last-modified time of the source .md/.mdx file — the one honest
-   *  "last updated" signal we have, since frontmatter.date is a synthesized
-   *  display date (evenly spread across a fake range), not a real timestamp. */
-  fileMtime?: Date;
+}
+
+type PostDates = Record<string, { published: string | null; modified: string | null }>;
+let postDatesCache: PostDates | null = null;
+
+/**
+ * Real dates from git history, written by scripts/build-post-dates.mjs (the frontmatter
+ * "date" is the WordPress export time, identical for every post). Kept inside
+ * content/posts so it ships wherever the posts do.
+ */
+function postDates(): PostDates {
+  if (postDatesCache) return postDatesCache;
+  try {
+    postDatesCache = JSON.parse(fs.readFileSync(path.join(postsDirectory, '_dates.json'), 'utf8')) as PostDates;
+  } catch {
+    postDatesCache = {};
+  }
+  return postDatesCache;
+}
+
+/** "2026-05-17" → "17 May 2026". */
+function formatPostDate(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
+function datesFor(slug: string): Pick<PostFrontmatter, 'date' | 'dateFormatted' | 'dateModified'> {
+  const d = postDates()[slug];
+  const date = d?.published ?? '';
+  return { date, dateFormatted: date ? formatPostDate(date) : '', dateModified: d?.modified ?? date };
 }
 
 /**
@@ -171,7 +199,6 @@ export async function getAllPosts(): Promise<Post[]> {
       const fullPath = path.join(postsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data, content } = matter(fileContents);
-      const fileMtime = fs.statSync(fullPath).mtime;
       const cleaned = cleanContent(content);
 
       const titleStr = sanitizeValue(data.title) || slug;
@@ -180,12 +207,9 @@ export async function getAllPosts(): Promise<Post[]> {
 
       return {
         slug,
-        fileMtime,
         frontmatter: {
           title: titleStr,
-          date: data.date ? new Date(sanitizeValue(data.date)).toLocaleDateString('en-IN', {
-            year: 'numeric', month: 'long', day: 'numeric',
-          }) : '',
+          ...datesFor(slug),
           excerpt: excerptFor(data.excerpt, cleaned),
           author: sanitizeValue(data.author),
           tags: rawTags.length > 0 ? rawTags : deriveTagsFromSlug(slug, titleStr),
@@ -197,31 +221,8 @@ export async function getAllPosts(): Promise<Post[]> {
       };
     });
 
-  const sorted = posts.sort((a, b) => a.slug.localeCompare(b.slug));
-  const total = sorted.length;
-  if (total === 0) return [];
-  const startDate = new Date('2023-01-15');
-  const endDate = new Date('2026-03-15');
-  const totalDays = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-
-  return sorted.map((post, index) => {
-    const daysOffset = total > 1 ? Math.floor((index / (total - 1)) * totalDays) : 0;
-    const postDate = new Date(startDate);
-    postDate.setDate(postDate.getDate() + daysOffset);
-    const isoDate = postDate.toISOString().split('T')[0];
-    return {
-      ...post,
-      frontmatter: {
-        ...post.frontmatter,
-        date: isoDate,
-        dateFormatted: postDate.toLocaleDateString('en-IN', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        }),
-      },
-    };
-  }).reverse();
+  // Newest first; posts published the same day keep the previous order (slug, descending).
+  return posts.sort((a, b) => b.frontmatter.date.localeCompare(a.frontmatter.date) || b.slug.localeCompare(a.slug));
 }
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -248,9 +249,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       slug,
       frontmatter: {
         title: titleStr,
-        date: data.date ? new Date(sanitizeValue(data.date)).toLocaleDateString('en-IN', {
-          year: 'numeric', month: 'long', day: 'numeric',
-        }) : '',
+        ...datesFor(slug),
         excerpt: excerptFor(data.excerpt, cleaned),
         author: sanitizeValue(data.author),
         tags: rawTags.length > 0 ? rawTags : deriveTagsFromSlug(slug, titleStr),
