@@ -26,6 +26,8 @@ const BANNED = {
   'salary figure': /\b\d+(?:\.\d+)?\s?(?:[-–]|to)?\s?\d*(?:\.\d+)?\s?(?:LPA|lakhs? per annum)\b|₹\s?[\d,.]+\s?(?:LPA|per annum|monthly)/i,
   'high-paying / lucrative': /\bhigh[- ]paying\b|\blucrative\b|\bdream jobs?\b/i,
   'placement record': /\bplacement (?:record|rate|track record)\b|\b(?:students|graduates|alumni|candidates)\b[^.\n]{0,40}\b(?:have been|were|are now|been successfully) placed\b/i,
+  'alumni outcome': /\btrack record of (?:placing|student success)|\b(?:alumni|graduates|former students)\b[^.\n]{0,60}\b(?:now work|are now working|have (?:successfully )?(?:transitioned|landed|secured|gone on)|work at|secured positions)\b|\b(?:roles|jobs|placements|positions) (?:at|in|with) (?:top|leading|reputed) (?:companies|firms|mncs|tech firms|it firms)\b/i,
+  'top companies as partners': /\b(?:partnerships?|collaborat\w+|tie-ups?|connections?) with (?:top|leading|major) (?:companies|firms|mncs|it firms|tech firms|it companies)\b/i,
   'unapproved student count': /\bthousands of (?:students|learners|professionals)\b|\bhundreds of (?:students|learners)\b/i,
   'years claim': /\b15\+ ?(?:years|yrs)\b/i,
   'competitor named': /\b(?:NareshIT|Digital Nest|Digital Medha|Digital Floats)\b/,
