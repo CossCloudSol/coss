@@ -9,7 +9,7 @@ import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
 
 const labelStyle: React.CSSProperties = {
-  display: 'block', fontSize: '13px', fontFamily: 'Poppins, sans-serif',
+  display: 'block', fontSize: '13px', fontFamily: 'var(--font-poppins), Poppins, sans-serif',
   fontWeight: 600, color: 'var(--text)', marginBottom: '6px',
 };
 const inputStyle: React.CSSProperties = {
@@ -80,7 +80,7 @@ export default function ContactForm() {
     return (
       <div style={{ background: 'var(--bg-card)', borderRadius: '16px', padding: '48px 32px', boxShadow: '0 4px 24px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', textAlign: 'center' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
-        <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '8px' }}>Message Sent!</h3>
+        <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', marginBottom: '8px' }}>Message Sent!</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Our team will get back to you within 24 hours.</p>
       </div>
     );
@@ -137,7 +137,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'loading'}
-        style={{ display: 'block', width: '100%', textAlign: 'center', background: status === 'loading' ? '#aaa' : '#e8401c', color: '#fff', padding: '14px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', border: 'none', cursor: status === 'loading' ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}
+        style={{ display: 'block', width: '100%', textAlign: 'center', background: status === 'loading' ? '#aaa' : '#e8401c', color: '#fff', padding: '14px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', border: 'none', cursor: status === 'loading' ? 'not-allowed' : 'pointer', transition: 'background 0.2s' }}
       >
         {status === 'loading' ? '⏳ Sending…' : 'Send Message →'}
       </button>

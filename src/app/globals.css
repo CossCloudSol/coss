@@ -943,7 +943,7 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid rgba(14,116,144,0.55);
   color: #4dd9f0;
   font-size: 11px; font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
   text-transform: uppercase; letter-spacing: 1.4px;
   padding: 6px 18px; border-radius: 100px;
   margin-bottom: 24px;
@@ -1012,7 +1012,7 @@ img { max-width: 100%; height: auto; display: block; }
   letter-spacing: 0.7px;
   text-transform: uppercase;
   color: rgba(255,255,255,0.5);
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
   font-weight: 600;
 }
 .hero-banner-cta-bar {
@@ -1021,7 +1021,7 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid rgba(228,117,56,0.42);
   color: rgba(255,255,255,0.82);
   font-size: 13px;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
   padding: 10px 22px;
   border-radius: 8px;
   line-height: 1.4;

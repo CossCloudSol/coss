@@ -55,7 +55,7 @@ const enrollBtn: React.CSSProperties = {
   color: '#fff',
   padding: '12px',
   borderRadius: '6px',
-  fontFamily: 'Poppins, sans-serif',
+  fontFamily: 'var(--font-poppins), Poppins, sans-serif',
   fontWeight: 700,
   fontSize: '14px',
   width: '100%',
@@ -176,7 +176,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       <div style={embedded ? undefined : cardStyle}>
         <h3
           style={{
-            fontFamily: 'Poppins, sans-serif',
+            fontFamily: 'var(--font-poppins), Poppins, sans-serif',
             fontWeight: 700,
             fontSize: '17px',
             marginBottom: '4px',
@@ -213,7 +213,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       <HoneypotField inputRef={honeypotRef} />
       <h3
         style={{
-          fontFamily: 'Poppins, sans-serif',
+          fontFamily: 'var(--font-poppins), Poppins, sans-serif',
           fontWeight: 700,
           fontSize: '17px',
           marginBottom: '4px',

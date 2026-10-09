@@ -26,7 +26,7 @@ const linkStyle = {
   minHeight: '44px',
   padding: '0 22px',
   borderRadius: '8px',
-  fontFamily: 'Poppins, sans-serif',
+  fontFamily: 'var(--font-poppins), Poppins, sans-serif',
   fontWeight: 700,
   fontSize: '14px',
   textDecoration: 'none',
@@ -40,7 +40,7 @@ export default function ThankYouPage({ searchParams }: Props) {
       <ResponsivePageStyles />
       <PageBanner title="Thank You" />
       <div style={{ maxWidth: '640px', margin: '0 auto', padding: '56px 20px', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '12px' }}>
+        <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '22px', color: 'var(--text)', marginBottom: '12px' }}>
           Thanks, your enquiry has been sent.
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.7, marginBottom: '28px' }}>{message}</p>

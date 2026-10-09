@@ -57,8 +57,8 @@ export default function WhyUsPage() {
       {/* Reasons */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '44px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>9 Strong Reasons</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)' }}>Why Students Choose Coss Cloud Solutions</h2>
+          <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>9 Strong Reasons</div>
+          <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)' }}>Why Students Choose Coss Cloud Solutions</h2>
         </div>
         <div className="why-feature-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '22px' }}>
           {reasons.map((r, i) => (
@@ -70,10 +70,10 @@ export default function WhyUsPage() {
               className="border border-gray-100 hover:border-teal-200 transition-colors"
               style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px 22px', boxShadow: '0 3px 18px rgba(0,0,0,0.08)', position: 'relative', overflow: 'hidden' }}
             >
-              <div style={{ position: 'absolute', top: '-12px', right: '-8px', fontFamily: 'Poppins, sans-serif', fontSize: '72px', fontWeight: 900, color: 'rgba(232,64,28,0.04)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</div>
+              <div style={{ position: 'absolute', top: '-12px', right: '-8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: '72px', fontWeight: 900, color: 'rgba(232,64,28,0.04)', lineHeight: 1 }}>{String(i + 1).padStart(2, '0')}</div>
               <div className="p-3 bg-teal-50 rounded-xl inline-flex mb-3" style={{ fontSize: '32px', lineHeight: 1 }}>{r.icon}</div>
-              <div style={{ background: '#fff3f0', color: '#e8401c', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, padding: '3px 10px', borderRadius: '12px', marginBottom: '10px', display: 'inline-block' }}>{r.highlight}</div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>{r.title}</h4>
+              <div style={{ background: '#fff3f0', color: '#e8401c', fontSize: '11px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, padding: '3px 10px', borderRadius: '12px', marginBottom: '10px', display: 'inline-block' }}>{r.highlight}</div>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>{r.title}</h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.65' }}>{r.desc}</p>
             </div>
           ))}
@@ -84,12 +84,12 @@ export default function WhyUsPage() {
       <div style={{ background: 'var(--bg-alt)', padding: '56px 20px' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Comparison</div>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Coss Cloud Solutions vs Other Institutes</h2>
+            <div style={{ display: 'inline-block', background: 'rgba(228,117,56,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Comparison</div>
+            <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Coss Cloud Solutions vs Other Institutes</h2>
           </div>
           <div style={{ background: 'var(--bg-card)', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 3px 18px rgba(0,0,0,0.08)' }}>
             {/* Header */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#1a1a2e', color: '#fff', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#1a1a2e', color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               <div style={{ padding: '14px 20px' }}>Feature</div>
               <div style={{ padding: '14px 20px', textAlign: 'center', background: '#e47538' }}>Coss Cloud Solutions</div>
               <div style={{ padding: '14px 20px', textAlign: 'center' }}>Other Institutes</div>

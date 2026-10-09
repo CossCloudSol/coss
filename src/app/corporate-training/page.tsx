@@ -62,10 +62,10 @@ export default async function CorporateTrainingPage() {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div className="page-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '56px', alignItems: 'center' }}>
             <div>
-              <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>
+              <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>
                 Corporate Training Programs
               </div>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(22px,4vw,34px)', fontWeight: 700, color: 'var(--text)', marginBottom: '16px', lineHeight: '1.25' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(22px,4vw,34px)', fontWeight: 700, color: 'var(--text)', marginBottom: '16px', lineHeight: '1.25' }}>
                 Transform Your<br />Workforce Skills
               </h2>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', marginBottom: '16px', fontSize: '15px' }}>
@@ -79,8 +79,8 @@ export default async function CorporateTrainingPage() {
                 ))}
               </ul>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Link href="/enroll-now-with-coss" style={{ background: '#e8401c', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>Get a Quote</Link>
-                <Link href="/contact-us" style={{ background: '#1a1a2e', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>Contact Us</Link>
+                <Link href="/enroll-now-with-coss" style={{ background: '#e8401c', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>Get a Quote</Link>
+                <Link href="/contact-us" style={{ background: '#1a1a2e', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>Contact Us</Link>
               </div>
             </div>
 
@@ -93,8 +93,8 @@ export default async function CorporateTrainingPage() {
       {/* Features */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '44px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Why Choose Us</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Why Companies Choose Coss Cloud Solutions for Corporate Training</h2>
+          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Why Choose Us</div>
+          <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Why Companies Choose Coss Cloud Solutions for Corporate Training</h2>
         </div>
         <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
           {features.map(f => (
@@ -107,7 +107,7 @@ export default async function CorporateTrainingPage() {
               style={{ background: 'var(--bg-card)', padding: '24px 18px', border: '1px solid var(--border-card)', textAlign: 'center' }}
             >
               <div className="inline-block p-3 rounded-xl mb-3" style={{ fontSize: '32px', lineHeight: 1, background: 'var(--primary-light)' }}>{f.icon}</div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>{f.title}</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>{f.title}</h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '12.5px', lineHeight: '1.6' }}>{f.desc}</p>
             </div>
           ))}
@@ -118,20 +118,20 @@ export default async function CorporateTrainingPage() {
       <div style={{ background: 'var(--bg-alt)', padding: '56px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Training Domains</div>
-            <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Areas of Corporate Training</h2>
+            <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Training Domains</div>
+            <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Areas of Corporate Training</h2>
           </div>
           <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
             {trainingAreas.map(area => (
               <div key={area.name} style={{ background: 'var(--bg-card)', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 2px 14px rgba(0,0,0,0.07)' }}>
                 <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span style={{ fontSize: '28px' }}>{area.icon}</span>
-                  <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: '#fff' }}>{area.name}</h4>
+                  <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: '#fff' }}>{area.name}</h4>
                 </div>
                 <div style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
                     {area.topics.map(t => (
-                      <span key={t} style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '12px', padding: '4px 10px', borderRadius: '12px', fontFamily: 'Poppins, sans-serif', fontWeight: 500, border: '1px solid var(--border)' }}>{t}</span>
+                      <span key={t} style={{ background: 'var(--surface)', color: 'var(--text-muted)', fontSize: '12px', padding: '4px 10px', borderRadius: '12px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 500, border: '1px solid var(--border)' }}>{t}</span>
                     ))}
                   </div>
                 </div>
@@ -144,15 +144,15 @@ export default async function CorporateTrainingPage() {
       {/* Process */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Process</div>
-          <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>How Our Corporate Training Works</h2>
+          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Process</div>
+          <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>How Our Corporate Training Works</h2>
         </div>
         <div className="process-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {process.map(p => (
             <div key={p.step} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 14px rgba(0,0,0,0.07)', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: '-10px', right: '-5px', fontFamily: 'Poppins, sans-serif', fontSize: '60px', fontWeight: 900, color: 'rgba(232,64,28,0.06)', lineHeight: 1 }}>{p.step}</div>
-              <div className="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{p.step}</div>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>{p.title}</h4>
+              <div style={{ position: 'absolute', top: '-10px', right: '-5px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: '60px', fontWeight: 900, color: 'rgba(232,64,28,0.06)', lineHeight: 1 }}>{p.step}</div>
+              <div className="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm mb-3" style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>{p.step}</div>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>{p.title}</h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.6' }}>{p.desc}</p>
             </div>
           ))}
@@ -163,7 +163,7 @@ export default async function CorporateTrainingPage() {
       {PLACEMENT_PROVIDERS_CONFIRMED && hiringPartners.length > 0 && (
       <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', padding: '48px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
-          <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '24px', color: '#fff', marginBottom: '8px' }}>Our Alumni Work At</h3>
+          <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '24px', color: '#fff', marginBottom: '8px' }}>Our Alumni Work At</h3>
           <p style={{ color: '#aaa', fontSize: '14px', marginBottom: '28px' }}>Companies That Hire Our Trained Professionals</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden bg-white">
             {hiringPartners.map((p, i, all) => {

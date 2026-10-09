@@ -250,7 +250,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
             ))}
 
             <div style={{ marginBottom: '28px' }}>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
                 Why Train Here for {topicLabel}
               </h2>
               {config.whyThisBranch.map((p, i) => (
@@ -261,7 +261,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
             {/* Batches */}
             <div style={{ marginBottom: '28px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
                   {topicLabel} Batches at {localityConfig.name}
                 </h2>
                 {batches.length > 0 && (
@@ -295,7 +295,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
             {/* Courses — the full topic catalogue, not just courses with a scheduled batch here */}
             {courses.length > 0 && (
               <div style={{ marginBottom: '28px' }}>
-                <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
+                <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>
                   {topicLabel} Courses at {localityConfig.name}
                 </h2>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -326,7 +326,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
             )}
 
             <div style={{ marginBottom: '28px' }}>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '12px' }}>
                 🚇 Getting Here
               </h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.8' }}>{config.commuteNote}</p>

@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const card = { background: 'var(--bg-card)', borderRadius: '14px', padding: '24px', border: '1px solid var(--border-card)' } as const;
-const h2 = { fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', margin: '0 0 16px' } as const;
+const h2 = { fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', color: 'var(--text)', margin: '0 0 16px' } as const;
 
 /** /locations: every centre and every area guide, from the same data the pages use. */
 export default async function LocationsIndexPage() {
@@ -56,7 +56,7 @@ export default async function LocationsIndexPage() {
             if (!branch) return null;
             return (
               <div key={loc.slug} style={card}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '17px', color: 'var(--text)', margin: '0 0 10px' }}>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '17px', color: 'var(--text)', margin: '0 0 10px' }}>
                   {loc.name} Centre
                 </h3>
                 <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7, margin: '0 0 8px' }}>

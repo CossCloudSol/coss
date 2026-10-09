@@ -144,7 +144,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
       <ResponsivePageStyles />
       <PageBanner
         title={`${data.name} Training in Hyderabad`}
-        breadcrumb={[{ label: 'Courses', href: '/courses' }, { label: data.name, href: '#' }]}
+        breadcrumb={[{ label: 'Courses', href: '/courses' }, { label: data.name, href: `/courses/${breadcrumbSlug}` }]}
       />
 
       {demoCourses.length > 0 && (
@@ -164,9 +164,9 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             <div style={{ marginBottom: '36px' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(232,64,28,0.08)', padding: '5px 14px', borderRadius: '20px', marginBottom: '14px' }}>
                 <CategoryIconDisplay slug={breadcrumbSlug} size={22} color="#e8401c" />
-                <span style={{ color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
+                <span style={{ color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
               </div>
-              <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>
+              <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>
                 {data.name} Training in Hyderabad
               </h2>
               <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '15px' }}>{data.description}</p>
@@ -182,7 +182,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
               ].map(s => (
                 <div key={s.label} style={{ background: 'var(--bg-alt)', borderRadius: '10px', padding: '14px 10px', textAlign: 'center', border: '1px solid var(--border)' }}>
                   <div style={{ fontSize: '22px', marginBottom: '5px' }}>{s.icon}</div>
-                  <div style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '11px', color: 'var(--text)', marginBottom: '2px' }}>{s.label}</div>
+                  <div style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '11px', color: 'var(--text)', marginBottom: '2px' }}>{s.label}</div>
                   <div style={{ fontSize: '10px', color: 'var(--text-light)' }}>{s.val}</div>
                 </div>
               ))}
@@ -253,7 +253,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* Why Learn */}
             {data.whyLearn.length > 0 && (
               <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#0f3460)', borderRadius: '14px', padding: '28px', marginBottom: '36px', color: '#fff' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px' }}>💡 Why Learn {data.name}?</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px' }}>💡 Why Learn {data.name}?</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   {data.whyLearn.map(w => (
                     <div key={w} style={{ display: 'flex', gap: '8px', fontSize: '13.5px', color: '#ccc', lineHeight: '1.5' }}>
@@ -267,10 +267,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* Tools */}
             {data.tools.length > 0 && (
               <div style={{ marginBottom: '36px' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🔨 Tools & Technologies</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🔨 Tools & Technologies</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {data.tools.map(t => (
-                    <span key={t} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>{t}</span>
+                    <span key={t} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 500 }}>{t}</span>
                   ))}
                 </div>
               </div>
@@ -279,7 +279,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* Real company logos — off until providers are confirmed */}
             {PLACEMENT_PROVIDERS_CONFIRMED && (imgs?.companyLogos?.length > 0 || hiringPartners.length > 0) && (
               <div style={{ marginBottom: '36px' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>🏢 Companies That Hire Our Graduates</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>🏢 Companies That Hire Our Graduates</h3>
                 {imgs?.companyLogos?.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-gray-200 rounded-xl overflow-hidden bg-white">
                     {imgs.companyLogos.map((logo, i, all) => {
@@ -370,10 +370,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* Careers */}
             {data.careers.length > 0 && (
               <div style={{ marginBottom: '36px' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🚀 Career Opportunities</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🚀 Career Opportunities</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {data.careers.map(c => (
-                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
+                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
                   ))}
                 </div>
               </div>
@@ -382,11 +382,11 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* FAQs */}
             {data.faqs.length > 0 && (
               <div style={{ marginBottom: '36px' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>❓ Frequently Asked Questions</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '16px' }}>❓ Frequently Asked Questions</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {data.faqs.map((faq, i) => (
                     <div key={i} style={{ background: 'var(--bg-alt)', borderRadius: '10px', padding: '18px 20px', border: '1px solid var(--border)' }}>
-                      <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>Q: {faq.q}</h4>
+                      <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '8px' }}>Q: {faq.q}</h4>
                       <p style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.65' }}>A: {faq.a}</p>
                     </div>
                   ))}

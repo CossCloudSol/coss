@@ -228,7 +228,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <Link href="/blog" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
             &larr; Back to Blog
           </Link>
-          <h1 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(24px, 4.5vw, 36px)', fontWeight: 700, color: 'var(--text)', marginTop: '12px', lineHeight: 1.25 }}>
+          <h1 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(24px, 4.5vw, 36px)', fontWeight: 700, color: 'var(--text)', marginTop: '12px', lineHeight: 1.25 }}>
             {dbPost.title}
           </h1>
         </div>
@@ -239,7 +239,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '24px', padding: '12px 18px', background: 'var(--bg-alt)', borderRadius: '10px', fontSize: '13px', color: 'var(--text-muted)', border: '1px solid var(--border)' }}>
                 {dbPost.publishedAt && <span>{new Date(dbPost.publishedAt).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' })}</span>}
                 {dbPost.readTime && <span>{dbPost.readTime}</span>}
-                <span style={{ background: 'var(--primary)', color: '#fff', padding: '2px 10px', borderRadius: '12px', fontSize: '11px', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}>{dbPost.category}</span>
+                <span style={{ background: 'var(--primary)', color: '#fff', padding: '2px 10px', borderRadius: '12px', fontSize: '11px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{dbPost.category}</span>
                 <span style={{ marginLeft: 'auto', fontSize: '12px' }}>by {dbPost.author}</span>
               </div>
               <div className="prose-content" style={{ fontSize: '15px', lineHeight: '1.85' }} dangerouslySetInnerHTML={{ __html: dbBodyBefore }} />
@@ -251,7 +251,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               )}
               {dbPost.tags.length > 0 && (
                 <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">
-                  <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>Tags:</span>
+                  <span style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>Tags:</span>
                   {dbPost.tags.map((tag) => (
                     <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`} className="text-xs px-3 py-1 rounded-full border bg-gray-100 text-gray-700 border-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
                       {tag}
@@ -261,23 +261,23 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               )}
               {dbCalloutTarget && <BlogCourseCallout target={dbCalloutTarget} />}
               <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
                 <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
-                <Link href="/free-demo-class" style={{ background: 'var(--primary)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
+                <Link href="/free-demo-class" style={{ background: 'var(--primary)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
                   Book Free Demo Class
                 </Link>
               </div>
             </article>
             <div>
               <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '24px', color: '#fff', marginBottom: '20px' }}>
-                <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Enroll Now</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Enroll Now</h3>
                 <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '16px' }}>Start your IT career with Coss Cloud Solutions</p>
-                <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+                <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
                   Book Free Demo Class
                 </Link>
               </div>
               <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
-                <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
+                <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
                   <CallLink number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                   <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
@@ -347,7 +347,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         </Link>
         <h1
           style={{
-            fontFamily: 'Poppins, sans-serif',
+            fontFamily: 'var(--font-poppins), Poppins, sans-serif',
             fontSize: 'clamp(24px, 4.5vw, 36px)',
             fontWeight: 700,
             color: 'var(--text)',
@@ -380,7 +380,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                       padding: '2px 10px',
                       borderRadius: '12px',
                       fontSize: '11px',
-                      fontFamily: 'Poppins, sans-serif',
+                      fontFamily: 'var(--font-poppins), Poppins, sans-serif',
                       fontWeight: 600,
                     }}
                   >
@@ -412,7 +412,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             {/* Tags — gray pills, dark-mode aware, clickable */}
             {Array.isArray(post.frontmatter.tags) && post.frontmatter.tags.length > 0 ? (
               <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)' }} className="flex flex-wrap items-center gap-2">
-                <span style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>
+                <span style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', color: 'var(--text-muted)' }}>
                   Tags:
                 </span>
                 {post.frontmatter.tags.map((tag, i) => {
@@ -435,9 +435,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
             {/* CTA */}
             <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
-              <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
+              <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
               <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
-              <Link href="/free-demo-class" style={{ background: 'var(--primary)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
+              <Link href="/free-demo-class" style={{ background: 'var(--primary)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
                 Book Free Demo Class
               </Link>
             </div>
@@ -448,7 +448,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <DemoSidebarForm courseGroups={COURSE_GROUPS} />
 
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)', border: '1px solid var(--border-card)', marginBottom: '20px' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '14px', paddingBottom: '8px', borderBottom: '2px solid var(--primary)', display: 'inline-block' }}>
                 Related Articles
               </h4>
               <div style={{ marginTop: '10px' }}>
@@ -461,7 +461,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </div>
 
             <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
-              <h4 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
                 <CallLink number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                 <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>

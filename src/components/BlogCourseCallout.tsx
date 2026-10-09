@@ -16,16 +16,16 @@ const CTA: Record<CalloutTarget['kind'], string> = {
 export default function BlogCourseCallout({ target }: { target: CalloutTarget }) {
   return (
     <div style={{ background: 'var(--bg-alt)', border: '1px solid var(--border)', borderRadius: '14px', padding: '24px', marginTop: '32px' }}>
-      <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '12px', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '8px' }}>
+      <p style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '12px', letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '8px' }}>
         {KICKER[target.kind]}
       </p>
-      <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '17px', color: 'var(--text)', marginBottom: '6px' }}>
+      <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '17px', color: 'var(--text)', marginBottom: '6px' }}>
         {target.title}
       </h3>
       <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '14px', lineHeight: 1.6 }}>
         {target.description}
       </p>
-      <Link href={target.href} style={{ display: 'inline-block', background: 'var(--primary)', color: '#fff', padding: '10px 22px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+      <Link href={target.href} style={{ display: 'inline-block', background: 'var(--primary)', color: '#fff', padding: '10px 22px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
         {CTA[target.kind]}
       </Link>
     </div>

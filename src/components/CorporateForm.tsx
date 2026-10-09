@@ -121,7 +121,7 @@ export default function CorporateForm(): JSX.Element {
   if (state.kind === 'success') {
     return (
       <div style={cardStyle}>
-        <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '6px', color: '#fff' }}>
+        <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '6px', color: '#fff' }}>
           Proposal request received
         </h3>
         <p style={{ color: '#bbb', fontSize: '13px', marginBottom: '22px' }}>
@@ -130,7 +130,7 @@ export default function CorporateForm(): JSX.Element {
         <button
           type="button"
           onClick={() => setState({ kind: 'idle' })}
-          style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px', border: 'none', cursor: 'pointer' }}
+          style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', border: 'none', cursor: 'pointer' }}
         >
           Submit Another Enquiry
         </button>
@@ -143,7 +143,7 @@ export default function CorporateForm(): JSX.Element {
   return (
     <form style={cardStyle} onSubmit={handleSubmit(onSubmit)} noValidate>
       <HoneypotField inputRef={honeypotRef} />
-      <h3 style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '6px', color: '#fff' }}>
+      <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '6px', color: '#fff' }}>
         Corporate Training Enquiry
       </h3>
       <p style={{ color: '#aaa', fontSize: '13px', marginBottom: '22px' }}>
@@ -187,7 +187,7 @@ export default function CorporateForm(): JSX.Element {
       <button
         type="submit"
         disabled={isSubmitting}
-        style={{ width: '100%', background: '#e8401c', color: '#fff', padding: '13px', borderRadius: '6px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '15px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: isSubmitting ? 0.8 : 1 }}
+        style={{ width: '100%', background: '#e8401c', color: '#fff', padding: '13px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, opacity: isSubmitting ? 0.8 : 1 }}
       >
         {isSubmitting && (
           <span style={{ width: 16, height: 16, border: '2px solid #fff', borderTopColor: 'transparent', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }} aria-hidden="true" />

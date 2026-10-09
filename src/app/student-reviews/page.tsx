@@ -32,21 +32,21 @@ export default async function StudentReviewsPage() {
       />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 20px 0', textAlign: 'center' }}>
-        <div style={{ display: 'inline-block', background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '12px', fontWeight: 600, fontFamily: 'Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Where to find them</div>
-        <h2 style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '14px' }}>Our Reviews Live on Google</h2>
+        <div style={{ display: 'inline-block', background: 'var(--primary-light)', color: 'var(--primary)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Where to find them</div>
+        <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '14px' }}>Our Reviews Live on Google</h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.8', maxWidth: '620px', margin: '0 auto 32px' }}>
           Every review for Coss Cloud Solutions is posted by students directly on Google, tied to their own Google account — we don&apos;t write, edit, or select which ones appear. Read them on either centre&apos;s listing below.
         </p>
         <GoogleRatingBadge
           rating={rating}
-          style={{ display: 'inline-block', marginBottom: '24px', color: 'var(--text)', fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '16px', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+          style={{ display: 'inline-block', marginBottom: '24px', color: 'var(--text)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '16px', textDecoration: 'underline', textUnderlineOffset: '3px' }}
         />
         {rating && <p style={{ margin: '-18px 0 24px', color: 'var(--text-muted)', fontSize: '12px' }}>Dilsukhnagar centre, live from Google</p>}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center', marginBottom: '8px' }}>
-          <a href={GBP_SAME_AS.dilsukhnagar} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+          <a href={GBP_SAME_AS.dilsukhnagar} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
             📍 Dilsukhnagar Centre Reviews
           </a>
-          <a href={GBP_SAME_AS.ameerpet} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+          <a href={GBP_SAME_AS.ameerpet} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', border: '2px solid var(--primary)', color: 'var(--primary)', padding: '14px 28px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
             📍 Ameerpet Centre Reviews
           </a>
         </div>

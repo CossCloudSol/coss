@@ -65,7 +65,7 @@ export default function CourseAccordionNav({ activeSlug }: { activeSlug: string 
       aria-label="All Courses"
       style={{ background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-card)', overflow: 'hidden' }}
     >
-      <div style={{ background: '#e47538', color: '#fff', padding: '10px 14px', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '13px', letterSpacing: '0.3px' }}>
+      <div style={{ background: '#e47538', color: '#fff', padding: '10px 14px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', letterSpacing: '0.3px' }}>
         All Courses
       </div>
 
@@ -89,13 +89,13 @@ export default function CourseAccordionNav({ activeSlug }: { activeSlug: string 
             >
               <span
                 aria-hidden="true"
-                style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '22px', height: '22px', borderRadius: '4px', background: isOpen ? '#e47538' : 'var(--bg-alt, rgba(0,0,0,0.05))', color: isOpen ? '#fff' : 'var(--text-muted)', fontFamily: 'Poppins, sans-serif', fontWeight: 700, fontSize: '10px', transition: 'background 0.2s, color 0.2s', flexShrink: 0 }}
+                style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: '22px', height: '22px', borderRadius: '4px', background: isOpen ? '#e47538' : 'var(--bg-alt, rgba(0,0,0,0.05))', color: isOpen ? '#fff' : 'var(--text-muted)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '10px', transition: 'background 0.2s, color 0.2s', flexShrink: 0 }}
               >
                 {group.num}
               </span>
 
               <span
-                style={{ flex: 1, fontFamily: 'Poppins, sans-serif', fontWeight: 600, fontSize: '12px', color: isOpen ? '#e47538' : 'var(--text)', transition: 'color 0.2s', lineHeight: '1.35' }}
+                style={{ flex: 1, fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '12px', color: isOpen ? '#e47538' : 'var(--text)', transition: 'color 0.2s', lineHeight: '1.35' }}
               >
                 {group.category}
               </span>
@@ -122,7 +122,7 @@ export default function CourseAccordionNav({ activeSlug }: { activeSlug: string 
                       <Link
                         href={`/${course.slug}`}
                         aria-current={isActive ? 'page' : undefined}
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 14px 9px 24px', fontSize: '13px', fontFamily: isActive ? 'Poppins, sans-serif' : 'Open Sans, sans-serif', fontWeight: isActive ? 600 : 400, color: isActive ? '#e47538' : 'var(--text-muted)', background: isActive ? 'var(--primary-light, rgba(228,117,56,0.08))' : 'transparent', borderLeft: isActive ? '3px solid #e47538' : '3px solid transparent', textDecoration: 'none', transition: 'color 0.15s, background 0.15s, border-color 0.15s' }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 14px 9px 24px', fontSize: '13px', fontFamily: isActive ? 'var(--font-poppins), Poppins, sans-serif' : 'Open Sans, sans-serif', fontWeight: isActive ? 600 : 400, color: isActive ? '#e47538' : 'var(--text-muted)', background: isActive ? 'var(--primary-light, rgba(228,117,56,0.08))' : 'transparent', borderLeft: isActive ? '3px solid #e47538' : '3px solid transparent', textDecoration: 'none', transition: 'color 0.15s, background 0.15s, border-color 0.15s' }}
                       >
                         <span>{course.shortTitle}</span>
                         <span aria-hidden="true" style={{ fontSize: '12px', opacity: 0.5 }}>&rsaquo;</span>

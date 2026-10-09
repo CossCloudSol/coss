@@ -44,7 +44,7 @@ test('manifest: brand name, brand colour, existing icons', async () => {
   const { default: manifest } = await import('../../src/app/manifest.ts');
   const m = manifest();
   assert.match(m.name, /^Coss Cloud Solutions/);
-  assert.equal(m.theme_color, '#024c57');
+  assert.equal(m.theme_color, '#005663');
   for (const icon of m.icons) assert.ok(fs.existsSync(path.join('public', icon.src)), icon.src);
 });
 
