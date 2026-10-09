@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { submitLead } from '@/lib/submitLead';
 import { buildBrochureDelivery } from '@/lib/whatsapp';
-import { NAME_ERROR, nameField } from '@/lib/lead-validation';
+import { NAME_ERROR, isValidName } from '@/lib/lead-checks';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import { attachmentUrl } from '@/lib/cloudinary';
 import { trackBrochureDownload } from '@/lib/click-tracking';
@@ -64,7 +64,7 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
       setError('Enter your name');
       return;
     }
-    if (!nameField.safeParse(name).success) {
+    if (!isValidName(name)) {
       setError(NAME_ERROR);
       return;
     }

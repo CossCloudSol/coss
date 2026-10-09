@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { submitLead, type Branch } from '@/lib/submitLead'
-import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation'
+import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks'
 import WhatsAppLink from '@/components/WhatsAppLink'
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField'
 import FormPrivacyNote from '@/components/FormPrivacyNote'
@@ -34,7 +34,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !phone.trim()) return
-    if (!nameField.safeParse(name).success) {
+    if (!isValidName(name)) {
       setState({ kind: 'error', message: NAME_ERROR })
       return
     }

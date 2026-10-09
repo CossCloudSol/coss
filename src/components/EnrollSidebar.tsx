@@ -10,7 +10,7 @@ import { CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
  * Lives in its own module (not in shared.tsx) on purpose: App Router ships
  * every client component a server module imports, rendered or not. While this
  * sat in shared.tsx, every page importing PageBanner/HeroBanner from there
- * also downloaded DemoSidebarForm's zod + react-hook-form (~38 kB gzipped)
+ * also downloaded DemoSidebarForm's form code
  * without rendering a form.
  */
 export default function EnrollSidebar() {

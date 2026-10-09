@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
-import { nameField, phoneField } from '@/lib/lead-validation';
+import { rules } from '@/lib/lead-form-rules';
+import { useLeadForm } from '@/lib/use-lead-form';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -17,14 +15,21 @@ import { goToThankYou } from '@/lib/lead-thank-you';
 // Name and phone use the shared rules the API enforces (submitLead converts
 // the phone to +91XXXXXXXXXX). We map the radios' lower-case values to the
 // API's enum.
-const heroFormSchema = z.object({
-  name: nameField,
-  phone: phoneField,
-  inquiryType: z.string().optional(),
-  branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, { error: 'Please select a branch' }),
-});
+const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 
-type HeroFormValues = z.infer<typeof heroFormSchema>;
+type HeroFormValues = {
+  name: string;
+  phone: string;
+  inquiryType: string;
+  branch: (typeof BRANCHES)[number];
+};
+
+const heroFormSchema = {
+  name: [rules.name()],
+  phone: [rules.phone()],
+  inquiryType: [],
+  branch: [rules.oneOf(BRANCHES, 'Please select a branch')],
+};
 
 const BRANCH_API_VALUE: Record<HeroFormValues['branch'], Branch> = {
   dilsukhnagar: 'Dilsukhnagar',
@@ -67,10 +72,7 @@ export default function HeroEnrollForm(): JSX.Element {
     reset,
     watch,
     formState: { errors },
-  } = useForm<HeroFormValues>({
-    resolver: zodResolver(heroFormSchema),
-    mode: 'onSubmit',
-  });
+  } = useLeadForm<HeroFormValues>(heroFormSchema);
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const selectedBranch = watch('branch');

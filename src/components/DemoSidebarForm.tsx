@@ -1,12 +1,10 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { submitLead, type Branch } from '@/lib/submitLead';
 import type { CourseGroup } from '@/data/course-options';
-import { nameField, phoneField } from '@/lib/lead-validation';
+import { rules } from '@/lib/lead-form-rules';
+import { useLeadForm } from '@/lib/use-lead-form';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -15,14 +13,21 @@ import { goToThankYou } from '@/lib/lead-thank-you';
 /*  Validation                                                                */
 /* -------------------------------------------------------------------------- */
 
-const demoFormSchema = z.object({
-  name: nameField,
-  phone: phoneField,
-  course: z.string().optional(),
-  branch: z.enum(['dilsukhnagar', 'ameerpet', 'online'] as const, 'Please select a branch'),
-});
+const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 
-type DemoFormValues = z.infer<typeof demoFormSchema>;
+type DemoFormValues = {
+  name: string;
+  phone: string;
+  course: string;
+  branch: (typeof BRANCHES)[number];
+};
+
+const demoFormSchema = {
+  name: [rules.name()],
+  phone: [rules.phone()],
+  course: [],
+  branch: [rules.oneOf(BRANCHES, 'Please select a branch')],
+};
 
 const BRANCH_API_VALUE: Record<DemoFormValues['branch'], Branch> = {
   dilsukhnagar: 'Dilsukhnagar',
@@ -141,10 +146,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
     reset,
     watch,
     formState: { errors },
-  } = useForm<DemoFormValues>({
-    resolver: zodResolver(demoFormSchema),
-    mode: 'onSubmit',
-  });
+  } = useLeadForm<DemoFormValues>(demoFormSchema);
 
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
   const selectedBranch = watch('branch');
@@ -157,7 +159,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
     const result = await submitLead({
       name: values.name,
       phone: values.phone,
-      course: course ?? values.course,
+      course: course ?? (values.course || undefined),
       branch: BRANCH_API_VALUE[values.branch],
       formType: 'demo',
       bot: botFields(),

@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { Check, SearchX } from 'lucide-react';
 import { submitLead } from '@/lib/submitLead';
-import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation';
+import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
 import { trackFormStart, trackFormSubmit } from '@/lib/click-tracking';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
@@ -44,7 +44,7 @@ export default function NoResultsLead({
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     markStarted();
-    if (!nameField.safeParse(name).success) return setState({ kind: 'error', message: NAME_ERROR });
+    if (!isValidName(name)) return setState({ kind: 'error', message: NAME_ERROR });
     if (normalizeIndianMobile(phone) === null) return setState({ kind: 'error', message: PHONE_ERROR });
     setState({ kind: 'submitting' });
     const result = await submitLead({

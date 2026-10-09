@@ -6,7 +6,7 @@ import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
 import { submitLead } from '@/lib/submitLead';
-import { NAME_ERROR, PHONE_ERROR, nameField, normalizeIndianMobile } from '@/lib/lead-validation';
+import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import { openPendingWindow, navigatePendingWindow } from '@/lib/pending-window';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -180,7 +180,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
 
   function validate(): boolean {
     const next: typeof errors = {};
-    if (!nameField.safeParse(form.name).success)
+    if (!isValidName(form.name))
       next.name = NAME_ERROR;
     if (normalizeIndianMobile(form.phone) === null)
       next.phone = PHONE_ERROR;

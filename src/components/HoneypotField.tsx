@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
-import { FILL_TIME_FIELD, HONEYPOT_FIELD } from '@/lib/lead-validation';
+import { FILL_TIME_FIELD, HONEYPOT_FIELD } from '@/lib/lead-checks';
 
 export type BotFields = { [HONEYPOT_FIELD]: string; [FILL_TIME_FIELD]: number };
 

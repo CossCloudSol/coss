@@ -6,7 +6,7 @@
 
 import { getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
-import { normalizeIndianMobile } from '@/lib/lead-validation';
+import { normalizeIndianMobile } from '@/lib/lead-checks';
 import type { BotFields } from '@/components/HoneypotField';
 
 export type Branch = 'Dilsukhnagar' | 'Ameerpet' | 'Online';
