@@ -27,6 +27,7 @@ export default function WhatsAppOptIn({
   return (
     <label
       htmlFor={id}
+      className="wa-optin"
       style={{
         display: 'flex',
         alignItems: 'center',

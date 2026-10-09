@@ -266,7 +266,7 @@ export default function HeroEnrollForm(): JSX.Element {
         </p>
       ) : null}
 
-      <WhatsAppOptIn />
+      <WhatsAppOptIn style={{ color: 'rgba(255,255,255,0.8)' }} />
 
       <button
         type="submit"
@@ -302,7 +302,9 @@ export default function HeroEnrollForm(): JSX.Element {
           <>Book my free demo</>
         )}
       </button>
-      <FormPrivacyNote />
+      <div style={{ color: 'rgba(255,255,255,0.7)' }}>
+        <FormPrivacyNote />
+      </div>
 
       {state.kind === 'error' ? (
         <p
