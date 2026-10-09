@@ -154,8 +154,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: db?.sitemapPriority ?? 0.7,
         }
       })
-  } catch {
-    // getAllPosts failed (e.g. no content dir in CI) — skip blog entries
+  } catch (err) {
+    // getAllPosts failed (e.g. no content dir in CI) — skip blog entries, but say so in the logs: a
+    // silently shorter sitemap went unnoticed for hours on 9 Oct.
+    console.error('[sitemap] could not read content/posts; blog posts are missing from the sitemap', err);
   }
 
   // 6 ── All DB courses at their canonical URLs (/courses/{slug} or /courses/{cat}/{slug})

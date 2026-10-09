@@ -5,6 +5,15 @@ import { REDIRECTS } from './redirects.config.mjs';
 const nextConfig = {
   trailingSlash: false,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  experimental: {
+    // The sitemap route is regenerated at runtime on Vercel, in a function bundle of its own. Without
+    // this its file trace has no content/posts, getAllPosts() fails there, and the 89 file-based blog
+    // posts silently drop out of sitemap.xml (203 URLs became 114 on 9 Oct). Same for the home page's
+    // latest-posts block, whose trace is made at build time and already includes them.
+    outputFileTracingIncludes: {
+      '/sitemap.xml': ['./content/posts/**/*'],
+    },
+  },
   images: {
     // Allowlist only the CDN hostnames actually used by <Image> components
     // (Cloudinary), to prevent this server being used as an open
