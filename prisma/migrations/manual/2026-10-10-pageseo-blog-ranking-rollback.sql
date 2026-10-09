@@ -2,10 +2,10 @@
 -- if that change has to be undone. Not run by Claude.
 -- If the editor asks about Row Level Security, click "Run without RLS" (this file creates no tables).
 --
--- What it does: puts back pageTitle, schemaMarkup and "updatedAt" of the 73 blog PageSeo rows
+-- What it does: puts back pageTitle, schemaMarkup and "updatedAt" of the 89-90 blog PageSeo rows
 -- exactly as saved in coss_backup.pageseo_blog_ranking_20261010 before the change. Nothing else
 -- changes. Any admin edit made to those two columns after the change is overwritten too.
--- One transaction; it stops (nothing changed) unless exactly 73 rows are restored and they match
+-- One transaction; it stops (nothing changed) unless every backed-up row is restored and they match
 -- the backup afterwards. The backup table is kept.
 --
 -- If you see ERROR: nothing changed; paste the error to Claude Code.
@@ -16,9 +16,11 @@ BEGIN;
 DO $$
 DECLARE
   cnt int;
+  n int;
 BEGIN
-  IF (SELECT count(*) FROM coss_backup.pageseo_blog_ranking_20261010) <> 73 THEN
-    RAISE EXCEPTION 'expected 73 rows in coss_backup.pageseo_blog_ranking_20261010';
+  SELECT count(*) INTO n FROM coss_backup.pageseo_blog_ranking_20261010;
+  IF n < 89 OR n > 90 THEN
+    RAISE EXCEPTION 'expected 89 or 90 rows in coss_backup.pageseo_blog_ranking_20261010, found %', n;
   END IF;
 
   UPDATE "PageSeo" p
@@ -26,7 +28,7 @@ BEGIN
   FROM coss_backup.pageseo_blog_ranking_20261010 k
   WHERE p.id = k.id;
   GET DIAGNOSTICS cnt = ROW_COUNT;
-  IF cnt <> 73 THEN RAISE EXCEPTION 'restored % rows (expected 73)', cnt; END IF;
+  IF cnt <> n THEN RAISE EXCEPTION 'restored % rows (expected %)', cnt, n; END IF;
 
   SELECT count(*) INTO cnt
   FROM "PageSeo" p JOIN coss_backup.pageseo_blog_ranking_20261010 k USING (id)

@@ -12,18 +12,23 @@
 --   the same ending cut short ("Hyderabad's lea…", "Hyderabad's leading IT inst…") → "Hyderabad…"
 --   "Best " at the start of a title or description, or after "– "  → removed
 --     ("Best Tally Institute in Hyderabad" → "Tally Institute in Hyderabad")
+--   "Coss Cloud Solutions Best …"  → "Coss Cloud Solutions – …"
 --   "Top-Rated " and "Industry Leading "  → removed;   "at the Top "  → "at a "
 -- These replacements are case-sensitive, so web addresses (all lower case, e.g.
 -- /blog/best-tally-institute-…) are never touched. Slugs, canonical URLs, descriptions shown in
 -- search, other columns and other rows do not change.
 --
--- Expected counts (from the read-only scan 2026-10-09-blog-claims-scan.sql, run 9 Oct on
--- production): the change is limited to the 73 blog PageSeo rows that scan listed; 37 of them
--- have ranking wording in pageTitle and 72 in schemaMarkup.
+-- Which rows: every blog PageSeo row whose pageTitle or schemaMarkup these replacements actually
+-- change (an exact predicate, evaluated before anything changes). Expected: 89 or 90 rows =
+--   72-73 of the 73 rows listed by the read-only scan 2026-10-09-blog-claims-scan.sql (9 Oct), plus
+--   17 rows the 10 Oct run's check found that the scan had missed (only a cut-off
+--   "Hyderabad's lea…" ending, which the scan could not see). The 73 listed slugs are kept below as
+--   a cross-check: at least 72 of them must be among the rows changed.
 --
--- Safety: one transaction. The 73 rows (id, pageSlug, pageTitle, schemaMarkup, updatedAt) are
+-- Safety: one transaction. Those rows (id, pageSlug, pageTitle, schemaMarkup, updatedAt) are
 -- copied first into coss_backup.pageseo_blog_ranking_20261010. Checks then stop everything
--- (nothing changed) if fewer or more than 73 rows are found, if any ranking wording is left in
+-- (nothing changed) if the row count is not 89-90, if fewer than 72 of the 73 listed slugs are
+-- among them, if any ranking wording is left in
 -- ANY blog PageSeo row (web addresses ignored), if a stored JSON that was valid becomes invalid,
 -- or if any other column or row changed. Running it a second time fails at once (the backup
 -- table already exists) and changes nothing. Undo: 2026-10-10-pageseo-blog-ranking-rollback.sql.
@@ -33,19 +38,23 @@
 --
 -- INDEPENDENT REVIEW: PASS (9 Oct 2026). Notes applied: changed-row guard tightened to 72-73;
 -- the leftover check also ignores escaped (https:\/\/) and relative URLs and catches "course provider".
+-- 10 Oct v2 (after the first run stopped with "18 rows still have ranking wording", nothing
+-- changed): rows chosen by predicate (89-90), "Coss Cloud Solutions Best" rule. Diff re-review: PASS
+-- (10 Oct; note applied: the new rule is limited to "Coss Cloud Solutions Best ").
 
 BEGIN;
 
 -- Helpers (dropped at the end of this file)
 CREATE FUNCTION pg_temp.coss_unrank(t text) RETURNS text LANGUAGE sql IMMUTABLE AS $f$
-  SELECT regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
+  SELECT regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
            t,
            'Hyderabad[’'']s leading IT institute\.', 'Hyderabad, since 2010.', 'g'),
            'Hyderabad[’'']s lea[A-Za-z ]*…', 'Hyderabad…', 'g'),
            '(^|"|– |- )Best ', '\1', 'g'),
            'Top-Rated ', '', 'g'),
            'Industry Leading ', '', 'g'),
-           'at the Top ', 'at a ', 'g')
+           'at the Top ', 'at a ', 'g'),
+           'Coss Cloud Solutions Best ', 'Coss Cloud Solutions – ', 'g')
 $f$;
 -- ranking wording left anywhere in a text, web addresses removed first
 CREATE FUNCTION pg_temp.coss_ranked(t text) RETURNS boolean LANGUAGE sql IMMUTABLE AS $f$
@@ -67,7 +76,30 @@ CREATE SCHEMA IF NOT EXISTS coss_backup;
 CREATE TABLE coss_backup.pageseo_blog_ranking_20261010 AS
 SELECT id, "pageSlug", "pageTitle", "schemaMarkup", "updatedAt"
 FROM "PageSeo"
-WHERE "pageSlug" IN (VALUES
+WHERE ("pageSlug" = 'blog' OR "pageSlug" LIKE 'blog/%')
+  AND (pg_temp.coss_unrank("pageTitle") IS DISTINCT FROM "pageTitle"
+       OR pg_temp.coss_unrank("schemaMarkup") IS DISTINCT FROM "schemaMarkup");
+ALTER TABLE coss_backup.pageseo_blog_ranking_20261010 ENABLE ROW LEVEL SECURITY;
+
+DO $$
+DECLARE
+  cnt int;
+  changed int;
+  rest_before jsonb;
+  others_before text;
+BEGIN
+  -- fingerprints before any change
+  SELECT jsonb_object_agg(p.id, md5((to_jsonb(p) - 'pageTitle' - 'schemaMarkup' - 'updatedAt')::text)) INTO rest_before
+  FROM "PageSeo" p WHERE p.id IN (SELECT id FROM coss_backup.pageseo_blog_ranking_20261010);
+  SELECT md5(string_agg(md5(p::text), ',' ORDER BY p.id)) INTO others_before
+  FROM "PageSeo" p WHERE p.id NOT IN (SELECT id FROM coss_backup.pageseo_blog_ranking_20261010);
+
+  -- 89-90 rows to change (72-73 from the 9 Oct scan list + 17 found by the 10 Oct check)
+  SELECT count(*) INTO cnt FROM coss_backup.pageseo_blog_ranking_20261010;
+  IF cnt < 89 OR cnt > 90 THEN RAISE EXCEPTION 'expected 89 or 90 blog PageSeo rows to change, found %', cnt; END IF;
+  -- cross-check: the rows listed by the 9 Oct scan are (almost) all among them
+  SELECT count(*) INTO cnt FROM coss_backup.pageseo_blog_ranking_20261010
+  WHERE "pageSlug" IN (VALUES
   ('blog/advance-your-career-at-the-top-devops-institute-in-dilsukhnagar-coss-cloud-solutions'),
   ('blog/artificial-intelligence-training-in-hyderabad'),
   ('blog/aws-cloud-course-training-in-hyderabad-with-coss-cloud-solutions'),
@@ -141,25 +173,8 @@ WHERE "pageSlug" IN (VALUES
   ('blog/spoken-english-institute-in-hyderabad'),
   ('blog/sql-mysql-postgresql-training-in-dilsukhnagar-hyderabad'),
   ('blog/top-rated-digital-marketing-institute-in-dilsukhnagar-hyderabad')
-);
-ALTER TABLE coss_backup.pageseo_blog_ranking_20261010 ENABLE ROW LEVEL SECURITY;
-
-DO $$
-DECLARE
-  cnt int;
-  changed int;
-  rest_before jsonb;
-  others_before text;
-BEGIN
-  -- fingerprints before any change
-  SELECT jsonb_object_agg(p.id, md5((to_jsonb(p) - 'pageTitle' - 'schemaMarkup' - 'updatedAt')::text)) INTO rest_before
-  FROM "PageSeo" p WHERE p.id IN (SELECT id FROM coss_backup.pageseo_blog_ranking_20261010);
-  SELECT md5(string_agg(md5(p::text), ',' ORDER BY p.id)) INTO others_before
-  FROM "PageSeo" p WHERE p.id NOT IN (SELECT id FROM coss_backup.pageseo_blog_ranking_20261010);
-
-  -- the 73 rows from the scan are all there
-  SELECT count(*) INTO cnt FROM coss_backup.pageseo_blog_ranking_20261010;
-  IF cnt <> 73 THEN RAISE EXCEPTION 'expected 73 blog PageSeo rows from the 9 Oct scan, found %', cnt; END IF;
+  );
+  IF cnt < 72 THEN RAISE EXCEPTION 'only % of the 73 slugs listed by the 9 Oct scan are among the rows to change (expected 72 or 73)', cnt; END IF;
 
   -- 2. Change (only rows where the wording actually changes)
   UPDATE "PageSeo" p
@@ -170,8 +185,8 @@ BEGIN
     AND (pg_temp.coss_unrank(p."pageTitle") IS DISTINCT FROM p."pageTitle"
          OR pg_temp.coss_unrank(p."schemaMarkup") IS DISTINCT FROM p."schemaMarkup");
   GET DIAGNOSTICS changed = ROW_COUNT;
-  IF changed < 72 OR changed > 73 THEN
-    RAISE EXCEPTION 'changed % rows; expected 72 or 73 (the scan found ranking wording in the stored JSON of 72)', changed;
+  IF changed <> (SELECT count(*) FROM coss_backup.pageseo_blog_ranking_20261010) THEN
+    RAISE EXCEPTION 'changed % rows; expected every backed-up row (%)', changed, (SELECT count(*) FROM coss_backup.pageseo_blog_ranking_20261010);
   END IF;
 
   -- 3. Checks
@@ -204,7 +219,7 @@ BEGIN
       WHERE p.id NOT IN (SELECT id FROM coss_backup.pageseo_blog_ranking_20261010)) THEN
     RAISE EXCEPTION 'another PageSeo row changed';
   END IF;
-  RAISE NOTICE 'changed % of the 73 rows', changed;
+  RAISE NOTICE 'changed % rows', changed;
 END $$;
 
 DROP FUNCTION pg_temp.coss_unrank(text);
