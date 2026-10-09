@@ -1,5 +1,7 @@
 -- 2026-10-09 Blog claims fix, database half (item 7). Run ONCE, in full, in the Supabase SQL
 -- Editor (production). Not run by Claude.
+-- If the editor asks about Row Level Security, click "Run without RLS": this file already turns
+-- RLS on for the tables it creates (all in the coss_backup schema), and it creates no temp tables.
 --
 -- What it changes:
 -- A. The body text (BlogPost.content) of 5 published blog posts, 8 sentences in all, so they
@@ -35,9 +37,9 @@
 --
 -- Safety: one transaction. The rows are copied first into coss_backup.blogpost_claims_20261009
 -- (id, slug, content, updatedAt) and coss_backup.pageseo_claims_20261009 (id, pageSlug,
--- metaDescription, updatedAt). Checks then stop everything (nothing changed) if an old sentence
--- is not found exactly once, if any old sentence is left, if a new sentence is missing, if a
--- body shrinks or grows more than expected, or if any other column or row changed. Running it
+-- metaDescription, updatedAt); the 8 fixes are kept in coss_backup.blogpost_claims_fix_20261009.
+-- Checks then stop everything (nothing changed) if an old sentence is not found exactly once,
+-- if any old sentence is left, if a new sentence is missing, if a body shrinks or grows more than expected, or if any other column or row changed. Running it
 -- a second time fails at once (the backup table already exists) and changes nothing.
 -- Undo: 2026-10-09-blog-claims-rollback.sql.
 --
@@ -46,6 +48,7 @@
 --
 -- INDEPENDENT REVIEW: PASS (9 Oct 2026; two reviews. Notes applied: leftover checks narrowed to the
 -- exact old phrases, published-status check, SEO row guard; surrounding text checked on the live posts)
+-- 9 Oct (editor-safe): no temp tables, RLS enabled inside the script; diff re-review PASS.
 
 BEGIN;
 
@@ -60,29 +63,14 @@ CREATE TABLE coss_backup.pageseo_claims_20261009 AS
 SELECT id, "pageSlug", "metaDescription", "updatedAt"
 FROM "PageSeo"
 WHERE "pageSlug" = 'blog/master-aws-devops-in-hyderabad';
-
--- Fingerprints, to prove nothing else changes
-CREATE TEMP TABLE claims_five_before ON COMMIT DROP AS
-SELECT b.id, md5((to_jsonb(b) - 'content' - 'updatedAt')::text) AS h
-FROM "BlogPost" b
-WHERE b.id IN (SELECT id FROM coss_backup.blogpost_claims_20261009);
-
-CREATE TEMP TABLE claims_other_before ON COMMIT DROP AS
-SELECT md5(string_agg(md5(b::text), ',' ORDER BY b.id)) AS h
-FROM "BlogPost" b
-WHERE b.id NOT IN (SELECT id FROM coss_backup.blogpost_claims_20261009);
-
-CREATE TEMP TABLE claims_seo_before ON COMMIT DROP AS
-SELECT
-  (SELECT md5((to_jsonb(p) - 'metaDescription' - 'updatedAt')::text) FROM "PageSeo" p
-     WHERE p."pageSlug" = 'blog/master-aws-devops-in-hyderabad') AS row_h,
-  (SELECT md5(string_agg(md5(p::text), ',' ORDER BY p.id)) FROM "PageSeo" p
-     WHERE p."pageSlug" <> 'blog/master-aws-devops-in-hyderabad') AS others_h;
+ALTER TABLE coss_backup.blogpost_claims_20261009 ENABLE ROW LEVEL SECURITY;
+ALTER TABLE coss_backup.pageseo_claims_20261009 ENABLE ROW LEVEL SECURITY;
 
 -- The 8 fixes: row, old sentence (whitespace-tolerant pattern), replacement, a phrase the new
 -- text must contain
-CREATE TEMP TABLE claims_fix (n int, id text, re text, repl text, must text) ON COMMIT DROP;
-INSERT INTO claims_fix VALUES
+CREATE TABLE coss_backup.blogpost_claims_fix_20261009 (n int, id text, re text, repl text, must text);
+ALTER TABLE coss_backup.blogpost_claims_fix_20261009 ENABLE ROW LEVEL SECURITY;
+INSERT INTO coss_backup.blogpost_claims_fix_20261009 VALUES
  (1, 'cmpieh1an0003552d7caornk5', 'Exam pass guarantee(\*\*)?\s+—\s+we refund your exam fee if you fail',
      'Exam preparation\1 — mock tests and revision before you book your exam', 'mock tests and revision before you book your exam'),
  (2, 'cmpieh1an0003552d7caornk5', 'Coss Cloud Solutions is a leading IT training institute in Hyderabad\s+with\s+centres',
@@ -104,8 +92,22 @@ DO $$
 DECLARE
   f record;
   cnt int;
+  five_before jsonb;
+  other_before text;
+  seo_row_before text;
+  seo_others_before text;
   new_desc constant text := 'Learn AWS DevOps in Hyderabad: CI/CD, infrastructure as code, monitoring and security on AWS, with hands-on labs at Coss Cloud Solutions, since 2010.';
 BEGIN
+  -- fingerprints before any change, to prove nothing else changes
+  SELECT jsonb_object_agg(b.id, md5((to_jsonb(b) - 'content' - 'updatedAt')::text)) INTO five_before
+  FROM "BlogPost" b WHERE b.id IN (SELECT id FROM coss_backup.blogpost_claims_20261009);
+  SELECT md5(string_agg(md5(b::text), ',' ORDER BY b.id)) INTO other_before
+  FROM "BlogPost" b WHERE b.id NOT IN (SELECT id FROM coss_backup.blogpost_claims_20261009);
+  SELECT md5((to_jsonb(p) - 'metaDescription' - 'updatedAt')::text) INTO seo_row_before
+  FROM "PageSeo" p WHERE p."pageSlug" = 'blog/master-aws-devops-in-hyderabad';
+  SELECT md5(string_agg(md5(p::text), ',' ORDER BY p.id)) INTO seo_others_before
+  FROM "PageSeo" p WHERE p."pageSlug" <> 'blog/master-aws-devops-in-hyderabad';
+
   -- the 5 posts exist, are published and have content; the SEO row exists once and is empty
   -- or still the old cut-off text
   IF (SELECT count(*) FROM "BlogPost"
@@ -125,7 +127,7 @@ BEGIN
     RAISE EXCEPTION 'the PageSeo description is not empty or the old cut-off text; not touching it';
   END IF;
   -- each old sentence is in its row exactly once, before anything changes
-  FOR f IN SELECT * FROM claims_fix ORDER BY n LOOP
+  FOR f IN SELECT * FROM coss_backup.blogpost_claims_fix_20261009 ORDER BY n LOOP
     SELECT count(*) INTO cnt FROM "BlogPost" b, regexp_matches(b.content, f.re, 'g') m WHERE b.id = f.id;
     IF cnt <> 1 THEN
       RAISE EXCEPTION 'fix %: old sentence found % times in row % (expected 1)', f.n, cnt, f.id;
@@ -133,7 +135,7 @@ BEGIN
   END LOOP;
 
   -- 2. Change
-  FOR f IN SELECT * FROM claims_fix ORDER BY n LOOP
+  FOR f IN SELECT * FROM coss_backup.blogpost_claims_fix_20261009 ORDER BY n LOOP
     UPDATE "BlogPost" SET content = regexp_replace(content, f.re, f.repl) WHERE id = f.id;
     GET DIAGNOSTICS cnt = ROW_COUNT;
     IF cnt <> 1 THEN RAISE EXCEPTION 'fix %: updated % rows', f.n, cnt; END IF;
@@ -148,7 +150,7 @@ BEGIN
   IF cnt <> 1 THEN RAISE EXCEPTION 'PageSeo description set on % rows (expected 1)', cnt; END IF;
 
   -- 3. Checks
-  FOR f IN SELECT * FROM claims_fix ORDER BY n LOOP
+  FOR f IN SELECT * FROM coss_backup.blogpost_claims_fix_20261009 ORDER BY n LOOP
     -- the old sentence is gone
     SELECT count(*) INTO cnt FROM "BlogPost" b, regexp_matches(b.content, f.re, 'g') m WHERE b.id = f.id;
     IF cnt <> 0 THEN RAISE EXCEPTION 'fix %: old sentence still there % times', f.n, cnt; END IF;
@@ -180,11 +182,12 @@ BEGIN
      OR b.content = k.content;
   IF cnt <> 0 THEN RAISE EXCEPTION '% rows changed by an unexpected amount (or not at all)', cnt; END IF;
   -- nothing but content and updatedAt changed on the 5 rows (slug, title, status, dates …)
-  SELECT count(*) INTO cnt FROM "BlogPost" b JOIN claims_five_before k USING (id)
-  WHERE md5((to_jsonb(b) - 'content' - 'updatedAt')::text) <> k.h;
+  SELECT count(*) INTO cnt FROM "BlogPost" b
+  WHERE b.id IN (SELECT id FROM coss_backup.blogpost_claims_20261009)
+    AND md5((to_jsonb(b) - 'content' - 'updatedAt')::text) IS DISTINCT FROM (five_before ->> b.id);
   IF cnt <> 0 THEN RAISE EXCEPTION 'other columns changed on % of the 5 rows', cnt; END IF;
   -- every other BlogPost row is unchanged
-  IF (SELECT h FROM claims_other_before) IS DISTINCT FROM
+  IF other_before IS DISTINCT FROM
      (SELECT md5(string_agg(md5(b::text), ',' ORDER BY b.id)) FROM "BlogPost" b
       WHERE b.id NOT IN (SELECT id FROM coss_backup.blogpost_claims_20261009)) THEN
     RAISE EXCEPTION 'another BlogPost row changed';
@@ -194,12 +197,12 @@ BEGIN
       AND "metaDescription" = new_desc) <> 1 THEN
     RAISE EXCEPTION 'PageSeo description not set';
   END IF;
-  IF (SELECT row_h FROM claims_seo_before) IS DISTINCT FROM
+  IF seo_row_before IS DISTINCT FROM
      (SELECT md5((to_jsonb(p) - 'metaDescription' - 'updatedAt')::text) FROM "PageSeo" p
       WHERE p."pageSlug" = 'blog/master-aws-devops-in-hyderabad') THEN
     RAISE EXCEPTION 'another column changed on the PageSeo row';
   END IF;
-  IF (SELECT others_h FROM claims_seo_before) IS DISTINCT FROM
+  IF seo_others_before IS DISTINCT FROM
      (SELECT md5(string_agg(md5(p::text), ',' ORDER BY p.id)) FROM "PageSeo" p
       WHERE p."pageSlug" <> 'blog/master-aws-devops-in-hyderabad') THEN
     RAISE EXCEPTION 'another PageSeo row changed';
