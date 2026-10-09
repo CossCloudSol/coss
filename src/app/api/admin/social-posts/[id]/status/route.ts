@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
-import { manualDraftNote } from '@/lib/social-post-state';
+import { manualDraftNote, statusChangeLine } from '@/lib/social-post-state';
 import { bufferChannelId } from '@/lib/buffer-client';
 import { checkPost, parseChannels, ruleErrors } from '@/lib/social-captions';
 import { getSocialPostCourse } from '@/lib/social-post-course';
@@ -98,6 +98,7 @@ export async function PATCH(req: NextRequest, { params }: Ctx): Promise<Response
 
   try {
     const post = await prisma.socialPost.update({ where: { id: params.id }, data });
+    console.info(statusChangeLine({ id: post.id, from: existing.status, to: post.status, by: 'admin-status', reason: data.lastError }));
     return NextResponse.json({ ok: true, status: post.status });
   } catch (err) {
     console.error('[PATCH /api/admin/social-posts/[id]/status]', err);

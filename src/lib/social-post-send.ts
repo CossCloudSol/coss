@@ -5,7 +5,7 @@ import { channelPayload, checkPost, findClaimMatches, parseChannels, ruleErrors 
 import { checkLinkedPages } from '@/lib/page-meta';
 import { getSocialPostCourse } from '@/lib/social-post-course';
 import { instagramJpegUrl } from '@/lib/social-post-image';
-import { sentChannels } from '@/lib/social-post-state';
+import { sentChannels, statusChangeLine } from '@/lib/social-post-state';
 
 export const MAX_ATTEMPTS = 5;
 /** Buffer needs a due time in the future: past-due and "Send now" posts go this far out. */
@@ -153,6 +153,8 @@ export async function sendSocialPost(post: SocialPost): Promise<SendOutcome> {
       ...(bufferPostIds ? { bufferPostIds } : {}),
     },
   });
+
+  console.info(statusChangeLine({ id: post.id, from: 'queued', to: status, by: 'send', reason: lastError ?? `attempt ${attemptCount}` }));
 
   return { status, lastError, hitLimit, bufferPostIds, dueAt: status === 'sent' ? dueAt : null };
 }
