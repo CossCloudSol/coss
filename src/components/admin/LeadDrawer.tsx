@@ -44,6 +44,19 @@ export interface LeadDetail {
   jobTitle: string | null;
   jobCompany: string | null;
   consentAt: string | null;
+  utmTerm: string | null;
+  utmContent: string | null;
+  gclid: string | null;
+  fbclid: string | null;
+  lastGclid: string | null;
+  lastFbclid: string | null;
+  lastUtmSource: string | null;
+  lastUtmMedium: string | null;
+  lastUtmCampaign: string | null;
+  lastLandingPage: string | null;
+  lastTouchAt: string | null;
+  whatsappOptIn: boolean;
+  whatsappOptInAt: string | null;
   activities: LeadActivityItem[];
 }
 
@@ -535,6 +548,10 @@ function DetailsGrid({ lead }: { lead: LeadDetail }): JSX.Element {
         minute: '2-digit',
       })
     : null;
+  const optInAt = lead.whatsappOptInAt
+    ? new Date(lead.whatsappOptInAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : null;
+  const lastTouch = [lead.lastUtmSource, lead.lastUtmMedium, lead.lastUtmCampaign].filter(Boolean).join(' / ') || null;
   const jobLabel = lead.jobTitle
     ? lead.jobCompany
       ? `${lead.jobTitle} (${lead.jobCompany})`
@@ -561,6 +578,13 @@ function DetailsGrid({ lead }: { lead: LeadDetail }): JSX.Element {
         <DetailItem label="Device" value={lead.deviceType ?? '—'} />
         {jobLabel ? <DetailItem label="Job" value={jobLabel} /> : null}
         {consentAt ? <DetailItem label="Consent" value={consentAt} /> : null}
+        {lead.utmTerm ? <DetailItem label="Keyword" value={lead.utmTerm} /> : null}
+        {lead.utmContent ? <DetailItem label="Ad content" value={lead.utmContent} /> : null}
+        {lead.gclid || lead.lastGclid ? <DetailItem label="Google Ads click" value="Yes" /> : null}
+        {lead.fbclid || lead.lastFbclid ? <DetailItem label="Meta ads click" value="Yes" /> : null}
+        {lastTouch ? <DetailItem label="Last touch" value={lastTouch} /> : null}
+        {lead.lastLandingPage && lead.lastLandingPage !== lead.landingPage ? <DetailItem label="Last landing page" value={lead.lastLandingPage} /> : null}
+        <DetailItem label="WhatsApp updates" value={lead.whatsappOptIn ? `Yes${optInAt ? ` (${optInAt})` : ''}` : 'No'} />
       </dl>
     </section>
   );

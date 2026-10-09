@@ -7,6 +7,7 @@ import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/l
 import { trackFormStart, trackFormSubmit } from '@/lib/click-tracking';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
+import WhatsAppOptIn, { optInFromForm } from '@/components/WhatsAppOptIn';
 import { goToThankYou } from '@/lib/lead-thank-you';
 
 type State = { kind: 'idle' } | { kind: 'submitting' } | { kind: 'success' } | { kind: 'error'; message: string };
@@ -53,6 +54,7 @@ export default function NoResultsLead({
       message: `Searched for a course: "${term.trim().slice(0, 200)}"`,
       formType: 'course_search',
       bot: botFields(),
+      whatsappOptIn: optInFromForm(e.currentTarget),
     });
     if (result.ok) {
       trackFormSubmit(formId);
@@ -110,6 +112,7 @@ export default function NoResultsLead({
             </label>
           </div>
           {state.kind === 'error' && <p className="text-sm text-red-700" role="alert">{state.message}</p>}
+          <WhatsAppOptIn />
           <button type="submit" disabled={busy} className="h-12 rounded-[10px] bg-[#b8531c] text-[15px] font-bold text-white hover:bg-[#8f3f14] disabled:opacity-60">
             {busy ? 'Sending…' : 'Call me back'}
           </button>

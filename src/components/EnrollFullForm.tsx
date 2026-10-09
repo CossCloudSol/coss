@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { submitLead, type Branch } from '@/lib/submitLead';
 import { rules } from '@/lib/lead-form-rules';
 import { useLeadForm } from '@/lib/use-lead-form';
+import WhatsAppOptIn from '@/components/WhatsAppOptIn';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -22,12 +23,15 @@ function sanitizeCourseSlug(raw: string | null): string | undefined {
 const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 
 type FullFormValues = {
+  /** 'yes' only when the optional WhatsApp box is ticked. */
+  whatsappOptIn: string;
   name: string;
   phone: string;
   branch: (typeof BRANCHES)[number];
 };
 
 const fullFormSchema = {
+  whatsappOptIn: [],
   name: [rules.name()],
   phone: [rules.phone()],
   branch: [rules.oneOf(BRANCHES, 'Please select a branch')],
@@ -129,6 +133,7 @@ function EnrollFullFormFields({
       course,
       formType: 'full',
       bot:      botFields(),
+      whatsappOptIn: values.whatsappOptIn === 'yes',
     });
     if (result.ok) {
       goToThankYou('full');
@@ -255,6 +260,7 @@ function EnrollFullFormFields({
       </div>
 
       {/* Submit */}
+      <WhatsAppOptIn />
       <button
         type="submit"
         disabled={isSubmitting}

@@ -10,6 +10,7 @@ import CallLink from '@/components/CallLink';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { PREFILL_COURSE_EVENT } from '@/components/home/TrackedCta';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
+import WhatsAppOptIn, { optInFromForm } from '@/components/WhatsAppOptIn';
 import { goToThankYou } from '@/lib/lead-thank-you';
 import { PRIMARY_PHONE } from '@/lib/nap';
 
@@ -77,6 +78,7 @@ export default function HomeHeroForm(): JSX.Element {
       branch: branch ?? undefined,
       formType: 'hero',
       bot: botFields(),
+      whatsappOptIn: optInFromForm(e.currentTarget),
     });
     if (result.ok) {
       trackFormSubmit(FORM_ID, course || undefined);
@@ -203,6 +205,8 @@ export default function HomeHeroForm(): JSX.Element {
       {state.kind === 'error' && (
         <p className="text-sm text-red-700" role="alert">{state.message}</p>
       )}
+
+      <WhatsAppOptIn />
 
       <button
         type="submit"
