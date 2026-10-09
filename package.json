@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
+    "build:local": "node scripts/build-local.mjs",
+    "seed:dev": "node scripts/seed-dev.mjs",
     "start": "next start",
     "lint": "next lint",
     "check:contact-links": "node scripts/check-no-raw-contact-links.mjs",

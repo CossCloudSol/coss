@@ -1,3 +1,4 @@
+import './lib/dev-env.cjs'; // local dev DB unless COSS_DB=prod (before Prisma loads .env)
 import { PrismaClient } from '@prisma/client'
 import { getAllPosts } from '../src/lib/posts'
 import { getPublishedCoursesForMatching } from '../src/lib/course-queries'
