@@ -41,6 +41,26 @@ model Lead {
   jobCompany  String?
   consentAt   DateTime?
 
+  /// First touch (with utmSource/utmMedium/utmCampaign/referrer/landingPage above).
+  gclid       String?
+  fbclid      String?
+  utmTerm     String?
+  utmContent  String?
+  /// Last touch before the form was sent (the visit that converted).
+  lastUtmSource   String?
+  lastUtmMedium   String?
+  lastUtmCampaign String?
+  lastUtmTerm     String?
+  lastUtmContent  String?
+  lastGclid       String?
+  lastFbclid      String?
+  lastReferrer    String?
+  lastLandingPage String?
+  lastTouchAt     DateTime?
+  /// "Send me batch updates on WhatsApp (optional)": unticked by default; the time is stored only when ticked.
+  whatsappOptIn   Boolean   @default(false)
+  whatsappOptInAt DateTime?
+
   createdAt DateTime @default(now())
 
   activities LeadActivity[]
@@ -65,6 +85,17 @@ model CorporateLead {
   /// Free text from the corporate form's "Additional requirements" box.
   requirements   String?
   status         String   @default("new")
+  /// First-touch attribution and consent (same meaning as on Lead).
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmTerm        String?
+  utmContent     String?
+  gclid          String?
+  fbclid         String?
+  referrer       String?
+  landingPage    String?
+  consentAt      DateTime?
   createdAt      DateTime @default(now())
 
   @@index([createdAt])

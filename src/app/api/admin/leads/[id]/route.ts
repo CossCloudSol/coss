@@ -41,6 +41,19 @@ export interface LeadDetailResponse {
   jobTitle: string | null;
   jobCompany: string | null;
   consentAt: string | null; // ISO
+  utmTerm: string | null;
+  utmContent: string | null;
+  gclid: string | null;
+  fbclid: string | null;
+  lastGclid: string | null;
+  lastFbclid: string | null;
+  lastUtmSource: string | null;
+  lastUtmMedium: string | null;
+  lastUtmCampaign: string | null;
+  lastLandingPage: string | null;
+  lastTouchAt: string | null; // ISO
+  whatsappOptIn: boolean;
+  whatsappOptInAt: string | null; // ISO
   activities: LeadActivityResponseItem[];
 }
 
@@ -86,6 +99,19 @@ function serializeLead(
     jobTitle: string | null;
     jobCompany: string | null;
     consentAt: Date | null;
+    utmTerm: string | null;
+    utmContent: string | null;
+    gclid: string | null;
+    fbclid: string | null;
+    lastGclid: string | null;
+    lastFbclid: string | null;
+    lastUtmSource: string | null;
+    lastUtmMedium: string | null;
+    lastUtmCampaign: string | null;
+    lastLandingPage: string | null;
+    lastTouchAt: Date | null;
+    whatsappOptIn: boolean;
+    whatsappOptInAt: Date | null;
     activities?: Array<{
       id: string;
       action: string;
@@ -117,6 +143,19 @@ function serializeLead(
     jobTitle: lead.jobTitle,
     jobCompany: lead.jobCompany,
     consentAt: lead.consentAt ? lead.consentAt.toISOString() : null,
+    utmTerm: lead.utmTerm,
+    utmContent: lead.utmContent,
+    gclid: lead.gclid,
+    fbclid: lead.fbclid,
+    lastGclid: lead.lastGclid,
+    lastFbclid: lead.lastFbclid,
+    lastUtmSource: lead.lastUtmSource,
+    lastUtmMedium: lead.lastUtmMedium,
+    lastUtmCampaign: lead.lastUtmCampaign,
+    lastLandingPage: lead.lastLandingPage,
+    lastTouchAt: lead.lastTouchAt ? lead.lastTouchAt.toISOString() : null,
+    whatsappOptIn: lead.whatsappOptIn,
+    whatsappOptInAt: lead.whatsappOptInAt ? lead.whatsappOptInAt.toISOString() : null,
     activities: (lead.activities ?? []).map((activity) => ({
       id: activity.id,
       action: activity.action,

@@ -1077,6 +1077,10 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   font-size: 12px;
 }
 .ef-glass-ctx .ef-required { color: #fb923c; }
+/* the WhatsApp opt-in row and the privacy note take the form text colour: light on this dark card */
+/* !important: both set color: inherit inline, which would otherwise win over this rule */
+.ef-glass-ctx .wa-optin { color: rgba(255, 255, 255, 0.85) !important; }
+.ef-glass-ctx .form-privacy-note { color: rgba(255, 255, 255, 0.7) !important; }
 .ef-glass-ctx .ef-input {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);

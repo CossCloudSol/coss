@@ -1,14 +1,23 @@
 /**
  * Standalone script to call syncRedirectsToConfig() without TypeScript path aliases.
  * Reads all active DB redirects and writes them to redirects.config.mjs (served by next.config.mjs).
- * Usage: node scripts/run-sync-redirects.mjs
+ * Usage: COSS_DB=prod node scripts/run-sync-redirects.mjs
+ *
+ * Production only, on purpose: the file must mirror the production Redirect table. Run against the
+ * (empty) dev DB it would drop every managed redirect from redirects.config.mjs, so it refuses
+ * unless COSS_DB=prod is set. It only reads the database.
  */
+import './lib/dev-env.cjs'; // local dev DB unless COSS_DB=prod (before Prisma loads .env)
 import { PrismaClient } from '@prisma/client'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+if (process.env.COSS_DB !== 'prod') {
+  console.error('[run-sync-redirects] Refusing: this copies the PRODUCTION Redirect table into redirects.config.mjs.\n  Run it with COSS_DB=prod (it only reads the database).')
+  process.exit(1)
+}
 const db = new PrismaClient()
 
 // Keep in sync with src/lib/sync-redirects.ts INFRA_REDIRECTS

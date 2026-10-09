@@ -6,6 +6,7 @@ import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
 import { trackLeadEvent } from '@/lib/submitLead';
+import { getAttribution } from '@/lib/first-touch';
 
 type CorporateFormValues = {
   companyName: string;
@@ -93,6 +94,8 @@ export default function CorporateForm(): JSX.Element {
           trainingDomain: values.trainingTopic,
           employeeCount:  values.teamSize,
           requirements:   values.requirements,
+          // first-touch attribution (the API stores first touch only for corporate leads)
+          ...getAttribution(),
         }),
       });
     } catch (err) {

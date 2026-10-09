@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
 import { createNotification } from '@/lib/notifications';
 import { MIN_FILL_MS, botCheck, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
@@ -98,11 +99,10 @@ export async function POST(req: NextRequest): Promise<Response> {
           formType: 'contact',
           status: 'new',
           message: d.message ?? null,
-          utmSource: d.utmSource ?? null,
-          utmMedium: d.utmMedium ?? null,
-          utmCampaign: d.utmCampaign ?? null,
-          referrer: d.referrer ?? null,
-          landingPage: d.landingPage ?? null,
+          // first + last touch and consent (best-effort fields, read from the raw body)
+          ...firstTouchData(body),
+          ...lastTouchData(body),
+          ...consentData(body),
           submitPath: d.submitPath ?? null,
           deviceType: d.deviceType ?? null,
         },

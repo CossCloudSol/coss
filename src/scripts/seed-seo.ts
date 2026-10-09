@@ -1,3 +1,4 @@
+import '../../scripts/lib/write-guard.cjs'; // dev DB by default; production needs COSS_DB=prod + ALLOW_PROD_WRITE=1
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -35,9 +36,9 @@ admin panel or by SQL will be reverted to the file's contents.
 
 Re-run with --confirm to proceed.
 
-This script targets whatever DATABASE_URL resolves to — assume production.
+Local runs use the dev DB (.env.development.local) by default; production needs COSS_DB=prod and ALLOW_PROD_WRITE=1.
 
-  npx dotenv-cli -e .env.development.local -- npx tsx src/scripts/seed-seo.ts --confirm
+  npx tsx src/scripts/seed-seo.ts --confirm
 `);
     process.exit(1);
   }

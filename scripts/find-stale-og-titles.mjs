@@ -18,6 +18,7 @@
  *   node scripts/find-stale-og-titles.mjs
  */
 
+import './lib/dev-env.cjs'; // local dev DB unless COSS_DB=prod (before Prisma loads .env)
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

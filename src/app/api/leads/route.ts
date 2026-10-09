@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
 import { createNotification } from '@/lib/notifications';
 import {
   MIN_FILL_MS,
@@ -216,11 +217,10 @@ export async function POST(req: NextRequest): Promise<Response> {
           formType: data.formType,
           status: 'new',
           message: data.message ?? null,
-          utmSource: data.utmSource ?? null,
-          utmMedium: data.utmMedium ?? null,
-          utmCampaign: data.utmCampaign ?? null,
-          referrer: data.referrer ?? null,
-          landingPage: data.landingPage ?? null,
+          // first + last touch and consent (best-effort fields, read from the raw body)
+          ...firstTouchData(body),
+          ...lastTouchData(body),
+          ...consentData(body),
           submitPath: data.submitPath ?? null,
           deviceType: data.deviceType ?? null,
         },
