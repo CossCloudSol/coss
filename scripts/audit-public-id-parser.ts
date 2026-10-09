@@ -2,6 +2,8 @@
 /**
  * scripts/audit-public-id-parser.ts
  *
+ * Reads production on purpose: run with COSS_DB=prod (local scripts default to the dev DB).
+ *
  * READ-ONLY audit of publicIdFromUrl() (src/lib/cloudinary.ts) against real
  * production data. Makes zero writes: no DB writes, no Cloudinary write/
  * delete calls — listAssets() only, which is a GET against the Admin API.
@@ -9,6 +11,7 @@
  * Usage: node scripts/audit-public-id-parser.ts
  */
 
+import './lib/dev-env.cjs'; // local dev DB unless COSS_DB=prod (before Prisma loads .env)
 import { PrismaClient } from '@prisma/client';
 import { publicIdFromUrl } from '../src/lib/cloudinary.js';
 import { listAssets, type CloudinaryAsset } from '../src/lib/cloudinary-admin.js';

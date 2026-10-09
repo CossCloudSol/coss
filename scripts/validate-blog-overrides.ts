@@ -8,6 +8,7 @@
 //
 // Usage: npx tsx scripts/validate-blog-overrides.ts
 // Exits non-zero if any entry fails to resolve.
+import './lib/dev-env.cjs'; // local dev DB unless COSS_DB=prod (before Prisma loads .env)
 import { PrismaClient } from '@prisma/client'
 import { getPublishedCoursesForMatching } from '../src/lib/course-queries'
 import { OVERRIDES, resolveOverride, type CalloutCourseInput } from '../src/lib/blog-course-callout'
