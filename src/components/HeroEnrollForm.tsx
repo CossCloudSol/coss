@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { submitLead, type Branch } from '@/lib/submitLead';
 import { rules } from '@/lib/lead-form-rules';
 import { useLeadForm } from '@/lib/use-lead-form';
+import WhatsAppOptIn from '@/components/WhatsAppOptIn';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -18,6 +19,8 @@ import { goToThankYou } from '@/lib/lead-thank-you';
 const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 
 type HeroFormValues = {
+  /** 'yes' only when the optional WhatsApp box is ticked. */
+  whatsappOptIn: string;
   name: string;
   phone: string;
   inquiryType: string;
@@ -25,6 +28,7 @@ type HeroFormValues = {
 };
 
 const heroFormSchema = {
+  whatsappOptIn: [],
   name: [rules.name()],
   phone: [rules.phone()],
   inquiryType: [],
@@ -87,6 +91,7 @@ export default function HeroEnrollForm(): JSX.Element {
       branch: BRANCH_API_VALUE[values.branch],
       formType: 'hero_demo',
       bot: botFields(),
+      whatsappOptIn: values.whatsappOptIn === 'yes',
     });
     if (result.ok) {
       goToThankYou('hero_demo');
@@ -261,6 +266,8 @@ export default function HeroEnrollForm(): JSX.Element {
         </p>
       ) : null}
 
+      <WhatsAppOptIn style={{ color: 'rgba(255,255,255,0.8)' }} />
+
       <button
         type="submit"
         disabled={isSubmitting}
@@ -295,7 +302,9 @@ export default function HeroEnrollForm(): JSX.Element {
           <>Book my free demo</>
         )}
       </button>
-      <FormPrivacyNote />
+      <div style={{ color: 'rgba(255,255,255,0.7)' }}>
+        <FormPrivacyNote />
+      </div>
 
       {state.kind === 'error' ? (
         <p

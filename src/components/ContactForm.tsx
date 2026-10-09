@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { getFirstTouch } from '@/lib/first-touch';
+import { getAttribution, getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
 import { trackLeadEvent } from '@/lib/submitLead';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
+import WhatsAppOptIn, { optInFromForm } from '@/components/WhatsAppOptIn';
 import { goToThankYou } from '@/lib/lead-thank-you';
 
 const labelStyle: React.CSSProperties = {
@@ -43,11 +44,9 @@ export default function ContactForm() {
         body: JSON.stringify({
           ...botFields(),
           name, phone, email, subject, branch, message,
-          utmSource: firstTouch?.utmSource,
-          utmMedium: firstTouch?.utmMedium,
-          utmCampaign: firstTouch?.utmCampaign,
-          referrer: firstTouch?.referrer ?? undefined,
-          landingPage: firstTouch?.landingPage,
+          // first + last touch (utm_*, gclid, fbclid, referrer, landing page)
+          ...getAttribution(),
+          whatsappOptIn: optInFromForm(e.currentTarget),
           submitPath,
           deviceType: detectDeviceType(),
         }),
@@ -134,6 +133,7 @@ export default function ContactForm() {
           {errorMsg}
         </div>
       )}
+      <WhatsAppOptIn style={{ marginBottom: '12px' }} />
       <button
         type="submit"
         disabled={status === 'loading'}

@@ -5,6 +5,7 @@ import { submitLead, type Branch } from '@/lib/submitLead';
 import type { CourseGroup } from '@/data/course-options';
 import { rules } from '@/lib/lead-form-rules';
 import { useLeadForm } from '@/lib/use-lead-form';
+import WhatsAppOptIn from '@/components/WhatsAppOptIn';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
@@ -16,6 +17,8 @@ import { goToThankYou } from '@/lib/lead-thank-you';
 const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 
 type DemoFormValues = {
+  /** 'yes' only when the optional WhatsApp box is ticked. */
+  whatsappOptIn: string;
   name: string;
   phone: string;
   course: string;
@@ -23,6 +26,7 @@ type DemoFormValues = {
 };
 
 const demoFormSchema = {
+  whatsappOptIn: [],
   name: [rules.name()],
   phone: [rules.phone()],
   course: [],
@@ -163,6 +167,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       branch: BRANCH_API_VALUE[values.branch],
       formType: 'demo',
       bot: botFields(),
+      whatsappOptIn: values.whatsappOptIn === 'yes',
     });
     if (result.ok) {
       goToThankYou('demo');
@@ -355,6 +360,8 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
           {errors.branch.message}
         </p>
       ) : null}
+
+      <WhatsAppOptIn />
 
       <button
         type="submit"

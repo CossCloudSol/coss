@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { firstTouchData } from '@/lib/attribution';
 import { createNotification } from '@/lib/notifications';
 import { MIN_FILL_MS, botCheck, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
@@ -145,6 +146,9 @@ export async function POST(req: NextRequest): Promise<Response> {
         employeeCount: data.employeeCount,
         requirements: data.requirements ?? null,
         status: 'new',
+        // first-touch attribution and consent (submitted next to the privacy notice)
+        ...firstTouchData(body),
+        consentAt: new Date(),
       },
       select: { id: true },
     });

@@ -4,7 +4,7 @@
  * empty-string-as-undefined coercion, and error extraction live in one place.
  */
 
-import { getFirstTouch } from '@/lib/first-touch';
+import { getAttribution, getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
 import { normalizeIndianMobile } from '@/lib/lead-checks';
 import type { BotFields } from '@/components/HoneypotField';
@@ -24,6 +24,8 @@ export interface LeadSubmitInput {
   formType: FormType;
   /** From useBotGuard().botFields() at submit time. */
   bot: BotFields;
+  /** The optional "Send me batch updates on WhatsApp" box; true only when ticked. */
+  whatsappOptIn?: boolean;
 }
 
 export type LeadSubmitResult =
@@ -87,11 +89,9 @@ export async function submitLead(
     branch: input.branch,
     message: emptyToUndefined(input.message),
     formType: input.formType,
-    utmSource: firstTouch?.utmSource,
-    utmMedium: firstTouch?.utmMedium,
-    utmCampaign: firstTouch?.utmCampaign,
-    referrer: firstTouch?.referrer ?? undefined,
-    landingPage: firstTouch?.landingPage,
+    // first + last touch (utm_*, gclid, fbclid, referrer, landing page)
+    ...getAttribution(),
+    whatsappOptIn: input.whatsappOptIn === true,
     submitPath: window.location.pathname,
     deviceType: detectDeviceType(),
   };

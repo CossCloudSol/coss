@@ -6,6 +6,7 @@ import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/l
 import WhatsAppLink from '@/components/WhatsAppLink'
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField'
 import FormPrivacyNote from '@/components/FormPrivacyNote'
+import WhatsAppOptIn, { optInFromForm } from '@/components/WhatsAppOptIn'
 import { goToThankYou } from '@/lib/lead-thank-you'
 
 interface Props {
@@ -50,6 +51,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
       branch: branch as Branch,
       formType: 'demo',
       bot: botFields(),
+      whatsappOptIn: optInFromForm(e.currentTarget),
     })
     setState(result.ok ? { kind: 'success' } : { kind: 'error', message: result.message })
     if (result.ok) goToThankYou('demo')
@@ -149,6 +151,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           </p>
         )}
 
+        <WhatsAppOptIn style={{ marginBottom: '8px' }} />
         <button
           type="submit"
           disabled={isSubmitting}
