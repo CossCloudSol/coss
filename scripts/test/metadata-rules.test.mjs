@@ -31,7 +31,7 @@ test('one viewport and one Search Console tag per page', () => {
 
 test('/blog?tag= is noindex; the category breadcrumb links to the category', () => {
   const mw = fs.readFileSync('src/middleware.ts', 'utf8');
-  assert.match(mw, /'\/blog'\]/, '/blog is in the middleware matcher');
+  assert.match(mw, /'\/blog'[,\]]/, '/blog is in the middleware matcher');
   assert.match(mw, /searchParams\.has\('tag'\)\) res\.headers\.set\('X-Robots-Tag', 'noindex, follow'\)/);
   assert.doesNotMatch(fs.readFileSync('src/components/CourseCategoryPage.tsx', 'utf8'), /label: data\.name, href: '#'/);
 });
