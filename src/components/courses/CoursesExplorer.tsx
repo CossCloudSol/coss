@@ -518,7 +518,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
             {list.length === 0 && (
               <div className="rounded-2xl border border-dashed border-[#cfdadd] bg-white p-6 md:p-10 dark:border-slate-700 dark:bg-slate-900">
                 <NoResultsLead term={noResultsTerm} formId="courses_page_no_results">
-                  <button type="button" onClick={clearAll} className="text-sm font-bold text-[#005663] hover:underline">Clear filters</button>
+                  <button type="button" onClick={clearAll} className="text-sm font-bold text-[#005663] hover:underline dark:text-[#5ef0c8]">Clear filters</button>
                 </NoResultsLead>
               </div>
             )}
