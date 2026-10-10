@@ -18,20 +18,21 @@ const MENU_ID = 'explore-menu';
 // Fixed widths (em, left-aligned text) on the row's text boxes: when the web
 // font swaps in for its metric-matched fallback, text widths change by a few
 // px, and flexible boxes would move (layout shift). Fixed boxes don't.
+// Icon paths are from the approved design reference (24×24, stroke).
 const NAV_LINKS = [
-  { label: 'Batches', href: '/batches', width: 'w-[3.9em]' },
-  { label: 'Corporate', href: '/corporate-training', width: 'w-[4.7em]' },
-  { label: 'Reviews', href: '/student-reviews', width: 'w-[4em]' },
-  { label: 'Faculty', href: '/faculty', width: 'w-[3.5em]' },
-  { label: 'Placements', href: '/placements', width: 'w-[5.6em]' },
+  { label: 'Batches', href: '/batches', icon: 'M3 4h18v18H3zM16 2v4M8 2v4M3 10h18' },
+  { label: 'Corporate', href: '/corporate-training', icon: 'M3 21h18M5 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16M16 9h3a2 2 0 0 1 2 2v10M9 7h3M9 11h3M9 15h3' },
+  { label: 'Reviews', href: '/student-reviews', icon: 'M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z' },
+  { label: 'Faculty', href: '/faculty', icon: 'M22 10L12 5 2 10l10 5 10-5zM6 12v5c3 2 9 2 12 0v-5' },
+  { label: 'Placements', href: '/placements', icon: 'M3 7h18v13H3zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M3 13h18' },
 ] as const;
 
 /** Mobile drawer links: the main nav plus Blog (Blog is not in the desktop row). */
-const DRAWER_LINKS = [...NAV_LINKS, { label: 'Blog', href: '/blog' }] as const;
+const DRAWER_LINKS = [...NAV_LINKS.map(({ label, href }) => ({ label, href })), { label: 'Blog', href: '/blog' }] as const;
 
 interface SiteHeaderProps {
-  /** Course categories with courses, for the mobile drawer's chips. */
-  categories: Array<{ name: string; slug: string; count: number }>;
+  /** Server-rendered Popular / All course tabs for the mobile drawer (MobileMenuCourses). */
+  drawerCourses: ReactNode;
   /** Server-rendered Explore Courses panel (MegaMenuPanel). */
   megaMenu: ReactNode;
 }
@@ -45,7 +46,7 @@ interface SiteHeaderProps {
  * Breakpoints: ≥1280 full; 1100–1279 narrower search; 1024–1099 search icon;
  * <1024 mobile row (logo, search, call, menu) with a drawer.
  */
-export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
+export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -115,20 +116,37 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
 
   // ArrowDown on the button: focus the first category once the panel is shown.
   useEffect(() => {
-    if (menuOpen && focusFirstOnOpen.current) {
+    if (!menuOpen) return;
+    // Always opens on Popular courses.
+    activate(panelRef.current?.querySelector('[data-mega-cat="popular"]') ?? null);
+    if (focusFirstOnOpen.current) {
       focusFirstOnOpen.current = false;
       categoryLinks()[0]?.focus();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuOpen]);
 
   /* ── Explore Courses menu: hover/focus picks a category; arrows move ── */
-  function categoryLinks(): HTMLAnchorElement[] {
-    return Array.from(panelRef.current?.querySelectorAll<HTMLAnchorElement>('[data-mega-cat]') ?? []);
+  function categoryLinks(): HTMLElement[] {
+    return Array.from(panelRef.current?.querySelectorAll<HTMLElement>('[data-mega-cat]') ?? []);
   }
+  /** Shows a category's courses (CSS, via data-active) and marks its rail row as current. */
   function activate(el: Element | null) {
     const cat = el?.closest<HTMLElement>('[data-mega-cat]')?.dataset.megaCat;
     const root = panelRef.current?.querySelector<HTMLElement>('[data-mega]');
-    if (cat && root) root.dataset.active = cat;
+    if (!cat || !root || root.dataset.active === cat) return;
+    root.dataset.active = cat;
+    for (const row of categoryLinks()) {
+      if (row.dataset.megaCat === cat) row.setAttribute('aria-current', 'true');
+      else row.removeAttribute('aria-current');
+    }
+  }
+  /** A rail row selects its category; its page is reached from "View all" (links stay in the HTML for crawlers). */
+  function onPanelClick(e: React.MouseEvent) {
+    const row = (e.target as Element).closest<HTMLElement>('[data-mega-cat]');
+    if (!row || !panelRef.current?.contains(row)) return;
+    e.preventDefault();
+    activate(row);
   }
   function closeMenu(returnFocus: boolean) {
     setMenuOpen(false);
@@ -176,19 +194,19 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
       return;
     }
     const cats = categoryLinks();
-    const i = cats.indexOf(target as HTMLAnchorElement);
+    const i = cats.indexOf(target);
     if (i === -1) return;
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       cats[(i + (e.key === 'ArrowDown' ? 1 : cats.length - 1)) % cats.length].focus();
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      panelRef.current?.querySelector<HTMLAnchorElement>(`[data-mega-list="${target.dataset.megaCat}"] a`)?.focus();
+      panelRef.current?.querySelector<HTMLElement>(`[data-mega-list="${target.dataset.megaCat}"] a`)?.focus();
     }
   }
 
   const iconButton =
-    'flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[#cfdadd] bg-white text-[#005663] hover:border-[#005663] dark:border-slate-700 dark:bg-slate-900 dark:text-[#5ef0c8]';
+    'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#cfdadd] bg-white text-[#005663] hover:border-[#005663] dark:border-slate-700 dark:bg-slate-900 dark:text-[#5ef0c8]';
 
   // Both icons are in the HTML and CSS picks one (dark: variants), so the
   // button looks right before hydration and never shifts. The label follows
@@ -211,6 +229,8 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
       ref={headerRef}
       className={`sticky top-0 z-[1000] border-b border-[#e3eaec] lg:top-[-12px] dark:border-slate-800 ${scrolled ? 'shadow-[0_4px_24px_rgba(0,86,99,0.16)]' : ''}`}
     >
+      {/* Dims the page while the menu is open (a click on it closes the menu). */}
+      {menuOpen && <div aria-hidden="true" onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-[rgba(10,30,36,0.55)]" />}
       <div className="relative h-16 bg-white lg:h-[76px] lg:pt-3 dark:bg-slate-950">
         {/* The 64px content box: centred in the 76px row at rest, flush once stuck. */}
         <div className={`mx-auto flex h-16 max-w-[1280px] items-center gap-3 px-4 transition-transform duration-200 xl:gap-4 ${scrolled ? '' : 'lg:-translate-y-1.5'}`}>
@@ -237,7 +257,7 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
             aria-controls={MENU_ID}
             onClick={() => setMenuOpen((v) => !v)}
             onKeyDown={onExploreKeyDown}
-            className="hidden h-11 w-[134px] shrink-0 items-center gap-2 rounded-[10px] bg-[#e6f0f1] px-3 text-[15px] font-bold text-[#005663] hover:bg-[#d8e9eb] lg:flex min-[1100px]:w-[190px] dark:bg-slate-800 dark:text-[#5ef0c8]"
+            className="hidden h-[46px] w-[134px] shrink-0 items-center gap-2 rounded-xl bg-[#0a3d4a] px-3 text-[15px] font-bold text-white hover:bg-[#005663] lg:flex min-[1100px]:w-[190px] dark:bg-[#005663] dark:hover:bg-[#0a3d4a]"
           >
             <LayoutGrid className="h-[18px] w-[18px]" aria-hidden="true" />
             <span className="min-[1100px]:hidden">Courses</span>
@@ -250,14 +270,18 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
             <HeaderSearch placeholder="Search course" className="w-full" />
           </div>
 
-          <nav aria-label="Main navigation" className="ml-auto hidden items-center gap-2.5 lg:flex xl:ml-2 xl:gap-3.5">
+          {/* Icon above label; the current page gets a light-teal tile. Fixed widths: no shift when the font swaps in. */}
+          <nav aria-label="Main navigation" className="ml-auto hidden items-center gap-0.5 lg:flex xl:ml-2">
             {NAV_LINKS.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 aria-current={pathname === l.href ? 'page' : undefined}
-                className={`${l.width} whitespace-nowrap text-[14px] font-medium text-[#17262a] hover:text-[#b8531c] aria-[current=page]:text-[#b8531c] xl:text-[15px] dark:text-slate-200`}
+                className="flex h-[58px] w-[72px] flex-col items-center justify-center gap-1 rounded-xl text-[12.5px] font-semibold text-[#26383d] hover:bg-[#eaf4f5] hover:text-[#005663] aria-[current=page]:bg-[#eaf4f5] aria-[current=page]:text-[#005663] xl:w-[76px] xl:text-[13px] dark:text-slate-200 dark:hover:bg-slate-800 dark:aria-[current=page]:bg-slate-800 dark:aria-[current=page]:text-[#5ef0c8]"
               >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="text-[#005663] dark:text-[#5ef0c8]" aria-hidden="true">
+                  <path d={l.icon} />
+                </svg>
                 {l.label}
               </Link>
             ))}
@@ -286,9 +310,8 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
             {themeButton('lg:hidden')}
             <Link
               href={DEMO_HREF}
-              className="hidden h-11 w-[174px] items-center gap-2 whitespace-nowrap rounded-[10px] bg-[#b8531c] px-4 text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
+              className="hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
             >
-              <CalendarCheck className="h-[18px] w-[18px]" aria-hidden="true" />
               Book Free Demo
             </Link>
             <button
@@ -314,15 +337,16 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
           hidden={!menuOpen}
           onMouseOver={(e) => activate(e.target as Element)}
           onFocus={(e) => activate(e.target as Element)}
+          onClick={onPanelClick}
           onKeyDown={onPanelKeyDown}
           onBlur={(e) => {
             const next = e.relatedTarget as Node | null;
             if (next && !panelRef.current?.contains(next) && next !== exploreRef.current) setMenuOpen(false);
           }}
           // No display classes here: they would override the hidden attribute.
-          className="absolute inset-x-0 top-full px-4"
+          className="absolute inset-x-0 top-full px-4 pt-2.5"
         >
-          <div className="mx-auto max-w-[1248px] overflow-hidden rounded-b-2xl border border-t-0 border-[#e3eaec] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.18)] dark:border-slate-700 dark:bg-slate-900">
+          <div className="mx-auto max-w-[1248px] overflow-hidden rounded-[22px] bg-white shadow-[0_30px_80px_rgba(0,0,0,0.35)] dark:bg-slate-900">
             {megaMenu}
           </div>
         </div>
@@ -341,19 +365,7 @@ export default function SiteHeader({ categories, megaMenu }: SiteHeaderProps) {
               <input id="drawer-search" type="search" name="q" placeholder="Search course" autoComplete="off" className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none dark:text-slate-100" />
             </form>
 
-            <div>
-              <p className="mb-2.5 text-xs font-bold uppercase tracking-[1.2px] text-[#5f7075]">Explore courses</p>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((c) => (
-                  <Link key={c.slug} href={`/courses/${c.slug}`} className="flex min-h-[44px] items-center rounded-full border border-[#cfdadd] px-4 text-sm text-[#26383d] dark:border-slate-700 dark:text-slate-200">
-                    {c.name}
-                  </Link>
-                ))}
-                <Link href="/courses" className="flex min-h-[44px] items-center rounded-full bg-[#e6f0f1] px-4 text-sm font-bold text-[#005663]">
-                  All courses
-                </Link>
-              </div>
-            </div>
+            {drawerCourses}
 
             <ul className="border-t border-[#eef2f3] dark:border-slate-800">
               {DRAWER_LINKS.map((l) => (

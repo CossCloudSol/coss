@@ -1682,22 +1682,44 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 [data-strip-rotator][data-active="2"] > [data-strip-msg]:nth-child(3),
 [data-strip-rotator][data-active="3"] > [data-strip-msg]:nth-child(4) { display: flex; }
 
-/* Explore Courses mega-menu (MegaMenuPanel). Short classes on purpose: the
-   panel is in every page's HTML and RSC payload, so repeated utility strings
-   would add up. */
-.mm-cat { display: flex; min-height: 42px; align-items: center; justify-content: space-between; gap: 8px; border-radius: 10px; padding: 0 12px; font-size: 14px; color: #17262a; }
-.mm-cat:hover, .mm-course:hover { background: #f4f7f8; }
-.mm-cat small { flex-shrink: 0; font-size: 12px; color: #5f7075; }
-.mm-course { display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 10px; align-items: center; min-height: 44px; border-radius: 10px; padding: 6px 12px; }
-.mm-course > img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-.mm-course > span { display: flex; flex-direction: column; grid-column: 2; }
-.mm-course b { font-size: 14px; line-height: 1.35; color: #17262a; }
-.mm-course small { font-size: 12px; color: #4a5c61; }
+/* Explore Courses mega-menu v4 (MegaMenuPanel, MobileMenuCourses). Short
+   classes on purpose: the panel is in every page's HTML and RSC payload, so
+   repeated utility strings would add up. Colours come from the approved
+   design reference. */
+.mm-tile { position: relative; display: flex; flex: none; align-items: center; justify-content: center; }
+.mm-cat, .mm-pop { display: flex; width: 100%; min-height: 46px; align-items: center; gap: 10px; border: 0; border-radius: 12px; padding: 4px 10px; font-size: 14.5px; font-weight: 500; color: #26383d; background: transparent; cursor: pointer; text-decoration: none; }
+.mm-cat:hover { background: #fff; }
+.mm-pop { min-height: 58px; padding: 8px 10px; border: 1.5px solid #e3eaec; background: #fff; font-size: 15px; font-weight: 700; color: #0a3d4a; }
+.mm-pop:hover { border-color: #f3c7ad; }
+.mm-n { flex-shrink: 0; min-width: 22px; border-radius: 999px; background: #e3eaec; padding: 2px 7px; text-align: center; font-size: 12px; font-weight: 700; color: #4a5c61; }
+.mm-pop .mm-n { background: #fff; color: #8f3f14; }
+[data-mega][data-active="popular"] .mm-pop { border-color: #f3c7ad; background: #fdf0e8; box-shadow: none; }
+.mm-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.mm-card { position: relative; display: flex; min-height: 104px; box-sizing: border-box; align-items: center; gap: 16px; overflow: hidden; border: 1px solid #e3eaec; border-radius: 18px; background: #fff; padding: 16px 18px; color: #17262a; text-decoration: none; box-shadow: 0 10px 24px -18px rgba(10,61,74,.6); }
+.mm-card:hover { border-color: #9cc3c9; box-shadow: 0 16px 30px -18px rgba(10,61,74,.7); }
+.mm-card-shape { position: absolute; right: -40px; bottom: -50px; width: 120px; height: 120px; border-radius: 999px; opacity: .7; }
+.mm-card-body { position: relative; display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 6px; }
+.mm-card-name { font-size: 18px; font-weight: 700; line-height: 1.25; color: #0a3d4a; }
+.mm-card-track { font-size: 13.5px; line-height: 1.35; color: #4a5c61; }
+.mm-card-chips { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; font-weight: 700; }
+.mm-chip { display: inline-flex; align-items: center; gap: 5px; border-radius: 999px; padding: 4px 9px; }
+.mm-card-chev { position: relative; display: flex; width: 36px; height: 36px; flex: none; align-items: center; justify-content: center; border-radius: 999px; background: #fff; box-shadow: 0 2px 8px rgba(10,61,74,.14); }
+.mm-soon { display: flex; align-items: center; gap: 12px; border: 1px solid #e3eaec; border-radius: 14px; padding: 9px; color: #17262a; text-decoration: none; min-height: 52px; }
+.mm-soon:hover { border-color: #9cc3c9; }
+.mm-date { display: flex; width: 48px; height: 52px; flex: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; background: #0a3d4a; color: #fff; line-height: 1; }
 [data-mega-list] { display: none; }
 .dark .mm-cat { color: #e2e8f0; }
-.dark .mm-cat:hover, .dark .mm-course:hover { background: #1e293b; }
-.dark .mm-cat small, .dark .mm-course small { color: #94a3b8; }
-.dark .mm-course b { color: #f1f5f9; }
+.dark .mm-cat:hover { background: #1e293b; }
+.dark .mm-pop, .dark .mm-card, .dark .mm-soon { background: #0f172a; border-color: #334155; color: #f1f5f9; }
+.dark .mm-card-name, .dark .mm-pop { color: #f1f5f9; }
+.dark .mm-card-track { color: #cbd5e1; }
+.dark .mm-card-chev { background: #1e293b; }
+.dark .mm-n { background: #334155; color: #e2e8f0; }
+.dark [data-mega][data-active] [data-mega-cat] { color: #e2e8f0; }
+.dark [data-mega][data-active] [data-mega-cat][aria-current] { background: #1e293b; }
+
+/* Mobile drawer: single column cards. */
+.mm-drawer .mm-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
 
 /* Muted grey text (#5f7075) is AA on light surfaces; on dark ones use slate-400. */
 .dark .text-\[\#5f7075\] { color: #94a3b8; }
