@@ -5,7 +5,7 @@ import CallLink from '@/components/CallLink';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { BRAND_NAME, CONTACT_EMAIL, PRIMARY_PHONE, PRIMARY_PHONE_LABEL, REGISTERED_ADDRESS } from '@/lib/nap';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('refund-cancellation-policy');
 }

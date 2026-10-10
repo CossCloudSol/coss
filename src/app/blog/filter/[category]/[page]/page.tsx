@@ -12,7 +12,7 @@ import { BLOG_CATEGORIES, BlogIndexView, blogPageCount, getBlogIndexData } from 
  * prerendered here, so these views are served from cache instead of rendering
  * on each request as the old searchParams-based /blog did.
  */
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
 type Params = { category: string; page: string };
 

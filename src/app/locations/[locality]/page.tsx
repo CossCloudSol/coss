@@ -16,7 +16,7 @@ import MobileInlineDemo from '@/components/MobileInlineDemo';
 import { COURSE_GROUPS } from '@/data/course-options';
 import { getBranchHours } from '@/lib/branch-hours';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
 /**
  * Batch.centre is free-text and nullable, entered by hand in the admin

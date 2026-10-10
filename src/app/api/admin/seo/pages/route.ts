@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { revalidatePaths, getPageSeoRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -129,6 +130,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         keywords: typeof data.keywords === 'string' ? data.keywords : null,
       },
     });
+    await revalidatePaths(getPageSeoRevalidationPaths(created.pageSlug));
     return NextResponse.json(serialize(created), { status: 201 });
   } catch (err) {
     console.error('[POST /api/admin/seo/pages] failed:', err);

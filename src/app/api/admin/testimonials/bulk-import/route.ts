@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { revalidatePaths, getTestimonialRevalidationPaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,5 +30,6 @@ export async function POST(req: NextRequest) {
     skipDuplicates: true,
   })
 
+  await revalidatePaths(getTestimonialRevalidationPaths())
   return NextResponse.json({ ok: true, count: created.count })
 }

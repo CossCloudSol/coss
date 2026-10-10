@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { revalidatePaths, getHiringPartnerRevalidationPaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,6 +24,7 @@ export async function PATCH(
       ...(body.sortOrder !== undefined && { sortOrder: Number(body.sortOrder) }),
     },
   })
+  await revalidatePaths(getHiringPartnerRevalidationPaths())
   return NextResponse.json(partner)
 }
 
@@ -34,5 +36,6 @@ export async function DELETE(
   if (guard instanceof Response) return guard
 
   await prisma.hiringPartner.delete({ where: { id: params.id } })
+  await revalidatePaths(getHiringPartnerRevalidationPaths())
   return NextResponse.json({ ok: true })
 }
