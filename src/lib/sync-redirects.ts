@@ -35,7 +35,7 @@ const INFRA_REDIRECTS = [
   { source: '/salesforce-crm-training-institute-in-hyderabad',    destination: '/salesforce-training-institute-in-hyderabad', permanent: true },
   // WordPress taxonomy wildcard patterns (must be in config — DB is exact-match only)
   { source: '/category/:path*',                             destination: '/courses',                        permanent: true },
-  { source: '/tag/:path*',                                  destination: '/courses',                        permanent: true },
+  { source: '/tag/:path*',                                  destination: '/blog',                           permanent: true },
   { source: '/author/:path*',                               destination: '/',                               permanent: true },
   { source: '/training-institutes-in-hyderabad/:path*',     destination: '/courses',                        permanent: true },
   { source: '/coaching-centres-in-hyderabad/:path*',        destination: '/courses',                        permanent: true },

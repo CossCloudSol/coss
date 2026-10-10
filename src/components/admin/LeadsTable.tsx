@@ -28,8 +28,9 @@ import type {
   AdminLeadsListResponse,
 } from '@/app/api/admin/leads/route';
 import LeadDrawer from '@/components/admin/LeadDrawer';
-import { csvCell } from '@/lib/csv';
+import { csvCell, withCsvBom } from '@/lib/csv';
 import { nameLooksOff } from '@/lib/name-quality';
+import { touchLabel } from '@/lib/touch-label';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants / typed enums                                                   */
@@ -287,6 +288,8 @@ export function LeadsTable(): JSX.Element {
         'Source Form',
         'Created (ISO)',
         'UTM Source',
+        'Last Touch Source',
+        'First → Last Touch',
         'UTM Medium',
         'UTM Campaign',
         'Referrer',
@@ -306,6 +309,8 @@ export function LeadsTable(): JSX.Element {
         l.formType,
         new Date(l.createdAt).toISOString(),
         l.utmSource ?? '',
+        l.lastUtmSource ?? '',
+        touchLabel(l.utmSource, l.lastUtmSource),
         l.utmMedium ?? '',
         l.utmCampaign ?? '',
         l.referrer ?? '',
@@ -319,7 +324,8 @@ export function LeadsTable(): JSX.Element {
         .map((row) => row.map(csvEscape).join(','))
         .join('\r\n');
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      // BOM: without it Excel reads the file as ANSI and shows "→" as garbage.
+      const blob = new Blob([withCsvBom(csv)], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -686,7 +692,7 @@ function LeadRow({
 
       <td className="px-4 py-3">
         <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          {lead.utmSource || 'direct'}
+          {touchLabel(lead.utmSource, lead.lastUtmSource)}
         </span>
       </td>
 
@@ -1007,7 +1013,7 @@ function MobileLeadCard({
       <div className="mt-3 flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-2.5">
         <div className="flex items-center gap-1.5">
           <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-            {lead.utmSource || 'direct'}
+            {touchLabel(lead.utmSource, lead.lastUtmSource)}
           </span>
           <span className="rounded bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
             {lead.formType}

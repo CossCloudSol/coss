@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { revalidatePaths, SITEMAP_PATH } from '@/lib/revalidate'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -44,6 +45,7 @@ export async function PATCH(
         ...(changeFreq      !== undefined && { changeFreq:      String(changeFreq) }),
       },
     })
+    await revalidatePaths([SITEMAP_PATH])
     return NextResponse.json(updated)
   }
 
@@ -57,5 +59,6 @@ export async function PATCH(
       changeFreq:      changeFreq      !== undefined ? String(changeFreq)       : 'monthly',
     },
   })
+  await revalidatePaths([SITEMAP_PATH])
   return NextResponse.json(created)
 }

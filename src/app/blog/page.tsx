@@ -3,7 +3,7 @@ import { buildPageMetadata } from '@/lib/get-page-seo';
 import { BlogIndexView } from './blog-index';
 import PageSchema from '@/components/PageSchema';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
 // Static: this route no longer reads searchParams. Filtered and paginated
 // views (/blog?category=…, /blog?page=…) are rewritten in next.config.mjs to

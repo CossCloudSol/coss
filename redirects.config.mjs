@@ -339,7 +339,7 @@ export const REDIRECTS = [
       { source: "/blog/77674-2", destination: "/blog/master-aws-devops-in-hyderabad", permanent: true },
       // infrastructure redirects — wildcard (must stay after exact-match rules above),
       { source: '/category/:path*', destination: '/courses', permanent: true },
-      { source: '/tag/:path*', destination: '/courses', permanent: true },
+      { source: '/tag/:path*', destination: '/blog', permanent: true },
       { source: '/author/:path*', destination: '/', permanent: true },
       { source: '/training-institutes-in-hyderabad/:path*', destination: '/courses', permanent: true },
       { source: '/coaching-centres-in-hyderabad/:path*', destination: '/courses', permanent: true },

@@ -6,7 +6,7 @@ import { findTrainers, getYearsOfExperience, splitCommaList } from '@/lib/traine
 import { optimizeCldUrl } from '@/lib/cloudinary';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 

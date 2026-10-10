@@ -48,7 +48,7 @@ const INFRA_REDIRECTS = [
   { source: '/java-full-stack-training-institute-in-hyderabad',   destination: '/java-training-institute-in-hyderabad', permanent: true },
   { source: '/salesforce-crm-training-institute-in-hyderabad',    destination: '/salesforce-training-institute-in-hyderabad', permanent: true },
   { source: '/category/:path*',                             destination: '/courses',                        permanent: true },
-  { source: '/tag/:path*',                                  destination: '/courses',                        permanent: true },
+  { source: '/tag/:path*',                                  destination: '/blog',                           permanent: true },
   { source: '/author/:path*',                               destination: '/',                               permanent: true },
   { source: '/training-institutes-in-hyderabad/:path*',     destination: '/courses',                        permanent: true },
   { source: '/coaching-centres-in-hyderabad/:path*',        destination: '/courses',                        permanent: true },

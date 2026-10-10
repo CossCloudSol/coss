@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { revalidatePaths, getPageSeoRevalidationPaths } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -91,6 +92,7 @@ export async function PATCH(
   const pageSlug = joinSlug(params.slug);
   try {
     const updated = await prisma.pageSeo.update({ where: { pageSlug }, data });
+    await revalidatePaths(getPageSeoRevalidationPaths(pageSlug));
     return NextResponse.json({
       ...updated,
       updatedAt: updated.updatedAt.toISOString(),
@@ -117,6 +119,7 @@ export async function DELETE(
   const pageSlug = joinSlug(params.slug);
   try {
     await prisma.pageSeo.delete({ where: { pageSlug } });
+    await revalidatePaths(getPageSeoRevalidationPaths(pageSlug));
     return new NextResponse(null, { status: 204 });
   } catch (err) {
     if (

@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getSession } from '@/lib/session';
 import { requiredAccess, isAllowed, ADMIN_PATH_HEADER } from '@/lib/admin-access';
 import { COURSE_FILTER_PARAMS } from '@/lib/course-search';
+import { isScannerPath } from '@/lib/scanner-paths';
 
 /**
  * First layer for /admin/* pages and /api/admin/* routes, from the session
@@ -13,6 +14,15 @@ import { COURSE_FILTER_PARAMS } from '@/lib/course-search';
  */
 export async function middleware(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl;
+
+  // Scanner and old-WordPress probes: a cheap 404 here instead of a function run, a database query
+  // and a cached 404 in the catch-all routes. The paths are listed in config.matcher below.
+  if (isScannerPath(pathname)) {
+    return new NextResponse('Not found', {
+      status: 404,
+      headers: { 'Cache-Control': 'public, s-maxage=86400', 'Content-Type': 'text/plain; charset=utf-8' },
+    });
+  }
 
   // /courses filtered views (?q=, ?cat=, …) are the same static page filtered
   // on the client: keep them out of the index but let crawlers follow links.
@@ -65,5 +75,13 @@ export const config = {
    * (noindex header on filtered and tag views). Static assets served by Next under /_next/*
    * are excluded automatically by the App Router.
    */
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/courses', '/blog'],
+  matcher: [
+    '/admin/:path*', '/api/admin/:path*', '/courses', '/blog',
+    // scanner / old-WordPress probes (see src/lib/scanner-paths.ts; scripts/test/usage-plan.test.mjs keeps these in step)
+    '/wp-admin/:path*', '/wp-content/:path*', '/wp-includes/:path*', '/wp-json/:path*', '/wordpress/:path*',
+    '/.git/:path*', '/.aws/:path*', '/.ssh/:path*', '/cgi-bin/:path*', '/phpmyadmin/:path*', '/pma/:path*',
+    '/vendor/:path*', '/WebInterface/:path*', '/telescope/:path*', '/actuator/:path*',
+    '/.env', '/.env.(.*)', '/xmlrpc.php', '/wp-login.php', '/wp-config.php', '/server-status',
+    '/(.*)\\.php', '/(.*)\\.asp', '/(.*)\\.aspx', '/(.*)\\.axd', '/(.*)\\.jsp', '/(.*)\\.cgi',
+  ],
 };

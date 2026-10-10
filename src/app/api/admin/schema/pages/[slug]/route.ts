@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { revalidatePaths, getPageSeoRevalidationPaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,6 +34,7 @@ export async function PATCH(
         ...(body.schemaOverride !== undefined && { schemaOverride: body.schemaOverride || null }),
       },
     })
+    await revalidatePaths(getPageSeoRevalidationPaths(slug))
     return NextResponse.json(updated)
   }
 
@@ -44,5 +46,6 @@ export async function PATCH(
       schemaOverride: body.schemaOverride ?? null,
     },
   })
+  await revalidatePaths(getPageSeoRevalidationPaths(slug))
   return NextResponse.json(created)
 }

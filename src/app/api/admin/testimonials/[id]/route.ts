@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { revalidatePaths, getTestimonialRevalidationPaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,6 +31,7 @@ export async function PATCH(
     },
   })
 
+  await revalidatePaths(getTestimonialRevalidationPaths())
   return NextResponse.json(item)
 }
 
@@ -41,5 +43,6 @@ export async function DELETE(
   if (guard instanceof Response) return guard
 
   await prisma.testimonial.delete({ where: { id: params.id } })
+  await revalidatePaths(getTestimonialRevalidationPaths())
   return NextResponse.json({ ok: true })
 }
