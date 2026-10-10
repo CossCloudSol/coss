@@ -50,6 +50,20 @@ test('smoke script keeps the sitemap size check and the --quick mode', () => {
   assert.match(s, /^const routes = JSON\.parse\(readFileSync\(join\(__dirname, 'routes\.json'\)/m, 'default mode still walks routes.json (/verify-prod)');
 });
 
+test('touchLabel: first → last touch for the admin leads table and CSV', async () => {
+  const { touchLabel } = await import('../../src/lib/touch-label.ts');
+  assert.equal(touchLabel(null, null), 'direct');
+  assert.equal(touchLabel('google', null), 'google'); // lead from before the attribution release
+  assert.equal(touchLabel('google', ''), 'google');
+  assert.equal(touchLabel(null, 'test'), 'direct → test');
+  assert.equal(touchLabel('google', 'Google'), 'google'); // same source once
+  assert.equal(touchLabel('chatgpt.com', 'facebook'), 'chatgpt.com → facebook');
+  const table = fs.readFileSync('src/components/admin/LeadsTable.tsx', 'utf8');
+  assert.equal((table.match(/touchLabel\(lead\.utmSource, lead\.lastUtmSource\)/g) || []).length, 2, 'table row + mobile card');
+  assert.match(table, /'First → Last Touch'/);
+  assert.match(fs.readFileSync('src/app/api/admin/leads/route.ts', 'utf8'), /lastUtmSource: lead\.lastUtmSource/);
+});
+
 test('pageSeoSlugToPaths: PageSeo slug → public path', () => {
   assert.deepEqual(pageSeoSlugToPaths('home'), ['/']);
   assert.deepEqual(pageSeoSlugToPaths(''), ['/']);
