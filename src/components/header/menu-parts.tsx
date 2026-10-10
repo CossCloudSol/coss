@@ -77,7 +77,8 @@ export function MenuCourseCard({ card }: { card: MenuCardData }): JSX.Element {
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
                   <path d="M3 4h18v17H3zM3 10h18" />
                 </svg>
-                Next batch {batch}
+                {/* Non-breaking spaces: if the chip has to wrap, it breaks after "Next batch", not inside the date. */}
+                Next batch {batch.replace(/ /g, '\u00A0')}
               </span>
             )}
             {card.popular && (
