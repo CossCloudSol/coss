@@ -1718,6 +1718,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .mm-scroll::-webkit-scrollbar-thumb { background: #cfdadd; border-radius: 3px; }
 .dark .mm-scroll::-webkit-scrollbar-thumb { background: #475569; }
 .mm-card-chev { position: relative; display: flex; width: 36px; height: 36px; flex: none; align-items: center; justify-content: center; border-radius: 999px; background: #fff; box-shadow: 0 2px 8px rgba(10,61,74,.14); }
+/* Callback form in the panel: a teal card in both themes. The opt-in tick is white on it
+   (the global accent #005663 would vanish against the teal). */
+.mm-callback input[type="checkbox"] { accent-color: #ffffff !important; }
 .mm-soon { display: flex; align-items: center; gap: 12px; border: 1px solid #e3eaec; border-radius: 14px; padding: 9px; color: #17262a; text-decoration: none; min-height: 52px; }
 .mm-soon:hover { border-color: #9cc3c9; }
 .mm-date { display: flex; width: 48px; height: 52px; flex: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; background: #0a3d4a; color: #fff; line-height: 1; }

@@ -67,11 +67,15 @@ export default function MegaMenuCallback(): JSX.Element {
       onSubmit={onSubmit}
       onFocus={markStarted}
       noValidate
-      className="relative flex flex-col gap-[11px] overflow-hidden bg-[linear-gradient(160deg,#00707f,#0a3d4a)] p-[22px] text-white"
+      // shrink-0 and no overflow-hidden on the form itself: the column scrolls as a whole,
+      // and a flex child that may shrink (overflow-hidden lets it) got cut off after "Your name".
+      className="mm-callback relative flex shrink-0 flex-col gap-[11px] bg-[linear-gradient(160deg,#00707f,#0a3d4a)] p-[22px] text-white [color-scheme:light]"
     >
-      <span aria-hidden="true" className="absolute -right-[60px] -top-[60px] h-[180px] w-[180px] rounded-full border-[30px] border-white/[0.06]" />
+      <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute -right-[60px] -top-[60px] h-[180px] w-[180px] rounded-full border-[30px] border-white/[0.06]" />
+      </span>
       <HoneypotField inputRef={honeypotRef} />
-      <span className="relative text-[11px] font-bold tracking-[0.1em] text-[#f3a57a]">FREE CAREER COUNSELLING</span>
+      <span className="relative text-[11px] font-bold tracking-[0.1em] text-[#ffe3d1]">FREE CAREER COUNSELLING</span>
       <p className="relative font-heading text-xl font-extrabold leading-tight">Not sure which course fits you?</p>
       <p className="relative text-sm leading-normal text-[#d6e8eb]">Leave your number. A counsellor calls back and matches a course to your background.</p>
       {state.kind === 'success' ? (

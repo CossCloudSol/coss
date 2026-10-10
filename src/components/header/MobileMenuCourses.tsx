@@ -25,7 +25,7 @@ export default function MobileMenuCourses({ data }: { data: MenuData }): JSX.Ele
           <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4a5c61] dark:text-slate-400">{g.title}</p>
           <div className="mm-grid">
             {g.categories.map((c) => (
-              <MenuCourseCard key={c.slug} card={{ href: `/courses/${c.slug}`, label: c.name, icon: c.icon, track: `${c.count} ${c.count === 1 ? 'course' : 'courses'}` }} />
+              <MenuCourseCard key={c.slug} card={{ href: c.href, label: c.name, icon: c.icon, track: `${c.count} ${c.count === 1 ? 'course' : 'courses'}` }} />
             ))}
           </div>
         </div>

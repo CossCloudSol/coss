@@ -1,9 +1,16 @@
 import type { SearchIndex } from '@/lib/course-search';
 import { categoryMenuStyle, MENU_GROUP_TITLES, type MenuGroup, type MenuIconKey } from '@/lib/menu-icons';
 import { resolvePopular, type PopularItem } from '@/lib/popular-courses';
+import { finalHref } from '@/lib/redirect-resolve';
+import { REDIRECTS } from '../../redirects.config.mjs';
+
+/** Every link in the menu goes straight to its final URL (no 308 hop). */
+const final = (path: string) => finalHref(path, REDIRECTS);
 
 export interface MenuCategory {
   slug: string;
+  /** The category page, as a final URL. */
+  href: string;
   name: string;
   count: number;
   icon: MenuIconKey;
@@ -24,13 +31,14 @@ export interface MenuData {
 
 /** Everything the desktop panel and the mobile drawer show, built once from the catalogue. */
 export function buildMenuData(index: SearchIndex): MenuData {
-  const { items: popular } = resolvePopular(index);
+  const popular = resolvePopular(index).items.map((p) => ({ ...p, href: final(p.href) }));
   const popularSlugs = new Set(popular.map((p) => p.courseSlug).filter((s): s is string => !!s));
 
   const categories: Array<MenuCategory & { group: MenuGroup; order: number }> = index.categories.map((c) => {
     const style = categoryMenuStyle(c.slug);
     return {
       slug: c.slug,
+      href: final(`/courses/${c.slug}`),
       name: c.name,
       count: c.count,
       icon: style.icon,
@@ -39,7 +47,7 @@ export function buildMenuData(index: SearchIndex): MenuData {
       order: style.order,
       courses: index.courses
         .filter((x) => x.categorySlug === c.slug)
-        .map((x) => ({ id: x.id, label: x.title, href: x.url, track: '', nextBatch: x.nextBatch, popular: popularSlugs.has(x.slug) })),
+        .map((x) => ({ id: x.id, label: x.title, href: final(x.url), track: '', nextBatch: x.nextBatch, popular: popularSlugs.has(x.slug) })),
     };
   });
 

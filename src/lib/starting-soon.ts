@@ -3,6 +3,9 @@ import { prisma } from '@/lib/db';
 import { COURSE_CATALOG_TAG } from '@/lib/course-search';
 import { courseCanonicalPath } from '@/lib/course-canonical';
 import { memoDuringBuild } from '@/lib/build-memo';
+import { finalHref } from '@/lib/redirect-resolve';
+import { formatBatchTime } from '@/lib/batch-time';
+import { REDIRECTS } from '../../redirects.config.mjs';
 import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 
 /** One live batch for the menu's "Starting soon" list: branch and time only, no seat counts. */
@@ -14,7 +17,7 @@ export interface StartingSoonBatch {
   href: string;
   /** "Ameerpet" / "Dilsukhnagar" / "Live online". */
   where: string;
-  /** The batch's schedule text from admin, e.g. "10:00 AM". */
+  /** The batch's time, formatted "10–11 AM"; empty when the schedule has no readable time. */
   time: string;
 }
 
@@ -42,9 +45,9 @@ async function loadStartingSoon(): Promise<StartingSoonBatch[]> {
     id: b.id,
     startDate: b.startDate.toISOString(),
     course: b.course.title.trim(),
-    href: courseCanonicalPath(b.course),
+    href: finalHref(courseCanonicalPath(b.course), REDIRECTS),
     where: /online/i.test(b.mode) || !b.centre ? 'Live online' : b.centre.trim(),
-    time: b.schedule.trim(),
+    time: formatBatchTime(b.schedule),
   }));
 }
 

@@ -46,7 +46,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
           </span>
           <span className="flex flex-1 flex-col gap-0.5 text-left">
             <span>Popular courses</span>
-            <span className="text-xs font-medium text-[#4a5c61]">A short list to start with</span>
+            <span className="text-xs font-medium text-[#4a5c61] dark:text-slate-300">A short list to start with</span>
           </span>
           <span className="mm-n">{data.popular.length}</span>
         </button>
@@ -57,7 +57,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
               // A plain <a>, not <Link>: Link navigates on click before the panel's
               // handler can turn the click into "show this category". The href stays
               // for crawlers, middle-click and no-JS.
-              <a key={c.slug} href={`/courses/${c.slug}`} data-mega-cat={c.slug} className="mm-cat">
+              <a key={c.slug} href={c.href} data-mega-cat={c.slug} className="mm-cat">
                 <IconTile icon={c.icon} size={36} radius={10} iconSize={18} />
                 <span className="flex-1 text-left">{c.name}</span>
                 <span className="mm-n">{c.count}</span>
@@ -79,7 +79,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
         </div>
         {categories.map((c) => (
           <div key={c.slug} data-mega-list={c.slug}>
-            <ListHead icon={c.icon} name={c.name} blurb={c.blurb} allHref={`/courses/${c.slug}`} allLabel={`View all ${c.count}`} />
+            <ListHead icon={c.icon} name={c.name} blurb={c.blurb} allHref={c.href} allLabel={`View all ${c.count}`} />
             <div className="mm-grid">
               {c.courses.map((k) => (
                 <MenuCourseCard key={k.id} card={{ href: k.href, label: k.label, icon: c.icon, nextBatch: k.nextBatch, popular: k.popular }} />
@@ -107,7 +107,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
       <div className="mm-scroll flex min-h-0 flex-col overflow-y-auto overscroll-contain border-l border-[#e3eaec] dark:border-slate-700">
         <MegaMenuCallback />
         {soon.length > 0 && (
-          <div className="flex flex-col gap-2.5 p-[18px]">
+          <div className="flex shrink-0 flex-col gap-2.5 p-[18px]">
             <div className="flex items-baseline justify-between">
               <span className="font-heading text-base font-extrabold text-[#0a3d4a] dark:text-white">Starting soon</span>
               <Link href="/batches" className="flex min-h-[44px] items-center text-[13px] font-bold text-[#b8531c] hover:text-[#8f3f14] dark:text-[#f3a57a]">
