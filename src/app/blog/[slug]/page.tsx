@@ -27,7 +27,7 @@ import { blogPosting, jsonLdGraph } from '@/lib/structured-data';
 import { deriveCategoryFromSlug, relatedPosts } from '@/lib/blog-categories';
 import { getBlogIndexData } from '../blog-index';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
 /**
  * Normalises a frontmatter value to a safe display string.

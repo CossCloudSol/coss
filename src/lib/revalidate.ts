@@ -2,6 +2,7 @@ import { revalidatePath as nextRevalidatePath, revalidateTag } from 'next/cache'
 import { COURSE_CATALOG_TAG } from '@/lib/course-search';
 import { prisma } from '@/lib/db';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
+import { pageSeoSlugToPaths } from '@/lib/page-seo-rules';
 
 export interface RevalidateResult {
   path: string;
@@ -132,6 +133,24 @@ export const BLOG_POSTS_TAG = 'blog-posts';
 export function getBlogRevalidationPaths(post: BlogRevalidationInput): string[] {
   return ['/blog/' + post.slug, '/blog', '/'];
 }
+
+/** The public path of a PageSeo row (see pageSeoSlugToPaths). */
+export function getPageSeoRevalidationPaths(pageSlug: string): string[] {
+  return pageSeoSlugToPaths(pageSlug);
+}
+
+/** Pages that list testimonials with page-level caching (the course and category pages refresh with the catalogue tag). */
+export function getTestimonialRevalidationPaths(): string[] {
+  return ['/corporate-training', '/'];
+}
+
+/** Pages that list hiring partners with page-level caching. */
+export function getHiringPartnerRevalidationPaths(): string[] {
+  return ['/corporate-training', '/placements', '/'];
+}
+
+/** sitemap.xml itself (PageSeo sitemap include / priority / frequency saves). */
+export const SITEMAP_PATH = '/sitemap.xml';
 
 /** The faculty roster has no per-trainer detail page — every write invalidates the same two listing pages. */
 export function getTrainerRevalidationPaths(): string[] {

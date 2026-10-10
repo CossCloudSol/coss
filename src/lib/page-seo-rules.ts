@@ -8,6 +8,19 @@ export const PAGE_SLUG_PATHS: Readonly<Record<string, string>> = {
 };
 
 /**
+ * The public path of a PageSeo row, for on-demand revalidation after an admin SEO / schema save
+ * (the page reads its PageSeo row at render time, so only a revalidation shows an edit before the
+ * page's own timer runs out): 'home' → '/', 'about' → '/about-us', 'blog/x' → '/blog/x',
+ * '/foo' or 'foo' → '/foo'. Returns [] for a slug that can't be a concrete path.
+ */
+export function pageSeoSlugToPaths(pageSlug: string): string[] {
+  const slug = pageSlug.trim().replace(/^\/+|\/+$/g, '');
+  if (slug === '' || slug === 'home') return ['/'];
+  if (/[[\]]/.test(slug)) return [];
+  return ['/' + (PAGE_SLUG_PATHS[slug] ?? slug)];
+}
+
+/**
  * OG image priority: an admin's own per-page image, then the page's image (course
  * banner, post thumbnail), then the site default. A stored per-page value equal to the
  * site default doesn't count as the admin's own: the SEO seed wrote the default into

@@ -9,7 +9,7 @@ import { LOCALITIES, LOCALITY_TOPIC_PAGES, TOPIC_LABELS, getLocalityBySlug, type
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { SITE_URL, breadcrumbList, collectionPage, jsonLdGraph } from '@/lib/structured-data';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
 export async function generateMetadata(): Promise<Metadata> {
   // Admin SEO for "locations" wins when set; this is the fallback.

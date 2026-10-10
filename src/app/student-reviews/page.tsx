@@ -6,7 +6,7 @@ import { getGoogleRating } from '@/lib/google-rating';
 import GoogleRatingBadge from '@/components/GoogleRatingBadge';
 import PageSchema from '@/components/PageSchema';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('student-reviews');
 }

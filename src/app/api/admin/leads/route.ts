@@ -23,6 +23,7 @@ export interface AdminLeadListItem {
   status: string;
   createdAt: string; // ISO
   utmSource: string | null;
+  lastUtmSource: string | null;
   utmMedium: string | null;
   utmCampaign: string | null;
   referrer: string | null;
@@ -139,6 +140,7 @@ export async function GET(req: NextRequest): Promise<Response> {
           status: true,
           createdAt: true,
           utmSource: true,
+          lastUtmSource: true,
           utmMedium: true,
           utmCampaign: true,
           referrer: true,
@@ -165,6 +167,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         status: lead.status,
         createdAt: lead.createdAt.toISOString(),
         utmSource: lead.utmSource,
+        lastUtmSource: lead.lastUtmSource,
         utmMedium: lead.utmMedium,
         utmCampaign: lead.utmCampaign,
         referrer: lead.referrer,

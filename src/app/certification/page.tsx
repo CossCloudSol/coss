@@ -5,7 +5,7 @@ import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import PageSchema from '@/components/PageSchema';
 
-export const revalidate = 86400;
+export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata('certification');
 }

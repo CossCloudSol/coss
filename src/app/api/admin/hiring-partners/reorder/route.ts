@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { prisma } from '@/lib/db'
+import { revalidatePaths, getHiringPartnerRevalidationPaths } from '@/lib/revalidate'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,5 +20,6 @@ export async function POST(req: NextRequest) {
       })
     )
   )
+  await revalidatePaths(getHiringPartnerRevalidationPaths())
   return NextResponse.json({ ok: true })
 }
