@@ -43,7 +43,8 @@ export default function MegaMenuCallback(): JSX.Element {
     const result = await submitLead({
       name: name.trim(),
       phone: phone.trim(),
-      message: 'Callback requested from the Explore Courses menu',
+      // The lead record has no source field; the message tells admin where it came from.
+      message: '[mega-menu-callback] Callback requested from the Explore Courses menu',
       formType: 'contact',
       bot: botFields(),
       whatsappOptIn: optInFromForm(e.currentTarget),

@@ -10,7 +10,9 @@ import type { MenuIconKey } from '@/lib/menu-icons';
  * so it can't give an exact, ordered set of 12.
  *
  * Slugs below are DB course slugs. Where the catalogue holds more than one
- * course for the same name, the one with the flat landing-page URL is used.
+ * course for the same name, the one used is live in the sitemap, returns 200
+ * with a self-referencing canonical and is not a redirect source or noindex
+ * (checked 11 Oct 2026). Re-check when redirects or SLUG_MAP change.
  * `kind: 'category'` is a category page, for an entry that is a whole track.
  */
 export interface PopularEntry {
@@ -30,7 +32,7 @@ export const POPULAR_COURSES: readonly PopularEntry[] = [
   { label: 'Data Science', kind: 'course', slug: 'data-science-training-institute-in-hyderabad', icon: 'data' },
   { label: 'Data Analytics', kind: 'course', slug: 'data-analytics-training-institute-in-hyderabad', icon: 'data' },
   { label: 'Cyber Security', kind: 'course', slug: 'cyber-security-training-institute-in-hyderabad', icon: 'cyber' },
-  { label: 'Ethical Hacking', kind: 'course', slug: 'ethical-hacking-training-institute-in-hyderabad', icon: 'hack' },
+  { label: 'Ethical Hacking', kind: 'course', slug: 'ethical-hacking-cyber-security-professional', icon: 'hack' },
   { label: 'Digital Marketing', kind: 'course', slug: 'digital-marketing-training-in-hyderabad', icon: 'digital' },
   { label: 'HR (Human Resource)', kind: 'category', slug: 'human-resource', icon: 'hr' },
   { label: 'Python Full Stack', kind: 'course', slug: 'full-stack-python-training-in-hyderabad', icon: 'prog' },

@@ -46,7 +46,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
           </span>
           <span className="flex flex-1 flex-col gap-0.5 text-left">
             <span>Popular courses</span>
-            <span className="text-xs font-medium text-[#4a5c61]">Our featured courses</span>
+            <span className="text-xs font-medium text-[#4a5c61]">A short list to start with</span>
           </span>
           <span className="mm-n">{data.popular.length}</span>
         </button>
