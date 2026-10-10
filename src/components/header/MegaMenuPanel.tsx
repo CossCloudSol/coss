@@ -37,7 +37,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
       <style dangerouslySetInnerHTML={{ __html: rules }} />
 
       {/* Rail */}
-      <div aria-label="Course categories" role="group" className="flex min-h-0 flex-col gap-2.5 overflow-y-auto overscroll-contain border-r border-[#e3eaec] bg-[#f6f9fa] px-3 py-4 dark:border-slate-700 dark:bg-slate-800">
+      <div aria-label="Course categories" role="group" className="mm-scroll flex min-h-0 flex-col gap-2.5 overflow-y-auto overscroll-contain border-r border-[#e3eaec] bg-[#f6f9fa] px-3 py-4 dark:border-slate-700 dark:bg-slate-800">
         <button type="button" data-mega-cat={POPULAR} aria-current="true" className="mm-pop">
           <span className="mm-tile" style={{ width: 40, height: 40, borderRadius: 12, background: '#b8531c', color: '#fff' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -54,18 +54,21 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
           <div key={g.group} className="flex flex-col gap-0.5">
             <span className="px-2.5 pb-1 pt-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[#4a5c61] dark:text-slate-400">{g.title}</span>
             {g.categories.map((c) => (
-              <Link key={c.slug} href={`/courses/${c.slug}`} data-mega-cat={c.slug} className="mm-cat">
+              // A plain <a>, not <Link>: Link navigates on click before the panel's
+              // handler can turn the click into "show this category". The href stays
+              // for crawlers, middle-click and no-JS.
+              <a key={c.slug} href={`/courses/${c.slug}`} data-mega-cat={c.slug} className="mm-cat">
                 <IconTile icon={c.icon} size={36} radius={10} iconSize={18} />
                 <span className="flex-1 text-left">{c.name}</span>
                 <span className="mm-n">{c.count}</span>
-              </Link>
+              </a>
             ))}
           </div>
         ))}
       </div>
 
       {/* Course cards */}
-      <div className="min-h-0 overflow-y-auto overscroll-contain px-[26px] py-6">
+      <div className="mm-scroll min-h-0 overflow-y-auto overscroll-contain px-[26px] py-6">
         <div data-mega-list={POPULAR}>
           <ListHead icon="popular" name="Popular courses" blurb="A short list to start with. Every course has a free demo class." allHref="/courses" allLabel="Browse all courses" />
           <div className="mm-grid">
@@ -101,7 +104,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
       </div>
 
       {/* Callback + starting soon */}
-      <div className="flex min-h-0 flex-col overflow-y-auto overscroll-contain border-l border-[#e3eaec] dark:border-slate-700">
+      <div className="mm-scroll flex min-h-0 flex-col overflow-y-auto overscroll-contain border-l border-[#e3eaec] dark:border-slate-700">
         <MegaMenuCallback />
         {soon.length > 0 && (
           <div className="flex flex-col gap-2.5 p-[18px]">
@@ -148,7 +151,7 @@ function ListHead({ icon, name, blurb, allHref, allLabel }: { icon: MenuIconKey;
           {blurb && <p className="mt-1 text-sm text-[#4a5c61] dark:text-slate-300">{blurb}</p>}
         </div>
       </div>
-      <Link href={allHref} className="flex h-[42px] flex-none items-center gap-1.5 rounded-[11px] border-[1.5px] border-[#cfe0e3] px-4 text-sm font-bold text-[#005663] hover:border-[#005663] dark:border-slate-600 dark:text-[#5ef0c8]">
+      <Link href={allHref} className="flex h-11 flex-none items-center gap-1.5 rounded-[11px] border-[1.5px] border-[#cfe0e3] px-4 text-sm font-bold text-[#005663] hover:border-[#005663] dark:border-slate-600 dark:text-[#5ef0c8]">
         {allLabel} <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </Link>
     </div>

@@ -4,6 +4,9 @@ import { MENU_ICON_COLORS, MENU_ICON_PATHS, type MenuIconKey } from '@/lib/menu-
 /** "Tue 13 Oct" for a batch chip, in IST. */
 export function batchChipDate(iso: string | null): string | null {
   if (!iso) return null;
+  // The catalogue is cached for up to a day: never show a date that has already passed (IST).
+  const istDay = (d: Date) => new Date(d.getTime() + 5.5 * 3600_000).toISOString().slice(0, 10);
+  if (istDay(new Date(iso)) < istDay(new Date())) return null;
   const parts = new Intl.DateTimeFormat('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }).formatToParts(new Date(iso));
   const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
   const out = `${get('weekday')} ${get('day')} ${get('month')}`.trim();

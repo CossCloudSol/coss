@@ -143,6 +143,7 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
   }
   /** A rail row selects its category; its page is reached from "View all" (links stay in the HTML for crawlers). */
   function onPanelClick(e: React.MouseEvent) {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // open-in-new-tab keeps working
     const row = (e.target as Element).closest<HTMLElement>('[data-mega-cat]');
     if (!row || !panelRef.current?.contains(row)) return;
     e.preventDefault();
