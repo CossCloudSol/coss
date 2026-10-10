@@ -1,0 +1,65 @@
+{
+  "note": "Snapshot of production /api/search-index (11 Oct 2026): the url the catalogue gave for each popular course, and the category slugs. Used only by menu-links.test.mjs.",
+  "courses": [
+    {
+      "slug": "artificial-intelligence-ai-training-hyderabad",
+      "url": "/artificial-intelligence-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "aws-devops-training-institute-in-hyderabad",
+      "url": "/aws-devops-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "azure-devops-training-in-hyderabad",
+      "url": "/azure-devops-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "linux-shell-scripting-training-in-hyderabad",
+      "url": "/linux-administration-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "data-science-training-institute-in-hyderabad",
+      "url": "/courses/data-science-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "data-analytics-training-institute-in-hyderabad",
+      "url": "/courses/data-analytics-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "cyber-security-training-institute-in-hyderabad",
+      "url": "/cyber-security-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "ethical-hacking-cyber-security-professional",
+      "url": "/courses/ethical-hacking-cyber-security-professional"
+    },
+    {
+      "slug": "digital-marketing-training-in-hyderabad",
+      "url": "/digital-marketing-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "full-stack-python-training-in-hyderabad",
+      "url": "/python-full-stack-training-institute-in-hyderabad"
+    },
+    {
+      "slug": "full-stack-java-developer-training-in-hyderabad",
+      "url": "/java-training-institute-in-hyderabad"
+    }
+  ],
+  "categories": [
+    "artificial-intelligence-training",
+    "data-analytics-bi",
+    "cloud-computing",
+    "devops-multi-cloud",
+    "programming-full-stack",
+    "data-engineering",
+    "cyber-security",
+    "erp-crm-enterprise-tools",
+    "software-testing-os",
+    "digital-design",
+    "professional-soft-skills",
+    "human-resource",
+    "quantum-computing",
+    "medical-coding"
+  ]
+}

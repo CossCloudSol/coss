@@ -31,6 +31,9 @@ import SiteHeader from '@/components/SiteHeader';
 import Footer from '@/components/Footer';
 import TopStrip from '@/components/header/TopStrip';
 import MegaMenuPanel from '@/components/header/MegaMenuPanel';
+import MobileMenuCourses from '@/components/header/MobileMenuCourses';
+import { buildMenuData } from '@/lib/menu-data';
+import { getStartingSoon, type StartingSoonBatch } from '@/lib/starting-soon';
 import PublicChrome from '@/components/PublicChrome';
 import WhatsAppWidget from '@/components/WhatsAppWidget';
 import FirstTouchCapture from '@/components/FirstTouchCapture';
@@ -156,12 +159,23 @@ async function getMenuIndex(): Promise<SearchIndex> {
   }
 }
 
+async function getMenuSoon(): Promise<StartingSoonBatch[]> {
+  try {
+    return await getStartingSoon();
+  } catch (err) {
+    console.error('[layout] starting-soon batches unavailable for the header menu:', err);
+    return [];
+  }
+}
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [{ gaId, gscId }, stripData, menuIndex] = await Promise.all([
+  const [{ gaId, gscId }, stripData, menuIndex, menuSoon] = await Promise.all([
     getSiteSettings(),
     getTopStripData(),
     getMenuIndex(),
+    getMenuSoon(),
   ]);
+  const menuData = buildMenuData(menuIndex);
 
   const globalSchemas = await buildGlobalSchemas();
 
@@ -209,7 +223,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PublicChrome>
         {/* Header v2: the strip scrolls away; the main row sticks (64px). */}
         <TopStrip data={stripData} />
-        <SiteHeader categories={menuIndex.categories} megaMenu={<MegaMenuPanel index={menuIndex} />} />
+        <SiteHeader drawerCourses={<MobileMenuCourses data={menuData} />} megaMenu={<MegaMenuPanel data={menuData} soon={menuSoon} />} />
         </PublicChrome>
 
         {/* Main */}
