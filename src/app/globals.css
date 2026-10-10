@@ -1081,6 +1081,16 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 /* !important: both set color: inherit inline, which would otherwise win over this rule */
 .ef-glass-ctx .wa-optin { color: rgba(255, 255, 255, 0.85) !important; }
 .ef-glass-ctx .form-privacy-note { color: rgba(255, 255, 255, 0.7) !important; }
+
+/* A card that is white in BOTH themes (e.g. the homepage demo form). In dark mode
+   the page text colour turns light and the form's text inherits it, so such a card
+   must pin its own colours and use the light colour scheme (native checkbox, inputs,
+   autofill). Colours: #26383d on #fff = 11:1, #4a5c61 = 7:1, #005663 = 8:1.
+   scripts/test/form-dark-mode.test.mjs fails if a form on a white card lacks this class. */
+.light-surface { color-scheme: light; color: #26383d; }
+.light-surface .wa-optin { color: #26383d; }
+.light-surface .form-privacy-note { color: #4a5c61; background: transparent; }
+.light-surface .form-privacy-note a { color: #005663; background: transparent; }
 .ef-glass-ctx .ef-input {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);

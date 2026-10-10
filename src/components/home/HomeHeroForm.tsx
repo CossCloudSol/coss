@@ -89,7 +89,8 @@ export default function HomeHeroForm(): JSX.Element {
     }
   }
 
-  const card = 'rounded-[20px] bg-white p-5 shadow-[0_24px_60px_rgba(0,0,0,0.28)] sm:p-7';
+  // light-surface: a white card stays light in dark mode, with its own text colours.
+  const card = 'light-surface rounded-[20px] bg-white p-5 shadow-[0_24px_60px_rgba(0,0,0,0.28)] sm:p-7';
 
   if (state.kind === 'success') {
     return (

@@ -95,7 +95,7 @@ export default function NoResultsLead({
               <span className="sr-only">Your name</span>
               <input className={`${input} w-full`} placeholder="Your name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} disabled={busy} />
             </label>
-            <label className="flex h-12 items-center gap-2 rounded-[10px] border border-[#cfdadd] bg-white pl-3 focus-within:border-[#005663] focus-within:ring-2 focus-within:ring-[#005663]/20">
+            <label className="flex h-12 items-center gap-2 rounded-[10px] border border-[#cfdadd] bg-white pl-3 text-[#26383d] focus-within:border-[#005663] focus-within:ring-2 focus-within:ring-[#005663]/20">
               <span className="text-[15px] text-[#26383d]" aria-hidden="true">+91</span>
               <span className="sr-only">Mobile number</span>
               <input
