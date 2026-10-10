@@ -6,9 +6,11 @@ import Link from 'next/link'
  */
 export default function FormPrivacyNote() {
   return (
-    <p className="form-privacy-note" style={{ margin: '8px 0 0', fontSize: '11.5px', lineHeight: 1.5, color: 'inherit', opacity: 0.85, textAlign: 'center' }}>
+    // No inline colour or opacity: the text takes the surface's colour (inherited), and
+    // `.light-surface .form-privacy-note` in globals.css pins it on a white card.
+    <p className="form-privacy-note" style={{ margin: '8px 0 0', fontSize: '11.5px', lineHeight: 1.5, textAlign: 'center' }}>
       We use your details only to contact you about courses. See our{' '}
-      <Link href="/privacy-policy" style={{ color: 'inherit', textDecoration: 'underline', display: 'inline-block', padding: '15px 0', margin: '-15px 0' }}>
+      <Link href="/privacy-policy" style={{ textDecoration: 'underline', display: 'inline-block', padding: '15px 0', margin: '-15px 0' }}>
         Privacy Policy
       </Link>
       .

@@ -11,7 +11,7 @@ export const WHATSAPP_OPT_IN_LABEL = 'Send me batch updates on WhatsApp (optiona
  *    whatsappOptIn=yes only when ticked;
  *  - in a form that keeps its own state: pass `checked` and `onChange`.
  * The whole row is the label, at least 44px tall, so it is easy to tap. Takes the form's
- * text colour.
+ * text colour; a fixed-white card must carry the `light-surface` class (see globals.css).
  */
 export default function WhatsAppOptIn({
   checked,
@@ -36,7 +36,8 @@ export default function WhatsAppOptIn({
         cursor: 'pointer',
         fontSize: '13px',
         lineHeight: 1.4,
-        color: 'inherit',
+        // No inline colour: the label inherits the surface's colour, and
+        // `.light-surface .wa-optin` in globals.css pins it on a white card.
         textAlign: 'left',
         ...style,
       }}
@@ -47,7 +48,7 @@ export default function WhatsAppOptIn({
         name="whatsappOptIn"
         value="yes"
         {...(controlled ? { checked, onChange: (e: React.ChangeEvent<HTMLInputElement>) => onChange?.(e.target.checked) } : { defaultChecked: false })}
-        style={{ width: '18px', height: '18px', margin: 0, flexShrink: 0, accentColor: '#25D366', cursor: 'pointer' }}
+        style={{ width: '18px', height: '18px', margin: 0, flexShrink: 0, accentColor: '#005663', colorScheme: 'light', cursor: 'pointer' }}
       />
       <span>{WHATSAPP_OPT_IN_LABEL}</span>
     </label>
