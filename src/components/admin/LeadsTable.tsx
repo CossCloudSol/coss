@@ -28,7 +28,7 @@ import type {
   AdminLeadsListResponse,
 } from '@/app/api/admin/leads/route';
 import LeadDrawer from '@/components/admin/LeadDrawer';
-import { csvCell } from '@/lib/csv';
+import { csvCell, withCsvBom } from '@/lib/csv';
 import { nameLooksOff } from '@/lib/name-quality';
 import { touchLabel } from '@/lib/touch-label';
 
@@ -324,7 +324,8 @@ export function LeadsTable(): JSX.Element {
         .map((row) => row.map(csvEscape).join(','))
         .join('\r\n');
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      // BOM: without it Excel reads the file as ANSI and shows "→" as garbage.
+      const blob = new Blob([withCsvBom(csv)], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

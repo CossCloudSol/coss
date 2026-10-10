@@ -98,3 +98,23 @@ test('7-day pages: every admin save that feeds them revalidates on demand', () =
     assert.match(s, new RegExp(`revalidatePaths\\([^)]*${fn}`), f);
   }
 });
+
+/* ── CSV: UTF-8 BOM so Excel shows "→" and non-Latin names correctly ───── */
+import { csvCell, withCsvBom, CSV_BOM } from '../../src/lib/csv.ts';
+import { touchLabel } from '../../src/lib/touch-label.ts';
+
+test('leads CSV starts with a UTF-8 BOM (EF BB BF) once, and the arrow is UTF-8 after it', () => {
+  const csv = ['"Source"', csvCell(touchLabel('direct', 'google')), csvCell('రవి Kumar')].join('\r\n');
+  const out = withCsvBom(csv);
+  const bytes = Buffer.from(out, 'utf8');
+  assert.deepEqual([...bytes.subarray(0, 3)], [0xef, 0xbb, 0xbf]);
+  assert.equal(withCsvBom(out), out, 'adding the BOM twice does not double it');
+  assert.ok(bytes.includes(Buffer.from([0xe2, 0x86, 0x92])), '"→" is E2 86 92 in UTF-8');
+  assert.equal(out.slice(1), csv, 'the BOM is the only change');
+  assert.equal(CSV_BOM, '\uFEFF');
+});
+
+test('the leads export writes its CSV through withCsvBom', () => {
+  const src = fs.readFileSync(new URL('../../src/components/admin/LeadsTable.tsx', import.meta.url), 'utf8');
+  assert.match(src, /new Blob\(\[withCsvBom\(csv\)\]/);
+});
