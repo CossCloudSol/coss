@@ -67,8 +67,9 @@ test('TEACHES parsing edge cases: semicolons, filler, duplicates, no label, no a
   // A long markdown description yields no chip that is a sentence, and its approach still separates.
   const md = '### Multi-Cloud DevOps - Topic-Wise Teaching  **1. AWS Cloud** Teaches AWS infrastructure, EC2, VPC, IAM, S3, Load Balancing, Auto Scaling, CloudWatch, RDS, and cloud security with hands-on implementation.  **Teaching Approach:** Instructor-led sessions combined with **live demonstrations, hands-on labs**.';
   const r = parseTeaches(md);
+  assert.deepEqual(r.topics, [], 'a markdown description is not a list: no chips');
   assert.equal(r.approach, 'Instructor-led sessions combined with live demonstrations, hands-on labs .'.replace(' .', '.'));
-  for (const t of r.topics) assert.ok(t.split(/\s+/).length <= 10 && !/^teaches\b/i.test(t) && !/[*#]/.test(t), t);
+
 });
 
 test('a TEACHES chip links only when it names a published course', () => {

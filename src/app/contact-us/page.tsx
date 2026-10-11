@@ -82,28 +82,28 @@ export default async function ContactUsPage() {
           <div>
             {/* Timings */}
             <div style={{ background: '#1a1a2e', borderRadius: '14px', padding: '28px', color: '#fff', marginBottom: '20px' }}>
-              <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '18px' }}>🕐 Centre Timings</h3>
+              <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '18px', color: '#fff' }}>🕐 Centre Timings</h3>
               {branches.map((b, i) => hours[i].groups.length > 0 && (
                 <div key={b.branchKey} style={{ marginBottom: '8px' }}>
                   <div style={{ color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', paddingTop: '6px' }}>{branchTitle(b)}</div>
                   {hours[i].groups.map(g => (
                     <div key={g.days} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: '13px' }}>
                       <span style={{ color: '#ccc' }}>{g.days}</span>
-                      <span style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
+                      <span style={{ color: '#f9bb96', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
                     </div>
                   ))}
                 </div>
               ))}
               <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(232,64,28,0.1)', borderRadius: '8px', fontSize: '12px', color: '#aaa', lineHeight: '1.6' }}>
-                📞 For urgent queries, call us directly at <CallLink number={PRIMARY_PHONE} pageType="static" style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
+                📞 For urgent queries, call us directly at <CallLink number={PRIMARY_PHONE} pageType="static" style={{ color: '#f9bb96', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
               </div>
             </div>
 
             {/* WhatsApp */}
             <div style={{ background: '#15803d', borderRadius: '14px', padding: '22px', color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>💬</div>
-              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px' }}>Chat on WhatsApp</h4>
-              <p style={{ fontSize: '13px', opacity: 0.9, marginBottom: '14px' }}>Get instant answers to your queries</p>
+              <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Chat on WhatsApp</h4>
+              <p style={{ fontSize: '14px', color: '#fff', marginBottom: '14px' }}>Get instant answers to your queries</p>
               <WhatsAppLink
                 ctaType="contact_page"
                 pageType="static"

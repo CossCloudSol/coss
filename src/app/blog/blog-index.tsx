@@ -85,8 +85,8 @@ function BlogCard({
           className="blog-date-badge"
           style={{
             background: badgeColor === 'orange'
-              ? 'rgba(249, 115, 22, 0.85)'
-              : 'rgba(99, 102, 241, 0.85)',
+              ? '#b8531c'
+              : '#4338ca',
           }}
         >
           {dateLabel}
@@ -281,7 +281,7 @@ export async function BlogIndexView({
                           {filteredDbPosts.length} posts · 2026
                         </span>
                       </div>
-                      <span className="text-xs text-gray-400">Posted by admin</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">Posted by admin</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px', padding: '16px 0' }} className="course-list-grid">
                       {filteredDbPosts.map((post, idx) => (
@@ -321,7 +321,7 @@ export async function BlogIndexView({
                           {filteredMdxPosts.length} posts · 2026–2023
                         </span>
                       </div>
-                      <span className="text-xs text-gray-400">Legacy content archive</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">Legacy content archive</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '24px', padding: '16px 0' }} className="course-list-grid">
                       {paginatedMdxPosts.map((post, idx) => (
@@ -360,7 +360,7 @@ export async function BlogIndexView({
                             href={`/blog?page=${p}${catParam}`}
                             className={`px-3 py-1.5 text-xs rounded-md ${
                               p === currentPage
-                                ? 'bg-indigo-500 text-white'
+                                ? 'bg-indigo-600 text-white'
                                 : 'border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                             }`}
                           >
@@ -393,7 +393,7 @@ export async function BlogIndexView({
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
                 IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad, since 2010.
               </p>
-              <Link href="/about-us" style={{ color: 'var(--primary-text)', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
+              <Link href="/about-us" style={{ color: '#f9bb96', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
             </div>
 
             <div style={{ background: 'var(--primary-light)', borderRadius: '12px', padding: '22px', border: '1px solid rgba(228,117,56,0.2)', marginBottom: '20px' }}>

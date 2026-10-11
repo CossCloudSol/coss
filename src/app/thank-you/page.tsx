@@ -48,7 +48,7 @@ export default function ThankYouPage({ searchParams }: Props) {
           <Link href="/courses" style={{ ...linkStyle, background: '#b8531c', color: '#fff' }}>
             Browse Courses
           </Link>
-          <Link href="/" style={{ ...linkStyle, border: '1.5px solid #024c57', color: '#024c57' }}>
+          <Link href="/" style={{ ...linkStyle, border: '1.5px solid var(--text)', color: 'var(--text)' }}>
             Back to Home
           </Link>
         </div>

@@ -114,7 +114,7 @@ export default function PromoBanner({ placement, banner, syllabus, fallback, cla
             trackPromoBannerClick({ placement, bannerId, variant: 'fallback', cta: 'book_demo', destination: DEMO_HREF })
           }
         >
-          Free Demo Class <span style={{ color: '#5ef0c8' }}>— Book Now</span>
+          Free Demo Class <span style={{ color: '#ccfbef' }}>— Book Now</span>
         </TrackedLink>
         <div className="flex flex-wrap gap-2">
           <TrackedLink

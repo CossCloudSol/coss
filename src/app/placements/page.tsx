@@ -40,7 +40,7 @@ export default async function PlacementsPage() {
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <nav aria-label="Breadcrumb" style={{ marginBottom: '18px' }}>
             <Link href="/" style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Home</Link>
-            <span style={{ color: 'rgba(255,255,255,0.4)', margin: '0 8px' }}>›</span>
+            <span style={{ color: 'rgba(255,255,255,0.75)', margin: '0 8px' }}>›</span>
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>Placements</span>
           </nav>
           <h1 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(26px,4.5vw,42px)', lineHeight: 1.2, marginBottom: '16px', color: '#fff' }}>
@@ -214,7 +214,7 @@ export default async function PlacementsPage() {
           <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 800, color: '#fff', marginBottom: '14px' }}>
             Come and see for yourself
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '15px', lineHeight: '1.75', marginBottom: '26px' }}>
+          <p style={{ color: '#fff', fontSize: '15px', lineHeight: '1.75', marginBottom: '26px' }}>
             Talk it through with a counsellor first: your background, the course that fits, and what our career support looks like in practice. No cost and no commitment.
           </p>
           <a
