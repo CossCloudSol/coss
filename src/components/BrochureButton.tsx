@@ -224,7 +224,7 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
               <path strokeLinecap="round" strokeLinejoin="round" d={DOWNLOAD_ICON_PATH} />
             </svg>
           </span>
-          <span className="inline-flex items-center rounded-full bg-white text-[var(--primary-fill)] text-[10px] font-extrabold tracking-wide px-2.5 py-1 uppercase">
+          <span className="inline-flex items-center rounded-full bg-white text-[#8f3f14] text-[11px] font-extrabold tracking-wide px-2.5 py-1 uppercase">
             Free PDF
           </span>
         </div>

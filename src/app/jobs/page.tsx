@@ -39,7 +39,7 @@ export default async function JobsPage() {
       >
         <div className="max-w-[1100px] mx-auto text-center">
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-4"
-            style={{ background: 'rgba(228,117,56,0.15)', border: '1px solid rgba(228,117,56,0.35)', color: '#b8531c' }}>
+            style={{ background: 'rgba(228,117,56,0.15)', border: '1px solid rgba(228,117,56,0.35)', color: '#f9bb96' }}>
             <Briefcase className="w-3.5 h-3.5" aria-hidden="true" />
             Placement Board
           </div>

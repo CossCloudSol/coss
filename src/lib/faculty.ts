@@ -98,17 +98,18 @@ const SENTENCE_START = /^(teaches|teach|covers|cover|provides|provide|introduces
 
 const stripMarkdown = (s: string): string => s.replace(/[*#_`]+/g, '').replace(/\s+/g, ' ').trim();
 
-function cleanTopic(raw: string): string | null {
+/** 'ok' with the topic, 'skip' for padding, 'prose' when the piece is a sentence fragment. */
+function classifyTopic(raw: string): { kind: 'ok'; topic: string } | { kind: 'skip' | 'prose' } {
   let t = stripMarkdown(raw)
     .replace(/^(and|&)\s+/i, '') // "and MLOps" -> "MLOps"
     .replace(/[.\s]+$/g, '') // trailing full stops
     .trim();
-  if (!t) return null;
+  if (!t) return { kind: 'skip' };
   const words = t.split(/\s+/);
-  if (words.length === 1 && FILLER.has(t.toLowerCase())) return null;
-  if (words.length > MAX_CHIP_WORDS || t.length > MAX_CHIP_CHARS) return null;
-  if (/[.!?]\s|:/.test(t) || SENTENCE_START.test(t)) return null;
-  return t;
+  if (words.length === 1 && FILLER.has(t.toLowerCase())) return { kind: 'skip' };
+  if (words.length > MAX_CHIP_WORDS || t.length > MAX_CHIP_CHARS) return { kind: 'prose' };
+  if (/[.!?]\s|:/.test(t) || SENTENCE_START.test(t)) return { kind: 'prose' };
+  return { kind: 'ok', topic: t };
 }
 
 export interface TeachesParsed {
@@ -132,15 +133,21 @@ export function parseTeaches(raw: string | null | undefined): TeachesParsed {
 
   const list = stripMarkdown(listPart.replace(/^\s*[#*\s]*teaches\s*[#*\s]*:\s*/i, ''));
   const seen = new Set<string>();
-  const topics: string[] = [];
+  let topics: string[] = [];
+  let prose = 0;
   for (const piece of list.split(/[,;\n]/)) {
-    const t = cleanTopic(piece);
-    if (!t) continue;
-    const key = t.toLowerCase();
+    const c = classifyTopic(piece);
+    if (c.kind === 'prose') prose++;
+    if (c.kind !== 'ok') continue;
+    const key = c.topic.toLowerCase();
     if (seen.has(key)) continue;
     seen.add(key);
-    topics.push(t);
+    topics.push(c.topic);
   }
+  // A description (markdown headings or bold, or many sentence fragments) is not a list: its commas
+  // would cut sentences into noise ("EC2", "VPC", "S3"), so it gives no chips at all.
+  const markdown = /\*\*|^\s*#{1,6}\s/m.test(listPart);
+  if (markdown || (prose >= 3 && prose * 4 >= topics.length)) topics = [];
   return { topics, approach: approachPart || null };
 }
 

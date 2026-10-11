@@ -90,7 +90,7 @@ export default function BatchesBoard({ batches }: { batches: BatchCardBatch[] })
           pageType="static"
           message="Hi Coss Cloud Solutions Team, I couldn't find a batch that fits my schedule. Could we arrange a custom schedule?"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
-          style={{ background: '#25D366' }}
+          style={{ background: '#15803d' }}
         >
           Ask on WhatsApp
         </WhatsAppLink>

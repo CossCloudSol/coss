@@ -151,7 +151,7 @@ export default async function CorporateTrainingPage() {
           {process.map(p => (
             <div key={p.step} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '24px', boxShadow: '0 2px 14px rgba(0,0,0,0.07)', position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: '-10px', right: '-5px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: '60px', fontWeight: 900, color: 'rgba(232,64,28,0.06)', lineHeight: 1 }}>{p.step}</div>
-              <div className="w-8 h-8 bg-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm mb-3" style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>{p.step}</div>
+              <div className="w-8 h-8 bg-teal-700 text-white rounded-full flex items-center justify-center font-bold text-sm mb-3" style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>{p.step}</div>
               <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--text)', marginBottom: '8px' }}>{p.title}</h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.6' }}>{p.desc}</p>
             </div>
