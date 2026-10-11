@@ -2,7 +2,7 @@
 // form pages). Same rules and messages the API routes enforce with zod
 // (src/lib/lead-validation.ts). Dependency-free (unit-tested in
 // scripts/test/lead-form-rules.test.mjs).
-import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
+import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
 
 /** Returns the error message, or null when the value is fine. */
 export type Rule = (value: string) => string | null;
@@ -19,8 +19,9 @@ export const rules = {
   email: (message: string): Rule => (v) => (EMAIL_RE.test(v) ? null : message),
 };
 
-/** Fields whose submitted value is trimmed (as zod's .trim() did for these). */
+/** Fields whose submitted value is trimmed; names are also normalised, as the server does (normalizeName). */
 const TRIMMED = new Set(['name', 'phone', 'contactPerson']);
+const NAME_FIELDS = new Set(['name', 'contactPerson']);
 
 export type LeadSchema<V extends Record<string, string>> = { [K in keyof V]: Rule[] };
 
@@ -36,7 +37,7 @@ export function validateLead<V extends Record<string, string>>(
   const errors: Partial<Record<keyof V, string>> = {};
   for (const key of Object.keys(schema) as Array<keyof V & string>) {
     const given = typeof raw[key] === 'string' ? (raw[key] as string) : '';
-    const value = TRIMMED.has(key) ? given.trim() : given;
+    const value = NAME_FIELDS.has(key) ? normalizeName(given) : TRIMMED.has(key) ? given.trim() : given;
     values[key] = value;
     for (const rule of schema[key]) {
       const message = rule(value);

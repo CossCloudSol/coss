@@ -30,9 +30,26 @@ export const PERSON_NAME_RE = /^(?=.*\p{L})[\p{L}\p{M} .'’-]{2,60}$/u;
 
 export const NAME_ERROR = "Name must be 2-60 characters: letters, spaces, . ' or -";
 
+/**
+ * Cleans a typed name before it is checked or saved, without removing anything a real name
+ * contains:
+ *  - every dash look-alike (‐ ‑ ‒ – — ― and the minus sign −) becomes "-", so "Mary–Jane" and
+ *    "TEST Subodh – ignore" are kept with their dash instead of failing;
+ *  - ‘ and ʼ become "'" (’ is already allowed as typed);
+ *  - runs of spaces, tabs and non-breaking spaces collapse to one space, and the ends are trimmed.
+ * Letters, . ' ’ - and combining marks are never touched.
+ */
+export function normalizeName(raw: string): string {
+  return raw
+    .replace(/[\u2010-\u2015\u2212]/g, '-')
+    .replace(/[\u2018\u02BC]/g, "'")
+    .replace(/[\s\u00A0]+/g, ' ')
+    .trim();
+}
+
 /** True for a name the API accepts (same rule as nameField). */
 export function isValidName(raw: string): boolean {
-  return PERSON_NAME_RE.test(raw.trim());
+  return PERSON_NAME_RE.test(normalizeName(raw));
 }
 
 /* -------------------------------------------------------------------------- */
