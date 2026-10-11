@@ -35,12 +35,12 @@ const accentGradients: Record<string, string> = {
 }
 
 const badgeBg: Record<string, string> = {
-  orange: '#FF6B2B',
-  teal:   '#0BA5A0',
+  orange: '#b8531c',   /* white text on every badge colour is AA */
+  teal:   '#0F766E',
   violet: '#7C3AED',
   rose:   '#E11D48',
-  amber:  '#D97706',
-  green:  '#059669',
+  amber:  '#B45309',
+  green:  '#047857',
 }
 
 export default function CourseCard({

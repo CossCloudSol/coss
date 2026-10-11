@@ -461,7 +461,7 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
         {originalPrice && price && (
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{originalPrice.toLocaleString()}</p>
         )}
-        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
         <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} embedded />
       </div>
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>

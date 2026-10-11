@@ -150,7 +150,7 @@ export function CtaBanner() {
   return (
     <div style={{ background: 'linear-gradient(135deg, var(--primary-fill) 0%, var(--primary-fill-dark) 100%)', borderRadius: '14px', padding: '40px 32px', textAlign: 'center', color: '#fff', margin: '48px 0 0' }}>
       <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(18px,4vw,26px)', fontWeight: 800, marginBottom: '10px', color: '#fff' }}>Ready to Start Your Journey?</h3>
-      <p style={{ opacity: 0.9, marginBottom: '22px', fontSize: '15px', color: 'rgba(255,255,255,0.9)' }}>Book a free demo class today. No commitment required.</p>
+      <p style={{ marginBottom: '22px', fontSize: '15px', color: '#fff' }}>Book a free demo class today. No commitment required.</p>
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
         <Link href="/free-demo-class" style={{ background: '#fff', color: 'var(--primary-fill)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
           Book a free demo class

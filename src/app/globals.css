@@ -12,7 +12,7 @@
   --primary-light:  rgba(228,117,56,0.12);
   --primary-fill:      #b8531c;   /* background behind text (white text AA) */
   --primary-fill-dark: #8f3f14;   /* its hover / gradient end */
-  --primary-text:   #b8531c;   /* brand orange as TEXT on the page background: AA on white */
+  --primary-text:   #a8471a;   /* brand orange as TEXT on the page background: AA on white and on the orange tints */
   --wa-text:        #15803d;   /* WhatsApp green as TEXT (the brand #25D366 is 1.9:1 on white) */
   --secondary:      #005663;
   --secondary-dark: #004450;
@@ -27,7 +27,7 @@
   /* Light mode text */
   --text:           #1a1a1a;
   --text-muted:     #555555;
-  --text-light:     #888888;
+  --text-light:     #5e6f74;   /* was #888888: 3.5:1 on white, too faint for 10-12px text */
   --text-inv:       #ffffff;
 
   /* Borders */
@@ -60,7 +60,7 @@
 
   --text:           #e8f0f2;
   --text-muted:     #9bb5ba;
-  --text-light:     #6d8f94;
+  --text-light:     #8fb0b5;
   --text-inv:       #ffffff;
 
   --border:         #1e4048;
