@@ -38,7 +38,7 @@ test('middleware matcher lists every scanner path, and no real page', () => {
 
 test('/tag/* redirects to /blog in all three places the infra rules live', () => {
   for (const f of ['redirects.config.mjs', 'scripts/run-sync-redirects.mjs', 'src/lib/sync-redirects.ts']) {
-    assert.match(fs.readFileSync(f, 'utf8'), /source: '\/tag\/:path\*',\s+destination: '\/blog'/, f);
+    assert.match(fs.readFileSync(f, 'utf8'), /source: ['"]\/tag\/:path\*['"],\s+destination: ['"]\/blog['"]/, f);
   }
 });
 
