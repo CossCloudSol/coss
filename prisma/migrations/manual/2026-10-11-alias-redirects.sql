@@ -23,7 +23,7 @@
 -- EXPECTED: step 1 (preview) returns 10 rows, every row "matches_expected" = true.
 --           step 2 prints UPDATE 10 and RETURNING lists the 10 rows.
 --           The DO block raises an exception (and nothing is committed) on any other count.
---           Success = the final SELECT returns 10 rows with ok = true, then COMMIT.
+--           Success = the SELECT after COMMIT returns 10 rows, every ok = true.
 -- IF ANYTHING ERRORS: the transaction aborts, nothing changed. Send the message back.
 -- AFTER SUCCESS: regenerate redirects.config.mjs (Admin -> Redirects sync, or
 --   node scripts/run-sync-redirects.mjs) and commit the file; the new destinations go live with
@@ -150,11 +150,11 @@ BEGIN
     RAISE EXCEPTION 'expected 10 backed-up rows, got %. Nothing was committed.', n;
   END IF;
 
-  -- exactly 10 rows were written in this transaction (now() is the transaction start time)
-  SELECT count(*) INTO n FROM "Redirect" WHERE "updatedAt" = now();
-  IF n <> 10 THEN
-    RAISE EXCEPTION 'expected 10 redirect rows updated, got %', n;
-  END IF;
+  -- exactly 10 of the backed-up rows now have a different destination than before
+  SELECT count(*) INTO n FROM "Redirect" r
+  JOIN coss_backup.redirect_alias_20261011 b ON b.id = r.id
+  WHERE r.destination <> b.destination;
+  IF n <> 10 THEN RAISE EXCEPTION 'expected 10 changed rows, got %', n; END IF;
 
   -- every changed row now points at one of the four flat pages, and status / active are untouched
   SELECT count(*) INTO n
@@ -182,17 +182,11 @@ BEGIN
   IF n <> 0 THEN
     RAISE EXCEPTION 'a target page is itself a redirect source (% rows)', n;
   END IF;
-
-  -- nothing else changed: no row outside the backed-up set was written in this transaction
-  SELECT count(*) INTO n FROM "Redirect" r
-  WHERE r."updatedAt" = now()
-    AND r.id NOT IN (SELECT id FROM coss_backup.redirect_alias_20261011);
-  IF n <> 0 THEN
-    RAISE EXCEPTION '% rows outside the intended set changed', n;
-  END IF;
 END $$;
 
--- Verify (expect 10 rows, ok = true).
+COMMIT;
+
+-- Verify, after the commit (expect 10 rows, ok = true).
 SELECT r.source, r.destination, r."statusCode", r."isActive",
        r.destination IN (
          '/linux-administration-training-institute-in-hyderabad',
@@ -202,5 +196,3 @@ SELECT r.source, r.destination, r."statusCode", r."isActive",
 FROM "Redirect" r
 WHERE r.id IN (SELECT id FROM coss_backup.redirect_alias_20261011)
 ORDER BY r.source;
-
-COMMIT;

@@ -1,6 +1,6 @@
 -- 2026-10-11  ROLLBACK for 2026-10-11-alias-redirects.sql. Run once, in full, in the Supabase SQL Editor.
 -- Not run by Claude. Restores the 10 "Redirect" rows from coss_backup.redirect_alias_20261011.
--- Expected: UPDATE 10, then the check returns 10 rows with restored = true. Any other count raises
+-- Expected: UPDATE 10, then (after COMMIT) the check returns 10 rows with restored = true. Any other count raises
 -- and nothing is committed. Only "destination" is restored (and "updatedAt" set to now()).
 -- If the backup table is missing the forward script was never run: nothing to roll back.
 
@@ -26,9 +26,10 @@ BEGIN
   END IF;
 END $$;
 
+COMMIT;
+
+-- Verify, after the commit (expect 10 rows, restored = true).
 SELECT r.source, r.destination, (r.destination = b.destination) AS restored
 FROM "Redirect" r
 JOIN coss_backup.redirect_alias_20261011 b ON b.id = r.id
 ORDER BY r.source;
-
-COMMIT;
