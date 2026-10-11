@@ -1796,3 +1796,32 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   .home-card { transition: none; }
   .home-card:hover { transform: none; }
 }
+
+/* ── /faculty: track filter (radio + :has, no client JavaScript) and the profile drawer ── */
+.fac:has(input[name="fac-track"][value="cloud"]:checked) [data-track]:not([data-track="cloud"]),
+.fac:has(input[name="fac-track"][value="ai-data"]:checked) [data-track]:not([data-track="ai-data"]),
+.fac:has(input[name="fac-track"][value="cyber"]:checked) [data-track]:not([data-track="cyber"]),
+.fac:has(input[name="fac-track"][value="linux"]:checked) [data-track]:not([data-track="linux"]),
+.fac:has(input[name="fac-track"][value="marketing"]:checked) [data-track]:not([data-track="marketing"]),
+.fac:has(input[name="fac-track"][value="hr"]:checked) [data-track]:not([data-track="hr"]),
+.fac:has(input[name="fac-track"][value="other"]:checked) [data-track]:not([data-track="other"]) { display: none; }
+.fac:has(input[name="fac-track"][value="cloud"]:checked) .fac-cta,
+.fac:has(input[name="fac-track"][value="ai-data"]:checked) .fac-cta,
+.fac:has(input[name="fac-track"][value="cyber"]:checked) .fac-cta,
+.fac:has(input[name="fac-track"][value="linux"]:checked) .fac-cta,
+.fac:has(input[name="fac-track"][value="marketing"]:checked) .fac-cta,
+.fac:has(input[name="fac-track"][value="hr"]:checked) .fac-cta,
+.fac:has(input[name="fac-track"][value="other"]:checked) .fac-cta { display: none; }
+[data-live] [data-demo-fallback] { display: none; }
+body:has(dialog.fac-drawer[open]) { overflow: hidden; }
+dialog.fac-drawer {
+  position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; border: 0;
+  width: 520px; max-width: 100%; height: 100%; max-height: 100%;
+  background: #fff; color: #26383d; color-scheme: light; overflow-y: auto;
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.25);
+}
+dialog.fac-drawer[open] { display: flex; flex-direction: column; animation: fac-in .2s ease-out; }
+dialog.fac-drawer::backdrop { background: rgba(10, 30, 36, 0.55); }
+@keyframes fac-in { from { transform: translateX(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { dialog.fac-drawer[open] { animation: none; } }
+dialog.fac-drawer h2 { color: #0a3d4a; }

@@ -127,6 +127,7 @@ test('dark glass card (free-demo-class) keeps light consent text on its dark bac
 const SURFACES = {
   'components/home/HomeHeroForm.tsx': 'white-card',
   'components/home/v4/FinalCtaForm.tsx': 'dark',
+  'components/faculty/FacultyDrawerController.tsx': 'white-card',
   'components/ContactForm.tsx': 'themed',
   'components/CorporateForm.tsx': 'themed',
   'components/DemoSidebarForm.tsx': 'themed',
