@@ -97,3 +97,11 @@ export function toFinalSitemap<T extends { url: string }>(entries: ReadonlyArray
   }
   return out
 }
+
+/**
+ * A link target for the UI: the final URL path (no 308 hop), or `path` unchanged when the
+ * chain can't be resolved (leaves the site or loops). Paths only, no query string.
+ */
+export function finalHref(path: string, rules: ReadonlyArray<RedirectRule>): string {
+  return finalPath(path, rules) ?? path
+}
