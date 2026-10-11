@@ -137,7 +137,7 @@ export default async function PlacementsPage() {
                 ctaType="batches_page"
                 pageType="static"
                 message="Hi, I'd like to know the next available batch dates at Coss."
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#25D366', color: '#fff', padding: '12px 24px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#15803d', color: '#fff', padding: '12px 24px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
               >
                 Ask on WhatsApp
               </WhatsAppLink>
@@ -180,7 +180,7 @@ export default async function PlacementsPage() {
                       ctaType="batch"
                       pageType="static"
                       message={message}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#25D366', color: '#fff', padding: '10px 18px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#15803d', color: '#fff', padding: '10px 18px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none', whiteSpace: 'nowrap' }}
                     >
                       Ask about this batch
                     </WhatsAppLink>

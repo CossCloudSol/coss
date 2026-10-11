@@ -164,7 +164,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             <div style={{ marginBottom: '36px' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(232,64,28,0.08)', padding: '5px 14px', borderRadius: '20px', marginBottom: '14px' }}>
                 <CategoryIconDisplay slug={breadcrumbSlug} size={22} color="#e8401c" />
-                <span style={{ color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
+                <span style={{ color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
               </div>
               <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>
                 {data.name} Training in Hyderabad
@@ -253,11 +253,11 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* Why Learn */}
             {data.whyLearn.length > 0 && (
               <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#0f3460)', borderRadius: '14px', padding: '28px', marginBottom: '36px', color: '#fff' }}>
-                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px' }}>💡 Why Learn {data.name}?</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px', color: '#fff' }}>💡 Why Learn {data.name}?</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   {data.whyLearn.map(w => (
                     <div key={w} style={{ display: 'flex', gap: '8px', fontSize: '13.5px', color: '#ccc', lineHeight: '1.5' }}>
-                      <span style={{ color: '#e8401c', fontWeight: 700, flexShrink: 0 }}>✓</span><span>{w}</span>
+                      <span style={{ color: '#f3a57a', fontWeight: 700, flexShrink: 0 }}>✓</span><span>{w}</span>
                     </div>
                   ))}
                 </div>

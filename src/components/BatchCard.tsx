@@ -26,7 +26,7 @@ export interface BatchCardBatch {
 
 const SEAT_COLOR_MAP: Record<string, string> = {
   green: 'text-green-600 dark:text-green-400',
-  amber: 'text-amber-600 dark:text-amber-400',
+  amber: 'text-amber-700 dark:text-amber-400',
   red: 'text-red-600 dark:text-red-400',
   gray: 'text-gray-500 dark:text-gray-400',
 }
@@ -80,7 +80,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
       {/* Meta grid */}
       <div className="p-5 grid grid-cols-2 gap-3">
         <div className="flex items-start gap-2">
-          <Calendar className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
+          <Calendar className="w-4 h-4 mt-0.5 text-teal-700 dark:text-teal-400 shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-600 dark:text-gray-300">Start Date</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">{formattedDate}</p>
@@ -88,7 +88,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
         </div>
 
         <div className="flex items-start gap-2">
-          <Clock className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
+          <Clock className="w-4 h-4 mt-0.5 text-teal-700 dark:text-teal-400 shrink-0" aria-hidden="true" />
           <div>
             <p className="text-xs text-gray-600 dark:text-gray-300">Schedule</p>
             <p className="text-sm font-semibold text-gray-900 dark:text-white">{batch.schedule}</p>
@@ -97,9 +97,9 @@ export default function BatchCard({ batch }: BatchCardProps) {
 
         <div className="flex items-start gap-2">
           {batch.mode === 'Online' ? (
-            <Wifi className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
+            <Wifi className="w-4 h-4 mt-0.5 text-teal-700 dark:text-teal-400 shrink-0" aria-hidden="true" />
           ) : (
-            <MapPin className="w-4 h-4 mt-0.5 text-teal-500 shrink-0" aria-hidden="true" />
+            <MapPin className="w-4 h-4 mt-0.5 text-teal-700 dark:text-teal-400 shrink-0" aria-hidden="true" />
           )}
           <div>
             <p className="text-xs text-gray-600 dark:text-gray-300">Venue</p>
@@ -111,7 +111,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
 
         <div className="flex items-start gap-2">
           <div className="w-4 h-4 mt-0.5 shrink-0 flex items-center justify-center">
-            <span className="text-teal-500 text-sm font-bold">M</span>
+            <span className="text-teal-700 dark:text-teal-400 text-sm font-bold">M</span>
           </div>
           <div>
             <p className="text-xs text-gray-600 dark:text-gray-300">Mode</p>

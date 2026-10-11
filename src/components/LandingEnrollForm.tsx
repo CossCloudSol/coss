@@ -74,7 +74,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           branchKey="dilsukhnagar"
           number={phone1}
           message={waMessage}
-          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#20BD5C]"
+          className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#15803d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#20BD5C]"
         >
           <WaIcon /> Chat on WhatsApp
         </WhatsAppLink>

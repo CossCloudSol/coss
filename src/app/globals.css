@@ -13,6 +13,7 @@
   --primary-fill:      #b8531c;   /* background behind text (white text AA) */
   --primary-fill-dark: #8f3f14;   /* its hover / gradient end */
   --primary-text:   #b8531c;   /* brand orange as TEXT on the page background: AA on white */
+  --wa-text:        #15803d;   /* WhatsApp green as TEXT (the brand #25D366 is 1.9:1 on white) */
   --secondary:      #005663;
   --secondary-dark: #004450;
   --secondary-mid:  #0a3d4a;
@@ -70,6 +71,7 @@
   --shadow-lg:      0 8px 32px rgba(0,0,0,0.45);
 
   --primary-text:   #f3a57a;   /* brand orange as TEXT on dark surfaces: 8.9:1 on #0f172a */
+  --wa-text:        #4ade80;
   --nav-bg:         #0d1b1e;
   --nav-text:       #e8f0f2;
   --topbar-bg:      #001a20;
@@ -422,11 +424,11 @@ img { max-width: 100%; height: auto; display: block; }
   color: rgba(255,255,255,0.6);
 }
 .page-banner-crumb a {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.82);
   transition: color 0.15s;
 }
 .page-banner-crumb a:hover { color: rgba(255,255,255,0.9); }
-.page-banner-crumb-sep { color: rgba(255,255,255,0.35); }
+.page-banner-crumb-sep { color: rgba(255,255,255,0.65); }
 
 /* ── Hero Banner (shared across inner pages) ─────────────────── */
 .hero-banner {
@@ -1198,7 +1200,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #25D366;
+  background: #15803d;
   border: none;
   cursor: pointer;
   display: flex;
@@ -1406,7 +1408,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   justify-content: center;
   gap: 7px;
   width: 100%;
-  background: #25D366;
+  background: #15803d;
   color: #fff;
   border: none;
   border-radius: 10px;

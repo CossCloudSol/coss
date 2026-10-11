@@ -193,11 +193,11 @@ export default async function FreeDemoClassPage() {
               <div className="flex flex-wrap gap-6 pt-6 border-t border-white/[0.08]">
                 <div className="text-center">
                   <div className="text-white font-bold text-xl">5,000+</div>
-                  <div className="text-slate-500 text-xs">Students trained</div>
+                  <div className="text-slate-400 text-xs">Students trained</div>
                 </div>
                 <div className="text-center">
                   <div className="text-white font-bold text-xl">100%</div>
-                  <div className="text-slate-500 text-xs">Free, no catch</div>
+                  <div className="text-slate-400 text-xs">Free, no catch</div>
                 </div>
               </div>
             </div>
@@ -221,7 +221,7 @@ export default async function FreeDemoClassPage() {
               {/* Social proof */}
               <div className="flex items-center gap-3 mt-3">
                 <div className="flex -space-x-2">
-                  <div className="w-7 h-7 rounded-full bg-[#FF6B2B] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">R</div>
+                  <div className="w-7 h-7 rounded-full bg-[#b8531c] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">R</div>
                   <div className="w-7 h-7 rounded-full bg-[#0BA5A0] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">S</div>
                   <div className="w-7 h-7 rounded-full bg-[#4D7CFE] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">P</div>
                   <div className="w-7 h-7 rounded-full bg-[#8B5CF6] border-2 border-[#0D1B2A] text-white text-xs font-bold flex items-center justify-center">K</div>
@@ -312,7 +312,7 @@ export default async function FreeDemoClassPage() {
             {faqs.map((f) => (
               <div key={f.q} className="bg-[#F8FAFC] border border-black/[0.06] rounded-2xl p-5">
                 <div className="flex items-start gap-2 mb-2">
-                  <span className="flex-shrink-0 w-5 h-5 rounded bg-[#FF6B2B] text-white text-xs font-bold flex items-center justify-center mt-0.5">Q</span>
+                  <span className="flex-shrink-0 w-5 h-5 rounded bg-[#b8531c] text-white text-xs font-bold flex items-center justify-center mt-0.5">Q</span>
                   <p className="font-semibold text-[#0D1B2A] text-sm leading-snug">{f.q}</p>
                 </div>
                 <p className="text-slate-500 text-sm leading-relaxed pl-7">{f.a}</p>
@@ -323,7 +323,7 @@ export default async function FreeDemoClassPage() {
       </section>
 
       {/* ── BOTTOM CTA STRIP ── */}
-      <section className="py-16 px-4 bg-[#FF6B2B]">
+      <section className="py-16 px-4 bg-[#b8531c]">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="font-heading text-3xl font-bold text-white mb-3">
             Your IT career starts with one free class
@@ -335,7 +335,7 @@ export default async function FreeDemoClassPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="#top"
-              className="bg-white text-[#FF6B2B] font-bold px-8 py-4 rounded-xl text-base hover:bg-orange-50 transition-colors"
+              className="bg-white text-[#b8531c] font-bold px-8 py-4 rounded-xl text-base hover:bg-orange-50 transition-colors"
             >
               Book my free demo
             </a>

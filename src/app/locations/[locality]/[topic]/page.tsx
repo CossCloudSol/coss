@@ -284,7 +284,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                     pageType="locality"
                     branchKey={config.branchKey}
                     message={noBatchMessage}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#25D366' }}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#15803d' }}
                   >
                     Ask for Next Batch Dates on WhatsApp
                   </WhatsAppLink>
@@ -317,7 +317,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                         style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'transparent', border: '1px dashed var(--border)' }}
                       >
                         <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>{c.title}</span>
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: '#25D366' }}>Next batch on request →</span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--wa-text)' }}>Next batch on request →</span>
                       </WhatsAppLink>
                     )
                   ))}

@@ -190,7 +190,7 @@ export default function RefundCancellationPolicyPage() {
         {/* Intro box */}
         <div style={{ background: '#fff3f0', borderRadius: '12px', padding: '18px 22px', marginBottom: '36px', borderLeft: '4px solid #e8401c' }}>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.7' }}>
-            <strong style={{ color: '#e8401c' }}>Last Updated: September 2026.</strong> At Coss Cloud Solutions, we want every student to make an informed decision before enrolling. We encourage students to attend a free demo class, review the course curriculum, confirm the batch schedule and clarify all questions before making payment. This Refund and Cancellation Policy applies to classroom, online, hybrid, weekday, weekend and fast-track training programmes offered by Coss Cloud Solutions.
+            <strong style={{ color: 'var(--primary-text)' }}>Last Updated: September 2026.</strong> At Coss Cloud Solutions, we want every student to make an informed decision before enrolling. We encourage students to attend a free demo class, review the course curriculum, confirm the batch schedule and clarify all questions before making payment. This Refund and Cancellation Policy applies to classroom, online, hybrid, weekday, weekend and fast-track training programmes offered by Coss Cloud Solutions.
           </p>
         </div>
 
@@ -198,7 +198,7 @@ export default function RefundCancellationPolicyPage() {
         {sections.map((s, i) => (
           <div key={s.title} style={{ marginBottom: '30px', paddingBottom: '28px', borderBottom: i < sections.length - 1 ? '1px solid #f0f0f0' : 'none' }}>
             <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '17px', color: 'var(--text)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span aria-hidden="true" style={{ background: '#e8401c', color: '#fff', width: '28px', height: '28px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>{' '}
+              <span aria-hidden="true" style={{ background: '#b8531c', color: '#fff', width: '28px', height: '28px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>{' '}
               {s.title.replace(/^\d+\.\s/, '')}
             </h2>
             {typeof s.content === 'string'
@@ -212,7 +212,7 @@ export default function RefundCancellationPolicyPage() {
           <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '10px' }}>Have Questions?</h3>
           <p style={{ color: '#ccc', fontSize: '14px', marginBottom: '18px' }}>Our team is happy to clarify any of these terms before you enroll.</p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <CallLink number={PRIMARY_PHONE} pageType="static" style={{ background: '#e8401c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            <CallLink number={PRIMARY_PHONE} pageType="static" style={{ background: '#b8531c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               📞 Call Us
             </CallLink>
             <a href="mailto:info@cosscloudsol.com" style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '11px 24px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.3)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>

@@ -89,7 +89,7 @@ export default async function ContactUsPage() {
                   {hours[i].groups.map(g => (
                     <div key={g.days} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', fontSize: '13px' }}>
                       <span style={{ color: '#ccc' }}>{g.days}</span>
-                      <span style={{ color: '#e8401c', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
+                      <span style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{g.time}</span>
                     </div>
                   ))}
                 </div>
@@ -100,7 +100,7 @@ export default async function ContactUsPage() {
             </div>
 
             {/* WhatsApp */}
-            <div style={{ background: '#25D366', borderRadius: '14px', padding: '22px', color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
+            <div style={{ background: '#15803d', borderRadius: '14px', padding: '22px', color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>💬</div>
               <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px' }}>Chat on WhatsApp</h4>
               <p style={{ fontSize: '13px', opacity: 0.9, marginBottom: '14px' }}>Get instant answers to your queries</p>
@@ -108,7 +108,7 @@ export default async function ContactUsPage() {
                 ctaType="contact_page"
                 pageType="static"
                 message="Hi Coss Cloud Solutions Team, I'd like to know more about your courses. Could you help me?"
-                style={{ display: 'block', background: 'var(--bg-card)', color: '#25D366', padding: '10px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}
+                style={{ display: 'block', background: 'var(--bg-card)', color: 'var(--wa-text)', padding: '10px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}
               >
                 Chat Now on WhatsApp
               </WhatsAppLink>
@@ -125,7 +125,7 @@ export default async function ContactUsPage() {
                 { label: '⭐ Student Reviews', href: '/student-reviews' },
               ].map(l => (
                 <Link key={l.href} href={l.href} style={{ display: 'block', padding: '9px 0', fontSize: '13.5px', color: 'var(--text)', borderBottom: '1px solid var(--border)', fontWeight: 500 }}>
-                  {l.label} <span style={{ float: 'right', color: '#e8401c' }}>›</span>
+                  {l.label} <span style={{ float: 'right', color: 'var(--primary-text)' }}>›</span>
                 </Link>
               ))}
             </div>

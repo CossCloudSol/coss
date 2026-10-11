@@ -62,6 +62,13 @@ const WaIcon = ({ cls }: { cls?: string }) => (
   </svg>
 )
 
+/** A tool badge's brand colour mixed 60% toward white, so its letters read on the dark badge (AA). */
+function lift(hex: string): string {
+  const n = parseInt(hex.replace('#', ''), 16);
+  const mix = (v: number) => Math.round(v + (255 - v) * 0.6);
+  return `rgb(${mix((n >> 16) & 255)}, ${mix((n >> 8) & 255)}, ${mix(n & 255)})`;
+}
+
 export default async function LandingPageTemplate({ course, branches, pageSlug, related, siblings }: Props) {
   const coursePageBanners = await getPromoBanners('course-page')
   const hiringPartners: HiringPartner[] = PLACEMENT_PROVIDERS_CONFIRMED
@@ -395,7 +402,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
               >
                 <span
                   className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black flex-shrink-0"
-                  style={{ background: tool.color + '25', color: tool.color }}
+                  style={{ background: tool.color + '25', color: lift(tool.color) }}
                 >
                   {tool.abbr}
                 </span>
@@ -606,7 +613,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
               )
             })}
           </div>
-          <p className="text-sm text-slate-500 text-center max-w-3xl mx-auto mt-8 leading-relaxed">
+          <p className="text-sm text-slate-400 text-center max-w-3xl mx-auto mt-8 leading-relaxed">
             Coss Cloud Solutions offers {titleWithoutTraining} training in Hyderabad across multiple locations including
             Dilsukhnagar, Ameerpet, and nearby areas including {serviceAreas.slice(0, 4).join(', ')}.
             Our certified trainers deliver both classroom and online training with placement support.
