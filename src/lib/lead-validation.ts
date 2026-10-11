@@ -6,9 +6,9 @@
  */
 
 import { z } from 'zod';
-import { FILL_TIME_FIELD, HONEYPOT_FIELD, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
+import { COMPANY_NAME_ERROR, COMPANY_NAME_RE, FILL_TIME_FIELD, HONEYPOT_FIELD, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, normalizeCompanyName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
 
-export { FILL_TIME_FIELD, HONEYPOT_FIELD, MIN_FILL_MS, MIN_FILL_MS_POPUP, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, isValidName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
+export { COMPANY_NAME_ERROR, COMPANY_NAME_RE, FILL_TIME_FIELD, HONEYPOT_FIELD, MIN_FILL_MS, MIN_FILL_MS_POPUP, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, isValidCompanyName, isValidName, normalizeCompanyName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
 
 /* -------------------------------------------------------------------------- */
 /*  Phone                                                                     */
@@ -26,6 +26,9 @@ export const phoneField = z
 
 // normalizeName first (dash look-alikes -> "-", spaces collapsed, trimmed), then the same rule as the browser.
 export const nameField = z.string().transform(normalizeName).pipe(z.string().regex(PERSON_NAME_RE, NAME_ERROR));
+
+// Corporate form's company name: same cleaning, a wider character set (digits, & . , ( ) / +), 2-100 characters.
+export const companyNameField = z.string().transform(normalizeCompanyName).pipe(z.string().regex(COMPANY_NAME_RE, COMPANY_NAME_ERROR));
 
 /* -------------------------------------------------------------------------- */
 /*  Bot protection                                                            */

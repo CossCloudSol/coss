@@ -14,7 +14,7 @@ registerHooks({
   },
 });
 const { normalizeName, isValidName } = await import('../../src/lib/lead-checks.ts');
-const { nameField } = await import('../../src/lib/lead-validation.ts');
+const { nameField, companyNameField } = await import('../../src/lib/lead-validation.ts');
 const { rules, validateLead } = await import('../../src/lib/lead-form-rules.ts');
 
 const saved = (raw) => {
@@ -62,4 +62,43 @@ test('browser rules give the same verdict and the same saved value as the server
   const { values } = validateLead({ name: [rules.name()] }, { name: 'TEST Subodh – ignore' });
   assert.equal(values.name, saved('TEST Subodh – ignore'));
   assert.equal(normalizeName('A  –  B'), 'A - B');
+});
+
+/* ── corporate form: contactPerson uses nameField; companyName has its own wider rule ── */
+const company = (raw) => {
+  const r = companyNameField.safeParse(raw);
+  return r.success ? r.data : null;
+};
+
+test('corporate contactPerson: same normaliser and verdict as a lead name', () => {
+  assert.equal(saved('TEST Subodh \u2013 ignore'), 'TEST Subodh - ignore');
+  assert.equal(rules.name()('TEST Subodh \u2013 ignore'), null);
+  const { values, errors } = validateLead({ contactPerson: [rules.name()] }, { contactPerson: '  Mary\u2013Jane   D\u2019Souza ' });
+  assert.deepEqual(errors, {});
+  assert.equal(values.contactPerson, 'Mary-Jane D\u2019Souza');
+});
+
+test('company names keep digits, & . , ( ) / + - and apostrophes', () => {
+  for (const n of ['Tata Consultancy Services Ltd.', 'L&T (India), Pvt. Ltd.', '3M India', 'Johnson & Johnson', "O'Neil & Sons", 'Wipro-Tech', '12345', 'A/B Labs + Co']) {
+    assert.equal(company(n), n, n);
+  }
+});
+
+test('company names: dash look-alikes become "-", spaces collapse', () => {
+  assert.equal(company('Acme \u2013 Cloud  Labs'), 'Acme - Cloud Labs');
+  assert.equal(company('  Acme   Corp '), 'Acme Corp');
+});
+
+test('company names: markup, emoji, symbols, too short or too long are rejected, not stripped', () => {
+  for (const n of ['<script>alert(1)</script>', 'Acme \u{1F680} Corp', 'A', '', '..', 'x'.repeat(101), 'Acme_Corp', 'Acme @ Corp']) {
+    assert.equal(company(n), null, JSON.stringify(n));
+  }
+});
+
+test('company name: browser rule and the saved value match the server', () => {
+  for (const n of ['3M India', 'Acme \u2013 Cloud  Labs', '<b>x</b>', 'A']) {
+    assert.equal(rules.companyName()(n) === null, company(n) !== null, n);
+  }
+  const { values } = validateLead({ companyName: [rules.companyName()] }, { companyName: ' Acme \u2013  Cloud ' });
+  assert.equal(values.companyName, 'Acme - Cloud');
 });

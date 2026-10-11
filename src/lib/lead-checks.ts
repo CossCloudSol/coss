@@ -53,6 +53,25 @@ export function isValidName(raw: string): boolean {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Company name (corporate form)                                             */
+/* -------------------------------------------------------------------------- */
+
+// 2-100 characters: letters in any script and combining marks, digits, spaces, and . , & ' ’ - ( ) / +
+// ("3M India", "L&T (India) Pvt. Ltd.", "Johnson & Johnson", "Tata Consultancy Services Ltd."). At
+// least one letter or digit. Markup (< >), emoji and other symbols are rejected, never stripped.
+export const COMPANY_NAME_RE = /^(?=.*[\p{L}\p{N}])[\p{L}\p{M}\p{N} .,&'’()/+-]{2,100}$/u;
+
+export const COMPANY_NAME_ERROR = "Company name must be 2-100 characters: letters, numbers, spaces and . , & ' - ( ) / +";
+
+/** Same cleaning as a person's name: dash look-alikes to "-", ‘ ʼ to ', runs of spaces collapsed, trimmed. */
+export const normalizeCompanyName = normalizeName;
+
+/** True for a company name the corporate API accepts (same rule as companyNameField). */
+export function isValidCompanyName(raw: string): boolean {
+  return COMPANY_NAME_RE.test(normalizeCompanyName(raw));
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Bot protection fields                                                     */
 /* -------------------------------------------------------------------------- */
 

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { firstTouchData } from '@/lib/attribution';
 import { createNotification } from '@/lib/notifications';
-import { MIN_FILL_MS, botCheck, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
+import { MIN_FILL_MS, botCheck, companyNameField, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -14,11 +14,8 @@ export const dynamic = 'force-dynamic';
 /* -------------------------------------------------------------------------- */
 
 const corporateLeadSchema = z.object({
-  companyName: z
-    .string()
-    .trim()
-    .min(2, 'Company name must be at least 2 characters')
-    .max(100, 'Company name must be 100 characters or fewer'),
+  // Same cleaning as a person's name; letters, digits, spaces and . , & ' - ( ) / + (lib/lead-checks).
+  companyName: companyNameField,
   contactPerson: nameField,
   // Shared rule (lib/lead-validation): 10 digits starting 6-9 with an
   // optional +91 or 0 prefix, stored as +91XXXXXXXXXX.
