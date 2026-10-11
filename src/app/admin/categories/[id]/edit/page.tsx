@@ -195,7 +195,7 @@ export default function EditCategoryPage() {
               <label className={labelCls}>
                 Slug *
                 {isLegacy && <span className="ml-1 text-amber-600 dark:text-amber-400 text-[10px]">— locked (legacy)</span>}
-                {!isLegacy && courseCount > 0 && <span className="ml-1 text-orange-500 text-[10px]">— warning: courses are linked</span>}
+                {!isLegacy && courseCount > 0 && <span className="ml-1 text-[#b8531c] text-[10px]">— warning: courses are linked</span>}
               </label>
               <div className="relative">
                 {isLegacy && (

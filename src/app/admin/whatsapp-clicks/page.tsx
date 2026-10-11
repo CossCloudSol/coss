@@ -43,7 +43,7 @@ const DEVICE_LABEL: Record<string, string> = {
 // Stat card light-mode backgrounds and dark-mode accent bars by index —
 // matches /admin/call-clicks's palette so the "Leads" group reads as one system.
 const STAT_LIGHT_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#03798a]', 'bg-[#7c3aed]'];
-const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-orange-500'];
+const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-[#b8531c]'];
 
 const MOBILE_CARD_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#7c3aed]'];
 
@@ -252,7 +252,7 @@ function CtaTypeBreakdown({
 const CHANNEL_META = {
   form: { label: 'Form Leads', color: 'bg-purple-500', dot: 'bg-purple-500' },
   whatsappLead: { label: 'WhatsApp Leads', color: 'bg-blue-500', dot: 'bg-blue-500' },
-  callClick: { label: 'Call Clicks', color: 'bg-orange-500', dot: 'bg-orange-500' },
+  callClick: { label: 'Call Clicks', color: 'bg-[#b8531c]', dot: 'bg-[#b8531c]' },
   whatsappClick: { label: 'WhatsApp Clicks', color: 'bg-emerald-500', dot: 'bg-emerald-500' },
 } as const;
 

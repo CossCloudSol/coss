@@ -265,7 +265,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                   {topicLabel} Batches at {localityConfig.name}
                 </h2>
                 {batches.length > 0 && (
-                  <Link href="/batches" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
+                  <Link href="/batches" style={{ fontSize: '13px', color: 'var(--primary-text)', fontWeight: 600 }}>
                     View all batches at this branch →
                   </Link>
                 )}
@@ -304,7 +304,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                       <Link key={c.slug} href={courseCanonicalPath(c)}
                         style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'var(--bg-alt)', border: '1px solid var(--border)' }}>
                         <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text)' }}>{c.title}</span>
-                        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary)' }}>Next batch: {formatBatchDate(c.nextBatchDate)}</span>
+                        <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary-text)' }}>Next batch: {formatBatchDate(c.nextBatchDate)}</span>
                       </Link>
                     ) : (
                       <WhatsAppLink
@@ -335,14 +335,14 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
             {/* Internal links: back to the parent locality page, across to the other branch's same-topic page */}
             <div style={{ fontSize: '13.5px', color: 'var(--text-muted)' }}>
               <p style={{ marginBottom: '8px' }}>
-                <Link href={`/locations/${config.localitySlug}`} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+                <Link href={`/locations/${config.localitySlug}`} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>
                   ← Back to the {localityConfig.name} branch page
                 </Link>
               </p>
               {otherBranchPage && otherBranchLocality && (
                 <p>
                   Also available at our{' '}
-                  <Link href={`/locations/${otherBranchPage.localitySlug}/${otherBranchPage.slug}`} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+                  <Link href={`/locations/${otherBranchPage.localitySlug}/${otherBranchPage.slug}`} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>
                     {otherBranchLocality.name} branch
                   </Link>.
                 </p>

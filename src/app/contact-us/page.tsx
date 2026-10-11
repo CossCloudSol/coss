@@ -95,7 +95,7 @@ export default async function ContactUsPage() {
                 </div>
               ))}
               <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(232,64,28,0.1)', borderRadius: '8px', fontSize: '12px', color: '#aaa', lineHeight: '1.6' }}>
-                📞 For urgent queries, call us directly at <CallLink number={PRIMARY_PHONE} pageType="static" style={{ color: 'var(--primary)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
+                📞 For urgent queries, call us directly at <CallLink number={PRIMARY_PHONE} pageType="static" style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
               </div>
             </div>
 

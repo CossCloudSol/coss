@@ -202,13 +202,13 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                       <p key={i} style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.8' }}>{line}</p>
                     ))}
                     <p style={{ marginTop: '12px', fontSize: '13.5px', color: 'var(--text)' }}>
-                      📞 <CallLink number={branch.phone} pageType="locality" branchKey={config.branchKey} style={{ color: 'var(--primary)', fontWeight: 600 }}>{branch.phone}</CallLink>
+                      📞 <CallLink number={branch.phone} pageType="locality" branchKey={config.branchKey} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{branch.phone}</CallLink>
                     </p>
                     {hours.groups.map((g) => (
                       <p key={g.days} style={{ fontSize: '13.5px', color: 'var(--text)' }}>🕐 {g.days}, {g.time}</p>
                     ))}
                     <a href={config.directionsHref} target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'inline-block', marginTop: '12px', fontSize: '13px', fontWeight: 600, color: 'var(--primary)' }}>
+                      style={{ display: 'inline-block', marginTop: '12px', fontSize: '13px', fontWeight: 600, color: 'var(--primary-text)' }}>
                       Get directions →
                     </a>
                   </div>
@@ -243,7 +243,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                     <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', margin: 0 }}>
                       Upcoming Batches at {config.name}
                     </h2>
-                    <Link href="/batches" style={{ fontSize: '13px', color: 'var(--primary)', fontWeight: 600 }}>
+                    <Link href="/batches" style={{ fontSize: '13px', color: 'var(--primary-text)', fontWeight: 600 }}>
                       View all batches at this branch →
                     </Link>
                   </div>
@@ -279,7 +279,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {LOCALITY_TOPIC_PAGES.filter((t) => t.localitySlug === config.slug).map((t) => (
                       <Link key={t.slug} href={`/locations/${t.localitySlug}/${t.slug}`}
-                        style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--primary-light)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--primary)' }}>
+                        style={{ padding: '9px 16px', borderRadius: '8px', background: 'var(--primary-light)', border: '1px solid var(--border)', fontSize: '13px', fontWeight: 600, color: 'var(--primary-text)' }}>
                         {TOPIC_LABELS[t.topicKey]} at {config.name} →
                       </Link>
                     ))}
@@ -306,7 +306,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                       return (
                         <span key={slug}>
                           {i > 0 && ' and '}
-                          <Link href={`/locations/${slug}`} style={{ color: 'var(--primary)', fontWeight: 600 }}>{c.name}</Link>
+                          <Link href={`/locations/${slug}`} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{c.name}</Link>
                         </span>
                       );
                     })}.
@@ -401,7 +401,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                 {config.nearestBranches.map((nb) => (
                   <div key={nb.branchKey} className="inner-card">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: '8px', marginBottom: '6px' }}>
-                      <Link href={`/locations/${nb.branchKey}`} style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--primary)' }}>
+                      <Link href={`/locations/${nb.branchKey}`} style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px', color: 'var(--primary-text)' }}>
                         {nb.label} →
                       </Link>
                       <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text)' }}>{nb.travelTime}</span>

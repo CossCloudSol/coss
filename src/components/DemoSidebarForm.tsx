@@ -60,7 +60,7 @@ const sidebarInput: React.CSSProperties = {
 const enrollBtn: React.CSSProperties = {
   display: 'block',
   textAlign: 'center',
-  background: 'var(--primary)',
+  background: 'var(--primary-fill)',
   color: '#fff',
   padding: '12px',
   borderRadius: '6px',

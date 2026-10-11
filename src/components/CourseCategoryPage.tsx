@@ -373,7 +373,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                 <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🚀 Career Opportunities</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {data.careers.map(c => (
-                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
+                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary-text)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
                   ))}
                 </div>
               </div>

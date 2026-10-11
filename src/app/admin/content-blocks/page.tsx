@@ -57,7 +57,7 @@ const BLOCK_TYPE_COLORS: Record<string, string> = {
   'course-grid':'bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-500/30',
   'blog-grid':  'bg-green-50 dark:bg-green-500/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-500/30',
   testimonials: 'bg-pink-50 dark:bg-pink-500/20 text-pink-700 dark:text-pink-300 border-pink-200 dark:border-pink-500/30',
-  cta:          'bg-orange-50 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-500/30',
+  cta:          'bg-orange-50 dark:bg-[#e47538]/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-[#e47538]/30',
 }
 
 // ─── Grid Style Selector ──────────────────────────────────────────────────────
@@ -950,7 +950,7 @@ export default function ContentBlocksPage() {
                     BLOCK_TYPE_COLORS[bt.type]?.includes('purple') ? 'bg-purple-500' :
                     BLOCK_TYPE_COLORS[bt.type]?.includes('blue') ? 'bg-blue-500' :
                     BLOCK_TYPE_COLORS[bt.type]?.includes('green') ? 'bg-green-500' :
-                    BLOCK_TYPE_COLORS[bt.type]?.includes('pink') ? 'bg-pink-500' : 'bg-orange-500'
+                    BLOCK_TYPE_COLORS[bt.type]?.includes('pink') ? 'bg-pink-500' : 'bg-[#b8531c]'
                   }`} />
                   + {bt.label}
                 </button>

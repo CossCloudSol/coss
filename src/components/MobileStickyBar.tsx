@@ -13,7 +13,7 @@ export default function MobileStickyBar() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[9998] md:hidden">
       <div
-        className="bg-[#0d1b2e] border-t-[2.5px] border-[#b8531c] shadow-[0_-4px_24px_rgba(0,0,0,0.5)]"
+        className="bg-[#0d1b2e] border-t-[2.5px] border-[#e47538] shadow-[0_-4px_24px_rgba(0,0,0,0.5)]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="grid grid-cols-4">

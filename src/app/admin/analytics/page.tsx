@@ -187,7 +187,7 @@ function StatsRow({ data }: { data: AnalyticsResponse }): JSX.Element {
     {
       label: 'Avg Response',
       value: data.totals.avgResponseHours === null ? '—' : `${data.totals.avgResponseHours.toFixed(1)} hrs`,
-      accent: 'bg-orange-500',
+      accent: 'bg-[#b8531c]',
     },
     { label: 'This Month',    value: fmt(data.totals.thisMonth),    accent: 'bg-purple-500' },
     { label: 'WhatsApp Sent', value: fmt(data.totals.whatsappSent), accent: 'bg-green-500'  },

@@ -226,7 +226,7 @@ export async function BlogIndexView({
                   cursor: 'pointer',
                   textDecoration: 'none',
                   display: 'inline-block',
-                  background: isActive ? 'var(--primary)' : 'var(--surface)',
+                  background: isActive ? 'var(--primary-fill)' : 'var(--surface)',
                   color: isActive ? '#fff' : 'var(--text-muted)',
                   border: `1px solid ${isActive ? 'var(--primary)' : 'var(--border)'}`,
                   transition: 'all 0.2s ease',
@@ -245,7 +245,7 @@ export async function BlogIndexView({
               <strong style={{ color: 'var(--text)' }}>{filteredDbPosts.length + filteredMdxPosts.length}</strong>{' '}
               post{(filteredDbPosts.length + filteredMdxPosts.length) !== 1 ? 's' : ''} in
             </span>
-            <span style={{ background: 'var(--primary)', color: '#fff', padding: '3px 12px', borderRadius: '12px', fontSize: '13px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>
+            <span style={{ background: 'var(--primary-fill)', color: '#fff', padding: '3px 12px', borderRadius: '12px', fontSize: '13px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>
               {activeCategory}
             </span>
             <Link href="/blog" style={{ fontSize: '12px', color: 'var(--text-muted)', textDecoration: 'underline' }}>
@@ -262,7 +262,7 @@ export async function BlogIndexView({
               <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
                 <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>No Posts Found</h3>
                 <p style={{ marginBottom: '16px' }}>No articles in &ldquo;{activeCategory}&rdquo; yet. Check back soon!</p>
-                <Link href="/blog" style={{ display: 'inline-block', background: 'var(--primary)', color: '#fff', padding: '9px 22px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', textDecoration: 'none' }}>
+                <Link href="/blog" style={{ display: 'inline-block', background: 'var(--primary-fill)', color: '#fff', padding: '9px 22px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', textDecoration: 'none' }}>
                   View All Posts
                 </Link>
               </div>
@@ -273,7 +273,7 @@ export async function BlogIndexView({
                   <div className="mb-2">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                       <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#b8531c] flex-shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-[#e47538] flex-shrink-0" />
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           Latest articles
                         </span>
@@ -393,7 +393,7 @@ export async function BlogIndexView({
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '13px', lineHeight: '1.7', marginBottom: '14px' }}>
                 IT training institute in Dilsukhnagar &amp; Ameerpet, Hyderabad, since 2010.
               </p>
-              <Link href="/about-us" style={{ color: 'var(--primary)', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
+              <Link href="/about-us" style={{ color: 'var(--primary-text)', fontSize: '13px', fontWeight: 600 }}>Learn More {'→'}</Link>
             </div>
 
             <div style={{ background: 'var(--primary-light)', borderRadius: '12px', padding: '22px', border: '1px solid rgba(228,117,56,0.2)', marginBottom: '20px' }}>
@@ -401,7 +401,7 @@ export async function BlogIndexView({
                 {'🎓'} Enroll Now
               </h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', marginBottom: '14px' }}>Book a free demo class and start your IT career today.</p>
-              <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+              <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary-fill)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
                 Book Free Demo Class
               </Link>
             </div>
@@ -425,7 +425,7 @@ export async function BlogIndexView({
                         borderBottom: '1px solid var(--border)',
                         fontSize: '13px',
                         textDecoration: 'none',
-                        color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                        color: isActive ? 'var(--primary-text)' : 'var(--text-muted)',
                         fontWeight: isActive ? 600 : 400,
                         fontFamily: 'var(--font-poppins), Poppins, sans-serif',
                         transition: 'color 0.15s ease',
@@ -433,7 +433,7 @@ export async function BlogIndexView({
                     >
                       <span>{'›'} {cat}</span>
                       {isActive && (
-                        <span style={{ background: 'var(--primary)', color: '#fff', borderRadius: '10px', padding: '1px 8px', fontSize: '11px', fontWeight: 600 }}>
+                        <span style={{ background: 'var(--primary-fill)', color: '#fff', borderRadius: '10px', padding: '1px 8px', fontSize: '11px', fontWeight: 600 }}>
                           active
                         </span>
                       )}

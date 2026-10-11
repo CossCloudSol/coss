@@ -126,19 +126,19 @@ export function CourseSidebarNav({ active }: { active?: string }) {
 
   return (
     <div style={{ background: 'var(--bg-card)', borderRadius: '12px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', marginBottom: '20px', border: '1px solid var(--border-card)' }}>
-      <div style={{ background: 'var(--primary)', padding: '14px 18px' }}>
+      <div style={{ background: 'var(--primary-fill)', padding: '14px 18px' }}>
         <h4 style={{ color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '15px' }}>All Course Categories</h4>
       </div>
       {links.map(l => (
         <Link key={l.href} href={l.href} style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '11px 18px', fontSize: '13px',
-          color: l.label === active ? 'var(--primary)' : 'var(--text)',
+          color: l.label === active ? 'var(--primary-text)' : 'var(--text)',
           borderBottom: '1px solid var(--border)',
           background: l.label === active ? 'var(--primary-light)' : 'transparent',
           fontWeight: l.label === active ? 600 : 400,
         }}>
-          {l.label} <span style={{ color: 'var(--primary)' }}>›</span>
+          {l.label} <span style={{ color: 'var(--primary-text)' }}>›</span>
         </Link>
       ))}
     </div>
@@ -148,11 +148,11 @@ export function CourseSidebarNav({ active }: { active?: string }) {
 /* ── CTA Banner ── */
 export function CtaBanner() {
   return (
-    <div style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)', borderRadius: '14px', padding: '40px 32px', textAlign: 'center', color: '#fff', margin: '48px 0 0' }}>
+    <div style={{ background: 'linear-gradient(135deg, var(--primary-fill) 0%, var(--primary-fill-dark) 100%)', borderRadius: '14px', padding: '40px 32px', textAlign: 'center', color: '#fff', margin: '48px 0 0' }}>
       <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(18px,4vw,26px)', fontWeight: 800, marginBottom: '10px', color: '#fff' }}>Ready to Start Your Journey?</h3>
       <p style={{ opacity: 0.9, marginBottom: '22px', fontSize: '15px', color: 'rgba(255,255,255,0.9)' }}>Book a free demo class today. No commitment required.</p>
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/free-demo-class" style={{ background: '#fff', color: 'var(--primary)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+        <Link href="/free-demo-class" style={{ background: '#fff', color: 'var(--primary-fill)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
           Book a free demo class
         </Link>
         <Link href="/contact-us" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>

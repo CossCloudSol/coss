@@ -265,7 +265,7 @@ export default async function HomePage() {
           <ul className="mt-2 flex flex-col gap-2.5 md:gap-3.5 lg:col-start-1 lg:row-start-2 lg:mt-0">
             {HERO_POINTS.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-3 text-sm text-white md:text-base">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#b8531c]/20 text-[#f3a57a] md:h-9 md:w-9">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#e47538]/20 text-[#f3a57a] md:h-9 md:w-9">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 {text}
@@ -656,7 +656,7 @@ export default async function HomePage() {
       {/* ── Final CTA band ── */}
       <section aria-label="Book your free demo class" className="bg-[#f4f7f8] px-4 pb-8 dark:bg-slate-950 md:px-8 md:pb-20">
         <div className={`${CONTAINER} relative flex flex-col gap-3 overflow-hidden rounded-[20px] bg-[#0a3d4a] px-5 py-7 md:flex-row md:items-center md:justify-between md:gap-10 md:rounded-3xl md:p-14`}>
-          <span aria-hidden="true" className="pointer-events-none absolute -bottom-[70px] -right-[60px] h-[200px] w-[200px] rounded-full border-[32px] border-[#b8531c]/[0.14] md:-bottom-[120px] md:-left-20 md:right-auto md:h-80 md:w-80 md:border-[48px]" />
+          <span aria-hidden="true" className="pointer-events-none absolute -bottom-[70px] -right-[60px] h-[200px] w-[200px] rounded-full border-[32px] border-[#e47538]/[0.14] md:-bottom-[120px] md:-left-20 md:right-auto md:h-80 md:w-80 md:border-[48px]" />
           <div className="relative flex flex-col gap-2 md:gap-3">
             <h2 className="font-heading text-[26px] font-extrabold text-white md:text-[40px]">Your next step: a free demo class</h2>
             <p className="text-[15px] text-white/85 md:text-[17px]">Meet the trainer, see the lab setup, then decide. No payment to book.</p>

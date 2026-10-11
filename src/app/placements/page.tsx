@@ -213,7 +213,7 @@ export default async function PlacementsPage() {
       </div>
 
       {/* Section 5 — Close */}
-      <div style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)', padding: '56px 20px' }}>
+      <div style={{ background: 'linear-gradient(135deg, var(--primary-fill) 0%, var(--primary-fill-dark) 100%)', padding: '56px 20px' }}>
         <div style={{ maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 800, color: '#fff', marginBottom: '14px' }}>
             Come and see for yourself
@@ -223,7 +223,7 @@ export default async function PlacementsPage() {
           </p>
           <a
             href={`#${FORM_ANCHOR}`}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff', color: 'var(--primary)', padding: '13px 30px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff', color: 'var(--primary-fill)', padding: '13px 30px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
           >
             {CAREER_SUPPORT_CTA} <ArrowRight size={16} aria-hidden="true" />
           </a>

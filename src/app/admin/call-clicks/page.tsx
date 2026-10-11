@@ -29,7 +29,7 @@ const DEVICE_LABEL: Record<string, string> = {
 // Stat card light-mode backgrounds and dark-mode accent bars by index —
 // matches /admin/whatsapp's palette so the two "Leads" pages read as one system.
 const STAT_LIGHT_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#03798a]', 'bg-[#7c3aed]'];
-const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-orange-500'];
+const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-[#b8531c]'];
 
 const MOBILE_CARD_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#7c3aed]'];
 
@@ -177,7 +177,7 @@ function StatsRow({
 const CHANNEL_META = {
   form: { label: 'Form Leads', color: 'bg-purple-500', dot: 'bg-purple-500' },
   whatsapp: { label: 'WhatsApp Leads', color: 'bg-emerald-500', dot: 'bg-emerald-500' },
-  call: { label: 'Call Clicks', color: 'bg-orange-500', dot: 'bg-orange-500' },
+  call: { label: 'Call Clicks', color: 'bg-[#b8531c]', dot: 'bg-[#b8531c]' },
 } as const;
 
 function ChannelSeriesPanel({

@@ -11,18 +11,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const certs = [
-  { name: 'AWS Certified Solutions Architect', vendor: 'Amazon Web Services', level: 'Associate / Professional', icon: '☁️', color: '#f59e0b' },
-  { name: 'Microsoft Azure Fundamentals (AZ-900)', vendor: 'Microsoft', level: 'Beginner', icon: '🔷', color: '#0078d4' },
-  { name: 'Microsoft Azure Administrator (AZ-104)', vendor: 'Microsoft', level: 'Associate', icon: '🔷', color: '#0078d4' },
-  { name: 'Azure Data Engineer (DP-203)', vendor: 'Microsoft', level: 'Associate', icon: '📊', color: '#0078d4' },
-  { name: 'Google Associate Cloud Engineer', vendor: 'Google Cloud', level: 'Associate', icon: '🌐', color: '#4285f4' },
-  { name: 'Certified Ethical Hacker (CEH)', vendor: 'EC-Council', level: 'Advanced', icon: '🔒', color: '#b8531c' },
-  { name: 'Salesforce Certified Administrator', vendor: 'Salesforce', level: 'Associate', icon: '🏢', color: '#00a1e0' },
-  { name: 'Certified Kubernetes Administrator (CKA)', vendor: 'CNCF', level: 'Advanced', icon: '⚙️', color: '#326ce5' },
-  { name: 'CompTIA Security+', vendor: 'CompTIA', level: 'Intermediate', icon: '🛡️', color: '#c8102e' },
-  { name: 'AWS Certified DevOps Engineer', vendor: 'Amazon Web Services', level: 'Professional', icon: '⚙️', color: '#f59e0b' },
-  { name: 'Terraform Associate', vendor: 'HashiCorp', level: 'Associate', icon: '🔧', color: '#7b42bc' },
-  { name: 'Power BI Data Analyst (PL-300)', vendor: 'Microsoft', level: 'Associate', icon: '📈', color: '#f2c811' },
+  { name: 'AWS Certified Solutions Architect', vendor: 'Amazon Web Services', level: 'Associate / Professional', icon: '☁️', accent: '#f59e0b' },
+  { name: 'Microsoft Azure Fundamentals (AZ-900)', vendor: 'Microsoft', level: 'Beginner', icon: '🔷', accent: '#0078d4' },
+  { name: 'Microsoft Azure Administrator (AZ-104)', vendor: 'Microsoft', level: 'Associate', icon: '🔷', accent: '#0078d4' },
+  { name: 'Azure Data Engineer (DP-203)', vendor: 'Microsoft', level: 'Associate', icon: '📊', accent: '#0078d4' },
+  { name: 'Google Associate Cloud Engineer', vendor: 'Google Cloud', level: 'Associate', icon: '🌐', accent: '#4285f4' },
+  { name: 'Certified Ethical Hacker (CEH)', vendor: 'EC-Council', level: 'Advanced', icon: '🔒', accent: '#e47538' },
+  { name: 'Salesforce Certified Administrator', vendor: 'Salesforce', level: 'Associate', icon: '🏢', accent: '#00a1e0' },
+  { name: 'Certified Kubernetes Administrator (CKA)', vendor: 'CNCF', level: 'Advanced', icon: '⚙️', accent: '#326ce5' },
+  { name: 'CompTIA Security+', vendor: 'CompTIA', level: 'Intermediate', icon: '🛡️', accent: '#c8102e' },
+  { name: 'AWS Certified DevOps Engineer', vendor: 'Amazon Web Services', level: 'Professional', icon: '⚙️', accent: '#f59e0b' },
+  { name: 'Terraform Associate', vendor: 'HashiCorp', level: 'Associate', icon: '🔧', accent: '#7b42bc' },
+  { name: 'Power BI Data Analyst (PL-300)', vendor: 'Microsoft', level: 'Associate', icon: '📈', accent: '#f2c811' },
 ];
 
 export default function CertificationPage() {
@@ -57,7 +57,7 @@ export default function CertificationPage() {
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {certs.map(c => (
-            <div key={c.name} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '22px', boxShadow: '0 2px 14px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', borderTop: `4px solid ${c.color}` }}>
+            <div key={c.name} style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '22px', boxShadow: '0 2px 14px rgba(0,0,0,0.08)', border: '1px solid var(--border-card)', borderTop: `4px solid ${c.accent}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                 <span style={{ fontSize: '26px' }}>{c.icon}</span>
                 <div>

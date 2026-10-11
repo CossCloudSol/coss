@@ -67,7 +67,7 @@ function Input({ value, onChange, placeholder, maxLength, disabled }: { value: s
         placeholder={placeholder}
         maxLength={maxLength}
         disabled={disabled}
-        className={`w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent${disabled ? ' opacity-60 cursor-not-allowed' : ''}`}
+        className={`w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#e47538] focus:border-transparent${disabled ? ' opacity-60 cursor-not-allowed' : ''}`}
       />
       {maxLength && (
         <span className="absolute right-2 top-2 text-xs text-gray-400">{value.length}/{maxLength}</span>
@@ -84,7 +84,7 @@ function Textarea({ value, onChange, rows = 3, maxLength }: { value: string; onC
         onChange={(e) => onChange(e.target.value)}
         rows={rows}
         maxLength={maxLength}
-        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
+        className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#e47538] resize-none"
       />
       {maxLength && (
         <span className="absolute right-2 bottom-2 text-xs text-gray-400">{value.length}/{maxLength}</span>
@@ -98,7 +98,7 @@ function Toggle({ enabled, onChange, label }: { enabled: boolean; onChange: (v: 
     <label className="flex items-center gap-3 cursor-pointer select-none">
       <div
         onClick={() => onChange(!enabled)}
-        className={`relative w-10 h-5 rounded-full transition-colors ${enabled ? 'bg-orange-500' : 'bg-gray-300 dark:bg-gray-600'}`}
+        className={`relative w-10 h-5 rounded-full transition-colors ${enabled ? 'bg-[#b8531c]' : 'bg-gray-300 dark:bg-gray-600'}`}
       >
         <div className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
       </div>
@@ -176,7 +176,7 @@ export default function HomepageManagerPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex items-center gap-3 text-gray-500">
-          <div className="w-5 h-5 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-[#e47538] border-t-transparent rounded-full animate-spin" />
           <span className="text-sm">Loading homepage settings...</span>
         </div>
       </div>
@@ -196,7 +196,7 @@ export default function HomepageManagerPage() {
         </div>
         <div className="flex items-center gap-3">
           {savedAt && !dirty && <span className="text-xs text-green-600 dark:text-green-400">Saved at {savedAt}</span>}
-          {dirty && <span className="text-xs text-orange-500">Unsaved changes</span>}
+          {dirty && <span className="text-xs text-[#b8531c]">Unsaved changes</span>}
           <a href="/" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1">
             Preview
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -206,7 +206,7 @@ export default function HomepageManagerPage() {
           <button
             onClick={save}
             disabled={saving || !dirty}
-            className="px-5 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+            className="px-5 py-2 bg-[#b8531c] hover:bg-orange-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
           >
             {saving && <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
             {saving ? 'Saving…' : 'Save Changes'}
@@ -232,7 +232,7 @@ export default function HomepageManagerPage() {
             <Field label="Background colour">
               <div className="flex items-center gap-2">
                 <input type="color" value={settings.announcementBgColor} onChange={(e) => update('announcementBgColor', e.target.value)} className="w-10 h-9 rounded cursor-pointer border border-gray-200 dark:border-gray-600 p-0.5" />
-                <input type="text" value={settings.announcementBgColor} onChange={(e) => update('announcementBgColor', e.target.value)} className="flex-1 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                <input type="text" value={settings.announcementBgColor} onChange={(e) => update('announcementBgColor', e.target.value)} className="flex-1 px-3 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-[#e47538]" />
               </div>
             </Field>
           </div>
@@ -291,7 +291,7 @@ export default function HomepageManagerPage() {
                   value={settings[s.v] as string}
                   onChange={(e) => update(s.v, e.target.value)}
                   placeholder={s.vp}
-                  className="w-full text-center text-lg font-bold text-orange-500 bg-transparent border-0 border-b border-gray-200 dark:border-gray-600 focus:outline-none focus:border-orange-500 mb-1 pb-1"
+                  className="w-full text-center text-lg font-bold text-[#b8531c] bg-transparent border-0 border-b border-gray-200 dark:border-gray-600 focus:outline-none focus:border-[#e47538] mb-1 pb-1"
                 />
                 <input
                   type="text"
@@ -352,7 +352,7 @@ export default function HomepageManagerPage() {
                 return (
                   <button key={course.id} onClick={() => !disabled && toggleFeaturedCourse(course.id)} disabled={disabled}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${selected ? 'bg-orange-50 dark:bg-orange-900/20' : disabled ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}>
-                    <div className={`w-4 h-4 rounded flex-shrink-0 border flex items-center justify-center transition-colors ${selected ? 'bg-orange-500 border-orange-500' : 'border-gray-300 dark:border-gray-600'}`}>
+                    <div className={`w-4 h-4 rounded flex-shrink-0 border flex items-center justify-center transition-colors ${selected ? 'bg-[#b8531c] border-[#e47538]' : 'border-gray-300 dark:border-gray-600'}`}>
                       {selected && <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
                     </div>
                     <div className="min-w-0">
@@ -382,7 +382,7 @@ export default function HomepageManagerPage() {
       {/* Sticky save footer */}
       <div className="sticky bottom-4 flex justify-end">
         <button onClick={save} disabled={saving || !dirty}
-          className="px-6 py-2.5 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white text-sm font-medium rounded-xl shadow-lg transition-colors flex items-center gap-2">
+          className="px-6 py-2.5 bg-[#b8531c] hover:bg-orange-600 disabled:bg-gray-300 dark:disabled:bg-gray-700 text-white text-sm font-medium rounded-xl shadow-lg transition-colors flex items-center gap-2">
           {saving && <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />}
           {saving ? 'Saving…' : dirty ? 'Save Changes' : 'All saved'}
         </button>
