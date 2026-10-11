@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { optimizeCldUrl } from '@/lib/cloudinary';
 import { bannerStyle } from '@/lib/home-v4';
 import { getYearsOfExperience, splitCommaList } from '@/lib/trainer-queries';
-import { TRACKS, courseLinkFor, demoLabel, initialsOf, trackOf, type TrackKey } from '@/lib/faculty';
+import { TRACKS, demoLabel, initialsOf, matchCourse, parseTeaches, trackOf, type TrackKey } from '@/lib/faculty';
 import { MENU_ICON_COLORS, MENU_ICON_PATHS } from '@/lib/menu-icons';
 import { CARD, CONTAINER, SECTION_PAD, TONE } from '@/components/home/v4/SectionHead';
 import FacultyDrawerController from '@/components/faculty/FacultyDrawerController';
@@ -64,22 +64,25 @@ function Experience({ years }: { years: number | null }) {
   );
 }
 
-function TeachesChips({ names, courses, size = 'sm' }: { names: string[]; courses: Props['courses']; size?: 'sm' | 'md' }) {
-  if (names.length === 0) return null;
+/** Topic chips: a chip links (with an arrow) only when it names a published course; any other topic is a plain chip. */
+function TopicChips({ topics, courses }: { topics: string[]; courses: Props['courses'] }) {
+  if (topics.length === 0) return null;
   return (
     <ul className="flex flex-wrap gap-1.5">
-      {names.map((c) => (
-        <li key={c}>
-          <Link
-            href={courseLinkFor(c, courses)}
-            data-cta="faculty_course"
-            data-loc="faculty"
-            className={`inline-flex min-h-9 items-center gap-1 rounded-full bg-[#fdf0e8] px-3 font-sans font-bold text-[#8f3f14] hover:bg-[#f9e1d1] ${size === 'md' ? 'text-sm' : 'text-[13px]'}`}
-          >
-            {c} <span aria-hidden="true">→</span>
-          </Link>
-        </li>
-      ))}
+      {topics.map((c) => {
+        const course = matchCourse(c, courses);
+        return (
+          <li key={c}>
+            {course ? (
+              <Link href={course.url} data-cta="faculty_course" data-loc="faculty" className="inline-flex min-h-9 items-center gap-1 rounded-full bg-[#fdf0e8] px-3 font-sans text-sm font-bold text-[#8f3f14] hover:bg-[#f9e1d1]">
+                {c} <span aria-hidden="true">→</span>
+              </Link>
+            ) : (
+              <span className="inline-flex min-h-9 items-center rounded-full border border-[#e3eaec] bg-[#f4f7f8] px-3 font-sans text-sm font-medium text-[#26383d]">{c}</span>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -98,7 +101,7 @@ export default function FacultyView({ trainers, courses }: Props) {
     track: trackOf(t.category, t.title),
     years: getYearsOfExperience(t.startYear),
     skills: splitCommaList(t.skills),
-    teaches: splitCommaList(t.teaches),
+    teaches: parseTeaches(t.teaches),
   }));
   const present = TRACKS.filter((tr) => rows.some((r) => r.track === tr.key));
 
@@ -157,7 +160,7 @@ export default function FacultyView({ trainers, courses }: Props) {
               )}
 
               <ul className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {rows.map(({ t, track, years, skills, teaches }) => {
+                {rows.map(({ t, track, years, skills }) => {
                   const info = trackInfo(track);
                   const shown = skills.slice(0, SKILLS_ON_CARD);
                   return (
@@ -193,12 +196,6 @@ export default function FacultyView({ trainers, courses }: Props) {
                                   </li>
                                 )}
                               </ul>
-                            </div>
-                          )}
-                          {teaches.length > 0 && (
-                            <div className="flex flex-col gap-2 border-t border-[#eef2f3] pt-3.5">
-                              <p className={LABEL}>Teaches</p>
-                              <TeachesChips names={teaches} courses={courses} />
                             </div>
                           )}
                           <div className="mt-auto grid grid-cols-[minmax(0,1fr)_auto] gap-2 pt-1.5">
@@ -265,10 +262,16 @@ export default function FacultyView({ trainers, courses }: Props) {
                   </ul>
                 </div>
               )}
-              {teaches.length > 0 && (
+              {teaches.topics.length > 0 && (
                 <div className="flex flex-col gap-2">
                   <p className={LABEL}>Teaches</p>
-                  <TeachesChips names={teaches} courses={courses} size="md" />
+                  <TopicChips topics={teaches.topics} courses={courses} />
+                </div>
+              )}
+              {teaches.approach && (
+                <div className="flex flex-col gap-2">
+                  <h3 className={LABEL}>Teaching approach</h3>
+                  <p className="font-sans text-[15px] leading-[1.65] text-[#26383d]">{teaches.approach}</p>
                 </div>
               )}
               <div data-demo-slot={t.id} data-trainer={t.name} data-label={demoLabel(t.name)} className="rounded-[18px] bg-[#eaf4f5] p-[18px]">
