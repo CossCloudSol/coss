@@ -2,7 +2,7 @@
 // form pages). Same rules and messages the API routes enforce with zod
 // (src/lib/lead-validation.ts). Dependency-free (unit-tested in
 // scripts/test/lead-form-rules.test.mjs).
-import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
+import { COMPANY_NAME_ERROR, NAME_ERROR, PHONE_ERROR, isValidCompanyName, isValidName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
 
 /** Returns the error message, or null when the value is fine. */
 export type Rule = (value: string) => string | null;
@@ -12,6 +12,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const rules = {
   name: (): Rule => (v) => (isValidName(v) ? null : NAME_ERROR),
+  companyName: (): Rule => (v) => (isValidCompanyName(v) ? null : COMPANY_NAME_ERROR),
   phone: (): Rule => (v) => (normalizeIndianMobile(v.trim()) ? null : PHONE_ERROR),
   oneOf: (options: readonly string[], message: string): Rule => (v) => (options.includes(v) ? null : message),
   minLength: (n: number, message: string): Rule => (v) => (v.length >= n ? null : message),
@@ -19,8 +20,9 @@ export const rules = {
   email: (message: string): Rule => (v) => (EMAIL_RE.test(v) ? null : message),
 };
 
-/** Fields whose submitted value is trimmed (as zod's .trim() did for these). */
-const TRIMMED = new Set(['name', 'phone', 'contactPerson']);
+/** Fields whose submitted value is trimmed; names are also normalised, as the server does (normalizeName). */
+const TRIMMED = new Set(['name', 'phone', 'contactPerson', 'companyName']);
+const NAME_FIELDS = new Set(['name', 'contactPerson', 'companyName']);
 
 export type LeadSchema<V extends Record<string, string>> = { [K in keyof V]: Rule[] };
 
@@ -36,7 +38,7 @@ export function validateLead<V extends Record<string, string>>(
   const errors: Partial<Record<keyof V, string>> = {};
   for (const key of Object.keys(schema) as Array<keyof V & string>) {
     const given = typeof raw[key] === 'string' ? (raw[key] as string) : '';
-    const value = TRIMMED.has(key) ? given.trim() : given;
+    const value = NAME_FIELDS.has(key) ? normalizeName(given) : TRIMMED.has(key) ? given.trim() : given;
     values[key] = value;
     for (const rule of schema[key]) {
       const message = rule(value);

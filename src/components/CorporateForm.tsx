@@ -19,7 +19,7 @@ type CorporateFormValues = {
 };
 
 const corporateFormSchema = {
-  companyName:   [rules.minLength(2, 'Company name is required')],
+  companyName:   [rules.companyName()],
   contactPerson: [rules.name()],
   phone:         [rules.phone()],
   email:         [rules.email('Enter a valid email address')],
