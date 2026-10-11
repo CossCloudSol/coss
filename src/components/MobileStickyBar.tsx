@@ -13,7 +13,7 @@ export default function MobileStickyBar() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[9998] md:hidden">
       <div
-        className="bg-[#0d1b2e] border-t-[2.5px] border-orange-500 shadow-[0_-4px_24px_rgba(0,0,0,0.5)]"
+        className="bg-[#0d1b2e] border-t-[2.5px] border-[#e47538] shadow-[0_-4px_24px_rgba(0,0,0,0.5)]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="grid grid-cols-4">
@@ -22,7 +22,7 @@ export default function MobileStickyBar() {
           <CallLink
             number={phone}
             className="flex flex-col items-center justify-center gap-1 py-3 text-slate-300 hover:bg-white/5 active:bg-white/10 transition-colors border-r border-slate-700/60"
-            aria-label="Call Coss Cloud Solutions"
+            aria-label="Call Now: Coss Cloud Solutions"
           >
             <svg className="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>

@@ -105,3 +105,19 @@ export function toFinalSitemap<T extends { url: string }>(entries: ReadonlyArray
 export function finalHref(path: string, rules: ReadonlyArray<RedirectRule>): string {
   return finalPath(path, rules) ?? path
 }
+
+/**
+ * Where a course URL finally settles: follow the redirect rules, map a /courses form to its
+ * flat canonical page (`canonicalize`, flat-url's canonicalCourseHref bound to SLUG_MAP), follow
+ * the redirects again, until it stops changing (at most 4 rounds). Two courses that settle on the
+ * same path are the same page: a retired alias and the course it redirects to.
+ */
+export function settlePath(path: string, rules: ReadonlyArray<RedirectRule>, canonicalize: (p: string) => string): string {
+  let current = finalHref(path, rules)
+  for (let i = 0; i < 4; i++) {
+    const next = finalHref(canonicalize(current), rules)
+    if (next === current) break
+    current = next
+  }
+  return current
+}

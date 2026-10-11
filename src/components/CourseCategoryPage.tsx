@@ -164,7 +164,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             <div style={{ marginBottom: '36px' }}>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', background: 'rgba(232,64,28,0.08)', padding: '5px 14px', borderRadius: '20px', marginBottom: '14px' }}>
                 <CategoryIconDisplay slug={breadcrumbSlug} size={22} color="#e8401c" />
-                <span style={{ color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
+                <span style={{ color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.tagline}</span>
               </div>
               <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)', marginBottom: '12px' }}>
                 {data.name} Training in Hyderabad
@@ -195,10 +195,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                 return (
                   <section className="py-12 px-0 rounded-2xl mb-10">
                     <div className="max-w-7xl mx-auto mb-10 text-center">
-                      <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+                      <h2 className="font-display text-3xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
                         Courses We Offer
                       </h2>
-                      <p className="mt-2 text-slate-500 text-sm">
+                      <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">
                         Choose the right programme for your goals
                       </p>
                     </div>
@@ -212,10 +212,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
               return (
                 <section className="py-12 px-4">
                   <div className="max-w-7xl mx-auto mb-10 text-center">
-                    <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+                    <h2 className="font-display text-3xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
                       Courses We Offer
                     </h2>
-                    <p className="mt-2 text-slate-500 text-sm">
+                    <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">
                       Choose the right programme for your goals
                     </p>
                   </div>
@@ -253,11 +253,11 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
             {/* Why Learn */}
             {data.whyLearn.length > 0 && (
               <div style={{ background: 'linear-gradient(135deg,#1a1a2e,#0f3460)', borderRadius: '14px', padding: '28px', marginBottom: '36px', color: '#fff' }}>
-                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px' }}>💡 Why Learn {data.name}?</h3>
+                <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '16px', color: '#fff' }}>💡 Why Learn {data.name}?</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   {data.whyLearn.map(w => (
                     <div key={w} style={{ display: 'flex', gap: '8px', fontSize: '13.5px', color: '#ccc', lineHeight: '1.5' }}>
-                      <span style={{ color: '#e8401c', fontWeight: 700, flexShrink: 0 }}>✓</span><span>{w}</span>
+                      <span style={{ color: '#f3a57a', fontWeight: 700, flexShrink: 0 }}>✓</span><span>{w}</span>
                     </div>
                   ))}
                 </div>
@@ -373,7 +373,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                 <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>🚀 Career Opportunities</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                   {data.careers.map(c => (
-                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
+                    <span key={c} style={{ background: 'var(--primary-light)', border: '1px solid rgba(228,117,56,0.3)', color: 'var(--primary-text)', fontSize: '13px', padding: '7px 16px', borderRadius: '20px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600 }}>{c}</span>
                   ))}
                 </div>
               </div>

@@ -129,7 +129,7 @@ export default function PromoBanner({ placement, banner, syllabus, fallback, cla
           {syllabus && (
             <TrackedLink
               href={syllabus.href}
-              className="inline-flex items-center rounded-lg border border-[#5ef0c8] px-4 py-2 text-sm font-bold text-[#5ef0c8] hover:bg-white/10"
+              className="inline-flex items-center rounded-lg border border-white/70 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
               onClick={() =>
                 trackPromoBannerClick({ placement, bannerId, variant: 'fallback', cta: 'download_syllabus', destination: syllabus.href })
               }

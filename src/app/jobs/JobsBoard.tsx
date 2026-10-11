@@ -40,7 +40,7 @@ export default function JobsBoard({ jobs }: { jobs: JobCardJob[] }) {
             className="px-4 py-2 rounded-full text-sm font-medium transition-all border min-h-[44px]"
             style={
               activeFilter === f
-                ? { background: '#e47538', borderColor: '#e47538', color: '#fff' }
+                ? { background: '#b8531c', borderColor: '#b8531c', color: '#fff' }
                 : { background: 'var(--bg-card,#fff)', borderColor: '#e5e7eb', color: 'var(--text,#111)' }
             }
           >

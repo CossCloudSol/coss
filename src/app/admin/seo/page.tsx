@@ -1222,7 +1222,7 @@ function ToolsTab({
           <ToolLink
             href="https://analytics.google.com"
             label="Open Analytics →"
-            color="bg-orange-500"
+            color="bg-[#b8531c]"
           />
         </div>
       </ToolCard>

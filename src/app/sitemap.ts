@@ -20,7 +20,7 @@ import { COURSE_PAGES, CATEGORY_PAGES, STATIC_PAGES } from '@/lib/all-pages-regi
 import { getAllPosts } from '@/lib/posts';
 import { getCourseUrl } from '@/lib/course-url';
 import { SLUG_MAP } from '@/lib/get-landing-page-data';
-import { sitemapCoursePaths } from '@/lib/flat-url';
+import { sitemapCoursePaths, canonicalCourseHref } from '@/lib/flat-url';
 import { toFinalSitemap } from '@/lib/redirect-resolve';
 import { REDIRECTS } from '../../redirects.config.mjs';
 
@@ -246,7 +246,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Only final URLs: an entry whose URL redirects is replaced by the page it lands on
   // (redirects.config.mjs, the list next.config.mjs serves); duplicates keep their first entry.
-  return toFinalSitemap([
+  // A retired duplicate's redirect lands on the /courses form of the course it points to; that
+  // course may have a flat canonical page, which is listed already. So: resolve redirects, map to
+  // the canonical form, resolve again (a flat page that itself redirects, e.g. Ethical Hacking,
+  // settles on its final URL), and keep one entry per URL.
+  const all: MetadataRoute.Sitemap = [
     ...seoPageEntries,
     ...categoryEntries,
     ...dynamicCourseEntriesDeduped,
@@ -257,5 +261,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...dbBlogEntries,
     ...listingEntries,
     ...jobEntries,
-  ], BASE_URL, REDIRECTS);
+  ];
+  const canonicalise = (entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap =>
+    entries.map((entry) => {
+      if (!entry.url.startsWith(BASE_URL)) return entry;
+      const path = entry.url.slice(BASE_URL.length) || '/';
+      const canonical = canonicalCourseHref(path, SLUG_MAP);
+      return canonical === path ? entry : { ...entry, url: `${BASE_URL}${canonical}` };
+    });
+  return toFinalSitemap(canonicalise(toFinalSitemap(all, BASE_URL, REDIRECTS)), BASE_URL, REDIRECTS);
 }

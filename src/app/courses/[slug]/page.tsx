@@ -260,7 +260,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>{course.category}</span>
           </div>
           {publicBadge(course.badge) && (
-            <div style={{ display: 'inline-block', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 12px', borderRadius: '12px', marginBottom: '12px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div style={{ display: 'inline-block', background: '#b8531c', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 12px', borderRadius: '12px', marginBottom: '12px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {publicBadge(course.badge)}
             </div>
           )}
@@ -281,7 +281,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
               </span>
             ))}
             {course.price != null && (
-              <span style={{ background: '#e47538', color: '#fff', fontSize: '13px', fontWeight: 700, padding: '6px 14px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
+              <span style={{ background: '#b8531c', color: '#fff', fontSize: '13px', fontWeight: 700, padding: '6px 14px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
                 {course.originalPrice && <span style={{ textDecoration: 'line-through', opacity: 0.7, marginRight: '6px', fontWeight: 400 }}>₹{course.originalPrice.toLocaleString()}</span>}
                 ₹{course.price.toLocaleString()}
               </span>
@@ -418,14 +418,6 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
                   {b.mode}{b.centre ? ` · ${b.centre}` : ''} · {b.schedule}
                 </p>
               </div>
-              {b.mode !== 'Online' && b.seatsAvailable !== null && (
-                <span style={{ fontSize: '12px', fontWeight: 600, color: b.seatsAvailable <= 3 ? '#dc2626' : b.seatsAvailable <= 6 ? '#d97706' : '#16a34a' }}>
-                  {b.seatsAvailable} seats left
-                </span>
-              )}
-              {b.mode === 'Online' && (
-                <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>Unlimited</span>
-              )}
               {/* No branchKey: b.centre is free-text on Batch (not a BranchSettings
                   foreign key), e.g. "Dilsukhnagar" vs the canonical 'dilsukhnagar'
                   key — deriving one here would produce unreliable/mismatched keys. */}
@@ -434,7 +426,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
                 pageType="category"
                 courseSlug={courseSlug}
                 message={waMsg}
-                style={{ background: '#e47538', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                style={{ background: '#b8531c', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
               >
                 Book Seat
               </WhatsAppLink>
@@ -461,13 +453,13 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
         {originalPrice && price && (
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{originalPrice.toLocaleString()}</p>
         )}
-        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
+        <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
         <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} embedded />
       </div>
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={courseSlug} style={{ color: '#e47538', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+          <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={courseSlug} style={{ color: '#b8531c', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
           <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
         </p>
       </div>
@@ -538,10 +530,10 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
 
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto mb-10 text-center">
-          <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+          <h2 className="font-display text-3xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
             Courses We Offer
           </h2>
-          <p className="mt-2 text-slate-500 text-sm">
+          <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">
             Choose the right programme for your goals
           </p>
         </div>

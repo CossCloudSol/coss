@@ -25,7 +25,7 @@ const CARD_CONFIG: Record<CardVariant, { lightBg: string; darkBar: string }> = {
   leads:     { lightBg: 'bg-[#024c57]', darkBar: 'bg-blue-500' },
   newToday:  { lightBg: 'bg-[#1d4ed8]', darkBar: 'bg-emerald-500' },
   enrolled:  { lightBg: 'bg-[#d97706]', darkBar: 'bg-teal-500' },
-  corporate: { lightBg: 'bg-[#7c3aed]', darkBar: 'bg-orange-500' },
+  corporate: { lightBg: 'bg-[#7c3aed]', darkBar: 'bg-[#b8531c]' },
 };
 
 function StatCard({

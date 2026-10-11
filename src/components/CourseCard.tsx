@@ -35,12 +35,12 @@ const accentGradients: Record<string, string> = {
 }
 
 const badgeBg: Record<string, string> = {
-  orange: '#FF6B2B',
-  teal:   '#0BA5A0',
+  orange: '#b8531c',   /* white text on every badge colour is AA */
+  teal:   '#0F766E',
   violet: '#7C3AED',
   rose:   '#E11D48',
-  amber:  '#D97706',
-  green:  '#059669',
+  amber:  '#B45309',
+  green:  '#047857',
 }
 
 export default function CourseCard({
@@ -150,13 +150,13 @@ export default function CourseCard({
       {/* Card Footer */}
       <div className="flex items-center justify-between gap-3 px-5 pt-[14px] pb-[18px]">
         <div>
-          <div className="text-[11px] text-slate-400 line-through mb-[1px]">{originalPrice}</div>
+          <div className="text-[11px] text-slate-500 line-through mb-[1px]">{originalPrice}</div>
           <div className="font-display text-[22px] font-bold text-[#0D1B2A] leading-none">{discountedPrice}</div>
           <div className="text-[10px] text-slate-500 mt-[2px]">{emi}</div>
         </div>
         <Link
           href={href}
-          className="inline-flex items-center gap-[6px] bg-[#FF6B2B] text-white px-5 py-[11px] rounded-xl text-[13px] font-semibold whitespace-nowrap tracking-[0.1px] transition-[background,transform] duration-[180ms] hover:bg-[#e85a1e] hover:scale-[1.03]"
+          className="inline-flex items-center gap-[6px] bg-[#b8531c] text-white px-5 py-[11px] rounded-xl text-[13px] font-semibold whitespace-nowrap tracking-[0.1px] transition-[background,transform] duration-[180ms] hover:bg-[#e85a1e] hover:scale-[1.03]"
         >
           View <span className="sr-only">{title} </span>Details
           <svg className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

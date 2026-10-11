@@ -45,7 +45,7 @@ export default function ThankYouPage({ searchParams }: Props) {
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.7, marginBottom: '28px' }}>{message}</p>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
-          <Link href="/courses" style={{ ...linkStyle, background: '#e8401c', color: '#fff' }}>
+          <Link href="/courses" style={{ ...linkStyle, background: '#b8531c', color: '#fff' }}>
             Browse Courses
           </Link>
           <Link href="/" style={{ ...linkStyle, border: '1.5px solid #024c57', color: '#024c57' }}>

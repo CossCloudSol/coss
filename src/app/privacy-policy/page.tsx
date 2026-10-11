@@ -187,7 +187,7 @@ export default function PrivacyPolicyPage() {
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ background: '#fff3f0', borderRadius: '12px', padding: '18px 22px', marginBottom: '36px', borderLeft: '4px solid #e8401c' }}>
           <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.7' }}>
-            <strong style={{ color: '#e8401c' }}>Last Updated: September 2026.</strong> This Privacy Policy describes how Coss Cloud Solutions collects, uses, shares, stores and protects your personal data, and sets out your rights under the Digital Personal Data Protection Act, 2023.
+            <strong style={{ color: 'var(--primary-text)' }}>Last Updated: September 2026.</strong> This Privacy Policy describes how Coss Cloud Solutions collects, uses, shares, stores and protects your personal data, and sets out your rights under the Digital Personal Data Protection Act, 2023.
           </p>
         </div>
         {sections.map(s => (

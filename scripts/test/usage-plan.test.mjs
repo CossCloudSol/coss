@@ -38,13 +38,13 @@ test('middleware matcher lists every scanner path, and no real page', () => {
 
 test('/tag/* redirects to /blog in all three places the infra rules live', () => {
   for (const f of ['redirects.config.mjs', 'scripts/run-sync-redirects.mjs', 'src/lib/sync-redirects.ts']) {
-    assert.match(fs.readFileSync(f, 'utf8'), /source: '\/tag\/:path\*',\s+destination: '\/blog'/, f);
+    assert.match(fs.readFileSync(f, 'utf8'), /source: ['"]\/tag\/:path\*['"],\s+destination: ['"]\/blog['"]/, f);
   }
 });
 
 test('smoke script keeps the sitemap size check and the --quick mode', () => {
   const s = fs.readFileSync('scripts/smoke.mjs', 'utf8');
-  assert.match(s, /const MIN_SITEMAP_URLS = 200;/);
+  assert.match(s, /const MIN_SITEMAP_URLS = 195;/);
   assert.match(s, /sitemapPaths\.length < MIN_SITEMAP_URLS/);
   assert.match(s, /args\.indexOf\('--quick'\)/);
   assert.match(s, /^const routes = JSON\.parse\(readFileSync\(join\(__dirname, 'routes\.json'\)/m, 'default mode still walks routes.json (/verify-prod)');

@@ -19,13 +19,13 @@ test('the 9 sitemap URLs that used to 308 resolve to the pages they land on', ()
   const cases = {
     '/ethical-hacking-training-institute-in-hyderabad': '/courses/ethical-hacking-training-institute-in-hyderabad',
     '/courses/data-analytics-training-institute-in-hyderabad': '/data-analytics-training-institute-in-hyderabad',
-    '/courses/full-stack-java-developer-bootcamp': '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
+    '/courses/full-stack-java-developer-bootcamp': '/java-training-institute-in-hyderabad',
     '/courses/hr-recruitment': '/courses/human-resource/hr-recruitment-training-in-hyderabad',
-    '/courses/software-testing-os/linux-shell-scripting-training-hyderabad': '/courses/software-testing-os/linux-shell-scripting-training-in-hyderabad',
+    '/courses/software-testing-os/linux-shell-scripting-training-hyderabad': '/linux-administration-training-institute-in-hyderabad',
     '/courses/cyber-security/ethical-hacking-ceh-training-hyderabad': '/courses/ethical-hacking-training-institute-in-hyderabad',
-    '/courses/full-stack-java-training-in-hyderabad': '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
+    '/courses/full-stack-java-training-in-hyderabad': '/java-training-institute-in-hyderabad',
     '/courses/professional-soft-skills/interview-prep-resume-building-training-in-hyderabad': '/courses/professional-soft-skills/interview-prep-resume-building-hyderabad',
-    '/courses/digital-design/digital-marketing-training-institute-in-hyderabad': '/courses/digital-design/digital-marketing-training-in-hyderabad',
+    '/courses/digital-design/digital-marketing-training-institute-in-hyderabad': '/digital-marketing-training-institute-in-hyderabad',
     '/blog/77674-2': '/blog/master-aws-devops-in-hyderabad',
   };
   for (const [from, to] of Object.entries(cases)) assert.equal(finalPath(from, REDIRECTS), to, from);
@@ -65,7 +65,7 @@ test('toFinalSitemap: never outputs a redirecting URL; replaces, de-duplicates, 
 
 test('the sitemap applies it, and both sync scripts write this file with the same header', () => {
   const sitemap = fs.readFileSync('src/app/sitemap.ts', 'utf8');
-  assert.match(sitemap, /return toFinalSitemap\(\[/);
+  assert.match(sitemap, /toFinalSitemap\(canonicalise\(toFinalSitemap\(all, BASE_URL, REDIRECTS\)\), BASE_URL, REDIRECTS\)/);
   assert.match(sitemap, /from '\.\.\/\.\.\/redirects\.config\.mjs'/);
   const file = fs.readFileSync('redirects.config.mjs', 'utf8');
   for (const script of ['src/lib/sync-redirects.ts', 'scripts/run-sync-redirects.mjs']) {

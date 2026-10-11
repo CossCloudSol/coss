@@ -103,7 +103,7 @@ export const COURSES: ReadonlyArray<Course> = [
       'DevOps interview preparation',
     ],
     icon: 'Settings',
-    color: 'bg-orange-500',
+    color: 'bg-[#e47538]',
   },
 
   /* ------------------------------------------------------------------- */
@@ -922,7 +922,7 @@ export const COURSES: ReadonlyArray<Course> = [
     ],
     features: ['Hands-on AWS console labs','Real CI/CD pipeline projects','Expert trainers','Placement assistance','Flexible batches','AWS certification guidance'],
     icon: 'Cloud',
-    color: 'bg-orange-500',
+    color: 'bg-[#e47538]',
   },
   {
     slug: 'azure-devops-training-institute-in-hyderabad',

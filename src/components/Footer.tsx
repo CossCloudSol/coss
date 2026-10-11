@@ -221,7 +221,7 @@ export default async function Footer() {
 
         {/* Col 5 — Our Branches */}
         <div className="footer-col footer-col-branches">
-          <h4 className="footer-heading">Our Branches</h4>
+          <h2 className="footer-heading">Our Branches</h2>
           <div className="footer-branches-flex">
             {BRANCHES.map(b => (
               <div key={b.name} className="footer-branch-card">

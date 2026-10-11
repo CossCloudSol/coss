@@ -46,7 +46,7 @@ const MOBILE_CARD_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[
 
 // Stat card light-mode backgrounds and dark-mode accent bars by index
 const STAT_LIGHT_BG: readonly string[] = ['bg-[#024c57]', 'bg-[#1d4ed8]', 'bg-[#03798a]', 'bg-[#7c3aed]'];
-const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-orange-500'];
+const STAT_DARK_ACCENT: readonly string[] = ['bg-emerald-500', 'bg-blue-500', 'bg-teal-500', 'bg-[#b8531c]'];
 
 function isStatus(v: string): v is Status {
   return v === 'new' || v === 'contacted' || v === 'enrolled' || v === 'lost';

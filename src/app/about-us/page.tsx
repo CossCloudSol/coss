@@ -51,7 +51,7 @@ export default function AboutUsPage() {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div className="page-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '56px', alignItems: 'center' }}>
             <div>
-              <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>
+              <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>
                 Who We Are
               </div>
               <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,32px)', fontWeight: 700, color: 'var(--text)', marginBottom: '16px' }}>
@@ -66,7 +66,7 @@ export default function AboutUsPage() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
                 {[{ n: '15+', l: 'Years Experience' }, { n: '5000+', l: 'Students Trained' }, { n: '30+', l: 'Courses Offered' }, { n: '50+', l: 'Hiring Partners' }].map(s => (
                   <div key={s.l} style={{ background: 'var(--bg-card)', borderRadius: '10px', padding: '16px', textAlign: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid var(--border-card)' }}>
-                    <div style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: '24px', fontWeight: 800, color: '#e8401c' }}>{s.n}</div>
+                    <div style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: '24px', fontWeight: 800, color: 'var(--primary-text)' }}>{s.n}</div>
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>{s.l}</div>
                   </div>
                 ))}
@@ -76,11 +76,11 @@ export default function AboutUsPage() {
               <div style={{ background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', borderRadius: '16px', padding: '32px', color: '#fff' }}>
                 <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '16px', color: '#fff' }}>Our Mission & Vision</h3>
                 <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                  <div style={{ color: '#e8401c', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🎯 Our Mission</div>
+                  <div style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🎯 Our Mission</div>
                   <p style={{ color: '#ccc', fontSize: '14px', lineHeight: '1.7' }}>To equip every learner with real-time skills, practical exposure, and placement assistance so they can confidently step into the IT industry and build rewarding careers.</p>
                 </div>
                 <div>
-                  <div style={{ color: '#e8401c', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🌟 Our Vision</div>
+                  <div style={{ color: 'var(--primary-text)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '13px', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🌟 Our Vision</div>
                   <p style={{ color: '#ccc', fontSize: '14px', lineHeight: '1.7' }}>To become a trusted IT training institute across South India, known for transforming careers through quality education, innovation, and unwavering student support.</p>
                 </div>
               </div>
@@ -92,7 +92,7 @@ export default function AboutUsPage() {
       {/* Values */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Values</div>
+          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Values</div>
           <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>What We Stand For</h2>
         </div>
         <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
@@ -110,7 +110,7 @@ export default function AboutUsPage() {
       <div style={{ background: 'var(--bg-alt)', padding: '56px 20px' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Journey</div>
+            <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Journey</div>
             <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Training IT Professionals Since 2010</h2>
           </div>
           <div style={{ position: 'relative', paddingLeft: '30px' }}>
@@ -119,7 +119,7 @@ export default function AboutUsPage() {
               <div key={m.year} style={{ position: 'relative', paddingBottom: '28px', paddingLeft: '28px' }}>
                 <div style={{ position: 'absolute', left: '-9px', top: '2px', width: '20px', height: '20px', background: '#e8401c', borderRadius: '50%', border: '3px solid var(--bg-alt)', boxShadow: '0 0 0 2px #e8401c' }} />
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', background: 'var(--bg-card)', borderRadius: '10px', padding: '16px 20px', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', border: '1px solid var(--border-card)' }}>
-                  <span style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 800, fontSize: '18px', color: '#e8401c', flexShrink: 0 }}>{m.year}</span>
+                  <span style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 800, fontSize: '18px', color: 'var(--primary-text)', flexShrink: 0 }}>{m.year}</span>
                   <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: '1.6' }}>{m.event}</p>
                 </div>
               </div>

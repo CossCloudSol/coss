@@ -23,9 +23,9 @@ export interface JobCardJob {
 }
 
 const COMPANY_COLORS: Record<string, string> = {
-  A: '#e47538', B: '#3b82f6', C: '#10b981', D: '#8b5cf6',
+  A: '#b8531c', B: '#3b82f6', C: '#10b981', D: '#8b5cf6',
   E: '#ef4444', F: '#f59e0b', G: '#0ea5e9', H: '#ec4899',
-  I: '#14b8a6', J: '#f97316', K: '#6366f1', L: '#22c55e',
+  I: '#14b8a6', J: '#b8531c', K: '#6366f1', L: '#22c55e',
   M: '#e11d48', N: '#06b6d4', O: '#84cc16', P: '#a855f7',
   Q: '#0891b2', R: '#dc2626', S: '#2563eb', T: '#059669',
   U: '#7c3aed', V: '#d97706', W: '#0f766e', X: '#be185d',
@@ -136,7 +136,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
           ctaType="job"
           message={waMessage}
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
-          style={{ background: '#e47538' }}
+          style={{ background: '#b8531c' }}
         >
           Apply via Coss Cloud Solutions
         </WhatsAppLink>

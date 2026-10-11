@@ -7,7 +7,9 @@ import { courseBannerPath } from '@/lib/course-banner-sign';
 import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
 import { COURSE_CATALOG_TAG, parseMonths, slugKeywords, tabForCategory, type CatalogCourse, type SearchIndex } from '@/lib/course-search';
 import { publicBadge } from '@/lib/course-badge';
-import { courseCanonicalPath } from '@/lib/course-canonical';
+import { courseCanonicalPath, courseSettledPath } from '@/lib/course-canonical';
+import { onePerPage } from '@/lib/flat-url';
+import { SLUG_MAP } from '@/lib/slug-map';
 
 // next/image only optimises this Cloudinary folder (next.config.mjs images.remotePatterns).
 const OPTIMISABLE_IMAGE = /^https:\/\/res\.cloudinary\.com\/dfditihuw\//;
@@ -100,6 +102,20 @@ async function loadSearchIndex(): Promise<SearchIndex> {
       syllabusHref: syllabusLinkFor(c).href,
     };
   }));
+
+  // One row per page. A row whose URL redirects to another course's page (a duplicate kept for the
+  // redirect, e.g. linux-shell-scripting-training-hyderabad) is not listed: its card, menu entry and
+  // search hit would all link to a 308. The page it points to stays; no public URL changes.
+  const bySlug = new Map(courses.map((c) => [c.slug, c]));
+  const listed = onePerPage(
+    catalog.flatMap((item) => {
+      const c = bySlug.get(item.slug);
+      return c ? [{ item, settled: courseSettledPath(c) }] : [{ item, settled: `#${item.slug}` }];
+    }),
+    SLUG_MAP,
+  );
+  catalog.length = 0;
+  catalog.push(...listed);
 
   const counts = new Map<string, number>();
   for (const c of catalog) if (c.categorySlug) counts.set(c.categorySlug, (counts.get(c.categorySlug) ?? 0) + 1);

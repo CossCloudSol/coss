@@ -41,7 +41,7 @@ export default function NotFound() {
         </ul>
         <Link
           href="/"
-          style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 22px', borderRadius: '8px', background: '#e8401c', color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
+          style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 22px', borderRadius: '8px', background: '#b8531c', color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
         >
           Back to Home
         </Link>

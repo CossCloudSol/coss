@@ -121,7 +121,7 @@ export function fromDbRow(row: {
 
 export const ANNOUNCEMENT_BAR_DEFAULTS: AnnouncementBarInput = {
   isEnabled:        true,
-  announcementText: 'Upcoming batches filling fast',
+  announcementText: 'New batches every month',
   ctaLabel:         'See dates',
   ctaUrl:           '/batches',
   backgroundColor:  '#0f766e',

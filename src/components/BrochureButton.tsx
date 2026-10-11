@@ -184,7 +184,7 @@ function BrochureModal({ courseTitle, modal }: { courseTitle: string; modal: Bro
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 hover:bg-green-700 disabled:opacity-70 text-white font-bold text-sm px-6 py-3 transition-colors"
+                className="w-full mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-green-700 hover:bg-green-800 disabled:opacity-70 text-white font-bold text-sm px-6 py-3 transition-colors"
               >
                 {submitting ? 'Sending…' : 'Send via WhatsApp'}
               </button>
@@ -216,22 +216,21 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
       <button
         type="button"
         onClick={() => modal.setOpen(true)}
-        aria-label={`Download the ${courseTitle} brochure`}
-        className="w-full text-left rounded-2xl bg-[var(--primary)] p-4 shadow-sm hover:shadow-md transition-shadow"
+        className="w-full text-left rounded-2xl bg-[var(--primary-fill)] p-4 shadow-sm hover:shadow-md transition-shadow"
       >
         <div className="flex items-center gap-2 mb-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[var(--primary)]">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-[var(--primary-fill)]">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d={DOWNLOAD_ICON_PATH} />
             </svg>
           </span>
-          <span className="inline-flex items-center rounded-full bg-white text-[var(--primary)] text-[10px] font-extrabold tracking-wide px-2.5 py-1 uppercase">
+          <span className="inline-flex items-center rounded-full bg-white text-[var(--primary-fill)] text-[10px] font-extrabold tracking-wide px-2.5 py-1 uppercase">
             Free PDF
           </span>
         </div>
         <h3 className="text-[15px] font-extrabold text-white mb-1">Download Brochure</h3>
-        <p className="text-xs text-white/85 mb-3">Get the syllabus PDF for {courseTitle}</p>
-        <span className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-white text-[var(--primary)] font-bold text-sm px-5 py-2.5">
+        <p className="text-xs text-white mb-3">Get the syllabus PDF for {courseTitle}</p>
+        <span className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-white text-[var(--primary-fill)] font-bold text-sm px-5 py-2.5">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d={DOWNLOAD_ICON_PATH} />
           </svg>
@@ -258,8 +257,8 @@ export function BrochureMobileTab({ courseSlug, courseTitle, brochureUrl }: Broc
       <button
         type="button"
         onClick={() => modal.setOpen(true)}
-        aria-label={`Download the ${courseTitle} brochure`}
-        className="md:hidden fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center gap-1 rounded-l-2xl bg-[var(--primary)] text-white px-2 py-3 shadow-lg active:opacity-90"
+        aria-label={`Download Brochure: ${courseTitle}`}
+        className="md:hidden fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center gap-1 rounded-l-2xl bg-[var(--primary-fill)] text-white px-2 py-3 shadow-lg active:opacity-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" d={DOWNLOAD_ICON_PATH} />

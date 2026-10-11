@@ -124,7 +124,7 @@ export default async function EnrollPage() {
                   </svg>
                   <div>
                     <div className="text-white font-bold text-sm">5,000+</div>
-                    <div className="text-slate-500 text-xs">Students Trained</div>
+                    <div className="text-slate-400 text-xs">Students Trained</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -134,7 +134,7 @@ export default async function EnrollPage() {
                   </svg>
                   <div>
                     <div className="text-white font-bold text-sm">Since 2010</div>
-                    <div className="text-slate-500 text-xs">Training in Hyderabad</div>
+                    <div className="text-slate-400 text-xs">Training in Hyderabad</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export default async function EnrollPage() {
                   </svg>
                   <div>
                     <div className="text-white font-bold text-sm">30+</div>
-                    <div className="text-slate-500 text-xs">Courses Offered</div>
+                    <div className="text-slate-400 text-xs">Courses Offered</div>
                   </div>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default async function EnrollPage() {
               {/* Social proof avatars */}
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-[#FF6B2B] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">R</div>
+                  <div className="w-8 h-8 rounded-full bg-[#b8531c] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">R</div>
                   <div className="w-8 h-8 rounded-full bg-[#0BA5A0] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">S</div>
                   <div className="w-8 h-8 rounded-full bg-[#4D7CFE] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">P</div>
                   <div className="w-8 h-8 rounded-full bg-[#8B5CF6] border-2 border-[#0D1B2A] flex items-center justify-center text-white text-xs font-bold">K</div>

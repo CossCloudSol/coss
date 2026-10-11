@@ -62,7 +62,7 @@ export default async function CorporateTrainingPage() {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div className="page-two-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '56px', alignItems: 'center' }}>
             <div>
-              <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>
+              <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '14px' }}>
                 Corporate Training Programs
               </div>
               <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(22px,4vw,34px)', fontWeight: 700, color: 'var(--text)', marginBottom: '16px', lineHeight: '1.25' }}>
@@ -74,12 +74,12 @@ export default async function CorporateTrainingPage() {
               <ul style={{ listStyle: 'none', padding: 0, marginBottom: '24px' }}>
                 {['Highly caliber and experienced faculty', 'Special batches for Hyderabad corporate clients', 'Certified instructor-led training', 'Customized approach to your technology stack', 'Weekend workshops on advanced technologies', 'In-depth needs analysis before course design'].map(item => (
                   <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '10px', fontSize: '14px', color: 'var(--text-muted)' }}>
-                    <span style={{ color: '#e8401c', fontWeight: 700, flexShrink: 0, marginTop: '2px' }}>✓</span> {item}
+                    <span style={{ color: 'var(--primary-text)', fontWeight: 700, flexShrink: 0, marginTop: '2px' }}>✓</span> {item}
                   </li>
                 ))}
               </ul>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <Link href="/enroll-now-with-coss" style={{ background: '#e8401c', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>Get a Quote</Link>
+                <Link href="/enroll-now-with-coss" style={{ background: '#b8531c', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>Get a Quote</Link>
                 <Link href="/contact-us" style={{ background: '#1a1a2e', color: '#fff', padding: '12px 26px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>Contact Us</Link>
               </div>
             </div>
@@ -93,7 +93,7 @@ export default async function CorporateTrainingPage() {
       {/* Features */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '44px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Why Choose Us</div>
+          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Why Choose Us</div>
           <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Why Companies Choose Coss Cloud Solutions for Corporate Training</h2>
         </div>
         <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
@@ -118,7 +118,7 @@ export default async function CorporateTrainingPage() {
       <div style={{ background: 'var(--bg-alt)', padding: '56px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Training Domains</div>
+            <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Training Domains</div>
             <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>Areas of Corporate Training</h2>
           </div>
           <div className="corp-feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
@@ -144,7 +144,7 @@ export default async function CorporateTrainingPage() {
       {/* Process */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: '#e8401c', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Process</div>
+          <div style={{ display: 'inline-block', background: 'rgba(232,64,28,0.1)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Our Process</div>
           <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: 'var(--text)' }}>How Our Corporate Training Works</h2>
         </div>
         <div className="process-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>

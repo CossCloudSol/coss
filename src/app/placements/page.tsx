@@ -52,7 +52,7 @@ export default async function PlacementsPage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
             <a
               href={`#${FORM_ANCHOR}`}
-              style={{ background: '#e47538', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
+              style={{ background: '#b8531c', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
             >
               {CAREER_SUPPORT_CTA}
             </a>
@@ -137,7 +137,7 @@ export default async function PlacementsPage() {
                 ctaType="batches_page"
                 pageType="static"
                 message="Hi, I'd like to know the next available batch dates at Coss."
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#25D366', color: '#fff', padding: '12px 24px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#15803d', color: '#fff', padding: '12px 24px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
               >
                 Ask on WhatsApp
               </WhatsAppLink>
@@ -147,7 +147,6 @@ export default async function PlacementsPage() {
               {batches.map(batch => {
                 const formattedDate = formatBatchDate(batch.startDate);
                 const branchLabel = batch.mode === 'Online' ? 'Online' : (batch.centre ?? 'Coss Cloud Solutions');
-                const hasRealSeatCount = batch.mode !== 'Online' && batch.seatsAvailable != null;
                 const message = `Hi, I'd like to know about the ${batch.course.title} batch starting ${formattedDate} at ${branchLabel}.`;
 
                 return (
@@ -171,16 +170,13 @@ export default async function PlacementsPage() {
                       </h3>
                       <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
                         {formattedDate} · {batch.schedule} · {branchLabel}
-                        {hasRealSeatCount && (
-                          <> · {batch.seatsAvailable} seat{batch.seatsAvailable === 1 ? '' : 's'} available</>
-                        )}
                       </p>
                     </div>
                     <WhatsAppLink
                       ctaType="batch"
                       pageType="static"
                       message={message}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#25D366', color: '#fff', padding: '10px 18px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#15803d', color: '#fff', padding: '10px 18px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none', whiteSpace: 'nowrap' }}
                     >
                       Ask about this batch
                     </WhatsAppLink>
@@ -213,7 +209,7 @@ export default async function PlacementsPage() {
       </div>
 
       {/* Section 5 — Close */}
-      <div style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%)', padding: '56px 20px' }}>
+      <div style={{ background: 'linear-gradient(135deg, var(--primary-fill) 0%, var(--primary-fill-dark) 100%)', padding: '56px 20px' }}>
         <div style={{ maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 800, color: '#fff', marginBottom: '14px' }}>
             Come and see for yourself
@@ -223,7 +219,7 @@ export default async function PlacementsPage() {
           </p>
           <a
             href={`#${FORM_ANCHOR}`}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff', color: 'var(--primary)', padding: '13px 30px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#fff', color: 'var(--primary-fill)', padding: '13px 30px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
           >
             {CAREER_SUPPORT_CTA} <ArrowRight size={16} aria-hidden="true" />
           </a>
