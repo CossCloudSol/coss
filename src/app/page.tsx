@@ -9,7 +9,7 @@ import { getPromoBanners } from '@/lib/promo-banners';
 import { getSearchIndex } from '@/lib/course-search-index';
 import type { CatalogCourse, SearchIndex } from '@/lib/course-search';
 import { getAllPosts } from '@/lib/posts';
-import { resolvePopular } from '@/lib/popular-courses';
+import { POPULAR_COURSES } from '@/lib/popular-courses';
 import { resolveTracks, finderSuggestions } from '@/lib/home-tracks';
 import { dateParts } from '@/lib/home-v4';
 import PromoBanner from '@/components/PromoBanner';
@@ -26,12 +26,12 @@ import { PLACEMENT_DISCLAIMER } from '@/lib/career-support';
 
 /*
  * Homepage, Design v4 (design-ref Main.dc.html desktop, Mobile.dc.html mobile): hero with the demo
- * form on an illustrated banner, explore-by-track strip, popular courses with category tabs, the
+ * form on an illustrated banner, explore-by-track strip, popular courses (the 12 on the course card), the
  * dark batch band, the 3-question course finder, how-it-works + career card, live Google reviews,
  * corporate banner, FAQ + latest articles, and the final CTA.
  *
- * Server HTML throughout. The tabs and the finder are native radio inputs filtered by CSS :has()
- * (globals.css, ".home-tabs / .home-batches / .home-finder"), the FAQ is <details>, and one small
+ * Server HTML throughout. The batch tabs and the finder are native radio inputs filtered by CSS :has()
+ * (globals.css, ".home-batches / .home-finder"), "Show all" on phones is a checkbox, the FAQ is <details>, and one small
  * inline script (HomeInteractions) does the GA4 cta_click and course prefill. The only client
  * components are the two lead forms. GA4 events: form_start / form_submit (forms), cta_click.
  *
@@ -81,19 +81,24 @@ async function getUpcomingBatches() {
   }
 }
 
-/** Admin-picked popular courses (Homepage manager), else the featured courses, else the menu's curated list. */
-function popularCourses(index: SearchIndex, ids: string[], useAdminPick: boolean): CatalogCourse[] {
-  const all = index.courses;
-  if (useAdminPick && ids.length > 0) {
-    const picked = ids.map((id) => all.find((c) => c.id === id)).filter((c): c is CatalogCourse => c != null);
-    if (picked.length > 0) return picked.slice(0, 12);
+/**
+ * The 12 courses of the Popular list (popular-courses.ts), in that order, on the course card. A
+ * course that is not published is skipped. A category entry (HR) uses the top course of that
+ * category, titled and linked as the category.
+ */
+function popularCourses(index: SearchIndex): CatalogCourse[] {
+  const out: CatalogCourse[] = [];
+  for (const entry of POPULAR_COURSES) {
+    if (entry.kind === 'course') {
+      const c = index.courses.find((x) => x.slug === entry.slug);
+      if (c) out.push(c);
+      continue;
+    }
+    const cat = index.categories.find((x) => x.slug === entry.slug);
+    const lead = index.courses.find((x) => x.categorySlug === entry.slug);
+    if (cat && lead) out.push({ ...lead, title: entry.label, url: `/courses/${cat.slug}`, category: cat.name });
   }
-  const featured = all.filter((c) => c.featured).slice(0, 12);
-  if (featured.length > 0) return featured;
-  return resolvePopular(index)
-    .items.map((it) => all.find((c) => c.slug === it.courseSlug))
-    .filter((c): c is CatalogCourse => c != null)
-    .slice(0, 12);
+  return out;
 }
 
 /**
@@ -142,7 +147,7 @@ export default async function HomePage() {
     getLatestArticles(),
     getPromoBanners('home'),
   ]);
-  const courses = hp.showFeaturedCourses ? popularCourses(index, hp.featuredCourseIds, hp.showFeaturedCourses) : [];
+  const courses = hp.showFeaturedCourses ? popularCourses(index) : [];
   const banner = homeBanners[0] ?? null;
 
   const batchCards: BatchCardData[] = batches.map((b) => ({

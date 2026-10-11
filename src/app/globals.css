@@ -1752,23 +1752,47 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 /* ── Homepage v4: tabs and the course finder without client JavaScript ──
    Each tab group is a set of native radio inputs; :has() shows the matching cards.
    Browsers without :has() simply show every card and the default finder text. */
-.home-tabs:has(input[name="pop-cat"][value="all"]:checked) [data-late] { display: none; }
-@media (max-width: 1023.98px) {
-  .home-tabs:has(input[name="pop-cat"][value="all"]:checked) [data-mobile-late] { display: none; }
-}
-.home-tabs:has(input[name="pop-cat"][value="ai-data"]:checked) [data-group]:not([data-group="ai-data"]),
-.home-tabs:has(input[name="pop-cat"][value="cloud-devops"]:checked) [data-group]:not([data-group="cloud-devops"]),
-.home-tabs:has(input[name="pop-cat"][value="cyber"]:checked) [data-group]:not([data-group="cyber"]),
-.home-tabs:has(input[name="pop-cat"][value="full-stack"]:checked) [data-group]:not([data-group="full-stack"]),
-.home-tabs:has(input[name="pop-cat"][value="marketing-hr"]:checked) [data-group]:not([data-group="marketing-hr"]) { display: none; }
+/* Popular courses: on phones only the first four show until "Show all" is ticked (no JavaScript). */
+.pop-late { display: none; }
+@media (min-width: 768px) { .pop-late { display: flex; } }
+.pop-more:checked ~ .pop-grid .pop-late { display: flex; }
+.pop-more:checked ~ .pop-btn { display: none; }
 
 .home-batches:has(input[name="batch-branch"][value="Dilsukhnagar"]:checked) [data-branch]:not([data-branch="Dilsukhnagar"]),
 .home-batches:has(input[name="batch-branch"][value="Ameerpet"]:checked) [data-branch]:not([data-branch="Ameerpet"]),
 .home-batches:has(input[name="batch-branch"][value="Online"]:checked) [data-branch]:not([data-branch="Online"]) { display: none; }
 
+/* Without :has() the answers cannot change the suggestion, so show one fixed starting point instead. */
+.finder-default { display: none; }
+@supports selector(:has(*)) {
+  .finder-fallback { display: none; }
+  .finder-default { display: block; }
+}
 .home-finder:has(input[name="finder-interest"]:checked) .finder-default { display: none; }
 .home-finder:has(input[name="finder-interest"][value="cloud-devops"]:checked) .finder-suggest[data-for="cloud-devops"],
 .home-finder:has(input[name="finder-interest"][value="ai-data"]:checked) .finder-suggest[data-for="ai-data"],
 .home-finder:has(input[name="finder-interest"][value="cyber-security"]:checked) .finder-suggest[data-for="cyber-security"],
 .home-finder:has(input[name="finder-interest"][value="building-apps"]:checked) .finder-suggest[data-for="building-apps"],
 .home-finder:has(input[name="finder-interest"][value="marketing-or-hr"]:checked) .finder-suggest[data-for="marketing-or-hr"] { display: block; }
+
+/* ── Homepage: shared tokens ──
+   On-dark: every dark or orange surface (hero, batch band, career card, corporate banner, final CTA)
+   wears .on-dark. The global h1-h6 rule sets a dark heading colour that beats an inherited white,
+   so headings inside a dark surface need this rule. Cards inside the surface (.light-surface) keep
+   their own heading colours. */
+.on-dark { color: #fff; }
+.on-dark :is(h1, h2, h3, h4):not(.light-surface *) { color: #fff; }
+.on-dark-eyebrow { color: #f9bb96; }   /* 5.5:1 or better on the teal gradient; never on the orange band */
+.on-dark-accent { color: #f9bb96; }
+.on-dark-sub { color: #d6e8eb; }       /* 8.9:1 on #0a3d4a */
+.on-orange-sub { color: #fff; }        /* #ffe2d1 on #b8531c was 3.2:1 */
+
+/* One card style for the homepage: 16px radius, 1px border, soft shadow; hover = small lift. */
+.home-card { transition: transform .18s ease, box-shadow .18s ease; }
+@media (hover: hover) {
+  .home-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(10, 61, 74, 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-card { transition: none; }
+  .home-card:hover { transform: none; }
+}

@@ -15,8 +15,9 @@ interface Props {
   /**
    * carousel: the homepage's swipe row (a vertical card at every width).
    * grid: /courses (a compact row on phones, a vertical card from md up).
+   * fill: the same vertical card as carousel, filling its grid cell (homepage Popular courses).
    */
-  layout: 'carousel' | 'grid';
+  layout: 'carousel' | 'grid' | 'fill';
   /** GA4 cta_click location. */
   location: string;
   /** "Book demo" target; with prefill, the homepage hero form gets the course. */
@@ -39,7 +40,7 @@ export default function CourseTile({ course: c, index, layout, location, demoHre
   return (
     <article
       className={`flex flex-col overflow-hidden rounded-2xl border border-[#e3eaec] bg-white shadow-[0_2px_8px_rgba(10,61,74,0.06)] dark:border-slate-700 dark:bg-slate-900 ${
-        grid ? 'rounded-[14px] md:rounded-2xl' : 'w-[300px] shrink-0 snap-start md:w-auto'
+        grid ? 'rounded-[14px] md:rounded-2xl' : layout === 'fill' ? 'home-card h-full' : 'w-[300px] shrink-0 snap-start md:w-auto'
       }`}
     >
       <div className={grid ? 'flex gap-3 p-3 md:block md:p-0' : ''}>

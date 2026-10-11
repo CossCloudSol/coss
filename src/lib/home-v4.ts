@@ -69,15 +69,6 @@ export const HERO_STATS = [
   { value: '1 year', label: 'LMS access', icon: ICON.book },
 ] as const;
 
-/** Floating icons around the hero form (design `orbit`): [desktop position, mobile position, icon]. */
-export const ORBIT = [
-  { desktop: 'left-2 top-[120px]', mobile: 'left-[14px] top-[10px]', icon: 'cloud' },
-  { desktop: 'right-1.5 top-[30px]', mobile: 'right-[18px] top-1', icon: 'ai' },
-  { desktop: 'left-[60px] top-6', mobile: 'left-[120px] top-0', icon: 'cyber' },
-  { desktop: '-right-2 bottom-[150px]', mobile: 'right-24 top-3.5', icon: 'data' },
-  { desktop: 'left-4 bottom-[130px]', mobile: 'hidden', icon: 'prog' },
-] as const satisfies readonly { desktop: string; mobile: string; icon: MenuIconKey }[];
-
 export const HERO_POPULAR = ['Artificial Intelligence', 'AWS DevOps', 'Data Science', 'Cyber Security', 'Python Full Stack'] as const;
 
 export const DESIGN_HEADLINE = 'Launch your IT career with live, hands-on training';
