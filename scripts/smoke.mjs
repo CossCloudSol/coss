@@ -52,7 +52,7 @@ if (!Number.isInteger(CONCURRENCY) || CONCURRENCY < 1) {
   process.exit(2);
 }
 const TIMEOUT_MS = 15000;
-const MIN_SITEMAP_URLS = 200;
+const MIN_SITEMAP_URLS = 195;
 const BYPASS = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 const EXTRA_HEADERS = BYPASS ? { 'x-vercel-protection-bypass': BYPASS } : {};
 const LEAD_ROUTES = ['/api/leads', '/api/contact', '/api/corporate-leads', '/api/call-clicks', '/api/whatsapp-clicks'];

@@ -3,7 +3,7 @@
 import { Calendar, Clock, MapPin, Wifi } from 'lucide-react';
 import { batchBookingMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
-import { getSeatStatus, formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
+import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 
 export interface BatchCardBatch {
   id: string;
@@ -24,13 +24,6 @@ export interface BatchCardBatch {
   };
 }
 
-const SEAT_COLOR_MAP: Record<string, string> = {
-  green: 'text-green-600 dark:text-green-400',
-  amber: 'text-amber-700 dark:text-amber-400',
-  red: 'text-red-600 dark:text-red-400',
-  gray: 'text-gray-500 dark:text-gray-400',
-}
-
 const STATUS_BADGE_COLOR: Record<string, string> = {
   blue:  'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300',
   green: 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300',
@@ -43,7 +36,6 @@ interface BatchCardProps {
 }
 
 export default function BatchCard({ batch }: BatchCardProps) {
-  const seatStatus = getSeatStatus(batch.mode, batch.seatsAvailable, batch.totalSeats);
   const statusBadge = getBatchStatusBadge(batch.status, batch.startDate);
   const formattedDate = formatBatchDate(batch.startDate);
 
@@ -119,38 +111,6 @@ export default function BatchCard({ batch }: BatchCardProps) {
           </div>
         </div>
       </div>
-
-      {/* Seats section */}
-      {batch.mode !== 'Online' && (
-        <div className="px-5 pb-4">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-gray-600 dark:text-gray-300">Seat availability</span>
-            <span className={`text-xs font-bold ${SEAT_COLOR_MAP[seatStatus.color] ?? SEAT_COLOR_MAP.gray}`}>
-              {seatStatus.label}
-            </span>
-          </div>
-          {seatStatus.type !== 'unknown' && (
-            <div className="w-full h-2 rounded-full bg-gray-100 dark:bg-gray-700 overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${seatStatus.percent}%`,
-                  background: seatStatus.color === 'green' ? '#10b981' : seatStatus.color === 'amber' ? '#f59e0b' : '#ef4444',
-                }}
-              />
-            </div>
-          )}
-        </div>
-      )}
-
-      {batch.mode === 'Online' && (
-        <div className="px-5 pb-4">
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
-            <Wifi className="w-3 h-3" aria-hidden="true" />
-            Unlimited seats
-          </span>
-        </div>
-      )}
 
       {/* CTA buttons */}
       <div className="mt-auto px-5 pb-5 flex flex-col gap-2">

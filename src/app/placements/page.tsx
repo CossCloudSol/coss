@@ -147,7 +147,6 @@ export default async function PlacementsPage() {
               {batches.map(batch => {
                 const formattedDate = formatBatchDate(batch.startDate);
                 const branchLabel = batch.mode === 'Online' ? 'Online' : (batch.centre ?? 'Coss Cloud Solutions');
-                const hasRealSeatCount = batch.mode !== 'Online' && batch.seatsAvailable != null;
                 const message = `Hi, I'd like to know about the ${batch.course.title} batch starting ${formattedDate} at ${branchLabel}.`;
 
                 return (
@@ -171,9 +170,6 @@ export default async function PlacementsPage() {
                       </h3>
                       <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
                         {formattedDate} · {batch.schedule} · {branchLabel}
-                        {hasRealSeatCount && (
-                          <> · {batch.seatsAvailable} seat{batch.seatsAvailable === 1 ? '' : 's'} available</>
-                        )}
                       </p>
                     </div>
                     <WhatsAppLink

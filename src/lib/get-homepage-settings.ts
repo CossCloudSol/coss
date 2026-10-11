@@ -36,7 +36,7 @@ const DEFAULTS: HomepageSettings = {
   stat3Value: '30+', stat3Label: 'Placement Assistance',
   stat4Value: '50+', stat4Label: 'Career Growth',
   announcementEnabled: true,
-  announcementText: 'Next batch starts 1 Jul 2026 — Limited seats available!',
+  announcementText: 'New batches every month',
   announcementUrl: '/enroll-now-with-coss',
   announcementBgColor: '#b8531c',
   featuredCourseIds: [],

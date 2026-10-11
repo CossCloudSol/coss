@@ -418,14 +418,6 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
                   {b.mode}{b.centre ? ` · ${b.centre}` : ''} · {b.schedule}
                 </p>
               </div>
-              {b.mode !== 'Online' && b.seatsAvailable !== null && (
-                <span style={{ fontSize: '12px', fontWeight: 600, color: b.seatsAvailable <= 3 ? '#dc2626' : b.seatsAvailable <= 6 ? '#d97706' : '#16a34a' }}>
-                  {b.seatsAvailable} seats left
-                </span>
-              )}
-              {b.mode === 'Online' && (
-                <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a' }}>Unlimited</span>
-              )}
               {/* No branchKey: b.centre is free-text on Batch (not a BranchSettings
                   foreign key), e.g. "Dilsukhnagar" vs the canonical 'dilsukhnagar'
                   key — deriving one here would produce unreliable/mismatched keys. */}
@@ -538,10 +530,10 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
 
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto mb-10 text-center">
-          <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+          <h2 className="font-display text-3xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
             Courses We Offer
           </h2>
-          <p className="mt-2 text-slate-500 text-sm">
+          <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">
             Choose the right programme for your goals
           </p>
         </div>

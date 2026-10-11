@@ -231,7 +231,7 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
       </h3>
       <p
         style={{
-          color: 'rgba(255,255,255,0.6)',
+          color: 'rgba(255,255,255,0.85)',
           fontSize: '12px',
           marginBottom: '16px',
         }}

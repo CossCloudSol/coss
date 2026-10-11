@@ -195,10 +195,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                 return (
                   <section className="py-12 px-0 rounded-2xl mb-10">
                     <div className="max-w-7xl mx-auto mb-10 text-center">
-                      <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+                      <h2 className="font-display text-3xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
                         Courses We Offer
                       </h2>
-                      <p className="mt-2 text-slate-500 text-sm">
+                      <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">
                         Choose the right programme for your goals
                       </p>
                     </div>
@@ -212,10 +212,10 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
               return (
                 <section className="py-12 px-4">
                   <div className="max-w-7xl mx-auto mb-10 text-center">
-                    <h2 className="font-display text-3xl font-bold text-[#0D1B2A] tracking-tight">
+                    <h2 className="font-display text-3xl font-bold text-[#0D1B2A] dark:text-white tracking-tight">
                       Courses We Offer
                     </h2>
-                    <p className="mt-2 text-slate-500 text-sm">
+                    <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">
                       Choose the right programme for your goals
                     </p>
                   </div>
