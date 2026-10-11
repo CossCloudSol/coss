@@ -83,7 +83,7 @@ async function getUpcomingBatches() {
 
 /**
  * The 12 courses of the Popular list (popular-courses.ts), in that order, on the course card. A
- * course that is not published is skipped. A category entry (HR) uses the top course of that
+ * course that is not published is skipped. A category entry (HR) uses the first course of that
  * category, titled and linked as the category.
  */
 function popularCourses(index: SearchIndex): CatalogCourse[] {
