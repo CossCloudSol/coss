@@ -169,7 +169,7 @@ async function main() {
           level:         'Beginner to Advanced',
           price:         7000,
           originalPrice: 11000,
-          badge:         'High Demand',
+          badge:         'Popular',
           status:        'published',
           featured:      false,
           sortOrder:     52,

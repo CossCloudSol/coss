@@ -32,7 +32,9 @@ export default function FooterLogo() {
       />
       {/* Text fallback — shown only when logo.png is missing */}
       <span style={{ display: 'none', alignItems: 'center', gap: '8px' }}>
-        <span className="logo-icon">C</span>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 54, height: 42, borderRadius: 10, background: '#fff', flexShrink: 0 }}>
+          <Image src="/logo-icon.png" alt="" width={40} height={25} />
+        </span>
         <span className="logo-text">
           <span className="logo-name" style={{ color: 'white' }}>Coss</span>
           <span className="logo-sub">Cloud Solutions</span>

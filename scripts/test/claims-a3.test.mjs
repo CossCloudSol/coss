@@ -47,7 +47,9 @@ test('the privacy-policy security disclaimer is not a guarantee claim', () => {
 
 test('publicBadge hides claim badges and keeps ordinary ones', () => {
   for (const b of ['Bestseller', 'best seller', 'Best-Seller', '#1 Course', 'No. 1', '100% Placement', 'Job Guaranteed', 'Top Rated', 'Most Trusted', 'Leading']) assert.equal(publicBadge(b), null, b);
-  for (const b of ['New', 'Popular', 'High Demand', 'Weekend Batch']) assert.equal(publicBadge(b), b);
+  for (const b of ['New', 'Popular', 'Weekend Batch']) assert.equal(publicBadge(b), b);
+  // "High demand" is not an allowed claim: whatever the admin saved, the public badge is "Popular".
+  for (const b of ['High Demand', 'high-demand', ' HIGH  DEMAND ']) assert.equal(publicBadge(b), 'Popular');
   assert.equal(publicBadge('  '), null);
   assert.equal(publicBadge(null), null);
 });

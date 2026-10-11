@@ -145,15 +145,27 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
      button so the eventual click logs the right ctaType. */
   useEffect(() => {
     const handler = (e: Event) => {
-      const origin = (e as CustomEvent<{ origin?: string }>).detail?.origin;
+      const detail = (e as CustomEvent<{ origin?: string; course?: string }>).detail;
       setMounted(true);
       setVisible(true);
-      setCtaOrigin(origin === 'sticky' ? 'sticky' : 'widget');
+      setCtaOrigin(detail?.origin === 'sticky' ? 'sticky' : 'widget');
+      // The homepage course finder passes the course it suggested; preselect the matching option.
+      const wanted = detail?.course?.trim().toLowerCase();
+      if (wanted) {
+        const titles = courseGroups.flatMap((g) => g.courses.map((c) => c.shortTitle));
+        const match = titles.find((t) => t.toLowerCase() === wanted) ?? titles.find((t) => t.toLowerCase().includes(wanted));
+        if (match) setForm((f) => ({ ...f, course: match }));
+      }
       setPanelOpen(true);
     };
     window.addEventListener('coss:open-whatsapp', handler);
-    return () => window.removeEventListener('coss:open-whatsapp', handler);
-  }, []);
+    // Inline page scripts check this before they take over a WhatsApp link.
+    (window as unknown as { __cossWaReady?: boolean }).__cossWaReady = true;
+    return () => {
+      window.removeEventListener('coss:open-whatsapp', handler);
+      (window as unknown as { __cossWaReady?: boolean }).__cossWaReady = false;
+    };
+  }, [courseGroups]);
 
   /* Move focus into panel on open */
   useEffect(() => {
@@ -265,7 +277,10 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
         >
           {/* Header */}
           <div className="wa-panel-header">
-            <div className="wa-panel-avatar" aria-hidden="true">C</div>
+            <div className="wa-panel-avatar" aria-hidden="true" style={{ background: '#fff' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-icon.png" alt="" width={30} height={19} />
+            </div>
             <div className="wa-panel-info">
               <div className="wa-panel-name">Coss</div>
               <div className="wa-panel-subtitle">Cloud Solutions</div>

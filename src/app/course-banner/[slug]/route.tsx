@@ -5,9 +5,9 @@ import { BANNER_PORTRAIT, BANNER_SQUARE, BANNER_WIDE, categoryStyle, shortCourse
 /**
  * Branded banner for a course without an admin thumbnail (next/og).
  * GET /course-banner/<slug>?t=<title>&c=<category>&k=<categorySlug>&v=<signature>[&s=sq]
- *   wide (default): 800×400 for cards — wordmark, category chip, title
+ *   wide (default): 800×400 for cards — logo icon + "Coss Cloud Solutions", category chip, title
  *   s=og: the wide banner plus "cosscloudsol.com", for og:image
- *   s=sq: 256×256 for small thumbnails — icon and the C tile only
+ *   s=sq: 256×256 for small thumbnails — icon and the logo icon only
  *   s=ig: 1080×1350 Instagram portrait — wordmark, title and the signed hook (h)
  * URLs are built server-side (lib/course-banner-sign) with an HMAC over the
  * slug, title and category: unsigned or edited parameters get a 404, and
@@ -98,42 +98,51 @@ function Pattern({ accent, width, height }: { accent: string; width: number; hei
   );
 }
 
-/** The "C" tile from the site logo. */
-function CTile({ size }: { size: number }) {
+/** The site's logo icon (public/logo-icon.png) as a data URL, so the banner needs no network request. */
+const logoIcon = fetch(new URL('../../../../public/logo-icon.png', import.meta.url))
+  .then((r) => r.arrayBuffer())
+  .then((buf) => {
+    const bytes = new Uint8Array(buf);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    return `data:image/png;base64,${btoa(bin)}`;
+  });
+const LOGO_ASPECT = 388 / 243;
+
+/** The logo icon on a white tile (the teal part of the icon needs a light ground on the dark banner). */
+function LogoTile({ height, src }: { height: number; src: string }) {
+  const pad = Math.round(height * 0.12);
+  const imgH = height - pad * 2;
   return (
     <div
       style={{
-        width: size,
-        height: size,
+        height,
+        width: Math.round(imgH * LOGO_ASPECT) + pad * 2,
         flexShrink: 0,
-        borderRadius: size * 0.24,
-        background: '#e47538',
-        color: '#ffffff',
+        borderRadius: Math.round(height * 0.24),
+        background: '#ffffff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontFamily: 'Raleway',
-        fontWeight: 800,
-        fontSize: size * 0.62,
       }}
     >
-      C
+      {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- next/og (satori) renders plain img */}
+      <img src={src} width={Math.round(imgH * LOGO_ASPECT)} height={imgH} />
     </div>
   );
 }
 
 /**
- * Full wordmark, as the site logo: C tile, "COSS" in brand orange, "CLOUD
- * SOLUTIONS" letter-spaced under it. flexShrink 0: it never truncates; the
- * category chip next to it gives way instead.
+ * Wordmark: the logo icon tile and "Coss Cloud Solutions" on one line. flexShrink 0: it never
+ * truncates; the category chip next to it gives way instead.
  */
-function Wordmark({ scale = 1 }: { scale?: number }) {
+function Wordmark({ scale = 1, src }: { scale?: number; src: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 14 * scale, flexShrink: 0 }}>
-      <CTile size={60 * scale} />
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ color: '#e47538', fontFamily: 'Raleway', fontWeight: 800, fontSize: 36 * scale, lineHeight: 1, letterSpacing: 3 * scale }}>COSS</div>
-        <div style={{ color: '#cfeff0', fontFamily: 'Raleway', fontWeight: 700, fontSize: 17 * scale, lineHeight: 1, letterSpacing: 3.4 * scale, marginTop: 7 * scale }}>CLOUD SOLUTIONS</div>
+      <LogoTile height={60 * scale} src={src} />
+      <div style={{ display: 'flex', color: '#ffffff', fontFamily: 'Raleway', fontWeight: 800, fontSize: 24 * scale, lineHeight: 1 }}>
+        <span style={{ color: '#f9a06a', marginRight: 6 * scale }}>Coss</span>
+        <span>Cloud Solutions</span>
       </div>
     </div>
   );
@@ -153,7 +162,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     return new Response('Not found', { status: 404, headers: { 'Cache-Control': 'no-store' } });
   }
 
-  const [extraBold, bold] = await Promise.all([extraBoldFont, boldFont]);
+  const [extraBold, bold, logoSrc] = await Promise.all([extraBoldFont, boldFont, logoIcon]);
   const { accent, icon } = categoryStyle(course.categorySlug || null);
   const shapes = ICONS[icon];
   // Flat fills only: smooth gradients made the PNGs ~95 KB; flat shapes compress to a fraction.
@@ -174,9 +183,9 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
           <Pattern accent={accent} width={width} height={height} />
           <div style={{ position: 'absolute', width: 200, height: 200, borderRadius: 100, background: '#005663', border: `3px solid ${accent}` }} />
           <Icon shapes={shapes} size={120} color={accent} strokeWidth={1.5} />
-          {/* Shown down to 40px (mega-menu), where a wordmark can't be read: the C tile only. */}
+          {/* Shown down to 40px (mega-menu), where a wordmark can't be read: the logo icon only. */}
           <div style={{ position: 'absolute', left: 16, bottom: 16, display: 'flex' }}>
-            <CTile size={44} />
+            <LogoTile height={44} src={logoSrc} />
           </div>
         </div>
       ),
@@ -197,7 +206,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
           <div style={{ position: 'absolute', right: 110, top: 480, display: 'flex' }}>
             <Icon shapes={shapes} size={260} color={accent} strokeWidth={1.2} />
           </div>
-          <Wordmark scale={1.7} />
+          <Wordmark scale={1.7} src={logoSrc} />
           <div
             style={{
               display: 'flex',
@@ -248,12 +257,12 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
           <Icon shapes={shapes} size={160} color={accent} strokeWidth={1.3} />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
-          <Wordmark />
+          <Wordmark src={logoSrc} />
           <div
             style={{
               display: 'flex',
               flexShrink: 1,
-              maxWidth: 400,
+              maxWidth: 330,
               padding: '8px 18px',
               borderRadius: 999,
               border: `2px solid ${accent}`,

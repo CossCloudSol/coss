@@ -45,9 +45,9 @@
   --topbar-bg:      #005663;
 
   /* Footer */
-  --footer-bg:      #002d36;
-  --footer-bottom:  #001a20;
-  --footer-text:    #9bb5ba;
+  --footer-bg:      #082f39;   /* Design v4 footer */
+  --footer-bottom:  #082f39;
+  --footer-text:    #c9dbdf;
   --footer-heading: #ffffff;
 }
 
@@ -326,8 +326,8 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-grid { max-width: 1280px; margin: 0 auto; padding: 56px 24px 48px; display: grid; grid-template-columns: 1.5fr 1.3fr 1fr 0.8fr 1.4fr; gap: 32px; }
 .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .footer-desc { font-size: 13px; line-height: 1.7; margin-bottom: 12px; color: var(--footer-text); }
-.footer-heading { color: var(--footer-heading); font-family: var(--font-raleway, 'Raleway'), sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); display: inline-block; }
-.footer-link { color: var(--footer-text); font-size: 13px; display: block; margin-bottom: 8px; transition: color 0.2s, padding-left 0.2s; }
+.footer-heading { color: var(--footer-heading); font-family: var(--font-roboto, 'Roboto'), system-ui, sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 8px; display: block; }
+.footer-link { color: var(--footer-text); font-size: 15px; display: block; margin-bottom: 4px; line-height: 1.7; transition: color 0.2s, padding-left 0.2s; }
 .footer-link:hover { color: var(--primary-text); padding-left: 3px; }
 /* Click-to-call / email */
 .footer-clinks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
@@ -353,7 +353,7 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-areas-served a { color: #5ef0c8; font-weight: 500; text-decoration: none; }
 .footer-areas-served a:hover { opacity: 0.8; }
 /* Bottom bar */
-.footer-bottom { background: var(--footer-bottom); padding: 14px 24px; font-size: 12px; color: var(--footer-text); }
+.footer-bottom { background: var(--footer-bottom); padding: 20px 24px 28px; font-size: 14px; color: var(--footer-text); border-top: 1px solid rgba(255, 255, 255, 0.12); }
 .footer-btm-inner { max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .footer-btm-links { display: flex; gap: 16px; }
 .footer-btm-links a { color: var(--footer-text); transition: color 0.2s; }
@@ -1748,3 +1748,51 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
 /* Muted grey text (#5f7075) is AA on light surfaces; on dark ones use slate-400. */
 .dark .text-\[\#5f7075\] { color: #94a3b8; }
+
+/* ── Homepage v4: tabs and the course finder without client JavaScript ──
+   Each tab group is a set of native radio inputs; :has() shows the matching cards.
+   Browsers without :has() simply show every card and the default finder text. */
+/* Popular courses: on phones only the first four show until "Show all" is ticked (no JavaScript). */
+.pop-late { display: none; }
+@media (min-width: 768px) { .pop-late { display: flex; } }
+.pop-more:checked ~ .pop-grid .pop-late { display: flex; }
+.pop-more:checked ~ .pop-btn { display: none; }
+
+.home-batches:has(input[name="batch-branch"][value="Dilsukhnagar"]:checked) [data-branch]:not([data-branch="Dilsukhnagar"]),
+.home-batches:has(input[name="batch-branch"][value="Ameerpet"]:checked) [data-branch]:not([data-branch="Ameerpet"]),
+.home-batches:has(input[name="batch-branch"][value="Online"]:checked) [data-branch]:not([data-branch="Online"]) { display: none; }
+
+/* Without :has() the answers cannot change the suggestion, so show one fixed starting point instead. */
+.finder-default { display: none; }
+@supports selector(:has(*)) {
+  .finder-fallback { display: none; }
+  .finder-default { display: block; }
+}
+.home-finder:has(input[name="finder-interest"]:checked) .finder-default { display: none; }
+.home-finder:has(input[name="finder-interest"][value="cloud-devops"]:checked) .finder-suggest[data-for="cloud-devops"],
+.home-finder:has(input[name="finder-interest"][value="ai-data"]:checked) .finder-suggest[data-for="ai-data"],
+.home-finder:has(input[name="finder-interest"][value="cyber-security"]:checked) .finder-suggest[data-for="cyber-security"],
+.home-finder:has(input[name="finder-interest"][value="building-apps"]:checked) .finder-suggest[data-for="building-apps"],
+.home-finder:has(input[name="finder-interest"][value="marketing-or-hr"]:checked) .finder-suggest[data-for="marketing-or-hr"] { display: block; }
+
+/* ── Homepage: shared tokens ──
+   On-dark: every dark or orange surface (hero, batch band, career card, corporate banner, final CTA)
+   wears .on-dark. The global h1-h6 rule sets a dark heading colour that beats an inherited white,
+   so headings inside a dark surface need this rule. Cards inside the surface (.light-surface) keep
+   their own heading colours. */
+.on-dark { color: #fff; }
+.on-dark :is(h1, h2, h3, h4):not(.light-surface *) { color: #fff; }
+.on-dark-eyebrow { color: #f9bb96; }   /* 5.5:1 or better on the teal gradient; never on the orange band */
+.on-dark-accent { color: #f9bb96; }
+.on-dark-sub { color: #d6e8eb; }       /* 8.9:1 on #0a3d4a */
+.on-orange-sub { color: #fff; }        /* #ffe2d1 on #b8531c was 3.2:1 */
+
+/* One card style for the homepage: 16px radius, 1px border, soft shadow; hover = small lift. */
+.home-card { transition: transform .18s ease, box-shadow .18s ease; }
+@media (hover: hover) {
+  .home-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(10, 61, 74, 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-card { transition: none; }
+  .home-card:hover { transform: none; }
+}

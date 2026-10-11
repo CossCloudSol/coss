@@ -1,13 +1,52 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import CallLink from './CallLink'
 import { PRIMARY_PHONE } from '@/lib/nap'
 
 export default function MobileStickyBar() {
   const phone = PRIMARY_PHONE
 
+  const pathname = usePathname()
+
   function openWhatsApp() {
     window.dispatchEvent(new CustomEvent('coss:open-whatsapp', { detail: { origin: 'sticky' } }))
+  }
+
+  // Design v4 (Mobile.dc.html "Sticky action bar"): on the homepage the bar is white with three
+  // actions. Every other page keeps the four-action bar below.
+  if (pathname === '/') {
+    return (
+      <nav aria-label="Quick actions" className="light-surface fixed bottom-0 left-0 right-0 z-[9998] md:hidden">
+        <div
+          className="grid grid-cols-[1fr_1fr_1.6fr] gap-2 border-t border-[#e3eaec] bg-white px-3 py-2.5 shadow-[0_-8px_24px_-12px_rgba(10,61,74,0.35)]"
+          style={{ paddingBottom: 'max(10px, env(safe-area-inset-bottom))' }}
+        >
+          <CallLink
+            number={phone}
+            className="flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-[#cfdadd] bg-white px-1.5 font-sans text-[15px] font-bold text-[#005663]"
+            aria-label="Call Now: Coss Cloud Solutions"
+          >
+            Call
+          </CallLink>
+          <button
+            type="button"
+            onClick={openWhatsApp}
+            className="flex min-h-12 items-center justify-center rounded-xl bg-[#e7f6ec] px-1.5 font-sans text-[15px] font-bold text-[#0f5a2c]"
+            aria-label="Open WhatsApp chat"
+          >
+            WhatsApp
+          </button>
+          <a
+            href="#enroll-form"
+            className="flex min-h-12 items-center justify-center rounded-xl bg-[#b8531c] px-1.5 font-sans text-[15px] font-bold text-white"
+            aria-label="Book a free demo class"
+          >
+            Free demo
+          </a>
+        </div>
+      </nav>
+    )
   }
 
   return (

@@ -58,7 +58,7 @@ OUTPUT: Return ONLY valid JSON with no markdown fences, no explanation, no pream
   "tools": ["string x6-10"],
   "duration": "string (e.g. 45 Days, 3 Months)",
   "level": "Beginner | Intermediate | Advanced | All Levels",
-  "badge": "New | Popular | High Demand",
+  "badge": "New | Popular | Weekend Batch",
   "seoTitle": "string (max 60 chars)",
   "seoDesc": "string (max 155 chars)"
 }`
