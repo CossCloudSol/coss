@@ -1748,3 +1748,27 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
 /* Muted grey text (#5f7075) is AA on light surfaces; on dark ones use slate-400. */
 .dark .text-\[\#5f7075\] { color: #94a3b8; }
+
+/* ── Homepage v4: tabs and the course finder without client JavaScript ──
+   Each tab group is a set of native radio inputs; :has() shows the matching cards.
+   Browsers without :has() simply show every card and the default finder text. */
+.home-tabs:has(input[name="pop-cat"][value="all"]:checked) [data-late] { display: none; }
+@media (max-width: 1023.98px) {
+  .home-tabs:has(input[name="pop-cat"][value="all"]:checked) [data-mobile-late] { display: none; }
+}
+.home-tabs:has(input[name="pop-cat"][value="ai-data"]:checked) [data-group]:not([data-group="ai-data"]),
+.home-tabs:has(input[name="pop-cat"][value="cloud-devops"]:checked) [data-group]:not([data-group="cloud-devops"]),
+.home-tabs:has(input[name="pop-cat"][value="cyber"]:checked) [data-group]:not([data-group="cyber"]),
+.home-tabs:has(input[name="pop-cat"][value="full-stack"]:checked) [data-group]:not([data-group="full-stack"]),
+.home-tabs:has(input[name="pop-cat"][value="marketing-hr"]:checked) [data-group]:not([data-group="marketing-hr"]) { display: none; }
+
+.home-batches:has(input[name="batch-branch"][value="Dilsukhnagar"]:checked) [data-branch]:not([data-branch="Dilsukhnagar"]),
+.home-batches:has(input[name="batch-branch"][value="Ameerpet"]:checked) [data-branch]:not([data-branch="Ameerpet"]),
+.home-batches:has(input[name="batch-branch"][value="Online"]:checked) [data-branch]:not([data-branch="Online"]) { display: none; }
+
+.home-finder:has(input[name="finder-interest"]:checked) .finder-default { display: none; }
+.home-finder:has(input[name="finder-interest"][value="cloud-devops"]:checked) .finder-suggest[data-for="cloud-devops"],
+.home-finder:has(input[name="finder-interest"][value="ai-data"]:checked) .finder-suggest[data-for="ai-data"],
+.home-finder:has(input[name="finder-interest"][value="cyber-security"]:checked) .finder-suggest[data-for="cyber-security"],
+.home-finder:has(input[name="finder-interest"][value="building-apps"]:checked) .finder-suggest[data-for="building-apps"],
+.home-finder:has(input[name="finder-interest"][value="marketing-or-hr"]:checked) .finder-suggest[data-for="marketing-or-hr"] { display: block; }

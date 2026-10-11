@@ -9,6 +9,8 @@ import type { MenuIconKey } from '@/lib/menu-icons';
 
 export interface TrackEntry {
   label: string;
+  /** Shorter label for the 3-column mobile grid. */
+  short?: string;
   /** CourseCategory.slug the tile links to. */
   category: string;
   icon: MenuIconKey;
@@ -19,15 +21,16 @@ export const TRACKS: readonly TrackEntry[] = [
   { label: 'DevOps', category: 'devops-multi-cloud', icon: 'devops' },
   { label: 'AI', category: 'artificial-intelligence-training', icon: 'ai' },
   { label: 'Data', category: 'data-analytics-bi', icon: 'data' },
-  { label: 'Cyber Security', category: 'cyber-security', icon: 'cyber' },
+  { label: 'Cyber Security', short: 'Cyber', category: 'cyber-security', icon: 'cyber' },
   { label: 'Full Stack', category: 'programming-full-stack', icon: 'prog' },
-  { label: 'Linux & Testing', category: 'software-testing-os', icon: 'testing' },
+  { label: 'Linux', category: 'software-testing-os', icon: 'testing' },
   { label: 'Marketing', category: 'digital-design', icon: 'digital' },
   { label: 'HR', category: 'human-resource', icon: 'hr' },
 ];
 
 export interface TrackLink {
   label: string;
+  short?: string;
   href: string;
   icon: MenuIconKey;
 }
@@ -36,7 +39,7 @@ export function resolveTracks(index: SearchIndex): TrackLink[] {
   const out: TrackLink[] = [];
   for (const t of TRACKS) {
     if (!index.categories.some((c) => c.slug === t.category)) continue;
-    out.push({ label: t.label, href: `/courses/${t.category}`, icon: t.icon });
+    out.push({ label: t.label, short: t.short, href: `/courses/${t.category}`, icon: t.icon });
   }
   return out;
 }

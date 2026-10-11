@@ -5,7 +5,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const page = fs.readFileSync(new URL('../../src/app/page.tsx', import.meta.url), 'utf8');
+// The page fetches the feed; the review block itself lives in components/home/v4/Lower.tsx.
+const pageOnly = fs.readFileSync(new URL('../../src/app/page.tsx', import.meta.url), 'utf8');
+const lower = fs.readFileSync(new URL('../../src/components/home/v4/Lower.tsx', import.meta.url), 'utf8');
+const page = `${pageOnly}
+${lower}`;
 
 test('the homepage never reads Testimonial rows', () => {
   assert.doesNotMatch(page, /prisma\.testimonial/);
@@ -14,12 +18,12 @@ test('the homepage never reads Testimonial rows', () => {
 });
 
 test('the review block is hidden unless the live feed returned reviews', () => {
-  assert.match(page, /\{reviews && reviews\.reviews\.length > 0 && \(/);
+  assert.match(lower, /if \(!reviews \|\| reviews\.reviews\.length === 0\) return null;/);
 });
 
 test('every shown review is attributed to Google with a link to the listing', () => {
-  assert.match(page, /Source: Google/);
-  assert.match(page, /href=\{reviews\.mapsUri\}/);
+  assert.match(lower, /Source: Google/);
+  assert.match(lower, /reviews\.mapsUri/);
   assert.match(page, /role="img" aria-label=\{`\$\{r\.rating\} out of 5 stars`\}/);
 });
 
