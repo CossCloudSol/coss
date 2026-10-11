@@ -156,7 +156,7 @@ BEGIN
     RAISE EXCEPTION 'expected 10 redirect rows updated, got %', n;
   END IF;
 
-  -- every changed row now points at one of the three flat pages, and status / active are untouched
+  -- every changed row now points at one of the four flat pages, and status / active are untouched
   SELECT count(*) INTO n
   FROM "Redirect" r
   JOIN coss_backup.redirect_alias_20261011 b ON b.id = r.id
@@ -183,7 +183,7 @@ BEGIN
     RAISE EXCEPTION 'a target page is itself a redirect source (% rows)', n;
   END IF;
 
-  -- nothing else changed: the Redirect table has the same number of rows as before
+  -- nothing else changed: no row outside the backed-up set was written in this transaction
   SELECT count(*) INTO n FROM "Redirect" r
   WHERE r."updatedAt" = now()
     AND r.id NOT IN (SELECT id FROM coss_backup.redirect_alias_20261011);
