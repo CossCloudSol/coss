@@ -10,6 +10,7 @@ import { getSearchIndex } from '@/lib/course-search-index';
 import type { CatalogCourse, SearchIndex } from '@/lib/course-search';
 import { getAllPosts } from '@/lib/posts';
 import { POPULAR_COURSES } from '@/lib/popular-courses';
+import { courseBannerPath } from '@/lib/course-banner-sign';
 import { resolveTracks, finderSuggestions } from '@/lib/home-tracks';
 import { dateParts } from '@/lib/home-v4';
 import PromoBanner from '@/components/PromoBanner';
@@ -82,23 +83,30 @@ async function getUpcomingBatches() {
 }
 
 /**
- * The 12 courses of the Popular list (popular-courses.ts), in that order, on the course card. A
- * course that is not published is skipped. A category entry (HR) uses the first course of that
- * category, titled and linked as the category.
+ * The 12 courses of the Popular list (popular-courses.ts), in that order, each on the generated
+ * banner (a photo thumbnail cropped and clashed with the badge here; photos stay on the course
+ * pages and /courses). A course that is not published is skipped. A category entry (HR) uses the
+ * first course of that category, titled and linked as the category.
  */
-function popularCourses(index: SearchIndex): CatalogCourse[] {
-  const out: CatalogCourse[] = [];
+async function popularCourses(index: SearchIndex): Promise<CatalogCourse[]> {
+  const picked: CatalogCourse[] = [];
   for (const entry of POPULAR_COURSES) {
     if (entry.kind === 'course') {
       const c = index.courses.find((x) => x.slug === entry.slug);
-      if (c) out.push(c);
+      if (c) picked.push(c);
       continue;
     }
     const cat = index.categories.find((x) => x.slug === entry.slug);
     const lead = index.courses.find((x) => x.categorySlug === entry.slug);
-    if (cat && lead) out.push({ ...lead, title: entry.label, url: `/courses/${cat.slug}`, category: cat.name });
+    if (cat && lead) picked.push({ ...lead, slug: cat.slug, title: entry.label, url: `/courses/${cat.slug}`, category: cat.name });
   }
-  return out;
+  return Promise.all(
+    picked.map(async (c) => ({
+      ...c,
+      thumbnail: null,
+      banner: (await courseBannerPath({ slug: c.slug, title: c.title, category: c.category, categorySlug: c.categorySlug })) ?? c.banner,
+    })),
+  );
 }
 
 /**
@@ -147,7 +155,7 @@ export default async function HomePage() {
     getLatestArticles(),
     getPromoBanners('home'),
   ]);
-  const courses = hp.showFeaturedCourses ? popularCourses(index) : [];
+  const courses = hp.showFeaturedCourses ? await popularCourses(index) : [];
   const banner = homeBanners[0] ?? null;
 
   const batchCards: BatchCardData[] = batches.map((b) => ({

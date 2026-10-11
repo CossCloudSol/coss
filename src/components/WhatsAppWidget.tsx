@@ -277,7 +277,10 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
         >
           {/* Header */}
           <div className="wa-panel-header">
-            <div className="wa-panel-avatar" aria-hidden="true">C</div>
+            <div className="wa-panel-avatar" aria-hidden="true" style={{ background: '#fff' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-icon.png" alt="" width={30} height={19} />
+            </div>
             <div className="wa-panel-info">
               <div className="wa-panel-name">Coss</div>
               <div className="wa-panel-subtitle">Cloud Solutions</div>

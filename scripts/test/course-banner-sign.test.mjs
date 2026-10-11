@@ -79,3 +79,13 @@ test('Instagram portrait URL signs the hook; without a hook signatures are uncha
   assert.ok(!sameSignature(url.searchParams.get('v'), plain));
   assert.ok(!sameSignature(url.searchParams.get('v'), await bannerSignature('devops', 'DevOps Training', 'DevOps', 'devops-multi-cloud', 'Placement guaranteed')));
 });
+
+test('banner design v3: logo icon + "Coss Cloud Solutions" (no "C" tile), and a new signature version so shared og:image URLs change', async () => {
+  const fs = await import('node:fs');
+  const route = fs.readFileSync(new URL('../../src/app/course-banner/[slug]/route.tsx', import.meta.url), 'utf8');
+  assert.ok(!/CTile/.test(route), 'the "C" placeholder tile is gone from the banner');
+  assert.ok(route.includes('logo-icon.png') && route.includes('Cloud Solutions'));
+  assert.ok(fs.existsSync(new URL('../../public/logo-icon.png', import.meta.url)));
+  const sign = fs.readFileSync(new URL('../../src/lib/course-banner-sign.ts', import.meta.url), 'utf8');
+  assert.match(sign, /DESIGN_VERSION = '3'/);
+});

@@ -16,7 +16,7 @@
  */
 
 /** Bump when the banner design changes, so every cached image is replaced. */
-const DESIGN_VERSION = '2';
+const DESIGN_VERSION = '3';
 
 const KEY_NAMESPACE = 'coss:course-banner:v2';
 const encoder = new TextEncoder();
