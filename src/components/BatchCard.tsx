@@ -172,7 +172,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
             ctaType="batch"
             message={enrollMsg}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
-            style={{ background: '#e47538' }}
+            style={{ background: '#b8531c' }}
           >
             Enroll Online Class
           </WhatsAppLink>

@@ -141,7 +141,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
             <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px' }}>{course.title}</span>
           </div>
           {publicBadge(course.badge) && (
-            <div style={{ display: 'inline-block', background: '#e47538', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 12px', borderRadius: '12px', marginBottom: '12px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div style={{ display: 'inline-block', background: '#b8531c', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 12px', borderRadius: '12px', marginBottom: '12px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {publicBadge(course.badge)}
             </div>
           )}
@@ -162,7 +162,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
               </span>
             ))}
             {course.price != null && (
-              <span style={{ background: '#e47538', color: '#fff', fontSize: '13px', fontWeight: 700, padding: '6px 14px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
+              <span style={{ background: '#b8531c', color: '#fff', fontSize: '13px', fontWeight: 700, padding: '6px 14px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
                 {course.originalPrice && <span style={{ textDecoration: 'line-through', opacity: 0.7, marginRight: '6px', fontWeight: 400 }}>₹{course.originalPrice.toLocaleString()}</span>}
                 ₹{course.price.toLocaleString()}
               </span>
@@ -276,7 +276,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                           pageType="course"
                           courseSlug={course.slug}
                           message={waMsg}
-                          style={{ background: '#e47538', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+                          style={{ background: '#b8531c', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
                         >
                           Book Seat
                         </WhatsAppLink>
@@ -309,7 +309,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
               <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={course.slug} style={{ color: '#e47538', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+                <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={course.slug} style={{ color: '#b8531c', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                 <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
               </p>
             </div>

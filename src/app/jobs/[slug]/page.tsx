@@ -122,7 +122,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
             <div
               style={{
                 width: '64px', height: '64px', borderRadius: '14px', flexShrink: 0,
-                background: '#e47538', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: '#b8531c', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '28px', fontWeight: 800, color: '#fff',
               }}
             >
@@ -158,7 +158,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               message={waMessage}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
-                background: '#e47538', color: '#fff', fontWeight: 700, fontSize: '14px',
+                background: '#b8531c', color: '#fff', fontWeight: 700, fontSize: '14px',
                 padding: '14px 28px', borderRadius: '12px', textDecoration: 'none',
                 whiteSpace: 'nowrap',
               }}
@@ -217,7 +217,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
                 ctaType="job"
                 pageType="static"
                 message={waMessage}
-                style={{ display: 'block', textAlign: 'center', background: '#e47538', color: '#fff', fontWeight: 700, fontSize: '14px', padding: '14px', borderRadius: '10px', textDecoration: 'none' }}
+                style={{ display: 'block', textAlign: 'center', background: '#b8531c', color: '#fff', fontWeight: 700, fontSize: '14px', padding: '14px', borderRadius: '10px', textDecoration: 'none' }}
               >
                 Apply via WhatsApp
               </WhatsAppLink>

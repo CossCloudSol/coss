@@ -585,7 +585,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
             <div className="flex items-center justify-between border-b border-[#eef2f3] px-4 py-3 dark:border-slate-800">
               <h2 id="filters-title" className="font-heading text-xl font-extrabold text-[#0a3d4a] dark:text-white">Filters</h2>
               <div className="flex items-center gap-2">
-                <button type="button" onClick={clearAll} className="text-sm font-bold text-[#b8531c]">Clear all</button>
+                <button type="button" onClick={clearAll} className="text-sm font-bold text-[#b8531c] dark:text-[#f3a57a]">Clear all</button>
                 <button type="button" onClick={() => setSheetOpen(false)} aria-label="Close filters" className="flex h-11 w-11 items-center justify-center rounded-[10px] text-[#17262a] dark:text-slate-100">
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>

@@ -158,7 +158,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
       <section className="pt-10 pb-0" style={{ background: 'linear-gradient(135deg, #012530 0%, #021e2b 60%, #011820 100%)' }}>
         <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 text-orange-300 text-xs font-black px-4 py-2 rounded-full mb-5 uppercase tracking-[0.1em]">
+            <div className="inline-flex items-center gap-2 bg-[#b8531c]/15 border border-[#b8531c]/30 text-orange-300 text-xs font-black px-4 py-2 rounded-full mb-5 uppercase tracking-[0.1em]">
               ★ Since 2010
             </div>
             <h1 className="font-black text-white leading-[1.08] tracking-tight mb-4">
@@ -190,7 +190,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
                 '1-year LMS access',
               ].map(chip => (
                 <div key={chip} className="flex items-center gap-2.5 text-sm font-semibold text-slate-200">
-                  <span className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
+                  <span className="w-5 h-5 rounded-full bg-[#b8531c] flex items-center justify-center flex-shrink-0">
                     <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
                     </svg>
@@ -304,8 +304,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
       {/* ── SECTION 4: WHY COSS ─────────────────────────────────────────── */}
       <section className="bg-white dark:bg-slate-900 py-10 md:py-16 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Why Choose Us</p>
-          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-[#b8531c] dark:text-[#f3a57a] mb-0">Why Choose Us</p>
+          <span className="block w-8 h-0.5 bg-[#b8531c] mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
             Why Choose Coss Cloud Solutions for {titleWithoutTraining}?
           </h2>
@@ -344,7 +344,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
               },
             ] as { svg: React.JSX.Element; title: string; body: string }[]).map((card, index) => (
               <div key={card.title} className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center flex flex-col items-center transition-all hover:-translate-y-1 hover:shadow-lg hover:border-teal-300 dark:hover:border-teal-700">
-                <span className="absolute top-3 right-3 w-7 h-7 rounded-full bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-[11px] font-black text-orange-500">
+                <span className="absolute top-3 right-3 w-7 h-7 rounded-full bg-[#b8531c]/10 border border-[#b8531c]/20 flex items-center justify-center text-[11px] font-black text-[#b8531c] dark:text-[#f3a57a]">
                   {String(index + 1).padStart(2, '0')}
                 </span>
                 <div className="w-14 h-14 rounded-2xl bg-teal-50 dark:bg-teal-950/40 flex items-center justify-center mb-4 flex-shrink-0">
@@ -363,10 +363,10 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
         <div className="max-w-[1200px] mx-auto">
 
           <div className="text-center mb-8">
-            <span className="text-xs font-black tracking-[0.12em] uppercase text-orange-500">
+            <span className="text-xs font-black tracking-[0.12em] uppercase text-[#b8531c] dark:text-[#f3a57a]">
               Industry-standard tools
             </span>
-            <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+            <span className="block w-8 h-0.5 bg-[#b8531c] mt-1.5 mb-3 mx-auto" />
             <h3 className="text-xl md:text-2xl font-extrabold text-white">
               Tools &amp; Technologies You Will Master
             </h3>
@@ -468,13 +468,13 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
       {/* ── SECTION 6: BATCHES ──────────────────────────────────────────── */}
       <section className="py-10 md:py-16 px-4 md:px-8 bg-[#0d1b2e]">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Enroll Now</p>
-          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <p className="text-xs font-black tracking-[0.12em] uppercase text-[#b8531c] dark:text-[#f3a57a] mb-0">Enroll Now</p>
+          <span className="block w-8 h-0.5 bg-[#b8531c] mt-1.5 mb-3 mx-auto" />
           <h2 className="text-3xl font-extrabold text-white mb-2">Weekday &amp; Weekend Batches</h2>
           <p className="text-sm text-slate-400 mt-2 mb-8">Online &amp; classroom at Dilsukhnagar and Ameerpet</p>
           <Link
             href="/batches"
-            className="inline-flex items-center gap-2 py-3.5 px-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all text-sm shadow-lg shadow-orange-500/20"
+            className="inline-flex items-center gap-2 py-3.5 px-8 bg-gradient-to-r from-[#b8531c] to-[#8f3f14] text-white font-bold rounded-xl hover:from-[#8f3f14] hover:to-[#74330f] transition-all text-sm shadow-lg shadow-[#b8531c]/20"
           >
             See current batch schedule →
           </Link>
@@ -486,8 +486,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
       {/* ── SECTION 8: FAQ ──────────────────────────────────────────────── */}
       <section className="py-10 md:py-16 px-4 md:px-8 bg-slate-50 dark:bg-slate-900">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">FAQs</p>
-          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-[#b8531c] dark:text-[#f3a57a] mb-0">FAQs</p>
+          <span className="block w-8 h-0.5 bg-[#b8531c] mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-10">Frequently Asked Questions</h2>
           <div className="max-w-3xl mx-auto flex flex-col gap-2">
             {faqItems.map((item, i) => (
@@ -497,7 +497,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
                     {item.q}
                   </span>
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-orange-50 dark:bg-orange-950/40 flex items-center justify-center transition-transform duration-200 group-open:rotate-45">
-                    <svg className="w-3.5 h-3.5 text-orange-500" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <svg className="w-3.5 h-3.5 text-[#b8531c] dark:text-[#f3a57a]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                     </svg>
                   </span>
@@ -527,8 +527,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
       {siblings.length > 0 && (
         <section className="py-10 md:py-16 px-4 md:px-8 bg-slate-50 dark:bg-slate-950">
           <div className="max-w-6xl mx-auto">
-            <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Explore More</p>
-            <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+            <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-[#b8531c] dark:text-[#f3a57a] mb-0">Explore More</p>
+            <span className="block w-8 h-0.5 bg-[#b8531c] mt-1.5 mb-3 mx-auto" />
             <h2 className="text-center text-3xl font-extrabold text-slate-900 dark:text-white mb-10">Other Training Institutes in Hyderabad</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {siblings.map((s) => (
@@ -548,8 +548,8 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
       {/* ── SECTION 9: LOCATIONS ────────────────────────────────────────── */}
       <section className="py-10 md:py-16 px-4 md:px-8 bg-[#0d1b2e]">
         <div className="max-w-6xl mx-auto">
-          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-orange-500 mb-0">Find Us</p>
-          <span className="block w-8 h-0.5 bg-orange-500 mt-1.5 mb-3 mx-auto" />
+          <p className="text-center text-xs font-black tracking-[0.12em] uppercase text-[#b8531c] dark:text-[#f3a57a] mb-0">Find Us</p>
+          <span className="block w-8 h-0.5 bg-[#b8531c] mt-1.5 mb-3 mx-auto" />
           <h2 className="text-center text-3xl font-extrabold text-white mb-2">Our Training Centres in Hyderabad</h2>
           <p className="text-sm text-slate-400 mt-2 text-center mb-10">Two conveniently located centres for {titleWithoutTraining} training</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -561,7 +561,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
                 ? `${branchObj.addressLine2}, ${branchObj.city} – ${branchObj.pincode}`
                 : fallbackAddr2
               return (
-                <div key={branchName} className="bg-[#112240] border border-slate-700 rounded-2xl overflow-hidden transition-all hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/5">
+                <div key={branchName} className="bg-[#112240] border border-slate-700 rounded-2xl overflow-hidden transition-all hover:border-[#b8531c]/50 hover:shadow-xl hover:shadow-[#b8531c]/5">
                   <div className="bg-[#080f1e] px-5 py-4 flex items-center gap-3 border-b border-slate-700">
                     <svg className="w-5 h-5 text-orange-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -644,7 +644,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href={`/free-demo-class?course=${course.slug}`}
-              className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-black text-base rounded-xl transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:-translate-y-0.5"
+              className="px-8 py-4 bg-[#b8531c] hover:bg-orange-600 text-white font-black text-base rounded-xl transition-all shadow-lg shadow-[#b8531c]/25 hover:shadow-[#b8531c]/40 hover:-translate-y-0.5"
             >
               Book Free Demo Class
             </Link>

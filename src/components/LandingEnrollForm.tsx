@@ -86,19 +86,19 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] border border-slate-100 dark:border-slate-700 relative overflow-hidden w-full max-w-full">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-orange-400 rounded-t-2xl" />
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#b8531c] to-[#f3a57a] rounded-t-2xl" />
       <div className="text-center mb-5 pt-2">
-        <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
           Book Your{' '}
-          <span className="text-orange-500">FREE</span>{' '}
+          <span className="text-[#b8531c] dark:text-[#f3a57a]">FREE</span>{' '}
           Demo
-        </h3>
+        </h2>
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
         <HoneypotField inputRef={honeypotRef} />
-        <div className="flex items-center gap-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 dark:focus-within:border-orange-500 transition-colors duration-200 w-full">
-          <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <div className="flex items-center gap-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 dark:focus-within:border-[#f3a57a] transition-colors duration-200 w-full">
+          <svg className="w-5 h-5 text-[#b8531c] dark:text-[#f3a57a] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
           </svg>
           <input
@@ -112,8 +112,8 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
             className="flex-1 min-w-0 bg-transparent outline-none text-slate-800 dark:text-slate-100 text-sm placeholder:text-slate-400 font-medium"
           />
         </div>
-        <div className="flex items-center gap-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 dark:focus-within:border-orange-500 transition-colors duration-200 w-full">
-          <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <div className="flex items-center gap-3 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 dark:focus-within:border-[#f3a57a] transition-colors duration-200 w-full">
+          <svg className="w-5 h-5 text-[#b8531c] dark:text-[#f3a57a] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
           </svg>
           <input
@@ -129,9 +129,10 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           />
         </div>
         <div className="flex items-center gap-2 border-2 border-slate-200 dark:border-slate-600 rounded-xl px-3 py-3.5 mb-3 bg-white dark:bg-slate-800 focus-within:border-orange-400 transition-colors duration-200">
-          <svg className="w-4 h-4 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-[#b8531c] dark:text-[#f3a57a] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
           </svg>
+          <label htmlFor="lef-branch" className="sr-only">Preferred branch</label>
           <select
             id="lef-branch"
             value={branch}
@@ -155,7 +156,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-4 bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white text-base font-black rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 mb-3 disabled:opacity-70"
+          className="w-full py-4 bg-[#b8531c] hover:bg-[#8f3f14] active:bg-[#74330f] text-white text-base font-black rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-[#b8531c]/20 hover:shadow-[#b8531c]/30 mb-3 disabled:opacity-70"
         >
           {isSubmitting ? 'Booking Your Seat…' : 'Book Free Demo Class'}
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">

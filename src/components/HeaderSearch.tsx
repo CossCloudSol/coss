@@ -212,9 +212,9 @@ function Suggestions({
 function BrowseLinks(): JSX.Element {
   return (
     <p className="text-xs text-[#5f7075] dark:text-slate-400">
-      Or browse: <Link href="/courses?cat=ai-data" className="font-bold text-[#b8531c]">AI &amp; Data</Link> ·{' '}
-      <Link href="/courses?cat=cloud-devops" className="font-bold text-[#b8531c]">Cloud</Link> ·{' '}
-      <Link href="/courses" className="font-bold text-[#b8531c]">All courses</Link>
+      Or browse: <Link href="/courses?cat=ai-data" className="font-bold text-[#b8531c] dark:text-[#f3a57a]">AI &amp; Data</Link> ·{' '}
+      <Link href="/courses?cat=cloud-devops" className="font-bold text-[#b8531c] dark:text-[#f3a57a]">Cloud</Link> ·{' '}
+      <Link href="/courses" className="font-bold text-[#b8531c] dark:text-[#f3a57a]">All courses</Link>
     </p>
   );
 }

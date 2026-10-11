@@ -1,0 +1,301 @@
+{
+ "note": "Snapshot of production /api/search-index taken 11 Oct 2026 BEFORE the one-URL-per-course fix: slug + the url the catalogue gave. Used by course-urls.test.mjs.",
+ "courses": [
+  {
+   "slug": "hr-recruitment",
+   "url": "/courses/hr-recruitment"
+  },
+  {
+   "slug": "linux-shell-scripting-training-hyderabad",
+   "url": "/courses/software-testing-os/linux-shell-scripting-training-hyderabad"
+  },
+  {
+   "slug": "digital-marketing-training-institute-in-hyderabad",
+   "url": "/courses/digital-design/digital-marketing-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "ethical-hacking-ceh-training-hyderabad",
+   "url": "/courses/cyber-security/ethical-hacking-ceh-training-hyderabad"
+  },
+  {
+   "slug": "ai-foundation-training-in-hyderabad",
+   "url": "/courses/artificial-intelligence-training/ai-foundation-training-in-hyderabad"
+  },
+  {
+   "slug": "aws-devops-training-institute-in-hyderabad",
+   "url": "/aws-devops-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "artificial-intelligence-ai-training-hyderabad",
+   "url": "/artificial-intelligence-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "hr-operations-training-in-hyderabad",
+   "url": "/courses/human-resource/hr-operations-training-in-hyderabad"
+  },
+  {
+   "slug": "ethical-hacking-cyber-security-professional",
+   "url": "/courses/ethical-hacking-cyber-security-professional"
+  },
+  {
+   "slug": "hr-business-partner-training-in-hyderabad",
+   "url": "/courses/human-resource/hr-business-partner-training-in-hyderabad"
+  },
+  {
+   "slug": "hr-leadership-training-in-hyderabad",
+   "url": "/courses/human-resource/hr-leadership-training-in-hyderabad"
+  },
+  {
+   "slug": "hr-learning-development-training-in-hyderabad",
+   "url": "/courses/human-resource/hr-learning-development-training-in-hyderabad"
+  },
+  {
+   "slug": "hr-management-training-in-hyderabad",
+   "url": "/courses/human-resource/hr-management-training-in-hyderabad"
+  },
+  {
+   "slug": "business-development-training-in-hyderabad",
+   "url": "/courses/human-resource/business-development-training-in-hyderabad"
+  },
+  {
+   "slug": "data-analytics-training-institute-in-hyderabad",
+   "url": "/courses/data-analytics-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "data-science-training-institute-in-hyderabad",
+   "url": "/courses/data-science-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "machine-learning-training-institute-in-hyderabad",
+   "url": "/machine-learning-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "artificial-intelligence-training-institute-in-hyderabad",
+   "url": "/courses/artificial-intelligence-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "aws-solutions-architect-training-in-hyderabad",
+   "url": "/aws-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "azure-administrator-training-in-hyderabad",
+   "url": "/azure-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "multi-cloud-architecture-training-in-hyderabad",
+   "url": "/courses/multi-cloud-architecture-training-in-hyderabad"
+  },
+  {
+   "slug": "devops-training-institute-in-hyderabad",
+   "url": "/devops-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "azure-devops-training-in-hyderabad",
+   "url": "/azure-devops-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "ethical-hacking-training-institute-in-hyderabad",
+   "url": "/ethical-hacking-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "ceh-certification-training-in-hyderabad",
+   "url": "/courses/ceh-certification-training-in-hyderabad"
+  },
+  {
+   "slug": "medical-coding-certification-in-hyderabad",
+   "url": "/courses/medical-coding/medical-coding-certification-in-hyderabad"
+  },
+  {
+   "slug": "tableau-data-visualization-training-in-hyderabad",
+   "url": "/courses/data-analytics-bi/tableau-data-visualization-training-in-hyderabad"
+  },
+  {
+   "slug": "sql-data-analytics-training-hyderabad",
+   "url": "/sql-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "python-data-analysis-training-hyderabad",
+   "url": "/courses/data-analytics-bi/python-data-analysis-training-hyderabad"
+  },
+  {
+   "slug": "apache-spark-training-in-hyderabad",
+   "url": "/big-data-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "azure-data-factory-training-in-hyderabad",
+   "url": "/azure-data-engineer-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "salesforce-admin-developer-training-in-hyderabad",
+   "url": "/salesforce-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "manual-testing-training-in-hyderabad",
+   "url": "/courses/software-testing-os/manual-testing-training-in-hyderabad"
+  },
+  {
+   "slug": "linux-shell-scripting-training-in-hyderabad",
+   "url": "/linux-administration-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "digital-marketing-training-in-hyderabad",
+   "url": "/digital-marketing-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "ui-ux-design-training-institute-in-hyderabad",
+   "url": "/ui-ux-design-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "interview-prep-resume-building-training-in-hyderabad",
+   "url": "/courses/professional-soft-skills/interview-prep-resume-building-training-in-hyderabad"
+  },
+  {
+   "slug": "power-bi-training-in-hyderabad",
+   "url": "/power-bi-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "sap-fico-training-institute-in-hyderabad",
+   "url": "/courses/erp-crm-enterprise-tools/sap-fico-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "selenium-automation-testing-training-in-hyderabad",
+   "url": "/courses/software-testing-os/selenium-automation-testing-training-in-hyderabad"
+  },
+  {
+   "slug": "api-testing-postman-training-in-hyderabad",
+   "url": "/courses/software-testing-os/api-testing-postman-training-in-hyderabad"
+  },
+  {
+   "slug": "business-communication-english-training-in-hyderabad",
+   "url": "/communication-skills-training-in-hyderabad"
+  },
+  {
+   "slug": "interview-prep-resume-building-hyderabad",
+   "url": "/courses/professional-soft-skills/interview-prep-resume-building-hyderabad"
+  },
+  {
+   "slug": "leadership-management-skills-training-hyderabad",
+   "url": "/courses/professional-soft-skills/leadership-management-skills-training-hyderabad"
+  },
+  {
+   "slug": "google-cloud-engineer-training-in-hyderabad",
+   "url": "/google-cloud-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "kubernetes-docker-devops-training-in-hyderabad",
+   "url": "/courses/devops-multi-cloud/kubernetes-docker-devops-training-in-hyderabad"
+  },
+  {
+   "slug": "terraform-ansible-training-in-hyderabad",
+   "url": "/courses/devops-multi-cloud/terraform-ansible-training-in-hyderabad"
+  },
+  {
+   "slug": "full-stack-java-developer-training-in-hyderabad",
+   "url": "/java-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "mern-stack-training-in-hyderabad",
+   "url": "/courses/programming-full-stack/mern-stack-training-in-hyderabad"
+  },
+  {
+   "slug": "comptia-security-plus-training-hyderabad",
+   "url": "/courses/comptia-security-plus-training-hyderabad"
+  },
+  {
+   "slug": "aws-cloud-practitioner-certification",
+   "url": "/courses/aws-cloud-practitioner-certification"
+  },
+  {
+   "slug": "hr-recruitment-training-in-hyderabad",
+   "url": "/courses/human-resource/hr-recruitment-training-in-hyderabad"
+  },
+  {
+   "slug": "full-stack-java-developer-bootcamp",
+   "url": "/courses/full-stack-java-developer-bootcamp"
+  },
+  {
+   "slug": "quantum-computing-training-in-hyderabad",
+   "url": "/courses/quantum-computing/quantum-computing-training-in-hyderabad"
+  },
+  {
+   "slug": "ms-office-advanced-excel",
+   "url": "/ms-office-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "soft-skills-personality-development",
+   "url": "/soft-skills-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "spoken-english-communication",
+   "url": "/spoken-english-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "tally-erp-prime-accounting",
+   "url": "/tally-erp-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "aws-cloud-practitioner-training-in-hyderabad",
+   "url": "/courses/aws-cloud-practitioner-training-in-hyderabad"
+  },
+  {
+   "slug": "full-stack-java-training-in-hyderabad",
+   "url": "/courses/full-stack-java-training-in-hyderabad"
+  },
+  {
+   "slug": "full-stack-python-training-in-hyderabad",
+   "url": "/python-full-stack-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "data-engineering-python-training-in-hyderabad",
+   "url": "/data-engineering-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "software-testing-training-institute-in-hyderabad",
+   "url": "/software-testing-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "social-media-marketing-training-in-hyderabad",
+   "url": "/courses/social-media-marketing-training-in-hyderabad"
+  },
+  {
+   "slug": "interview-preparation-training-in-hyderabad",
+   "url": "/courses/interview-preparation-training-in-hyderabad"
+  },
+  {
+   "slug": "leadership-management-training-in-hyderabad",
+   "url": "/courses/leadership-management-training-in-hyderabad"
+  },
+  {
+   "slug": "personality-development-training-in-hyderabad",
+   "url": "/courses/personality-development-training-in-hyderabad"
+  },
+  {
+   "slug": "resume-building-career-guidance-in-hyderabad",
+   "url": "/courses/resume-building-career-guidance-in-hyderabad"
+  },
+  {
+   "slug": "jenkins-cicd-training-in-hyderabad",
+   "url": "/courses/jenkins-cicd-training-in-hyderabad"
+  },
+  {
+   "slug": "python-programming-training-in-hyderabad",
+   "url": "/python-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "cyber-security-training-institute-in-hyderabad",
+   "url": "/cyber-security-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "seo-training-institute-in-hyderabad",
+   "url": "/seo-training-institute-in-hyderabad"
+  },
+  {
+   "slug": "react-nodejs-training-in-hyderabad",
+   "url": "/courses/react-nodejs-training-in-hyderabad"
+  },
+  {
+   "slug": "network-security-training-in-hyderabad",
+   "url": "/courses/network-security-training-in-hyderabad"
+  }
+ ]
+}

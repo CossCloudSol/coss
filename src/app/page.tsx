@@ -19,7 +19,6 @@ import {
   Plus,
   Search,
   Send,
-  Star,
   Users,
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/get-page-seo';
@@ -266,7 +265,7 @@ export default async function HomePage() {
           <ul className="mt-2 flex flex-col gap-2.5 md:gap-3.5 lg:col-start-1 lg:row-start-2 lg:mt-0">
             {HERO_POINTS.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-3 text-sm text-white md:text-base">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#e47538]/20 text-[#f3a57a] md:h-9 md:w-9">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#b8531c]/20 text-[#f3a57a] md:h-9 md:w-9">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 {text}
@@ -432,7 +431,7 @@ export default async function HomePage() {
                 </tbody>
               </table>
             </div>
-            <TrackedCta href="/batches" ctaId="all_batches" location="upcoming_batches" className="text-center text-sm font-bold text-[#b8531c] md:hidden">
+            <TrackedCta href="/batches" ctaId="all_batches" location="upcoming_batches" className="text-center text-sm font-bold text-[#b8531c] md:hidden dark:text-[#f3a57a]">
               See all upcoming batches <ArrowRight className="inline h-4 w-4 align-[-3px]" aria-hidden="true" />
             </TrackedCta>
           </div>
@@ -453,7 +452,7 @@ export default async function HomePage() {
                   <span className={`flex h-11 w-11 items-center justify-center rounded-xl text-white md:h-14 md:w-14 md:rounded-[14px] ${i === STEPS.length - 1 ? 'bg-[#b8531c]' : 'bg-[#0a3d4a]'}`}>
                     <Icon className="h-6 w-6 md:h-[26px] md:w-[26px]" aria-hidden="true" />
                   </span>
-                  <span aria-hidden="true" className="hidden font-heading text-[44px] font-extrabold text-[#e3eaec] md:block dark:text-slate-700">
+                  <span aria-hidden="true" className="hidden font-heading text-[44px] font-extrabold text-[#7a8a90] md:block dark:text-slate-500">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
@@ -538,11 +537,6 @@ export default async function HomePage() {
                         </span>
                       )}
                     </figcaption>
-                    <span className="ml-auto flex shrink-0 gap-px" aria-label={`${r.rating} out of 5 stars`}>
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <Star key={i} className={`h-3.5 w-3.5 ${i < r.rating ? 'fill-[#b8531c] text-[#b8531c]' : 'text-[#cfdadd]'}`} aria-hidden="true" />
-                      ))}
-                    </span>
                   </div>
                   <blockquote className="line-clamp-4 text-sm leading-relaxed text-[#26383d] md:text-[15px] md:leading-[1.6] dark:text-slate-300">{r.quote}</blockquote>
                 </figure>
@@ -610,7 +604,7 @@ export default async function HomePage() {
               <details key={f.q} open={i === 0} className="group border-b border-[#e3eaec] dark:border-slate-700">
                 <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 py-3.5 font-heading text-base font-bold text-[#17262a] md:min-h-16 md:py-[18px] md:text-lg dark:text-white [&::-webkit-details-marker]:hidden">
                   {f.q}
-                  <Plus className="h-[22px] w-[22px] shrink-0 text-[#005663] transition-transform group-open:rotate-45 group-open:text-[#b8531c] dark:text-[#5ef0c8]" aria-hidden="true" />
+                  <Plus className="h-[22px] w-[22px] shrink-0 text-[#005663] transition-transform group-open:rotate-45 group-open:text-[#b8531c] dark:text-[#5ef0c8] dark:group-open:text-[#f3a57a]" aria-hidden="true" />
                 </summary>
                 <p className="pb-4 text-[15px] leading-relaxed text-[#4a5c61] md:pb-5 md:pr-10 md:text-base md:leading-[1.65] dark:text-slate-400">{f.a}</p>
               </details>
@@ -647,7 +641,7 @@ export default async function HomePage() {
                   </span>
                   <span className="flex flex-col gap-1.5 p-3.5 md:gap-2.5 md:p-5">
                     <span className="text-[11px] font-bold uppercase tracking-[1px] text-[#005663] md:text-xs dark:text-[#5ef0c8]">{a.category}</span>
-                    <span className="line-clamp-3 font-heading text-base font-extrabold leading-snug text-[#17262a] group-hover:text-[#b8531c] md:text-lg dark:text-white">{a.title}</span>
+                    <span className="line-clamp-3 font-heading text-base font-extrabold leading-snug text-[#17262a] group-hover:text-[#b8531c] md:text-lg dark:text-white dark:group-hover:text-[#f3a57a]">{a.title}</span>
                     {(a.date || a.readTime) && (
                       <span className="text-xs text-[#5f7075] md:text-[13px]">{[a.date, a.readTime].filter(Boolean).join(' · ')}</span>
                     )}
@@ -662,7 +656,7 @@ export default async function HomePage() {
       {/* ── Final CTA band ── */}
       <section aria-label="Book your free demo class" className="bg-[#f4f7f8] px-4 pb-8 dark:bg-slate-950 md:px-8 md:pb-20">
         <div className={`${CONTAINER} relative flex flex-col gap-3 overflow-hidden rounded-[20px] bg-[#0a3d4a] px-5 py-7 md:flex-row md:items-center md:justify-between md:gap-10 md:rounded-3xl md:p-14`}>
-          <span aria-hidden="true" className="pointer-events-none absolute -bottom-[70px] -right-[60px] h-[200px] w-[200px] rounded-full border-[32px] border-[#e47538]/[0.14] md:-bottom-[120px] md:-left-20 md:right-auto md:h-80 md:w-80 md:border-[48px]" />
+          <span aria-hidden="true" className="pointer-events-none absolute -bottom-[70px] -right-[60px] h-[200px] w-[200px] rounded-full border-[32px] border-[#b8531c]/[0.14] md:-bottom-[120px] md:-left-20 md:right-auto md:h-80 md:w-80 md:border-[48px]" />
           <div className="relative flex flex-col gap-2 md:gap-3">
             <h2 className="font-heading text-[26px] font-extrabold text-white md:text-[40px]">Your next step: a free demo class</h2>
             <p className="text-[15px] text-white/85 md:text-[17px]">Meet the trainer, see the lab setup, then decide. No payment to book.</p>

@@ -1,6 +1,8 @@
 import { getCourseUrl, type CourseUrlParams } from '@/lib/course-url';
 import { SLUG_MAP } from '@/lib/slug-map';
 import { canonicalCoursePath, canonicalCourseHref } from '@/lib/flat-url';
+import { finalHref, settlePath } from '@/lib/redirect-resolve';
+import { REDIRECTS } from '../../redirects.config.mjs';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
@@ -12,7 +14,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.c
  * /courses form still renders (200) and points here with rel=canonical.
  */
 export function courseCanonicalPath(course: CourseUrlParams): string {
-  return canonicalCoursePath(course.slug, getCourseUrl(course), SLUG_MAP);
+  // Followed through the redirect rules: a canonical (or an internal link) must never be a URL
+  // that 308s, and must not loop back through one (Ethical Hacking: flat page -> /courses form ->
+  // canonical = flat page).
+  return finalHref(canonicalCoursePath(course.slug, getCourseUrl(course), SLUG_MAP), REDIRECTS);
+}
+
+/**
+ * The path a course's URL settles on after redirects and flat/nested mapping. Two catalogue rows
+ * with the same settled path are one page: a retired alias row and the course it redirects to.
+ */
+export function courseSettledPath(course: CourseUrlParams): string {
+  return settlePath(canonicalCoursePath(course.slug, getCourseUrl(course), SLUG_MAP), REDIRECTS, (p) => canonicalCourseHref(p, SLUG_MAP));
 }
 
 export function courseCanonicalUrl(course: CourseUrlParams): string {

@@ -65,7 +65,7 @@ test('toFinalSitemap: never outputs a redirecting URL; replaces, de-duplicates, 
 
 test('the sitemap applies it, and both sync scripts write this file with the same header', () => {
   const sitemap = fs.readFileSync('src/app/sitemap.ts', 'utf8');
-  assert.match(sitemap, /return toFinalSitemap\(\[/);
+  assert.match(sitemap, /toFinalSitemap\(canonicalise\(toFinalSitemap\(all, BASE_URL, REDIRECTS\)\), BASE_URL, REDIRECTS\)/);
   assert.match(sitemap, /from '\.\.\/\.\.\/redirects\.config\.mjs'/);
   const file = fs.readFileSync('redirects.config.mjs', 'utf8');
   for (const script of ['src/lib/sync-redirects.ts', 'scripts/run-sync-redirects.mjs']) {

@@ -52,7 +52,7 @@ export default async function PlacementsPage() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
             <a
               href={`#${FORM_ANCHOR}`}
-              style={{ background: '#e47538', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
+              style={{ background: '#b8531c', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', textDecoration: 'none' }}
             >
               {CAREER_SUPPORT_CTA}
             </a>

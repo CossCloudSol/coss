@@ -16,7 +16,7 @@ const certs = [
   { name: 'Microsoft Azure Administrator (AZ-104)', vendor: 'Microsoft', level: 'Associate', icon: '🔷', color: '#0078d4' },
   { name: 'Azure Data Engineer (DP-203)', vendor: 'Microsoft', level: 'Associate', icon: '📊', color: '#0078d4' },
   { name: 'Google Associate Cloud Engineer', vendor: 'Google Cloud', level: 'Associate', icon: '🌐', color: '#4285f4' },
-  { name: 'Certified Ethical Hacker (CEH)', vendor: 'EC-Council', level: 'Advanced', icon: '🔒', color: '#e47538' },
+  { name: 'Certified Ethical Hacker (CEH)', vendor: 'EC-Council', level: 'Advanced', icon: '🔒', color: '#b8531c' },
   { name: 'Salesforce Certified Administrator', vendor: 'Salesforce', level: 'Associate', icon: '🏢', color: '#00a1e0' },
   { name: 'Certified Kubernetes Administrator (CKA)', vendor: 'CNCF', level: 'Advanced', icon: '⚙️', color: '#326ce5' },
   { name: 'CompTIA Security+', vendor: 'CompTIA', level: 'Intermediate', icon: '🛡️', color: '#c8102e' },

@@ -38,7 +38,7 @@ const DEFAULTS: HomepageSettings = {
   announcementEnabled: true,
   announcementText: 'Next batch starts 1 Jul 2026 — Limited seats available!',
   announcementUrl: '/enroll-now-with-coss',
-  announcementBgColor: '#f97316',
+  announcementBgColor: '#b8531c',
   featuredCourseIds: [],
   featuredSectionTitle: 'Popular Courses',
   featuredSectionSubtext: 'Industry-relevant curriculum built for the Hyderabad job market.',

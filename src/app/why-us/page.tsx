@@ -91,14 +91,14 @@ export default function WhyUsPage() {
             {/* Header */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#1a1a2e', color: '#fff', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               <div style={{ padding: '14px 20px' }}>Feature</div>
-              <div style={{ padding: '14px 20px', textAlign: 'center', background: '#e47538' }}>Coss Cloud Solutions</div>
+              <div style={{ padding: '14px 20px', textAlign: 'center', background: '#b8531c' }}>Coss Cloud Solutions</div>
               <div style={{ padding: '14px 20px', textAlign: 'center' }}>Other Institutes</div>
             </div>
             {comparisons.map((c, i) => (
               <div key={c.feature} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: i % 2 === 0 ? 'var(--bg-card)' : 'var(--bg-alt)', borderBottom: '1px solid var(--border)' }}>
                 <div style={{ padding: '13px 20px', fontSize: '13.5px', color: 'var(--text)', fontWeight: 500 }}>{c.feature}</div>
                 <div style={{ padding: '13px 20px', textAlign: 'center', color: '#22c55e', fontSize: '18px', background: 'rgba(232,64,28,0.03)' }}>✓</div>
-                <div style={{ padding: '13px 20px', textAlign: 'center', color: c.others === true ? '#22c55e' : c.others === 'Partial' ? '#f59e0b' : '#e47538', fontSize: c.others === true ? '18px' : '13px', fontWeight: c.others === 'Partial' ? 600 : 400 }}>
+                <div style={{ padding: '13px 20px', textAlign: 'center', color: c.others === true ? '#22c55e' : c.others === 'Partial' ? '#f59e0b' : '#b8531c', fontSize: c.others === true ? '18px' : '13px', fontWeight: c.others === 'Partial' ? 600 : 400 }}>
                   {c.others === true ? '✓' : c.others === 'Partial' ? 'Partial' : '✗'}
                 </div>
               </div>

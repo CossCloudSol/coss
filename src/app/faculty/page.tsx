@@ -110,7 +110,7 @@ export default async function FacultyPage() {
                         {t.bio.length > 160 && (
                           <label
                             htmlFor={`bio-${t.id}`}
-                            className="mt-1 inline-block cursor-pointer text-sm font-bold text-[#b8531c] peer-focus-visible:underline [&>span:last-child]:hidden peer-checked:[&>span:first-child]:hidden peer-checked:[&>span:last-child]:inline"
+                            className="mt-1 inline-block cursor-pointer text-sm font-bold text-[#b8531c] dark:text-[#f3a57a] peer-focus-visible:underline [&>span:last-child]:hidden peer-checked:[&>span:first-child]:hidden peer-checked:[&>span:last-child]:inline"
                           >
                             <span>Read more</span>
                             <span>Read less</span>

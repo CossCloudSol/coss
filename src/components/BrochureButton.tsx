@@ -216,7 +216,6 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
       <button
         type="button"
         onClick={() => modal.setOpen(true)}
-        aria-label={`Download the ${courseTitle} brochure`}
         className="w-full text-left rounded-2xl bg-[var(--primary)] p-4 shadow-sm hover:shadow-md transition-shadow"
       >
         <div className="flex items-center gap-2 mb-3">
@@ -258,7 +257,7 @@ export function BrochureMobileTab({ courseSlug, courseTitle, brochureUrl }: Broc
       <button
         type="button"
         onClick={() => modal.setOpen(true)}
-        aria-label={`Download the ${courseTitle} brochure`}
+        aria-label={`Download Brochure: ${courseTitle}`}
         className="md:hidden fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center gap-1 rounded-l-2xl bg-[var(--primary)] text-white px-2 py-3 shadow-lg active:opacity-90"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">

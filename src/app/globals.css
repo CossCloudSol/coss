@@ -7,9 +7,10 @@
 ══════════════════════════════════════════════════ */
 :root {
   /* Brand colours — updated palette */
-  --primary:        #e47538;
-  --primary-dark:   #c95e22;
-  --primary-light:  rgba(228,117,56,0.12);
+  --primary:        #b8531c;
+  --primary-dark:   #8f3f14;
+  --primary-light:  rgba(184,83,28,0.12);
+  --primary-text:   #b8531c;   /* brand orange as TEXT on the page background: AA on white */
   --secondary:      #005663;
   --secondary-dark: #004450;
   --secondary-mid:  #0a3d4a;
@@ -66,6 +67,7 @@
   --shadow-md:      0 4px 20px rgba(0,0,0,0.35);
   --shadow-lg:      0 8px 32px rgba(0,0,0,0.45);
 
+  --primary-text:   #f3a57a;   /* brand orange as TEXT on dark surfaces: 8.9:1 on #0f172a */
   --nav-bg:         #0d1b1e;
   --nav-text:       #e8f0f2;
   --topbar-bg:      #001a20;
@@ -264,7 +266,7 @@ img { max-width: 100%; height: auto; display: block; }
   font-family: var(--font-roboto, 'Roboto'), sans-serif;
 }
 .form-input::placeholder { color: rgba(255,255,255,0.45); }
-.form-input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(228,117,56,0.2); }
+.form-input:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(184,83,28,0.2); }
 /* Make select dropdown text visible */
 .form-input option { color: #1a1a1a; background: #fff; }
 .form-radio-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -580,7 +582,7 @@ img { max-width: 100%; height: auto; display: block; }
 /* Cards in inner pages */
 .inner-card { background: var(--bg-card); border-radius: 12px; padding: 22px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-card); }
 
-input:focus, select:focus, textarea:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(228,117,56,0.15) !important; }
+input:focus, select:focus, textarea:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(184,83,28,0.15) !important; }
 
 /* ══════════════════════════════════════════════════
    DESKTOP ONLY (≥1025px) — keeps the ≤1024px/≤768px
@@ -1124,12 +1126,12 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   background: rgba(251,146,60,0.16);
 }
 .ef-glass-ctx .ef-branch-name { color: rgba(255,255,255,0.92); }
-.ef-glass-ctx .ef-branch-sub { color: rgba(255,255,255,0.5); }
+.ef-glass-ctx .ef-branch-sub { color: rgba(255,255,255,0.65); } /* 4.46:1 at 0.5 on the glass card; 6.4:1 now */
 .ef-glass-ctx .ef-branch-icon { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); }
 .ef-glass-ctx .ef-branch-card:has(.ef-branch-input:checked) .ef-branch-icon { background: #fb923c; color: #fff; }
 .ef-glass-ctx .ef-submit-btn { padding: 12px 20px; min-height: 44px; }
 .ef-glass-ctx .ef-trust-item { color: rgba(255,255,255,0.55); }
-.ef-glass-ctx .ef-disclaimer { color: rgba(255, 255, 255, 0.45); }
+.ef-glass-ctx .ef-disclaimer { color: rgba(255, 255, 255, 0.6); } /* 4.25:1 at 0.45; 6.1:1 now */
 .ef-glass-ctx .ef-error { color: #fca5a5; }
 .ef-glass-ctx .ef-submit-error { color: #fca5a5; }
 .ef-glass-ctx .ef-success-title { color: #fff; }

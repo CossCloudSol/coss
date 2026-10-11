@@ -64,3 +64,27 @@ export function sitemapCoursePaths<T extends { slug: string }>(
     .map((course) => ({ course, path: canonicalCoursePath(course.slug, ownPath(course), slugMap) }))
     .filter(({ path }) => path.startsWith('/courses/'))
 }
+
+/**
+ * Catalogue rows that settle on the same page are one page: a retired alias row (kept in the DB so
+ * its URL redirects) and the course whose page that is. Returns one row per page, in input order:
+ * the course the page belongs to, else the first row. `settled` is the path the row's URL ends up on.
+ * Ownership: the course a flat page renders (its SLUG_MAP value) wins; otherwise the course whose
+ * slug is the page's last path segment.
+ */
+export function onePerPage<T extends { slug: string }>(
+  rows: ReadonlyArray<{ item: T; settled: string }>,
+  slugMap: Readonly<Record<string, string>>,
+): T[] {
+  const claim = (slug: string, settled: string): number => {
+    const last = settled.split('/').filter(Boolean).pop() ?? ''
+    if (slugMap[last] === slug) return 2
+    return last === slug ? 1 : 0
+  }
+  const keeper = new Map<string, T>()
+  for (const { item, settled } of rows) {
+    const cur = keeper.get(settled)
+    if (cur === undefined || claim(item.slug, settled) > claim(cur.slug, settled)) keeper.set(settled, item)
+  }
+  return rows.filter(({ item, settled }) => keeper.get(settled) === item).map(({ item }) => item)
+}

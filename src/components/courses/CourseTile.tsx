@@ -107,7 +107,7 @@ export default function CourseTile({ course: c, index, layout, location, demoHre
         <div className={`flex min-w-0 flex-col gap-1 ${grid ? 'md:gap-2.5 md:px-4 md:pt-4' : 'gap-2.5 px-4 pt-4 md:gap-3 md:px-5 md:pt-5'}`}>
           {grid && <span className="text-[11px] font-bold uppercase tracking-[0.8px] text-[#005663] md:hidden dark:text-[#5ef0c8]">{c.category}</span>}
           <h3 className={`font-heading font-extrabold leading-snug text-[#17262a] dark:text-white ${grid ? 'text-base md:text-lg' : 'text-lg md:text-xl'}`}>
-            <Link href={c.url} className="hover:text-[#b8531c]">{c.title}</Link>
+            <Link href={c.url} className="hover:text-[#b8531c] dark:hover:text-[#f3a57a]">{c.title}</Link>
           </h3>
           {grid && (
             <span className="text-xs text-[#4a5c61] md:hidden dark:text-slate-400">

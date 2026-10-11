@@ -157,7 +157,7 @@ export default async function ContactUsPage() {
         {/* ── Pay Course Fee Online ── */}
         <div style={{ marginTop: '56px' }}>
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-            <div style={{ display: 'inline-block', background: 'rgba(249,115,22,0.12)', color: '#F97316', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Online Payment</div>
+            <div style={{ display: 'inline-block', background: 'rgba(184,83,28,0.12)', color: 'var(--primary-text)', fontSize: '12px', fontWeight: 600, fontFamily: 'var(--font-poppins), Poppins, sans-serif', textTransform: 'uppercase', letterSpacing: '1px', padding: '4px 14px', borderRadius: '20px', marginBottom: '12px' }}>Online Payment</div>
             <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(22px,3.5vw,30px)', fontWeight: 700, color: 'var(--text)', marginBottom: '8px' }}>Pay Course Fee Online</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Secure payment via Razorpay — pay anytime, anywhere</p>
           </div>
@@ -174,7 +174,7 @@ export default async function ContactUsPage() {
                 rel="noopener noreferrer"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  background: '#F97316', color: '#fff',
+                  background: '#b8531c', color: '#fff',
                   padding: '16px 36px', borderRadius: '10px',
                   fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '17px',
                   textDecoration: 'none', marginBottom: '22px',
