@@ -81,7 +81,7 @@ const programmingCourses: CourseCategoryData = {
     { name: 'React.js', duration: '2 Months', level: 'Intermediate', highlights: ['Component Architecture', 'React Hooks', 'Redux', 'API Integration'] },
     { name: 'Core Java', duration: '2 Months', level: 'Beginner', highlights: ['OOPs Concepts', 'Collections & Generics', 'Exception Handling', 'JDBC'] },
   ],
-  whyLearn: ['Web development is the backbone of every digital business', 'High demand for full-stack developers worldwide', 'Ability to build complete products independently', 'Freelancing and startup opportunities'],
+  whyLearn: ['Web development is the backbone of every digital business', 'Full-stack skills apply across many kinds of companies', 'Ability to build complete products independently', 'Freelancing and startup opportunities'],
   tools: ['VS Code', 'IntelliJ IDEA', 'Git & GitHub', 'Postman', 'MySQL Workbench', 'MongoDB Compass', 'npm/yarn'],
   careers: ['Full Stack Developer', 'Java Developer', 'Python Developer', 'React Developer', 'Backend Engineer', 'Software Engineer'],
   faqs: [
@@ -166,7 +166,7 @@ const testingCourses: CourseCategoryData = {
     { name: 'Linux Administration', duration: '2 Months', level: 'Beginner to Intermediate', highlights: ['Linux Commands', 'Shell Scripting', 'User Management', 'Server Administration'] },
     { name: 'API Testing', duration: '1 Month', level: 'Intermediate', highlights: ['REST & SOAP APIs', 'Postman', 'REST Assured', 'JSON/XML Parsing'] },
   ],
-  whyLearn: ['QA engineers are in high demand at every software company', 'Linux is fundamental for cloud and DevOps roles', 'Automation testing multiplies your productivity', 'Lower entry barrier compared to development roles'],
+  whyLearn: ['QA engineers work in almost every software company', 'Linux is fundamental for cloud and DevOps roles', 'Automation testing multiplies your productivity', 'Lower entry barrier compared to development roles'],
   tools: ['Selenium', 'JIRA', 'TestNG', 'Postman', 'Jenkins', 'Linux Terminal', 'Git', 'Maven'],
   careers: ['QA Engineer', 'Automation Test Engineer', 'Linux System Admin', 'SDET', 'DevOps Engineer'],
   faqs: [
@@ -279,7 +279,7 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
   },
   {
     title: 'Machine Learning Training in Hyderabad',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'teal',
     accentVariant: 'data',
     categoryLabel: "DATA ANALYTICS & BI",
@@ -378,7 +378,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
   },
   {
     title: 'Microsoft Azure Training in Hyderabad',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'teal',
     accentVariant: 'cloud',
     categoryLabel: "CLOUD COMPUTING",
@@ -445,7 +445,7 @@ export const cloudComputingCourses: CourseCardProps[] = [
 export const devopsMultiCloudCourses: CourseCardProps[] = [
   {
     title: 'AWS DevOps Training in Hyderabad',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'rose',
     accentVariant: 'devops',
     categoryLabel: "DEVOPS & MULTI-CLOUD",
@@ -560,7 +560,7 @@ export const programmingFullStackCourses: CourseCardProps[] = [
   },
   {
     title: 'Python Full Stack Training in Hyderabad',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'green',
     accentVariant: 'fullstack',
     categoryLabel: "PROGRAMMING & FULL STACK",
@@ -643,7 +643,7 @@ export const dataEngineeringCourses: CourseCardProps[] = [
   },
   {
     title: 'Apache Spark & PySpark Training',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'violet',
     accentVariant: 'data',
     categoryLabel: "DATA ENGINEERING",
@@ -694,7 +694,7 @@ export const dataEngineeringCourses: CourseCardProps[] = [
 export const cyberSecurityCourses: CourseCardProps[] = [
   {
     title: 'Ethical Hacking & CEH Training',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'rose',
     accentVariant: 'security',
     categoryLabel: "CYBER SECURITY",
@@ -793,7 +793,7 @@ export const erpCrmCourses: CourseCardProps[] = [
   },
   {
     title: 'Oracle Fusion Cloud HCM Training',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'amber',
     accentVariant: 'oracle',
     categoryLabel: "ERP, CRM & ENTERPRISE",
@@ -860,7 +860,7 @@ export const softwareTestingCourses: CourseCardProps[] = [
   },
   {
     title: 'Linux Administration Training',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'orange',
     accentVariant: 'devops',
     categoryLabel: "SOFTWARE TESTING",
@@ -943,7 +943,7 @@ export const digitalDesignCourses: CourseCardProps[] = [
   },
   {
     title: 'SEO & Content Marketing Training',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'violet',
     accentVariant: 'digital',
     categoryLabel: "DIGITAL & DESIGN",
@@ -978,7 +978,7 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
   },
   {
     title: 'Spoken English Training in Hyderabad',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'green',
     accentVariant: 'softskills',
     categoryLabel: "PROFESSIONAL SKILLS",
@@ -1045,7 +1045,7 @@ export const humanResourceCourses: CourseCardProps[] = [
   },
   {
     title: 'HR Analytics Training in Hyderabad',
-    badge: 'High Demand',
+    badge: 'Popular',
     badgeVariant: 'orange',
     accentVariant: 'hr',
     categoryLabel: "HUMAN RESOURCE",

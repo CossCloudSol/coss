@@ -6,8 +6,12 @@
  */
 export const DISALLOWED_BADGE = /placement|guarant|best\s*-?\s*sell|rank|#\s*1\b|\bno\.?\s*1\b|\btop\b|\bleading\b|trusted/i;
 
+/** "High demand" is not an allowed claim; the admin value (and any already saved) shows as "Popular". */
+const DEMAND_BADGE = /high\s*-?\s*demand/i;
+
 /** The badge to show publicly, or null when it's empty or disallowed. */
 export function publicBadge(badge: string | null | undefined): string | null {
   const b = badge?.trim();
-  return b && !DISALLOWED_BADGE.test(b) ? b : null;
+  if (!b || DISALLOWED_BADGE.test(b)) return null;
+  return DEMAND_BADGE.test(b) ? 'Popular' : b;
 }

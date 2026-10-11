@@ -88,7 +88,6 @@ export async function generateStaticParams() {
 const BADGE_MAP: Record<string, string> = {
   'popular': 'Popular',
   'most popular': 'Popular',
-  'high demand': 'High Demand',
   'trending': 'Trending',
   'new': 'New',
   'newly added': 'New',
@@ -99,7 +98,6 @@ const BADGE_MAP: Record<string, string> = {
 const BADGE_VARIANT_MAP: Record<string, CourseCardProps['badgeVariant']> = {
   'popular': 'orange',
   'most popular': 'orange',
-  'high demand': 'rose',
   'trending': 'teal',
   'new': 'green',
   'newly added': 'green',

@@ -48,7 +48,7 @@ export default function CourseTile({ course: c, index, layout, location, demoHre
           href={c.url}
           tabIndex={-1}
           aria-hidden="true"
-          className={`relative block shrink-0 overflow-hidden ${grid ? 'h-[88px] w-[88px] rounded-[10px] md:h-[150px] md:w-full md:rounded-none' : 'h-40 md:h-[190px]'}`}
+          className={`relative block shrink-0 overflow-hidden ${grid ? 'h-[88px] w-[88px] rounded-[10px] md:h-[150px] md:w-full md:rounded-none' : layout === 'fill' ? 'h-40 md:aspect-[2/1] md:h-auto' : 'h-40 md:h-[190px]'}`}
           style={{ background: fill }}
         >
           {c.thumbnail ? (

@@ -111,13 +111,6 @@ export default function Hero({ headline, subtext, rating, nextBatch }: Props) {
 
         {/* Banner + form */}
         <div id="enroll-form" className="relative -mx-4 mt-[22px] scroll-mt-40 px-4 pb-7 pt-[70px] lg:mx-0 lg:mt-0 lg:max-w-[580px] lg:flex-[1_1_520px] lg:px-0 lg:pb-0 lg:pt-0">
-          <div aria-hidden="true" className="absolute inset-x-0 bottom-0 top-[30px] overflow-hidden rounded-t-[30px] bg-gradient-to-br from-[#00707f] via-[#005663] to-[#0a3d4a] ring-1 ring-inset ring-white/15 lg:inset-x-auto lg:bottom-0 lg:left-11 lg:right-0 lg:top-0 lg:rounded-[36px]">
-            <span className="absolute -right-20 -top-20 h-[260px] w-[260px] rounded-full border-[1.5px] border-white/[0.14] lg:-right-[90px] lg:-top-[90px] lg:h-[360px] lg:w-[360px]" />
-            <span className="absolute -right-[30px] -top-[30px] hidden h-[240px] w-[240px] rounded-full border-[1.5px] border-white/[0.12] lg:block" />
-            <span className="absolute -bottom-[60px] -left-[90px] h-[280px] w-[280px] rounded-full border-[1.5px] border-white/10 lg:-bottom-[140px] lg:-left-[120px] lg:h-[420px] lg:w-[420px]" />
-            <span className="absolute -bottom-20 left-[30%] hidden h-[260px] w-[260px] rounded-full bg-[radial-gradient(circle,rgba(243,165,122,0.45),rgba(243,165,122,0)_70%)] lg:block" />
-            <span className="absolute inset-0 [background-image:radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1.5px)] [background-size:16px_16px] lg:[background-size:18px_18px]" />
-          </div>
           <div className="relative z-[2] lg:mb-[92px] lg:ml-[108px] lg:mr-10 lg:mt-[92px]">
             <HomeHeroForm nextBatch={nextBatch} />
           </div>

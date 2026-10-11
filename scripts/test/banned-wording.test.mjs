@@ -19,7 +19,7 @@ function walk(dir, out = []) {
 }
 const rel = (p) => path.relative(root, p).split(path.sep).join('/');
 // Not public: the admin panel, API routes, and the file that LISTS the banned phrases for the AI writer.
-const pub = walk(root).filter((f) => !/^(app\/admin|components\/admin|app\/api|lib\/ai-content-rules\.ts)/.test(rel(f)));
+const pub = walk(root).filter((f) => !/^(app\/admin|components\/admin|app\/api|lib\/ai-content-rules\.ts|lib\/course-badge\.ts)/.test(rel(f)));
 
 const BANNED = [
   /\bseats?\s+left\b/i,
@@ -30,6 +30,8 @@ const BANNED = [
   /\bonly\s+\d+\s+seats?\b/i,
   /\bfilling\s+fast\b/i,
   /\bseat\s+availability\b/i,
+  // Not an allowed claim. course-badge.ts is the one place that names it, to turn a saved badge into "Popular".
+  /\bhigh[\s-]+demand\b/i,
 ];
 
 test('no seat-count or scarcity wording in public source', () => {
