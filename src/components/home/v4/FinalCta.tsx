@@ -1,4 +1,4 @@
-import FinalCtaForm from '@/components/home/v4/FinalCtaForm';
+import FinalCtaFormLazy from '@/components/home/v4/FinalCtaFormLazy';
 
 /** Final CTA banner (Design v4): orange band; inline form from lg, one button on mobile. */
 export default function FinalCta() {
@@ -26,7 +26,7 @@ export default function FinalCta() {
           Book free demo
         </a>
         <div className="hidden lg:contents">
-          <FinalCtaForm />
+          <FinalCtaFormLazy />
         </div>
       </div>
     </section>
