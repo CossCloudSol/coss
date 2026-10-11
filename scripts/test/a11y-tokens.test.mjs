@@ -55,9 +55,10 @@ test('the logo mark keeps the brand orange (logos are exempt from contrast rules
   assert.match(css, /--primary:\s*#e47538;/);
 });
 
-test('home reviews do not render per-review star spans (admin testimonials, not live Google data)', () => {
+test('home review stars come only from the live Google feed, and carry a text alternative', () => {
   const home = fs.readFileSync(path.join(root, 'app/page.tsx'), 'utf8');
-  assert.doesNotMatch(home, /out of 5 stars/);
+  assert.doesNotMatch(home, /prisma\.testimonial|getReviews\(/);
+  assert.match(home, /role="img" aria-label=\{`\$\{r\.rating\} out of 5 stars`\}/);
 });
 
 test('every form select has a label (select-name)', () => {

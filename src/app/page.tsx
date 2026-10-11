@@ -19,6 +19,7 @@ import {
   Plus,
   Search,
   Send,
+  Star,
   Users,
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/get-page-seo';
@@ -42,6 +43,9 @@ import PromoBanner from '@/components/PromoBanner';
 import HomeHeroForm from '@/components/home/HomeHeroForm';
 import CourseTile, { BANNER_FILLS } from '@/components/courses/CourseTile';
 import TrackedCta from '@/components/home/TrackedCta';
+import ExploreTracks from '@/components/home/ExploreTracks';
+import CourseFinder from '@/components/home/CourseFinder';
+import { resolveTracks, finderSuggestions } from '@/lib/home-tracks';
 import { PRIMARY_PHONE } from '@/lib/nap';
 import PageSchema from '@/components/PageSchema';
 
@@ -279,6 +283,9 @@ export default async function HomePage() {
         </ul>
       </section>
 
+      {/* ── Explore by track ── */}
+      <ExploreTracks tracks={resolveTracks(index)} />
+
       {/* ── Popular courses ── */}
       {courses.length > 0 && (
         <section id="courses" aria-labelledby="popular-title" className="bg-[#f4f7f8] px-4 pb-4 pt-10 dark:bg-slate-950 md:px-8 md:pb-10 md:pt-20">
@@ -425,6 +432,9 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* ── Course finder ── */}
+      <CourseFinder suggestions={finderSuggestions(index)} />
+
       {/* ── How it works ── */}
       <section aria-labelledby="how-title" className={`bg-[#f4f7f8] dark:bg-slate-950 ${SECTION}`}>
         <div className={`${CONTAINER} flex flex-col gap-4 md:items-center md:gap-10`}>
@@ -502,15 +512,16 @@ export default async function HomePage() {
 
       {/* ── Reviews: live Google reviews only (never admin Testimonial rows); hidden when the feed fails ── */}
       {reviews && reviews.reviews.length > 0 && (
-        <section aria-labelledby="reviews-title" className="bg-[#f4f7f8] py-10 dark:bg-slate-950 md:px-8 md:py-20">
-          <div className={`${CONTAINER} flex flex-col gap-4 md:gap-8`}>
+        <section id="reviews" aria-labelledby="reviews-title" className="relative overflow-hidden bg-[#fdf0e8] py-10 dark:bg-slate-950 md:px-8 md:py-20">
+          <span aria-hidden="true" className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgba(184,83,28,0.12)_1px,transparent_1.5px)] [background-size:22px_22px] dark:hidden" />
+          <div className={`${CONTAINER} relative flex flex-col gap-4 md:gap-8`}>
             <div className="flex flex-col gap-1.5 px-4 md:gap-2 md:px-0">
-              <p className={EYEBROW}>Student reviews</p>
-              <h2 id="reviews-title" className={H2}>What our students say</h2>
+              <p className="text-xs font-bold uppercase tracking-[1.4px] text-[#8f3f14] md:text-[13px] dark:text-[#f3a57a]">Student reviews</p>
+              <h2 id="reviews-title" className={H2}>What students say on Google</h2>
             </div>
             <div className="flex snap-x gap-3 overflow-x-auto px-4 pb-1.5 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
               {reviews.reviews.map((r) => (
-                <figure key={r.id} className={`${CARD} flex w-[290px] shrink-0 snap-start flex-col gap-2.5 p-4 md:w-auto md:gap-3.5 md:p-6`}>
+                <figure key={r.id} className="flex w-[290px] shrink-0 snap-start flex-col gap-2.5 rounded-[22px] bg-white p-4 shadow-[0_20px_40px_-32px_rgba(143,63,20,0.7)] md:w-auto md:gap-3.5 md:p-6 dark:border dark:border-slate-700 dark:bg-slate-900">
                   <div className="flex items-center gap-2.5 md:gap-3">
                     <span aria-hidden="true" className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-[#e6f0f1] font-bold text-[#005663] md:h-11 md:w-11">
                       {r.author.charAt(0).toUpperCase()}
