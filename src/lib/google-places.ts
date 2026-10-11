@@ -132,10 +132,10 @@ export function failureLine(err: unknown): string {
  * ordinary failure becomes null (rating hidden) and is logged once per
  * process as one console.warn line. Next.js internals are rethrown.
  */
-export function ratingGetter(
-  load: () => Promise<GoogleRating>,
+export function ratingGetter<T = GoogleRating>(
+  load: () => Promise<T>,
   opts: { log?: (line: string) => void; isInternal?: (err: unknown) => boolean } = {},
-): () => Promise<GoogleRating | null> {
+): () => Promise<T | null> {
   const log = opts.log ?? ((line: string) => console.warn(line));
   const isInternal = opts.isInternal ?? isNextInternalError;
   const logged = new Set<string>();
@@ -209,4 +209,86 @@ export function dedupeInFlight<T>(fn: () => Promise<T>): () => Promise<T> {
 /** "★ {rating}/5 on Google ({count} reviews)": one decimal, Indian digit grouping. */
 export function ratingLabel(r: Pick<GoogleRating, 'rating' | 'count'>): string {
   return `★ ${r.rating.toFixed(1)}/5 on Google (${r.count.toLocaleString('en-IN')} ${r.count === 1 ? 'review' : 'reviews'})`;
+}
+
+/* ── Reviews (Places API (New) `reviews` field) ───────────────────────────
+ * Live Google reviews for the same listing: used by the homepage review block,
+ * never mixed with admin Testimonial rows. Attribution is mandatory: "Source:
+ * Google", the reviewer's name (linked when Google gives a link) and the link
+ * to the listing. No result, a failed call or a result without a usable Maps
+ * link means the block is hidden. */
+
+export interface GoogleReview {
+  /** Google's resource name, unique per review. */
+  id: string;
+  author: string;
+  /** The reviewer's Google profile link, or null. */
+  authorUri: string | null;
+  /** 1-5, the reviewer's own rating. */
+  rating: number;
+  /** Review text as Google returns it (original language), whitespace-normalised. */
+  text: string;
+  /** Google's own relative time: "2 months ago". */
+  when: string | null;
+}
+
+export interface GoogleReviews {
+  reviews: GoogleReview[];
+  /** The listing on Google Maps: the attribution link. */
+  mapsUri: string;
+}
+
+const GOOGLE_PROFILE = /^https:\/\/(?:www\.google\.com\/maps\/contrib\/|maps\.google\.com\/|www\.google\.com\/maps\/)/;
+
+/** Lenient: an entry without a name, a 1-5 rating or any text is dropped, never thrown on. */
+export function parsePlaceReviews(raw: unknown, limit = 3): GoogleReview[] {
+  if (!Array.isArray(raw)) return [];
+  const out: GoogleReview[] = [];
+  for (const r of raw as Array<Record<string, any>>) {
+    const rating = r?.rating;
+    const text = String(r?.originalText?.text ?? r?.text?.text ?? '').replace(/\s+/g, ' ').trim();
+    const author = String(r?.authorAttribution?.displayName ?? '').trim();
+    if (typeof rating !== 'number' || !Number.isInteger(rating) || rating < 1 || rating > 5) continue;
+    if (!text || !author) continue;
+    const uri = typeof r?.authorAttribution?.uri === 'string' && GOOGLE_PROFILE.test(r.authorAttribution.uri) ? r.authorAttribution.uri : null;
+    const when = typeof r?.relativePublishTimeDescription === 'string' && r.relativePublishTimeDescription.trim() ? r.relativePublishTimeDescription.trim() : null;
+    out.push({ id: String(r?.name ?? `${author}-${out.length}`), author, authorUri: uri, rating, text, when });
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
+/**
+ * Fetches the listing's reviews or THROWS (missing env var, non-200, network error, timeout, bad
+ * data, no review text, no Maps link): a throw is never cached (see google-reviews.ts).
+ */
+export async function fetchPlaceReviews(env: Env, fetchImpl: typeof fetch = fetch, timeoutMs = PLACES_TIMEOUT_MS): Promise<GoogleReviews> {
+  const key = env.GOOGLE_PLACES_API_KEY?.trim();
+  const placeId = env.GOOGLE_PLACE_ID_DILSUKHNAGAR?.trim();
+  if (!key) throw new Error('GOOGLE_PLACES_API_KEY is not set');
+  if (!placeId) throw new Error('GOOGLE_PLACE_ID_DILSUKHNAGAR is not set');
+
+  let res: Response;
+  try {
+    res = await fetchImpl(`https://places.googleapis.com/v1/places/${encodeURIComponent(placeId)}`, {
+      headers: { 'X-Goog-Api-Key': key, 'X-Goog-FieldMask': 'reviews,googleMapsUri' },
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+  } catch (err) {
+    if (isNextInternalError(err)) throw err;
+    const name = err instanceof Error ? err.name : '';
+    throw new Error(name === 'TimeoutError' || name === 'AbortError' ? `Places API timed out after ${timeoutMs} ms` : `Places API request failed: ${err instanceof Error ? err.message : String(err)}`);
+  }
+  if (!res.ok || res.status !== 200) throw new Error(`Places API HTTP ${res.status}`);
+
+  let body: { reviews?: unknown; googleMapsUri?: unknown };
+  try {
+    body = await res.json();
+  } catch {
+    throw new Error('Places API returned invalid JSON');
+  }
+  if (typeof body.googleMapsUri !== 'string' || !MAPS_URI.test(body.googleMapsUri)) throw new Error('Places API: googleMapsUri missing or not a Google Maps link');
+  const reviews = parsePlaceReviews(body.reviews);
+  if (reviews.length === 0) throw new Error('Places API: no usable reviews');
+  return { reviews, mapsUri: body.googleMapsUri };
 }

@@ -218,3 +218,58 @@ test('opening hours: bad or missing data gives null and never hides the rating',
     assert.equal(r.hours, null);
   }
 });
+
+/* -- Reviews ---------------------------------------------------------------- */
+import { fetchPlaceReviews, parsePlaceReviews } from '../../src/lib/google-places.ts';
+
+const REV = (over = {}) => ({
+  name: 'places/ChIJtest/reviews/r1',
+  relativePublishTimeDescription: '2 months ago',
+  rating: 5,
+  text: { text: 'Trainer explained every lab step by step.', languageCode: 'en' },
+  originalText: { text: 'Trainer explained every lab step by step.', languageCode: 'en' },
+  authorAttribution: { displayName: 'Test Reviewer', uri: 'https://www.google.com/maps/contrib/1234567890', photoUri: 'https://lh3.example/p' },
+  ...over,
+});
+const OKR = { googleMapsUri: 'https://maps.google.com/?cid=123', reviews: [REV(), REV({ name: 'r2', rating: 4 }), REV({ name: 'r3' }), REV({ name: 'r4' })] };
+
+test('reviews: success returns at most 3, with the Maps link; the request asks only for reviews and the link', async () => {
+  let seen;
+  const r = await fetchPlaceReviews(ENV, async (url, init) => { seen = { url, init }; return new Response(JSON.stringify(OKR)); });
+  assert.equal(r.reviews.length, 3);
+  assert.equal(r.mapsUri, 'https://maps.google.com/?cid=123');
+  assert.deepEqual(r.reviews[0], { id: 'places/ChIJtest/reviews/r1', author: 'Test Reviewer', authorUri: 'https://www.google.com/maps/contrib/1234567890', rating: 5, text: 'Trainer explained every lab step by step.', when: '2 months ago' });
+  assert.equal(seen.init.headers['X-Goog-FieldMask'], 'reviews,googleMapsUri');
+  assert.equal('cache' in seen.init, false);
+});
+
+test('reviews: failures throw (so nothing is cached) and an empty list is a failure, never a fallback', async () => {
+  await assert.rejects(fetchPlaceReviews({ GOOGLE_PLACE_ID_DILSUKHNAGAR: 'x' }, reply(200, OKR)), /GOOGLE_PLACES_API_KEY is not set/);
+  await assert.rejects(fetchPlaceReviews(ENV, reply(403, {})), /HTTP 403/);
+  await assert.rejects(fetchPlaceReviews(ENV, reply(200, 'nope')), /invalid JSON/);
+  await assert.rejects(fetchPlaceReviews(ENV, reply(200, { ...OKR, reviews: [] })), /no usable reviews/);
+  await assert.rejects(fetchPlaceReviews(ENV, reply(200, { reviews: OKR.reviews })), /googleMapsUri missing/);
+  await assert.rejects(fetchPlaceReviews(ENV, reply(200, { ...OKR, googleMapsUri: 'https://evil.example/m' })), /not a Google Maps link/);
+});
+
+test('reviews: entries without text, a name or a 1-5 rating are dropped; a foreign profile link is not kept', () => {
+  const out = parsePlaceReviews([
+    REV({ name: 'a', text: undefined, originalText: undefined }),
+    REV({ name: 'b', rating: 0 }),
+    REV({ name: 'c', rating: 4.5 }),
+    REV({ name: 'd', authorAttribution: { displayName: '  ', uri: 'https://www.google.com/maps/contrib/1' } }),
+    REV({ name: 'e', authorAttribution: { displayName: 'Kept', uri: 'https://evil.example/profile' } }),
+  ]);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].author, 'Kept');
+  assert.equal(out[0].authorUri, null);
+  assert.deepEqual(parsePlaceReviews(null), []);
+});
+
+test('reviews: a getter hides the block (null) on an ordinary failure, logging once', async () => {
+  const logs = [];
+  const get = ratingGetter(() => fetchPlaceReviews(ENV, reply(500, {})), { log: (l) => logs.push(l) });
+  assert.equal(await get(), null);
+  assert.equal(await get(), null);
+  assert.equal(logs.length, 1);
+});

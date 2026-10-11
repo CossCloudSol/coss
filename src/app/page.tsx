@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import { prisma } from '@/lib/db';
+import { getGoogleReviews } from '@/lib/google-reviews';
 import { getHomepageSettings } from '@/lib/get-homepage-settings';
 import { formatBatchDate } from '@/lib/batch-utils';
 import { getPromoBanners } from '@/lib/promo-banners';
@@ -34,7 +35,6 @@ import {
   CAREER_SUPPORT_HEADLINE,
   CAREER_SUPPORT_ITEMS,
   PLACEMENT_DISCLAIMER,
-  PLACEMENT_PROVIDERS_CONFIRMED,
 } from '@/lib/career-support';
 import CallLink from '@/components/CallLink';
 import WhatsAppLink from '@/components/WhatsAppLink';
@@ -131,19 +131,6 @@ async function getUpcomingBatches() {
   }
 }
 
-async function getReviews() {
-  try {
-    return await prisma.testimonial.findMany({
-      where: { visible: true, scope: 'global' },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
-      take: 3,
-      select: { id: true, name: true, jobTitle: true, company: true, quote: true, rating: true, reviewDate: true },
-    });
-  } catch {
-    return [];
-  }
-}
-
 /** Admin-picked popular courses (Homepage manager), else the featured courses. */
 function popularCourses(all: CatalogCourse[], ids: string[], useAdminPick: boolean): CatalogCourse[] {
   if (useAdminPick && ids.length > 0) {
@@ -202,7 +189,7 @@ export default async function HomePage() {
   const [index, batches, reviews, articles, homeBanners] = await Promise.all([
     getSearchIndex().catch((): SearchIndex => ({ courses: [], categories: [] })),
     getUpcomingBatches(),
-    hp.showTestimonials ? getReviews() : Promise.resolve([]),
+    hp.showTestimonials ? getGoogleReviews() : Promise.resolve(null),
     getLatestArticles(),
     getPromoBanners('home'),
   ]);
@@ -513,8 +500,8 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── Reviews (live Google reviews replace these once Q5 lands) ── */}
-      {reviews.length > 0 && (
+      {/* ── Reviews: live Google reviews only (never admin Testimonial rows); hidden when the feed fails ── */}
+      {reviews && reviews.reviews.length > 0 && (
         <section aria-labelledby="reviews-title" className="bg-[#f4f7f8] py-10 dark:bg-slate-950 md:px-8 md:py-20">
           <div className={`${CONTAINER} flex flex-col gap-4 md:gap-8`}>
             <div className="flex flex-col gap-1.5 px-4 md:gap-2 md:px-0">
@@ -522,40 +509,44 @@ export default async function HomePage() {
               <h2 id="reviews-title" className={H2}>What our students say</h2>
             </div>
             <div className="flex snap-x gap-3 overflow-x-auto px-4 pb-1.5 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0">
-              {reviews.map((r) => (
+              {reviews.reviews.map((r) => (
                 <figure key={r.id} className={`${CARD} flex w-[290px] shrink-0 snap-start flex-col gap-2.5 p-4 md:w-auto md:gap-3.5 md:p-6`}>
                   <div className="flex items-center gap-2.5 md:gap-3">
                     <span aria-hidden="true" className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-[#e6f0f1] font-bold text-[#005663] md:h-11 md:w-11">
-                      {r.name.trim().charAt(0).toUpperCase()}
+                      {r.author.charAt(0).toUpperCase()}
                     </span>
                     <figcaption className="flex min-w-0 flex-col">
-                      <span className="truncate font-bold text-[#17262a] dark:text-white">{r.name}</span>
-                      {/* Company names stay hidden until hiring partners are confirmed. */}
-                      {(r.jobTitle || (PLACEMENT_PROVIDERS_CONFIRMED && r.company) || r.reviewDate) && (
-                        <span className="truncate text-xs text-[#5f7075]">
-                          {[r.jobTitle, PLACEMENT_PROVIDERS_CONFIRMED ? r.company : null, r.reviewDate].filter(Boolean).join(' · ')}
-                        </span>
+                      {r.authorUri ? (
+                        <a href={r.authorUri} target="_blank" rel="noopener noreferrer" className="truncate font-bold text-[#17262a] hover:underline dark:text-white">
+                          {r.author}
+                        </a>
+                      ) : (
+                        <span className="truncate font-bold text-[#17262a] dark:text-white">{r.author}</span>
                       )}
+                      {r.when && <span className="truncate text-xs text-[#4a5c61] dark:text-slate-300">{r.when}</span>}
                     </figcaption>
+                    <span role="img" aria-label={`${r.rating} out of 5 stars`} className="ml-auto flex shrink-0 gap-px">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < r.rating ? 'fill-[#b8531c] text-[#b8531c]' : 'text-[#cfdadd]'}`} aria-hidden="true" />
+                      ))}
+                    </span>
                   </div>
-                  <blockquote className="line-clamp-4 text-sm leading-relaxed text-[#26383d] md:text-[15px] md:leading-[1.6] dark:text-slate-300">{r.quote}</blockquote>
+                  <blockquote className="line-clamp-4 text-sm leading-relaxed text-[#26383d] md:text-[15px] md:leading-[1.6] dark:text-slate-300">{r.text}</blockquote>
                 </figure>
               ))}
             </div>
-            <TrackedCta
-              href="/student-reviews"
-              ctaId="all_reviews"
-              location="reviews"
-              className="mx-4 flex h-12 items-center justify-center gap-2 rounded-[10px] border border-[#cfdadd] bg-white px-[22px] text-[15px] font-bold text-[#005663] md:mx-0 md:self-center dark:border-slate-700 dark:bg-slate-900 dark:text-[#5ef0c8]"
-            >
-              Read all student reviews <ArrowRight className="h-[18px] w-[18px]" aria-hidden="true" />
-            </TrackedCta>
+            <p className="px-4 text-sm text-[#4a5c61] md:px-0 md:text-center dark:text-slate-300">
+              Source: Google.{' '}
+              <a href={reviews.mapsUri} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center font-bold text-[#005663] underline dark:text-[#5ef0c8]">
+                See all reviews on Google
+              </a>
+            </p>
           </div>
         </section>
       )}
 
       {/* ── Corporate strip ── */}
-      <section aria-label="Corporate training" className={`bg-[#f4f7f8] px-4 pb-7 dark:bg-slate-950 md:px-8 md:pb-16 ${reviews.length > 0 ? '' : 'pt-8 md:pt-16'}`}>
+      <section aria-label="Corporate training" className={`bg-[#f4f7f8] px-4 pb-7 dark:bg-slate-950 md:px-8 md:pb-16 ${reviews && reviews.reviews.length > 0 ? '' : 'pt-8 md:pt-16'}`}>
         <div className={`${CONTAINER} flex flex-col gap-3 rounded-2xl bg-[#e6f0f1] p-5 md:flex-row md:items-center md:gap-6 md:rounded-[20px] md:px-10 md:py-8 dark:bg-slate-900`}>
           <span className="hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#005663] text-white md:flex">
             <Building2 className="h-[30px] w-[30px]" aria-hidden="true" />
