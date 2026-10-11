@@ -202,7 +202,7 @@ export default function FacultyView({ trainers, courses }: Props) {
                             </div>
                           )}
                           <div className="mt-auto grid grid-cols-[minmax(0,1fr)_auto] gap-2 pt-1.5">
-                            <button type="button" data-open-profile={t.id} data-focus-form="" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#b8531c] px-3 font-sans text-[15px] font-bold text-white hover:bg-[#8f3f14]">
+                            <button type="button" data-open-profile={t.id} data-focus-form="" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#b8531c] px-3 py-2 text-center leading-tight font-sans text-[15px] font-bold text-white hover:bg-[#8f3f14]">
                               {demoLabel(t.name)}
                             </button>
                             <button type="button" data-open-profile={t.id} className="inline-flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-[#cfdadd] bg-white px-4 font-sans text-[15px] font-bold text-[#005663] hover:border-[#005663]">
