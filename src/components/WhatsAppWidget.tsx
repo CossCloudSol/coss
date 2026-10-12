@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { MapPin, Monitor } from 'lucide-react';
+import { getWaStatus, type WaStatus } from '@/lib/wa-status';
 import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
@@ -31,11 +33,11 @@ const FOCUSABLE_SELECTORS =
 // see handleSkip, which uses this instead of buildFormMessage.
 const SKIP_MESSAGE = "Hi Coss Cloud Solutions! I'd like to know more about your courses. Please get in touch.";
 
-function buildFormMessage(name: string, course: string, branch: Branch): string {
+function buildFormMessage(name: string, course: string, branch: Branch | null): string {
   const parts: string[] = ["Hi Coss Cloud Solutions! I'd like to know more about your courses."];
   if (name.trim()) parts.push(`My name is ${name.trim()}.`);
   if (course) parts.push(`I'm interested in: ${course}.`);
-  parts.push(branch === 'Online' ? "I'd like to join online classes." : `I'd prefer the ${branch} branch.`);
+  if (branch) parts.push(branch === 'Online' ? "I'd like to join online classes." : `I'd prefer the ${branch} branch.`);
   parts.push('Please get in touch.');
   return parts.join(' ');
 }
@@ -64,14 +66,15 @@ interface FormState {
   name: string;
   phone: string;
   course: string;
-  branch: Branch;
+  /** null = not chosen; the lead is saved as "undecided" (same as the hero form). */
+  branch: Branch | null;
 }
 
 const defaultForm: FormState = {
   name: '',
   phone: '',
   course: '',
-  branch: 'Dilsukhnagar',
+  branch: null,
 };
 
 /* ─────────────────────────────────────────────────────────────── */
@@ -94,6 +97,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
   const [errors, setErrors]       = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus]       = useState<WaStatus>(() => getWaStatus());
 
   const panelRef    = useRef<HTMLDivElement | null>(null);
   const floatBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -178,6 +182,11 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
     return () => cancelAnimationFrame(raf);
   }, [panelOpen]);
 
+  /* Re-read the clock each time the panel opens (office hours are IST). */
+  useEffect(() => {
+    if (panelOpen) setStatus(getWaStatus());
+  }, [panelOpen]);
+
   /* Reset form when panel closes */
   useEffect(() => {
     if (!panelOpen) {
@@ -211,7 +220,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       name:     form.name.trim(),
       phone:    form.phone.trim(),
       course:   form.course || undefined,
-      branch:   form.branch,
+      branch:   form.branch ?? undefined,
       formType: 'whatsapp_widget',
       bot:      botFields(),
     });
@@ -232,7 +241,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       // ('dilsukhnagar' | 'ameerpet') — 'online' isn't one, so it's omitted
       // here. The branch selection still reaches the message text via
       // buildFormMessage() above; nothing is lost operationally.
-      branchKey: form.branch === 'Online' ? undefined : form.branch.toLowerCase(),
+      branchKey: form.branch === null || form.branch === 'Online' ? undefined : form.branch.toLowerCase(),
     }));
     // WhatsApp still opens when the lead couldn't be saved; only a saved lead goes to /thank-you.
     if (result.ok) goToThankYou('whatsapp_widget');
@@ -282,11 +291,10 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
               <img src="/logo-icon.png" alt="" width={30} height={19} />
             </div>
             <div className="wa-panel-info">
-              <div className="wa-panel-name">Coss</div>
-              <div className="wa-panel-subtitle">Cloud Solutions</div>
+              <div className="wa-panel-name">Coss Cloud Solutions</div>
               <div className="wa-panel-online">
-                <span className="wa-online-dot" aria-hidden="true" />
-                Typically replies within 1 hour
+                {status.online && <span className="wa-online-dot" aria-hidden="true" />}
+                {status.text}
               </div>
             </div>
             <button
@@ -369,20 +377,24 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
 
               {/* Branch */}
               <div className="wa-form-field">
-                <span className="wa-form-label" id="wa-branch-label">Branch</span>
-                <div className="wa-radio-group" role="radiogroup" aria-labelledby="wa-branch-label">
-                  {BRANCHES.map((b) => (
-                    <label key={b} className="wa-radio-label">
-                      <input
-                        type="radio"
-                        name="wa-branch"
-                        value={b}
-                        checked={form.branch === b}
-                        onChange={() => setForm((f) => ({ ...f, branch: b }))}
-                      />
-                      <span>{b}</span>
-                    </label>
-                  ))}
+                <span className="wa-form-label" id="wa-branch-label">Branch (optional)</span>
+                <div className="wa-radio-group" role="group" aria-labelledby="wa-branch-label">
+                  {BRANCHES.map((b) => {
+                    const selected = form.branch === b;
+                    const Icon = b === 'Online' ? Monitor : MapPin;
+                    return (
+                      <button
+                        key={b}
+                        type="button"
+                        aria-pressed={selected}
+                        className="wa-branch-chip"
+                        onClick={() => setForm((f) => ({ ...f, branch: selected ? null : b }))}
+                      >
+                        <Icon size={14} aria-hidden="true" />
+                        {b}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

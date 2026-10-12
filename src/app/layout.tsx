@@ -176,6 +176,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     getMenuSoon(),
   ]);
   const menuData = buildMenuData(menuIndex);
+  /** Earliest upcoming batch start (ISO); the header decides client-side whether it is within 7 days. */
+  function earliestBatch(d: typeof menuData): string | null {
+    let min: string | null = null;
+    for (const g of d.groups) for (const c of g.categories) for (const course of c.courses) {
+      if (course.nextBatch && (min === null || course.nextBatch < min)) min = course.nextBatch;
+    }
+    return min;
+  }
 
   const globalSchemas = await buildGlobalSchemas();
 
@@ -218,12 +226,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
         ))}
       </head>
-      <body className="pb-16 md:pb-0">
+      <body className="pb-[72px] md:pb-0">
         <ThemeProvider>
         <PublicChrome>
         {/* Header v2: the strip scrolls away; the main row sticks (64px). */}
         <TopStrip data={stripData} />
-        <SiteHeader drawerCourses={<MobileMenuCourses data={menuData} />} megaMenu={<MegaMenuPanel data={menuData} soon={menuSoon} />} />
+        <SiteHeader nextBatchAt={earliestBatch(menuData)} drawerCourses={<MobileMenuCourses data={menuData} />} megaMenu={<MegaMenuPanel data={menuData} soon={menuSoon} />} />
         </PublicChrome>
 
         {/* Main */}

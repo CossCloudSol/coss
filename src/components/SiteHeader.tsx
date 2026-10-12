@@ -27,10 +27,14 @@ const NAV_LINKS = [
   { label: 'Placements', href: '/placements', icon: 'M3 7h18v13H3zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M3 13h18' },
 ] as const;
 
-/** Mobile drawer links: the main nav plus Blog (Blog is not in the desktop row). */
-const DRAWER_LINKS = [...NAV_LINKS.map(({ label, href }) => ({ label, href })), { label: 'Blog', href: '/blog' }] as const;
+/** Mobile drawer text links. The five main-nav links are the icon row above them; Blog is not in the desktop row. */
+const DRAWER_LINKS = [{ label: 'Blog', href: '/blog' }] as const;
+
+const DAY_MS = 86_400_000;
 
 interface SiteHeaderProps {
+  /** Earliest upcoming batch start (ISO) or null. The Batches dot shows only when it is within 7 days. */
+  nextBatchAt?: string | null;
   /** Server-rendered Popular / All course tabs for the mobile drawer (MobileMenuCourses). */
   drawerCourses: ReactNode;
   /** Server-rendered Explore Courses panel (MegaMenuPanel). */
@@ -46,12 +50,18 @@ interface SiteHeaderProps {
  * Breakpoints: ≥1280 full; 1100–1279 narrower search; 1024–1099 search icon;
  * <1024 mobile row (logo, search, call, menu) with a drawer.
  */
-export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps) {
+export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  // Decided after mount from the clock, so a cached page never shows a stale dot.
+  const [batchSoon, setBatchSoon] = useState(false);
+  useEffect(() => {
+    const start = nextBatchAt ? new Date(nextBatchAt).getTime() : NaN;
+    setBatchSoon(Number.isFinite(start) && start >= Date.now() - DAY_MS && start <= Date.now() + 7 * DAY_MS);
+  }, [nextBatchAt]);
   const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const exploreRef = useRef<HTMLButtonElement>(null);
@@ -304,11 +314,10 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
             {themeButton('hidden lg:flex')}
-            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={iconButton}>
+            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={`${iconButton} hidden lg:flex`}>
               <Phone className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">{PHONE_LABEL}</span>
             </CallLink>
-            {themeButton('lg:hidden')}
             <Link
               href={DEMO_HREF}
               className="hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
@@ -363,8 +372,32 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
             <form action="/courses" method="get" role="search" className="flex h-12 items-center gap-2 rounded-xl border border-[#cfdadd] bg-[#f4f7f8] pl-3 pr-1.5 text-[#5f7075] focus-within:border-[#005663] dark:border-slate-700 dark:bg-slate-900">
               <Search className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
               <label htmlFor="drawer-search" className="sr-only">Search courses</label>
-              <input id="drawer-search" type="search" name="q" placeholder="Search course" autoComplete="off" className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none dark:text-slate-100" />
+              <input id="drawer-search" type="search" name="q" placeholder="Search course" autoComplete="off" className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#5e6f74] dark:text-slate-100 dark:placeholder:text-slate-400" />
             </form>
+
+            {/* All five section links as icons: five equal columns fit 375px, no scrolling. */}
+            <ul className="grid grid-cols-5 gap-1" aria-label="Sections">
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    aria-current={pathname === l.href ? 'page' : undefined}
+                    className="relative flex min-h-[64px] flex-col items-center justify-center gap-1 rounded-xl px-0.5 text-[11.5px] font-semibold leading-tight text-[#26383d] hover:bg-[#eaf4f5] aria-[current=page]:bg-[#eaf4f5] dark:text-slate-200 dark:hover:bg-slate-800 dark:aria-[current=page]:bg-slate-800"
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="text-[#005663] dark:text-[#5ef0c8]" aria-hidden="true">
+                      <path d={l.icon} />
+                    </svg>
+                    {l.label}
+                    {l.href === '/batches' && batchSoon && (
+                      <>
+                        <span aria-hidden="true" className="absolute right-3 top-2 h-2.5 w-2.5 rounded-full bg-[var(--primary-fill)] ring-2 ring-white dark:ring-slate-950" />
+                        <span className="sr-only">(a batch starts this week)</span>
+                      </>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
 
             {drawerCourses}
 
@@ -378,12 +411,25 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
               ))}
             </ul>
 
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex min-h-[48px] items-center justify-between rounded-xl border border-[#cfdadd] px-4 text-base font-medium text-[#17262a] dark:border-slate-700 dark:text-slate-100"
+            >
+              <span>
+                <span className="dark:hidden">Dark mode</span>
+                <span className="hidden dark:inline">Light mode</span>
+              </span>
+              <Moon className="h-5 w-5 text-[#005663] dark:hidden" aria-hidden="true" />
+              <Sun className="hidden h-5 w-5 text-[#5ef0c8] dark:block" aria-hidden="true" />
+            </button>
+
             <div className="grid grid-cols-2 gap-2.5">
               <CallLink number={PHONE} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#cfdadd] font-bold text-[#005663] dark:border-slate-700 dark:text-[#5ef0c8]">
                 <Phone className="h-5 w-5" aria-hidden="true" />
                 Call
               </CallLink>
-              <Link href={DEMO_HREF} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#b8531c] font-bold text-white">
+              <Link href={DEMO_HREF} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[var(--primary-fill)] font-bold text-white">
                 <CalendarCheck className="h-5 w-5" aria-hidden="true" />
                 Book Free Demo
               </Link>

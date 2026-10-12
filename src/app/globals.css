@@ -1244,7 +1244,8 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   border-radius: 16px;
   background: var(--bg-card);    /* theme-aware: #fff in light, card-bg in dark */
   box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-  overflow: hidden;
+  overflow: hidden auto;
+  max-height: calc(100dvh - 120px);
   /* Entrance animation */
   transform-origin: bottom right;
   animation: wa-panel-in 0.22s cubic-bezier(0.34,1.56,0.64,1) both;
@@ -1295,10 +1296,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
-  color: #4ade80;
+  font-size: 12px;
+  color: #fff;               /* white on #075E54 (the green is for the dot only) */
   margin-top: 4px;
   font-weight: 600;
+  line-height: 1.35;
 }
 .wa-online-dot {
   width: 8px;
@@ -1309,13 +1311,13 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 }
 .wa-close-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255,255,255,0.15);
+  top: 2px;
+  right: 2px;
+  background: transparent;
   border: none;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1362,7 +1364,9 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   outline: none;
   transition: border-color 0.18s;
   box-sizing: border-box;
+  min-height: 44px;
 }
+.wa-form-input::placeholder { color: var(--text-light); }
 .wa-form-input:focus { border-color: #25D366; box-shadow: 0 0 0 3px rgba(37,211,102,0.15); }
 .wa-form-input.wa-input-error { border-color: #ef4444; }
 
@@ -1370,10 +1374,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 
 .wa-field-error {
   font-size: 11px;
-  color: #ef4444;
+  color: #dc2626;
   font-family: var(--font-roboto, 'Roboto'), sans-serif;
   margin-top: 1px;
 }
+.dark .wa-field-error { color: #fca5a5; }
 
 /* Radio group */
 .wa-radio-group {
@@ -1382,28 +1387,32 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   flex-wrap: wrap;
 }
 
-.wa-radio-label {
-  display: flex;
+.wa-branch-chip {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
-  font-size: 12px;
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 13px;
   font-family: var(--font-roboto, 'Roboto'), sans-serif;
-  color: var(--text);           /* theme-aware — was #374151 */
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
   cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 20px;
-  border: 1.5px solid var(--border);  /* theme-aware — was #d1d5db */
-  transition: border-color 0.15s, background 0.15s;
   white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
 }
-.wa-radio-label:has(input:checked) {
-  border-color: #25D366;
-  background: rgba(37,211,102,0.08);
-  color: #065f46;
-  font-weight: 600;
+.wa-branch-chip:hover { border-color: var(--secondary); }
+.wa-branch-chip[aria-pressed="true"] {
+  background: var(--secondary);
+  border-color: var(--secondary);
+  color: #fff;
+  font-weight: 700;
 }
-.dark .wa-radio-label:has(input:checked) { color: #4ade80; background: rgba(37,211,102,0.12); }
-.wa-radio-label input[type="radio"] { accent-color: #25D366; width: 14px; height: 14px; cursor: pointer; }
+.wa-branch-chip:focus-visible { outline: 2px solid var(--secondary); outline-offset: 2px; }
+.dark .wa-branch-chip[aria-pressed="true"] { background: var(--secondary); border-color: #5ef0c8; }
 
 /* "Chat on WhatsApp" CTA button */
 .wa-chat-btn {
@@ -1425,7 +1434,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   min-height: 48px;
   margin-top: 4px;
 }
-.wa-chat-btn:hover:not(:disabled)  { background: #1DA851; }
+.wa-chat-btn:hover:not(:disabled)  { background: #166534; }   /* white text stays ≥5:1 on hover */
 .wa-chat-btn:active:not(:disabled) { transform: scale(0.98); }
 .wa-chat-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 .wa-chat-btn:focus-visible { outline: 3px solid #075E54; outline-offset: 2px; }
@@ -1436,16 +1445,17 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
   width: 100%;
   background: none;
   border: none;
-  padding: 8px 0 2px;
+  padding: 0;
+  min-height: 44px;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   font-family: var(--font-roboto, 'Roboto'), sans-serif;
   color: var(--text-muted);     /* theme-aware — was #6b7280 with dark override */
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.15s;
 }
-.wa-skip-link:hover { color: #25D366; }
+.wa-skip-link:hover { color: var(--wa-text); }
 
 /* Success state */
 .wa-success {
