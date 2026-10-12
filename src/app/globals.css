@@ -1358,7 +1358,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .wa-close-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* Form */
-.wa-scroll { flex: 1; overflow-y: auto; }
+.wa-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }   /* min-height:0 lets the form scroll above the footer on short screens */
 .wa-form-body { padding: 20px 16px 16px; }
 .wa-form-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .wa-form-label {
@@ -1505,6 +1505,25 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary) !import
 .wa-privacy .form-privacy-note { display: inline; margin: 0 !important; font-size: 13px !important; }
 .wa-privacy .form-privacy-note a { color: #005663; font-weight: 700; }
 .dark .wa-privacy .form-privacy-note a { color: #5ef0c8; }
+
+/* Short phones (e.g. 375×667): tighter header, fields and footer so the chat button shows without
+   scrolling; on anything shorter still, the form scrolls above the footer. */
+@media (max-width: 767px) and (max-height: 720px) {
+  .wa-panel-header { padding: 14px 16px 12px; gap: 10px; }
+  .wa-panel-avatar { width: 48px; height: 48px; }
+  .wa-panel-avatar img { width: 30px; }
+  .wa-panel-name { font-size: 18px; }
+  .wa-panel-online { font-size: 13px; margin-top: 2px; }
+  .wa-close-btn { top: 10px; }
+  .wa-bubble { margin-top: 0; padding: 8px 12px; font-size: 13px; line-height: 1.4; }
+  .wa-form-body { padding: 12px 16px 12px; }
+  .wa-form-field { gap: 6px; margin-bottom: 10px; }
+  .wa-chat-btn { min-height: 52px; margin-top: 4px; font-size: 16px; }
+  .wa-panel-foot { padding: 8px 16px max(8px, env(safe-area-inset-bottom)); }
+  .wa-skip-link { min-height: 44px; }
+  .wa-privacy { margin-top: 4px; font-size: 12px; line-height: 1.35; }
+  .wa-privacy .form-privacy-note { font-size: 12px !important; }
+}
 
 /* Success state */
 .wa-success {

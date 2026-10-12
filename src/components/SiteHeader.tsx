@@ -418,8 +418,10 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
       {searchOpen && <HeaderSearch variant="overlay" onClose={() => setSearchOpen(false)} />}
     </header>
 
-    {/* Phones: section cards under the header (scrolls away with the page). Four show at 375px and the
+    {/* Phones: section cards under the header (scrolls away with the page). Not on the homepage (its own
+        sections cover this); the same five links are in the menu drawer. Four show at 375px and the
         fifth peeks, which is the scroll hint. Fixed height, so the dot appearing never shifts anything. */}
+    {pathname !== '/' && (
     <nav aria-label="Sections" className="border-b border-[#e3eaec] bg-white lg:hidden dark:border-slate-800 dark:bg-slate-950">
       <ul className="flex h-[88px] snap-x scroll-px-4 gap-2 overflow-x-auto px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {NAV_LINKS.map((l) => {
@@ -449,6 +451,7 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
         })}
       </ul>
     </nav>
+    )}
     </>
   );
 }
