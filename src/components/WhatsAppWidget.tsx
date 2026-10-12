@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { MapPin, Monitor } from 'lucide-react';
+import { User, Zap } from 'lucide-react';
 import { getWaStatus, type WaStatus } from '@/lib/wa-status';
 import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
@@ -286,14 +286,20 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
         >
           {/* Header */}
           <div className="wa-panel-header">
-            <div className="wa-panel-avatar" aria-hidden="true" style={{ background: '#fff' }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-icon.png" alt="" width={30} height={19} />
+            <div className="wa-avatar-wrap">
+              <div className="wa-panel-avatar" aria-hidden="true">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo-icon.png" alt="" width={30} height={19} />
+              </div>
+              {status.online && <span className="wa-online-dot" aria-hidden="true" />}
             </div>
             <div className="wa-panel-info">
-              <div className="wa-panel-name">Coss Cloud Solutions</div>
+              <div className="wa-panel-titlerow">
+                <span className="wa-panel-name">COSS Cloud</span>
+                <span className="wa-panel-pill">Student Desk</span>
+              </div>
               <div className="wa-panel-online">
-                {status.online && <span className="wa-online-dot" aria-hidden="true" />}
+                <Zap size={14} className="wa-bolt" aria-hidden="true" />
                 {status.text}
               </div>
             </div>
@@ -303,129 +309,116 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
               onClick={() => { setPanelOpen(false); floatBtnRef.current?.focus(); }}
               aria-label="Close chat panel"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </button>
+            <p className="wa-bubble">Hey! {'👋'} Enter your name &amp; number to get syllabus PDFs, fee details &amp; batch timings on WhatsApp.</p>
           </div>
 
-          {/* Body */}
           {submitted ? (
             /* ── Success state ── */
-            <div className="wa-form-body wa-success" role="status" aria-live="polite">
+            <div className="wa-scroll wa-success" role="status" aria-live="polite">
               <div className="wa-success-icon" aria-hidden="true">{'✓'}</div>
               <p className="wa-success-title">Opening WhatsApp…</p>
               <p className="wa-success-sub">Your details have been saved. We will reach out to you soon!</p>
             </div>
           ) : (
-            /* ── Lead capture form ── */
-            <form className="wa-form-body" onSubmit={handleSubmit} noValidate>
-              <HoneypotField inputRef={honeypotRef} />
+            <>
+              {/* ── Lead capture form ── */}
+              <form className="wa-scroll wa-form-body" onSubmit={handleSubmit} noValidate>
+                <HoneypotField inputRef={honeypotRef} />
 
-              {/* Name */}
-              <div className="wa-form-field">
-                <label className="wa-form-label" htmlFor="wa-name">Your Name *</label>
-                <input
-                  id="wa-name"
-                  className={`wa-form-input${errors.name ? ' wa-input-error' : ''}`}
-                  type="text"
-                  placeholder="e.g. Rahul Sharma"
-                  value={form.name}
-                  onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                  autoComplete="name"
-                />
-                {errors.name && <span className="wa-field-error" role="alert">{errors.name}</span>}
-              </div>
+                <div className="wa-form-field">
+                  <label className="wa-form-label" htmlFor="wa-name">Your Name <span className="wa-req" aria-hidden="true">*</span></label>
+                  <div className={`wa-input-wrap${errors.name ? ' wa-input-error' : ''}`}>
+                    <User size={18} className="wa-input-icon" aria-hidden="true" />
+                    <input
+                      id="wa-name"
+                      className="wa-form-input"
+                      type="text"
+                      placeholder="e.g. Rahul Sharma"
+                      value={form.name}
+                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                      autoComplete="name"
+                      aria-required="true"
+                    />
+                  </div>
+                  {errors.name && <span className="wa-field-error" role="alert">{errors.name}</span>}
+                </div>
 
-              {/* Phone */}
-              <div className="wa-form-field">
-                <label className="wa-form-label" htmlFor="wa-phone">Phone Number *</label>
-                <input
-                  id="wa-phone"
-                  className={`wa-form-input${errors.phone ? ' wa-input-error' : ''}`}
-                  type="tel"
-                  placeholder="10-digit mobile number"
-                  value={form.phone}
-                  onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                  autoComplete="tel"
-                  inputMode="numeric"
-                  maxLength={15}
-                />
-                {errors.phone && <span className="wa-field-error" role="alert">{errors.phone}</span>}
-              </div>
+                <div className="wa-form-field">
+                  <label className="wa-form-label" htmlFor="wa-phone">WhatsApp Number <span className="wa-req" aria-hidden="true">*</span></label>
+                  <div className={`wa-input-wrap${errors.phone ? ' wa-input-error' : ''}`}>
+                    <span className="wa-prefix" aria-hidden="true">+91</span>
+                    <input
+                      id="wa-phone"
+                      className="wa-form-input"
+                      type="tel"
+                      placeholder="10-digit mobile number"
+                      value={form.phone}
+                      onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                      autoComplete="tel"
+                      inputMode="numeric"
+                      maxLength={15}
+                      aria-required="true"
+                    />
+                  </div>
+                  {errors.phone && <span className="wa-field-error" role="alert">{errors.phone}</span>}
+                </div>
 
-              {/* Course */}
-              <div className="wa-form-field">
-                <label className="wa-form-label" htmlFor="wa-course">Course (optional)</label>
-                <select
-                  id="wa-course"
-                  className="wa-form-input wa-form-select"
-                  value={form.course}
-                  onChange={(e) => setForm((f) => ({ ...f, course: e.target.value }))}
+                {/* No course select in this design: a course suggested by the homepage finder is still
+                    kept in form state and sent with the lead. */}
+
+                {/* Branch: none selected = "undecided" */}
+                <div className="wa-form-field">
+                  <span className="wa-form-label" id="wa-branch-label">Preferred Branch / Mode</span>
+                  <div className="wa-radio-group" role="group" aria-labelledby="wa-branch-label">
+                    {BRANCHES.map((b) => {
+                      const selected = form.branch === b;
+                      return (
+                        <button
+                          key={b}
+                          type="button"
+                          aria-pressed={selected}
+                          className="wa-branch-chip"
+                          onClick={() => setForm((f) => ({ ...f, branch: selected ? null : b }))}
+                        >
+                          <span aria-hidden="true">{b === 'Online' ? '💻' : '📍'}</span>
+                          {b}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="wa-chat-btn"
+                  disabled={submitting}
+                  aria-busy={submitting}
                 >
-                  <option value="">— Select a Course —</option>
-                  {courseGroups.map(({ category, courses }) => (
-                    <optgroup key={category} label={category}>
-                      {courses.map(({ shortTitle }) => (
-                        <option key={shortTitle} value={shortTitle}>{shortTitle}</option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              </div>
+                  {submitting ? (
+                    'Saving…'
+                  ) : (
+                    <>
+                      <WaIcon size={20} />
+                      Chat on WhatsApp {'→'}
+                    </>
+                  )}
+                </button>
+              </form>
 
-              {/* Branch */}
-              <div className="wa-form-field">
-                <span className="wa-form-label" id="wa-branch-label">Branch (optional)</span>
-                <div className="wa-radio-group" role="group" aria-labelledby="wa-branch-label">
-                  {BRANCHES.map((b) => {
-                    const selected = form.branch === b;
-                    const Icon = b === 'Online' ? Monitor : MapPin;
-                    return (
-                      <button
-                        key={b}
-                        type="button"
-                        aria-pressed={selected}
-                        className="wa-branch-chip"
-                        onClick={() => setForm((f) => ({ ...f, branch: selected ? null : b }))}
-                      >
-                        <Icon size={14} aria-hidden="true" />
-                        {b}
-                      </button>
-                    );
-                  })}
+              <div className="wa-panel-foot">
+                <button type="button" className="wa-skip-link" onClick={handleSkip}>
+                  Skip, just chat {'→'}
+                </button>
+                <div className="wa-privacy">
+                  <span aria-hidden="true">{'🔒'}</span> <FormPrivacyNote />
                 </div>
               </div>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                className="wa-chat-btn"
-                disabled={submitting}
-                aria-busy={submitting}
-              >
-                {submitting ? (
-                  'Saving…'
-                ) : (
-                  <>
-                    <WaIcon size={18} />
-                    Chat on WhatsApp {'→'}
-                  </>
-                )}
-              </button>
-              <FormPrivacyNote />
-
-              {/* Skip */}
-              <button
-                type="button"
-                className="wa-skip-link"
-                onClick={handleSkip}
-              >
-                Skip, just chat {'→'}
-              </button>
-
-            </form>
+            </>
           )}
         </div>
       )}

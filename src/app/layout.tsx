@@ -226,7 +226,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           />
         ))}
       </head>
-      <body className="pb-[72px] md:pb-0">
+      <body className="pb-16 md:pb-0">
         <ThemeProvider>
         <PublicChrome>
         {/* Header v2: the strip scrolls away; the main row sticks (64px). */}

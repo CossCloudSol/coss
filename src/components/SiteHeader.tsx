@@ -27,8 +27,8 @@ const NAV_LINKS = [
   { label: 'Placements', href: '/placements', icon: 'M3 7h18v13H3zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M3 13h18' },
 ] as const;
 
-/** Mobile drawer text links. The five main-nav links are the icon row above them; Blog is not in the desktop row. */
-const DRAWER_LINKS = [{ label: 'Blog', href: '/blog' }] as const;
+/** Mobile drawer links: the main nav plus Blog (Blog is not in the desktop row). */
+const DRAWER_LINKS = [...NAV_LINKS.map(({ label, href }) => ({ label, href })), { label: 'Blog', href: '/blog' }] as const;
 
 const DAY_MS = 86_400_000;
 
@@ -236,6 +236,7 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
   );
 
   return (
+    <>
     <header
       ref={headerRef}
       className={`sticky top-0 z-[1000] border-b border-[#e3eaec] lg:top-[-12px] dark:border-slate-800 ${scrolled ? 'shadow-[0_4px_24px_rgba(0,86,99,0.16)]' : ''}`}
@@ -299,10 +300,22 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0 xl:gap-3">
+            {/* Phones: solid green WhatsApp (opens the lead widget) and solid orange Call.
+                Fills are the design's hues darkened for 3:1+ icon contrast: #16883f, #c2561a. */}
+            <button
+              type="button"
+              className="order-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#16883f] text-white lg:hidden"
+              aria-label="Chat on WhatsApp"
+              onClick={() => window.dispatchEvent(new CustomEvent('coss:open-whatsapp', { detail: { origin: 'widget' } }))}
+            >
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+            </button>
             {/* Search icon: 1024–1099 and phones */}
             <button
               type="button"
-              className={`${iconButton} min-[1100px]:hidden`}
+              className={`${iconButton} order-3 lg:order-1 min-[1100px]:hidden`}
               aria-label="Search courses"
               aria-expanded={searchOpen}
               aria-controls={MOBILE_SEARCH_ID}
@@ -313,20 +326,21 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
             >
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
-            {themeButton('hidden lg:flex')}
-            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={`${iconButton} hidden lg:flex`}>
+            {themeButton('order-4 hidden lg:order-2 lg:flex')}
+            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={`${iconButton} order-2 lg:order-3 max-lg:!border-transparent max-lg:!bg-[#c2561a] max-lg:!text-white`}>
               <Phone className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">{PHONE_LABEL}</span>
             </CallLink>
+            {themeButton('order-4 lg:hidden')}
             <Link
               href={DEMO_HREF}
-              className="hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
+              className="order-4 hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
             >
               Book Free Demo
             </Link>
             <button
               type="button"
-              className={`${iconButton} !text-[#17262a] lg:hidden dark:!text-slate-100`}
+              className={`${iconButton} order-5 !text-[#17262a] lg:hidden dark:!text-slate-100`}
               aria-label={drawerOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={drawerOpen}
               aria-controls="mobile-nav"
@@ -372,32 +386,8 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
             <form action="/courses" method="get" role="search" className="flex h-12 items-center gap-2 rounded-xl border border-[#cfdadd] bg-[#f4f7f8] pl-3 pr-1.5 text-[#5f7075] focus-within:border-[#005663] dark:border-slate-700 dark:bg-slate-900">
               <Search className="h-[18px] w-[18px] shrink-0" aria-hidden="true" />
               <label htmlFor="drawer-search" className="sr-only">Search courses</label>
-              <input id="drawer-search" type="search" name="q" placeholder="Search course" autoComplete="off" className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none placeholder:text-[#5e6f74] dark:text-slate-100 dark:placeholder:text-slate-400" />
+              <input id="drawer-search" type="search" name="q" placeholder="Search course" autoComplete="off" className="field-bare min-w-0 flex-1 border-0 bg-transparent text-base text-[#17262a] outline-none dark:text-slate-100" />
             </form>
-
-            {/* All five section links as icons: five equal columns fit 375px, no scrolling. */}
-            <ul className="grid grid-cols-5 gap-1" aria-label="Sections">
-              {NAV_LINKS.map((l) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    aria-current={pathname === l.href ? 'page' : undefined}
-                    className="relative flex min-h-[64px] flex-col items-center justify-center gap-1 rounded-xl px-0.5 text-[11.5px] font-semibold leading-tight text-[#26383d] hover:bg-[#eaf4f5] aria-[current=page]:bg-[#eaf4f5] dark:text-slate-200 dark:hover:bg-slate-800 dark:aria-[current=page]:bg-slate-800"
-                  >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" className="text-[#005663] dark:text-[#5ef0c8]" aria-hidden="true">
-                      <path d={l.icon} />
-                    </svg>
-                    {l.label}
-                    {l.href === '/batches' && batchSoon && (
-                      <>
-                        <span aria-hidden="true" className="absolute right-3 top-2 h-2.5 w-2.5 rounded-full bg-[var(--primary-fill)] ring-2 ring-white dark:ring-slate-950" />
-                        <span className="sr-only">(a batch starts this week)</span>
-                      </>
-                    )}
-                  </Link>
-                </li>
-              ))}
-            </ul>
 
             {drawerCourses}
 
@@ -411,25 +401,12 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
               ))}
             </ul>
 
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex min-h-[48px] items-center justify-between rounded-xl border border-[#cfdadd] px-4 text-base font-medium text-[#17262a] dark:border-slate-700 dark:text-slate-100"
-            >
-              <span>
-                <span className="dark:hidden">Dark mode</span>
-                <span className="hidden dark:inline">Light mode</span>
-              </span>
-              <Moon className="h-5 w-5 text-[#005663] dark:hidden" aria-hidden="true" />
-              <Sun className="hidden h-5 w-5 text-[#5ef0c8] dark:block" aria-hidden="true" />
-            </button>
-
             <div className="grid grid-cols-2 gap-2.5">
               <CallLink number={PHONE} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#cfdadd] font-bold text-[#005663] dark:border-slate-700 dark:text-[#5ef0c8]">
                 <Phone className="h-5 w-5" aria-hidden="true" />
                 Call
               </CallLink>
-              <Link href={DEMO_HREF} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[var(--primary-fill)] font-bold text-white">
+              <Link href={DEMO_HREF} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#b8531c] font-bold text-white">
                 <CalendarCheck className="h-5 w-5" aria-hidden="true" />
                 Book Free Demo
               </Link>
@@ -440,5 +417,38 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
 
       {searchOpen && <HeaderSearch variant="overlay" onClose={() => setSearchOpen(false)} />}
     </header>
+
+    {/* Phones: section cards under the header (scrolls away with the page). Four show at 375px and the
+        fifth peeks, which is the scroll hint. Fixed height, so the dot appearing never shifts anything. */}
+    <nav aria-label="Sections" className="border-b border-[#e3eaec] bg-white lg:hidden dark:border-slate-800 dark:bg-slate-950">
+      <ul className="flex h-[88px] snap-x scroll-px-4 gap-2 overflow-x-auto px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {NAV_LINKS.map((l) => {
+          const orange = l.href === '/student-reviews';
+          return (
+            <li key={l.href} className="shrink-0 snap-start">
+              <Link
+                href={l.href}
+                aria-current={pathname === l.href ? 'page' : undefined}
+                className="relative flex h-[68px] w-[78px] flex-col items-center justify-center gap-1 rounded-2xl border border-[#dbe6e8] bg-white text-[12.5px] font-bold text-[#17262a] shadow-[0_2px_8px_rgba(0,86,99,0.06)] aria-[current=page]:border-[#005663] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:aria-[current=page]:border-[#5ef0c8]"
+              >
+                <span className={`flex h-9 w-9 items-center justify-center rounded-[10px] ${orange ? 'bg-[#fdf0e8] text-[#a8471a] dark:bg-[#3a2418] dark:text-[#f3a57a]' : 'bg-[#dcecef] text-[#005663] dark:bg-[#12353b] dark:text-[#5ef0c8]'}`}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d={l.icon} />
+                  </svg>
+                </span>
+                {l.label}
+                {l.href === '/batches' && batchSoon && (
+                  <>
+                    <span aria-hidden="true" className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#e47538]" />
+                    <span className="sr-only">(a batch starts this week)</span>
+                  </>
+                )}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+    </>
   );
 }
