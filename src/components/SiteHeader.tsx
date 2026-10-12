@@ -30,7 +30,11 @@ const NAV_LINKS = [
 /** Mobile drawer links: the main nav plus Blog (Blog is not in the desktop row). */
 const DRAWER_LINKS = [...NAV_LINKS.map(({ label, href }) => ({ label, href })), { label: 'Blog', href: '/blog' }] as const;
 
+const DAY_MS = 86_400_000;
+
 interface SiteHeaderProps {
+  /** Earliest upcoming batch start (ISO) or null. The Batches dot shows only when it is within 7 days. */
+  nextBatchAt?: string | null;
   /** Server-rendered Popular / All course tabs for the mobile drawer (MobileMenuCourses). */
   drawerCourses: ReactNode;
   /** Server-rendered Explore Courses panel (MegaMenuPanel). */
@@ -46,12 +50,18 @@ interface SiteHeaderProps {
  * Breakpoints: ≥1280 full; 1100–1279 narrower search; 1024–1099 search icon;
  * <1024 mobile row (logo, search, call, menu) with a drawer.
  */
-export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps) {
+export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu }: SiteHeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  // Decided after mount from the clock, so a cached page never shows a stale dot.
+  const [batchSoon, setBatchSoon] = useState(false);
+  useEffect(() => {
+    const start = nextBatchAt ? new Date(nextBatchAt).getTime() : NaN;
+    setBatchSoon(Number.isFinite(start) && start >= Date.now() - DAY_MS && start <= Date.now() + 7 * DAY_MS);
+  }, [nextBatchAt]);
   const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
   const exploreRef = useRef<HTMLButtonElement>(null);
@@ -226,6 +236,7 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
   );
 
   return (
+    <>
     <header
       ref={headerRef}
       className={`sticky top-0 z-[1000] border-b border-[#e3eaec] lg:top-[-12px] dark:border-slate-800 ${scrolled ? 'shadow-[0_4px_24px_rgba(0,86,99,0.16)]' : ''}`}
@@ -289,10 +300,22 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0 xl:gap-3">
+            {/* Phones: solid green WhatsApp (opens the lead widget) and solid orange Call.
+                Fills are the design's hues darkened for 3:1+ icon contrast: #16883f, #c2561a. */}
+            <button
+              type="button"
+              className="order-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#16883f] text-white lg:hidden"
+              aria-label="Chat on WhatsApp"
+              onClick={() => window.dispatchEvent(new CustomEvent('coss:open-whatsapp', { detail: { origin: 'widget' } }))}
+            >
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </svg>
+            </button>
             {/* Search icon: 1024–1099 and phones */}
             <button
               type="button"
-              className={`${iconButton} min-[1100px]:hidden`}
+              className={`${iconButton} order-3 lg:order-1 min-[1100px]:hidden`}
               aria-label="Search courses"
               aria-expanded={searchOpen}
               aria-controls={MOBILE_SEARCH_ID}
@@ -303,21 +326,21 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
             >
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
-            {themeButton('hidden lg:flex')}
-            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={iconButton}>
+            {themeButton('order-4 hidden lg:order-2 lg:flex')}
+            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={`${iconButton} order-2 lg:order-3 max-lg:!border-transparent max-lg:!bg-[#c2561a] max-lg:!text-white`}>
               <Phone className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">{PHONE_LABEL}</span>
             </CallLink>
-            {themeButton('lg:hidden')}
+            {themeButton('order-4 lg:hidden')}
             <Link
               href={DEMO_HREF}
-              className="hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
+              className="order-4 hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
             >
               Book Free Demo
             </Link>
             <button
               type="button"
-              className={`${iconButton} !text-[#17262a] lg:hidden dark:!text-slate-100`}
+              className={`${iconButton} order-5 !text-[#17262a] lg:hidden dark:!text-slate-100`}
               aria-label={drawerOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={drawerOpen}
               aria-controls="mobile-nav"
@@ -394,5 +417,41 @@ export default function SiteHeader({ drawerCourses, megaMenu }: SiteHeaderProps)
 
       {searchOpen && <HeaderSearch variant="overlay" onClose={() => setSearchOpen(false)} />}
     </header>
+
+    {/* Phones: section cards under the header (scrolls away with the page). Not on the homepage (its own
+        sections cover this); the same five links are in the menu drawer. Four show at 375px and the
+        fifth peeks, which is the scroll hint. Fixed height, so the dot appearing never shifts anything. */}
+    {pathname !== '/' && (
+    <nav aria-label="Sections" className="border-b border-[#e3eaec] bg-white lg:hidden dark:border-slate-800 dark:bg-slate-950">
+      <ul className="flex h-[88px] snap-x scroll-px-4 gap-2 overflow-x-auto px-4 py-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {NAV_LINKS.map((l) => {
+          const orange = l.href === '/student-reviews';
+          return (
+            <li key={l.href} className="shrink-0 snap-start">
+              <Link
+                href={l.href}
+                aria-current={pathname === l.href ? 'page' : undefined}
+                className="relative flex h-[68px] w-[78px] flex-col items-center justify-center gap-1 rounded-2xl border border-[#dbe6e8] bg-white text-[12.5px] font-bold text-[#17262a] shadow-[0_2px_8px_rgba(0,86,99,0.06)] aria-[current=page]:border-[#005663] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:aria-[current=page]:border-[#5ef0c8]"
+              >
+                <span className={`flex h-9 w-9 items-center justify-center rounded-[10px] ${orange ? 'bg-[#fdf0e8] text-[#a8471a] dark:bg-[#3a2418] dark:text-[#f3a57a]' : 'bg-[#dcecef] text-[#005663] dark:bg-[#12353b] dark:text-[#5ef0c8]'}`}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d={l.icon} />
+                  </svg>
+                </span>
+                {l.label}
+                {l.href === '/batches' && batchSoon && (
+                  <>
+                    <span aria-hidden="true" className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-[#e47538]" />
+                    <span className="sr-only">(a batch starts this week)</span>
+                  </>
+                )}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+    )}
+    </>
   );
 }
