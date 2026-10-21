@@ -57,6 +57,10 @@ model Lead {
   lastReferrer    String?
   lastLandingPage String?
   lastTouchAt     DateTime?
+  /// The button clicked before the form (within 30 minutes), from intent-tracking's sessionStorage memory.
+  sourceCta       String?
+  sourceLocation  String?
+  sourcePath      String?
   /// "Send me batch updates on WhatsApp (optional)": unticked by default; the time is stored only when ticked.
   whatsappOptIn   Boolean   @default(false)
   whatsappOptInAt DateTime?
@@ -96,6 +100,10 @@ model CorporateLead {
   referrer       String?
   landingPage    String?
   consentAt      DateTime?
+  /// The button clicked before the form (within 30 minutes), same as on Lead.
+  sourceCta      String?
+  sourceLocation String?
+  sourcePath     String?
   createdAt      DateTime @default(now())
 
   @@index([createdAt])
@@ -376,6 +384,9 @@ model CallClick {
   courseSlug  String?
   branchKey   String?
   phoneNumber String
+  /// Which button and page section (intent-tracking), e.g. "call" / "header".
+  ctaId       String?
+  location    String?
 
   deviceType  String
   referrer    String?
@@ -406,6 +417,9 @@ model WhatsAppClick {
   branchKey   String?
   phoneNumber String
   hadPrefill  Boolean
+  /// Which button and page section (intent-tracking), e.g. "batch_whatsapp" / "batch_band".
+  ctaId       String?
+  location    String?
 
   deviceType  String
   referrer    String?
@@ -419,6 +433,39 @@ model WhatsAppClick {
   @@index([courseSlug])
   @@index([branchKey])
   @@index([phoneNumber])
+}
+
+/// Anonymous click on a demo / syllabus / brochure / enrol (or other tagged) button — NOT a
+/// Lead: no name, phone or IP. One row per click, posted by intent-tracking's beacon to
+/// /api/cta-clicks. Call and WhatsApp clicks stay in CallClick / WhatsAppClick. Append-only;
+/// same retention caveat as CallClick (no pruning job yet). See /admin/tracking.
+model CtaClick {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+
+  /// demo | syllabus | brochure_download | enroll | other
+  kind        String
+  /// The button, e.g. "book_demo"; "untagged" from the site-wide safety net.
+  ctaId       String
+  /// The page section, e.g. "header", "sticky_bar", "cta_band".
+  location    String
+  path        String
+  pageType    String
+  /// Where the click went, without any query string.
+  destination String
+  courseSlug  String?
+
+  deviceType  String
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  gclid       String?
+
+  @@index([createdAt])
+  @@index([kind])
+  @@index([ctaId])
+  @@index([courseSlug])
 }
 
 /// Singleton controlling all editable homepage content. id is always "main".
