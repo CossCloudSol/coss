@@ -50,10 +50,9 @@ export function detectDeviceType(): 'mobile' | 'desktop' {
 }
 
 /**
- * GA4 event for the brochure popup's skip path (direct PDF download, no lead
- * created). Best-effort only, mirroring trackContactClick/trackLeadEvent: a
- * missing gtag is a no-op, and any failure here must never affect the
- * download.
+ * GA4 event helper. Best-effort only: a missing gtag is a no-op and a failure
+ * never reaches the caller. (Intent clicks — demo, syllabus, brochure, call,
+ * WhatsApp — go through lib/intent-tracking instead.)
  */
 function gtagEvent(name: string, params: Record<string, string | number>): void {
   if (typeof window === 'undefined') return;
@@ -73,11 +72,6 @@ export function trackFormStart(formId: string): void {
 /** GA4 form_submit: a lead form was submitted and accepted. */
 export function trackFormSubmit(formId: string, course?: string): void {
   gtagEvent('form_submit', { form_id: formId, page_path: window.location.pathname, ...(course ? { course } : {}) });
-}
-
-/** GA4 cta_click: a call-to-action link or button (ctaId names the CTA, location the section). */
-export function trackCtaClick(ctaId: string, location: string, destination: string): void {
-  gtagEvent('cta_click', { cta_id: ctaId, location, destination, page_path: window.location.pathname });
 }
 
 const SEARCH_REPEAT_MS = 30_000;
@@ -135,19 +129,6 @@ export function trackPromoBannerClick(params: {
     });
   } catch {
     /* best-effort */
-  }
-}
-
-export function trackBrochureDownload(courseSlug: string, courseTitle: string): void {
-  if (typeof window === 'undefined') return;
-  if (typeof (window as any).gtag !== 'function') return;
-  try {
-    (window as any).gtag('event', 'brochure_download', {
-      course_slug: courseSlug,
-      course_title: courseTitle,
-    });
-  } catch {
-    /* best-effort — never let tracking affect the download */
   }
 }
 

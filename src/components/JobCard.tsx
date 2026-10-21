@@ -132,7 +132,7 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
             <span className="text-xs text-gray-500 dark:text-gray-400">Salary not disclosed</span>
           )}
         </div>
-        <WhatsAppLink
+        <WhatsAppLink location="job_card"
           ctaType="job"
           message={waMessage}
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"

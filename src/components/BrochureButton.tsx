@@ -6,7 +6,7 @@ import { buildBrochureDelivery } from '@/lib/whatsapp';
 import { NAME_ERROR, isValidName } from '@/lib/lead-checks';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import { attachmentUrl } from '@/lib/cloudinary';
-import { trackBrochureDownload } from '@/lib/click-tracking';
+import { trackIntent } from '@/lib/intent-tracking';
 import { openPendingWindow, navigatePendingWindow, closePendingWindow } from '@/lib/pending-window';
 import { goToThankYou } from '@/lib/lead-thank-you';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
@@ -100,7 +100,8 @@ function useBrochureModal({ courseSlug, courseTitle, brochureUrl }: BrochureButt
   }
 
   function handleSkip() {
-    trackBrochureDownload(courseSlug, courseTitle);
+    // GA4 brochure_download plus a CtaClick row (kind brochure_download).
+    trackIntent({ kind: 'brochure_download', ctaId: 'brochure_skip', location: 'brochure_popup', destination: '/brochure-pdf', courseSlug });
     window.open(attachmentUrl(brochureUrl), '_blank', 'noopener,noreferrer');
     close();
   }
@@ -216,6 +217,10 @@ export default function BrochureButton({ courseSlug, courseTitle, brochureUrl }:
       <button
         type="button"
         onClick={() => modal.setOpen(true)}
+        data-cta="brochure"
+        data-loc="course_sidebar"
+        data-kind="syllabus"
+        data-course={courseSlug}
         className="w-full text-left rounded-2xl bg-[var(--primary-fill)] p-4 shadow-sm hover:shadow-md transition-shadow"
       >
         <div className="flex items-center gap-2 mb-3">
@@ -257,6 +262,10 @@ export function BrochureMobileTab({ courseSlug, courseTitle, brochureUrl }: Broc
       <button
         type="button"
         onClick={() => modal.setOpen(true)}
+        data-cta="brochure"
+        data-loc="brochure_tab"
+        data-kind="syllabus"
+        data-course={courseSlug}
         aria-label={`Download Brochure: ${courseTitle}`}
         className="md:hidden fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center gap-1 rounded-l-2xl bg-[var(--primary-fill)] text-white px-2 py-3 shadow-lg active:opacity-90"
       >

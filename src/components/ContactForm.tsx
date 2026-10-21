@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { getAttribution, getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
+import { leadSourceFields } from '@/lib/intent-tracking';
 import { leadErrorKind, trackLeadEvent, trackLeadSubmitError } from '@/lib/submitLead';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
@@ -50,6 +51,8 @@ export default function ContactForm() {
           whatsappOptIn: optInFromForm(e.currentTarget),
           submitPath,
           deviceType: detectDeviceType(),
+          // the button clicked before this form, when under 30 minutes old
+          ...leadSourceFields(),
         }),
       });
     } catch {

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import { savesClickRows } from '@/lib/click-rows';
 import { WA_NUMBER as WA_NUMBER_DIGITS } from '@/lib/whatsapp';
 import { normalizeIndianMobile } from '@/lib/lead-validation';
 
@@ -16,6 +17,8 @@ const PAGE_TYPE_VALUES = ['course', 'category', 'locality', 'blog', 'static'] as
 const CTA_TYPE_VALUES = [
   'footer', 'hero', 'contact_page', 'free_demo', 'batches_page',
   'batch', 'job', 'locality', 'widget', 'sticky',
+  // server-rendered wa.me links counted by the site-wide click listener
+  'other',
 ] as const;
 const DEVICE_TYPE_VALUES = ['mobile', 'desktop'] as const;
 
@@ -45,6 +48,15 @@ const whatsAppClickSchema = z.object({
   phoneNumber: z.string().trim().refine((v) => normalizeIndianMobile(v) === v, 'phoneNumber must be canonical +91XXXXXXXXXX'),
   hadPrefill: z.boolean(),
   deviceType: z.enum(DEVICE_TYPE_VALUES),
+  // Which button and page section (intent-tracking ids: snake_case, max 60).
+  ctaId: z.preprocess(
+    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+    z.string().trim().regex(/^[a-z0-9_]{1,60}$/).optional(),
+  ),
+  location: z.preprocess(
+    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+    z.string().trim().regex(/^[a-z0-9_]{1,60}$/).optional(),
+  ),
   referrer: z
     .preprocess(
       (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
@@ -200,6 +212,9 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: 'Unrecognized phoneNumber' }, { status: 422 });
   }
 
+  // Rows only on Vercel production and preview deployments, never local or development (lib/click-rows).
+  if (!savesClickRows()) return new NextResponse(null, { status: 204 });
+
   try {
     await prisma.whatsAppClick.create({
       data: {
@@ -210,6 +225,8 @@ export async function POST(req: NextRequest): Promise<Response> {
         branchKey: data.branchKey ?? null,
         phoneNumber: data.phoneNumber,
         hadPrefill: data.hadPrefill,
+        ctaId: data.ctaId ?? null,
+        location: data.location ?? null,
         deviceType: data.deviceType,
         referrer: data.referrer ?? null,
         utmSource: data.utmSource ?? null,

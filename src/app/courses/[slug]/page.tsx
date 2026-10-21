@@ -419,7 +419,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
               {/* No branchKey: b.centre is free-text on Batch (not a BranchSettings
                   foreign key), e.g. "Dilsukhnagar" vs the canonical 'dilsukhnagar'
                   key — deriving one here would produce unreliable/mismatched keys. */}
-              <WhatsAppLink
+              <WhatsAppLink location="category_batches" ctaId="batch_whatsapp"
                 ctaType="batch"
                 pageType="category"
                 courseSlug={courseSlug}
@@ -457,7 +457,7 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
       <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
         <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={courseSlug} style={{ color: '#b8531c', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+          <CallLink ctaId="call" location="course_sidebar" number={PRIMARY_PHONE} pageType="course" courseSlug={courseSlug} style={{ color: '#b8531c', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
           <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
         </p>
       </div>

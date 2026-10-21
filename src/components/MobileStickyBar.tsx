@@ -35,11 +35,11 @@ export default function MobileStickyBar() {
           <WaGlyph className="h-6 w-6" />
           WhatsApp
         </button>
-        <CallLink number={PRIMARY_PHONE} className={`${BLOCK} bg-[#0a3d4a]`} aria-label="Call Now: Coss Cloud Solutions">
+        <CallLink ctaId="call" location="sticky_bar" number={PRIMARY_PHONE} className={`${BLOCK} bg-[#0a3d4a]`} aria-label="Call Now: Coss Cloud Solutions">
           <Phone className="h-6 w-6 text-[#e47538]" aria-hidden="true" />
           Call Now
         </CallLink>
-        <a href={demoHref} className={`${BLOCK} bg-[#c2561a]`} aria-label="Book a free demo class">
+        <a href={demoHref} data-cta="book_demo" data-loc="sticky_bar" data-kind="demo" className={`${BLOCK} bg-[#c2561a]`} aria-label="Book a free demo class">
           <CalendarDays className="h-6 w-6" aria-hidden="true" />
           Free Demo
         </a>

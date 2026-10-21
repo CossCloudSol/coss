@@ -401,7 +401,7 @@ export async function BlogIndexView({
                 {'🎓'} Enroll Now
               </h4>
               <p style={{ color: 'var(--text-muted)', fontSize: '12px', lineHeight: '1.6', marginBottom: '14px' }}>Book a free demo class and start your IT career today.</p>
-              <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary-fill)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+              <Link href="/free-demo-class" data-cta="book_demo" data-loc="blog_index_sidebar" style={{ display: 'block', textAlign: 'center', background: 'var(--primary-fill)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
                 Book Free Demo Class
               </Link>
             </div>

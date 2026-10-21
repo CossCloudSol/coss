@@ -1,10 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
 
 interface GoogleAnalyticsProps {
   gaId: string;
 }
+
+/** The only host that loads gtag.js. Previews and local builds keep events in dataLayer only. */
+export const GA_PRODUCTION_HOST = 'www.cosscloudsol.com';
 
 /**
  * Drop-in GA4 tag. Renders nothing when `gaId` is empty so the public site
@@ -13,15 +17,24 @@ interface GoogleAnalyticsProps {
  * Loading order (performance):
  * - The tiny inline stub runs afterInteractive. It defines window.gtag and
  *   queues 'js' + 'config' in dataLayer, so CallLink / WhatsAppLink /
- *   submitLead / click-tracking events fired before the library arrives are
+ *   submitLead / intent-tracking events fired before the library arrives are
  *   queued instead of dropped.
  * - The gtag.js library (the heavy part) loads lazyOnload (browser idle after the
  *   window load event), so it no longer competes with page JS and images
  *   during load. On load it replays everything queued in dataLayer.
+ *
+ * Only on GA_PRODUCTION_HOST: everywhere else (Vercel previews, localhost) the
+ * stub still collects events in window.dataLayer, where they can be checked,
+ * but gtag.js never loads, so test traffic stays out of the live property.
  */
 export default function GoogleAnalytics({
   gaId,
 }: GoogleAnalyticsProps): JSX.Element | null {
+  const [onProductionHost, setOnProductionHost] = useState(false);
+  useEffect(() => {
+    setOnProductionHost(window.location.hostname === GA_PRODUCTION_HOST);
+  }, []);
+
   const trimmed = gaId.trim();
   if (!trimmed || trimmed === 'G-XXXXXXXXXX') return null;
   const idLiteral = JSON.stringify(trimmed);
@@ -35,10 +48,12 @@ export default function GoogleAnalytics({
           gtag('config', ${idLiteral}, { page_path: window.location.pathname });
         `}
       </Script>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(trimmed)}`}
-        strategy="lazyOnload"
-      />
+      {onProductionHost ? (
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(trimmed)}`}
+          strategy="lazyOnload"
+        />
+      ) : null}
     </>
   );
 }

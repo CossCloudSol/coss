@@ -95,7 +95,7 @@ export default async function ContactUsPage() {
                 </div>
               ))}
               <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(232,64,28,0.1)', borderRadius: '8px', fontSize: '12px', color: '#aaa', lineHeight: '1.6' }}>
-                📞 For urgent queries, call us directly at <CallLink number={PRIMARY_PHONE} pageType="static" style={{ color: '#f9bb96', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
+                📞 For urgent queries, call us directly at <CallLink ctaId="call" location="contact_page" number={PRIMARY_PHONE} pageType="static" style={{ color: '#f9bb96', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink>
               </div>
             </div>
 
@@ -104,7 +104,7 @@ export default async function ContactUsPage() {
               <div style={{ fontSize: '32px', marginBottom: '8px' }}>💬</div>
               <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Chat on WhatsApp</h4>
               <p style={{ fontSize: '14px', color: '#fff', marginBottom: '14px' }}>Get instant answers to your queries</p>
-              <WhatsAppLink
+              <WhatsAppLink location="contact_page"
                 ctaType="contact_page"
                 pageType="static"
                 message="Hi Coss Cloud Solutions Team, I'd like to know more about your courses. Could you help me?"

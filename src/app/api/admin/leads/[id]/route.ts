@@ -55,6 +55,10 @@ export interface LeadDetailResponse {
   lastTouchAt: string | null; // ISO
   whatsappOptIn: boolean;
   whatsappOptInAt: string | null; // ISO
+  /** The button clicked before the form (intent-tracking). */
+  sourceCta: string | null;
+  sourceLocation: string | null;
+  sourcePath: string | null;
   activities: LeadActivityResponseItem[];
 }
 
@@ -113,6 +117,9 @@ function serializeLead(
     lastTouchAt: Date | null;
     whatsappOptIn: boolean;
     whatsappOptInAt: Date | null;
+    sourceCta: string | null;
+    sourceLocation: string | null;
+    sourcePath: string | null;
     activities?: Array<{
       id: string;
       action: string;
@@ -157,6 +164,9 @@ function serializeLead(
     lastTouchAt: lead.lastTouchAt ? lead.lastTouchAt.toISOString() : null,
     whatsappOptIn: lead.whatsappOptIn,
     whatsappOptInAt: lead.whatsappOptInAt ? lead.whatsappOptInAt.toISOString() : null,
+    sourceCta: lead.sourceCta,
+    sourceLocation: lead.sourceLocation,
+    sourcePath: lead.sourcePath,
     activities: (lead.activities ?? []).map((activity) => ({
       id: activity.id,
       action: activity.action,

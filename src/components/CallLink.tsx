@@ -2,68 +2,28 @@
 
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { type PageType, classifyPageType, detectDeviceType, extractUtmParams } from '@/lib/click-tracking';
+import type { PageType } from '@/lib/click-tracking';
+import { logCallClick, toE164India } from '@/lib/contact-click-log';
+import { TRACKED_ATTR, trackIntent } from '@/lib/intent-tracking';
 
 /* -------------------------------------------------------------------------- */
 /*  Single source of truth for every "tap to call" link on the site. Renders  */
 /*  a plain <a href="tel:..."> — the browser's native tel: handling is never  */
 /*  touched or delayed — and fires a non-blocking, fire-and-forget log of     */
-/*  the click via navigator.sendBeacon (falling back to a keepalive fetch),   */
-/*  mirroring the existing BlogViewBeacon pattern. Logging failure never      */
-/*  affects the call: sendBeacon only ever queues, it doesn't report errors,  */
-/*  and the fetch fallback is wrapped so a throw can't reach the click.       */
+/*  the click (CallClick row via sendBeacon) plus GA4 contact_click through   */
+/*  intent-tracking. Logging failure never affects the call. data-tracked     */
+/*  tells the site-wide click listener not to count it again.                 */
 /* -------------------------------------------------------------------------- */
 
 export type CallPageType = PageType;
 
-function normalizePhone(raw: string): string {
-  const digits = raw.replace(/\D/g, '');
-  const tenDigit = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
-  return `+91${tenDigit}`;
-}
-
-function logCallClick(payload: Record<string, string>): void {
-  try {
-    const body = JSON.stringify(payload);
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon('/api/call-clicks', new Blob([body], { type: 'application/json' }));
-    } else {
-      fetch('/api/call-clicks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body,
-        keepalive: true,
-      }).catch(() => {
-        /* best-effort — never let logging affect the call */
-      });
-    }
-  } catch {
-    /* best-effort — never let logging affect the call */
-  }
-}
-
-/**
- * GA4 contact_click event. Best-effort only: gtag may not have loaded yet
- * (Script strategy="afterInteractive"), so a missing gtag is a no-op rather
- * than an error, and any failure here must never affect the call.
- */
-function trackContactClick(params: { pageType: string; path: string }): void {
-  if (typeof window === 'undefined') return;
-  if (typeof (window as any).gtag !== 'function') return;
-  try {
-    (window as any).gtag('event', 'contact_click', {
-      method: 'call',
-      pageType: params.pageType,
-      path: params.path,
-    });
-  } catch {
-    /* best-effort — never let tracking affect the call */
-  }
-}
-
 export interface CallLinkProps {
   /** Raw phone number in any spacing/format — normalized to +91XXXXXXXXXX for both the href and the logged event. */
   number: string;
+  /** Which button, e.g. "call" or "call_ameerpet". */
+  ctaId: string;
+  /** Which part of the page, e.g. "header", "footer", "sticky_bar", "course_sidebar". */
+  location: string;
   /** Omit only for global chrome (header/footer/topbar/sticky bar) that has no page context — see classifyPageType. */
   pageType?: CallPageType;
   courseSlug?: string;
@@ -76,6 +36,8 @@ export interface CallLinkProps {
 
 export default function CallLink({
   number,
+  ctaId,
+  location,
   pageType,
   courseSlug,
   branchKey,
@@ -85,25 +47,12 @@ export default function CallLink({
   children,
 }: CallLinkProps): JSX.Element {
   const pathname = usePathname();
-  const normalized = normalizePhone(number);
+  const normalized = toE164India(number);
 
   const handleClick = useCallback(() => {
-    const resolvedPath = pathname || '/';
-    const resolvedPageType = pageType ?? classifyPageType(resolvedPath);
-    const payload: Record<string, string> = {
-      path: resolvedPath,
-      pageType: resolvedPageType,
-      phoneNumber: normalized,
-      deviceType: detectDeviceType(),
-    };
-    if (courseSlug) payload.courseSlug = courseSlug;
-    if (branchKey) payload.branchKey = branchKey;
-    if (typeof document !== 'undefined' && document.referrer) payload.referrer = document.referrer;
-    Object.assign(payload, extractUtmParams());
-
-    logCallClick(payload);
-    trackContactClick({ pageType: resolvedPageType, path: resolvedPath });
-  }, [pathname, pageType, courseSlug, branchKey, normalized]);
+    logCallClick({ pathname, pageType, phoneNumber: normalized, ctaId, location, courseSlug, branchKey });
+    trackIntent({ kind: 'call', ctaId, location, destination: `tel:${normalized}`, courseSlug, pageType });
+  }, [pathname, pageType, courseSlug, branchKey, normalized, ctaId, location]);
 
   return (
     <a
@@ -112,6 +61,7 @@ export default function CallLink({
       style={style}
       aria-label={ariaLabel}
       onClick={handleClick}
+      {...{ [TRACKED_ATTR]: '' }}
     >
       {children}
     </a>

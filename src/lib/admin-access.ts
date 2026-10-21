@@ -24,6 +24,7 @@ export const ROUTE_PERMISSIONS: ReadonlyArray<readonly [string, Permission | nul
   ['/admin/call-clicks',      'callclicks:view'],
   ['/admin/seo',              'seo:view'],
   ['/admin/analytics',        'analytics:view'],
+  ['/admin/tracking',         'analytics:view'],
   ['/admin/stats',            'dashboard:view'],
   ['/admin/topbar',           'topbar:view'],
   ['/admin/announcement-bar', 'topbar:view'],

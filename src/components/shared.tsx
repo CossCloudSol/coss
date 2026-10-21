@@ -152,10 +152,10 @@ export function CtaBanner() {
       <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontSize: 'clamp(18px,4vw,26px)', fontWeight: 800, marginBottom: '10px', color: '#fff' }}>Ready to Start Your Journey?</h3>
       <p style={{ marginBottom: '22px', fontSize: '15px', color: '#fff' }}>Book a free demo class today. No commitment required.</p>
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <Link href="/free-demo-class" style={{ background: '#fff', color: 'var(--primary-fill)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+        <Link href="/free-demo-class" data-cta="book_demo" data-loc="cta_band" style={{ background: '#fff', color: 'var(--primary-fill)', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
           Book a free demo class
         </Link>
-        <Link href="/contact-us" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
+        <Link href="/contact-us" data-cta="contact" data-loc="cta_band" style={{ background: 'transparent', color: '#fff', padding: '11px 27px', borderRadius: '6px', border: '2px solid rgba(255,255,255,0.7)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
           Contact Us
         </Link>
       </div>

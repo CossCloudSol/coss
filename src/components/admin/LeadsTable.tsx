@@ -30,6 +30,7 @@ import type {
 import LeadDrawer from '@/components/admin/LeadDrawer';
 import { csvCell, withCsvBom } from '@/lib/csv';
 import { istDateKey } from '@/lib/ist-date';
+import { cameFromLabel } from '@/lib/lead-source';
 import { nameLooksOff } from '@/lib/name-quality';
 import { touchLabel } from '@/lib/touch-label';
 
@@ -315,6 +316,7 @@ export function LeadsTable(): JSX.Element {
         'Device',
         'Job Title',
         'Job Company',
+        'Came From',
       ];
       const rows = all.map((l) => [
         l.name,
@@ -336,6 +338,7 @@ export function LeadsTable(): JSX.Element {
         l.deviceType ?? '',
         l.jobTitle ?? '',
         l.jobCompany ?? '',
+        cameFromLabel(l) ?? '',
       ]);
       const csv = [header, ...rows]
         .map((row) => row.map(csvEscape).join(','))

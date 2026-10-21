@@ -130,6 +130,7 @@ export default function CourseTile({ course: c, index, layout, location, demoHre
         <TrackedCta
           href={demoHref}
           ctaId="book_demo"
+          kind="demo"
           location={location}
           prefillCourse={prefillCourse ? c.title : undefined}
           className="flex h-[42px] items-center justify-center gap-1.5 rounded-[10px] bg-[#b8531c] text-sm font-bold text-white hover:bg-[#8f3f14] md:h-11"
@@ -140,6 +141,7 @@ export default function CourseTile({ course: c, index, layout, location, demoHre
         <TrackedCta
           href={c.syllabusHref}
           ctaId="get_syllabus"
+          kind="syllabus"
           location={location}
           className="flex h-[42px] items-center justify-center gap-1.5 rounded-[10px] border border-[#cfdadd] text-sm font-bold text-[#005663] hover:border-[#005663] md:h-11 dark:border-slate-700 dark:text-[#5ef0c8]"
         >

@@ -379,7 +379,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
       </span>
       <h2 className="font-heading text-lg font-extrabold text-white md:text-[19px]">Not sure which course fits?</h2>
       <p className="text-sm leading-[1.55] text-white/85">Get a free counselling call. We match the course to your background and goal.</p>
-      <WhatsAppLink
+      <WhatsAppLink location="courses_page"
         ctaType="hero"
         pageType="static"
         message="Hi, I'd like a free counselling call to choose a course."

@@ -246,7 +246,7 @@ export default function HomeHeroForm({ nextBatch = null }: { nextBatch?: NextBat
         {/* font-sans on the small flowing lines: no shift when the web font swaps in. */}
         <div className="flex items-center justify-between gap-3 font-sans text-[13px] text-[#4a5c61]">
           <span>No payment needed</span>
-          <WhatsAppLink
+          <WhatsAppLink location="hero_form"
             ctaType="hero"
             pageType="static"
             message="Hi, I'd like to book a free demo class at Coss Cloud Solutions."

@@ -20,6 +20,7 @@ export default function FinalCta() {
             href="#enroll-form"
             data-cta="book_demo"
             data-loc="final_cta"
+            data-kind="demo"
             className="relative inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[#0a3d4a] font-sans text-[15px] font-bold text-white lg:hidden"
           >
             Book free demo

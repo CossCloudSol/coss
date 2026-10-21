@@ -1,10 +1,17 @@
 'use client';
 
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { installIntentListener } from '@/lib/intent-listener';
 
 interface PublicChromeProps {
   children: ReactNode;
+  /**
+   * Installs the site-wide CTA click listener (lib/intent-listener) while on a public page.
+   * Set on exactly one PublicChrome in the root layout so there is one listener.
+   */
+  clickTracking?: boolean;
 }
 
 /**
@@ -22,9 +29,17 @@ interface PublicChromeProps {
  */
 export default function PublicChrome({
   children,
+  clickTracking = false,
 }: PublicChromeProps): JSX.Element | null {
   const pathname = usePathname();
-  if (pathname.startsWith('/admin')) {
+  const isAdmin = pathname.startsWith('/admin');
+
+  useEffect(() => {
+    if (!clickTracking || isAdmin) return;
+    return installIntentListener();
+  }, [clickTracking, isAdmin]);
+
+  if (isAdmin) {
     return null;
   }
   return <>{children}</>;

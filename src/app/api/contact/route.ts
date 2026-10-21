@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db';
 import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
 import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
-import { MIN_FILL_MS, botCheck, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
+import { MIN_FILL_MS, botCheck, leadSourceData, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -111,6 +111,8 @@ export async function POST(req: NextRequest): Promise<Response> {
           ...firstTouchData(body),
           ...lastTouchData(body),
           ...consentData(body),
+          // the button clicked before the form (intent-tracking, under 30 minutes old)
+          ...leadSourceData(body),
           submitPath: d.submitPath ?? null,
           deviceType: d.deviceType ?? null,
         },

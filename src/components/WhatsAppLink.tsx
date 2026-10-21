@@ -2,114 +2,33 @@
 
 import { useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { type PageType, classifyPageType, detectDeviceType, extractUtmParams } from '@/lib/click-tracking';
+import type { PageType } from '@/lib/click-tracking';
+import { buildWhatsAppClickPayload, logWhatsAppClick, toWaDigits, type WhatsAppCtaType } from '@/lib/contact-click-log';
+import { TRACKED_ATTR, trackIntent } from '@/lib/intent-tracking';
 import { WA_NUMBER } from '@/lib/whatsapp';
 
 /* -------------------------------------------------------------------------- */
 /*  Single source of truth for every WhatsApp CTA on the site, mirroring      */
 /*  CallLink. Renders a plain <a href="https://wa.me/..."> — never delayed —  */
-/*  and fires a non-blocking, fire-and-forget log of the click via            */
-/*  navigator.sendBeacon (falling back to a keepalive fetch). Logging         */
-/*  failure never affects the click: sendBeacon only ever queues, it doesn't  */
-/*  report errors, and the fetch fallback is wrapped so a throw can't reach   */
-/*  the click.                                                                */
+/*  and fires a non-blocking, fire-and-forget log of the click (WhatsAppClick */
+/*  row via sendBeacon) plus GA4 contact_click through intent-tracking.       */
+/*  data-tracked tells the site-wide click listener not to count it again.    */
 /* -------------------------------------------------------------------------- */
 
-export type WhatsAppCtaType =
-  | 'footer' | 'hero' | 'contact_page' | 'free_demo' | 'batches_page'
-  | 'batch' | 'job' | 'locality' | 'widget' | 'sticky';
-
-function normalizeToWaDigits(raw: string): string {
-  const digits = raw.replace(/\D/g, '');
-  const tenDigit = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
-  return `91${tenDigit}`;
-}
-
-export interface WhatsAppClickPayload {
-  path: string;
-  pageType: PageType;
-  ctaType: WhatsAppCtaType;
-  phoneNumber: string;
-  hadPrefill: boolean;
-  deviceType: 'mobile' | 'desktop';
-  courseSlug?: string;
-  branchKey?: string;
-  referrer?: string;
-  utmSource?: string;
-  utmMedium?: string;
-  utmCampaign?: string;
-}
-
-/** Exported for WhatsAppWidget, whose outbound click follows an async lead POST rather than a plain anchor click — it can't render <WhatsAppLink> directly but builds/logs a payload through the same helpers. */
-export function buildWhatsAppClickPayload(params: {
-  pathname: string | null;
-  pageType?: PageType;
-  ctaType: WhatsAppCtaType;
-  phoneNumber: string;
-  hadPrefill: boolean;
-  courseSlug?: string;
-  branchKey?: string;
-}): WhatsAppClickPayload {
-  const resolvedPath = params.pathname || '/';
-  const payload: WhatsAppClickPayload = {
-    path: resolvedPath,
-    pageType: params.pageType ?? classifyPageType(resolvedPath),
-    ctaType: params.ctaType,
-    phoneNumber: params.phoneNumber,
-    hadPrefill: params.hadPrefill,
-    deviceType: detectDeviceType(),
-  };
-  if (params.courseSlug) payload.courseSlug = params.courseSlug;
-  if (params.branchKey) payload.branchKey = params.branchKey;
-  if (typeof document !== 'undefined' && document.referrer) payload.referrer = document.referrer;
-  Object.assign(payload, extractUtmParams());
-  return payload;
-}
-
-export function logWhatsAppClick(payload: WhatsAppClickPayload): void {
-  try {
-    const body = JSON.stringify(payload);
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon('/api/whatsapp-clicks', new Blob([body], { type: 'application/json' }));
-    } else {
-      fetch('/api/whatsapp-clicks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body,
-        keepalive: true,
-      }).catch(() => {
-        /* best-effort — never let logging affect the click */
-      });
-    }
-  } catch {
-    /* best-effort — never let logging affect the click */
-  }
-}
-
-/**
- * GA4 contact_click event. Best-effort only: gtag may not have loaded yet
- * (Script strategy="afterInteractive"), so a missing gtag is a no-op rather
- * than an error, and any failure here must never affect the click.
- */
-function trackContactClick(params: { ctaType: WhatsAppCtaType; path: string }): void {
-  if (typeof window === 'undefined') return;
-  if (typeof (window as any).gtag !== 'function') return;
-  try {
-    (window as any).gtag('event', 'contact_click', {
-      method: 'whatsapp',
-      ctaType: params.ctaType,
-      path: params.path,
-    });
-  } catch {
-    /* best-effort — never let tracking affect the click */
-  }
-}
+export type { WhatsAppCtaType, WhatsAppClickPayload } from '@/lib/contact-click-log';
+// WhatsAppWidget's outbound click follows an async lead POST rather than a plain anchor click,
+// so it logs through the same helpers instead of rendering <WhatsAppLink>.
+export { buildWhatsAppClickPayload, logWhatsAppClick } from '@/lib/contact-click-log';
 
 export interface WhatsAppLinkProps {
   /** Prebuilt message text (batchBookingMessage(), jobApplyMessage(), etc.). Omit for a bare wa.me link with no text= param. */
   message?: string;
   /** Which CTA this is — required, used to tell apart the many WhatsApp buttons sharing a page/pageType. */
   ctaType: WhatsAppCtaType;
+  /** Which part of the page, e.g. "footer", "batch_card", "contact_page". */
+  location: string;
+  /** Which button; defaults to the ctaType. */
+  ctaId?: string;
   /** Omit for global chrome (footer/widget) that has no page context — see classifyPageType. */
   pageType?: PageType;
   courseSlug?: string;
@@ -127,6 +46,8 @@ export interface WhatsAppLinkProps {
 export default function WhatsAppLink({
   message,
   ctaType,
+  location,
+  ctaId,
   pageType,
   courseSlug,
   branchKey,
@@ -138,24 +59,27 @@ export default function WhatsAppLink({
   children,
 }: WhatsAppLinkProps): JSX.Element {
   const pathname = usePathname();
-  const digits = normalizeToWaDigits(number ?? WA_NUMBER);
+  const digits = toWaDigits(number ?? WA_NUMBER);
   if (number && !/^91\d{10}$/.test(digits)) {
     console.warn(`[WhatsAppLink] normalized number "${digits}" (from override "${number}") does not match the expected 91XXXXXXXXXX shape`);
   }
   const href = `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
 
   const handleClick = useCallback(() => {
+    const id = ctaId ?? ctaType;
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
       pageType,
       ctaType,
       phoneNumber: `+${digits}`,
       hadPrefill: hadPrefill ?? Boolean(message?.trim()),
+      ctaId: id,
+      location,
       courseSlug,
       branchKey,
     }));
-    trackContactClick({ ctaType, path: pathname || '/' });
-  }, [pathname, pageType, ctaType, courseSlug, branchKey, digits, hadPrefill, message]);
+    trackIntent({ kind: 'whatsapp', ctaId: id, location, destination: `https://wa.me/${digits}`, courseSlug, pageType });
+  }, [pathname, pageType, ctaType, ctaId, location, courseSlug, branchKey, digits, hadPrefill, message]);
 
   return (
     <a
@@ -166,6 +90,7 @@ export default function WhatsAppLink({
       style={style}
       aria-label={ariaLabel}
       onClick={handleClick}
+      {...{ [TRACKED_ATTR]: '' }}
     >
       {children}
     </a>

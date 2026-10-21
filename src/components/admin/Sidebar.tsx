@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import {
   ArrowLeftRight,
   BarChart2,
+  MousePointerClick,
   BookOpen,
   Braces,
   Briefcase,
@@ -69,6 +70,7 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
       { href: '/admin/call-clicks', label: 'Call Log',    icon: Phone,         permissionKey: 'callclicks:view' },
       { href: '/admin/whatsapp-clicks', label: 'WhatsApp Clicks', icon: MessageCircle, permissionKey: 'whatsappclicks:view' },
       { href: '/admin/analytics', label: 'Analytics',     icon: BarChart2,     permissionKey: 'analytics:view' },
+      { href: '/admin/tracking',  label: 'Tracking',      icon: MousePointerClick, permissionKey: 'analytics:view' },
     ],
   },
   {

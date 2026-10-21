@@ -115,7 +115,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
       {/* CTA buttons */}
       <div className="mt-auto px-5 pb-5 flex flex-col gap-2">
         {(batch.mode === 'Classroom' || batch.mode === 'Hybrid') && (
-          <WhatsAppLink
+          <WhatsAppLink location="batch_card" ctaId="batch_classroom_whatsapp"
             ctaType="batch"
             message={bookMsg}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
@@ -128,7 +128,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
           </WhatsAppLink>
         )}
         {(batch.mode === 'Online' || batch.mode === 'Hybrid') && (
-          <WhatsAppLink
+          <WhatsAppLink location="batch_card" ctaId="batch_online_whatsapp"
             ctaType="batch"
             message={enrollMsg}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"

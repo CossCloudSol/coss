@@ -66,7 +66,7 @@ export default async function LocationsIndexPage() {
                   <p key={g.days} style={{ color: 'var(--text)', fontSize: '14px', margin: '0 0 4px' }}>🕐 {g.days}, {g.time}</p>
                 ))}
                 <p style={{ fontSize: '14px', margin: '8px 0 14px' }}>
-                  📞 <CallLink number={branch.phone} pageType="locality" branchKey={loc.branchKey} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{branch.phone}</CallLink>
+                  📞 <CallLink ctaId="call" location="locations_list" number={branch.phone} pageType="locality" branchKey={loc.branchKey} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{branch.phone}</CallLink>
                 </p>
                 <Link href={`/locations/${loc.slug}`} style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', fontSize: '14px', fontWeight: 700, color: 'var(--primary-text)' }}>
                   Directions and courses at {loc.name} →

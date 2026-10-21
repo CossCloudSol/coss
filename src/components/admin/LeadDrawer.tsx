@@ -10,6 +10,7 @@ import {
   X,
 } from 'lucide-react';
 import { nameLooksOff } from '@/lib/name-quality';
+import { cameFromLabel } from '@/lib/lead-source';
 
 /* -------------------------------------------------------------------------- */
 /*  Public types — mirror app/api/admin/leads/[id]/route.ts                   */
@@ -57,6 +58,9 @@ export interface LeadDetail {
   lastTouchAt: string | null;
   whatsappOptIn: boolean;
   whatsappOptInAt: string | null;
+  sourceCta: string | null;
+  sourceLocation: string | null;
+  sourcePath: string | null;
   activities: LeadActivityItem[];
 }
 
@@ -592,6 +596,7 @@ function DetailsGrid({ lead }: { lead: LeadDetail }): JSX.Element {
         <DetailItem label="Landing page" value={lead.landingPage ?? '—'} />
         <DetailItem label="Referrer" value={lead.referrer ?? '—'} />
         <DetailItem label="Device" value={lead.deviceType ?? '—'} />
+        <DetailItem label="Came from" value={cameFromLabel(lead) ?? '—'} />
         {jobLabel ? <DetailItem label="Job" value={jobLabel} /> : null}
         {consentAt ? <DetailItem label="Consent" value={consentAt} /> : null}
         {lead.utmTerm ? <DetailItem label="Keyword" value={lead.utmTerm} /> : null}

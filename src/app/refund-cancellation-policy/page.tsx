@@ -212,7 +212,7 @@ export default function RefundCancellationPolicyPage() {
           <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', marginBottom: '10px' }}>Have Questions?</h3>
           <p style={{ color: '#ccc', fontSize: '14px', marginBottom: '18px' }}>Our team is happy to clarify any of these terms before you enroll.</p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <CallLink number={PRIMARY_PHONE} pageType="static" style={{ background: '#b8531c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
+            <CallLink ctaId="call" location="policy_page" number={PRIMARY_PHONE} pageType="static" style={{ background: '#b8531c', color: '#fff', padding: '11px 24px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}>
               📞 Call Us
             </CallLink>
             <a href="mailto:info@cosscloudsol.com" style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', padding: '11px 24px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.3)', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 600, fontSize: '14px' }}>
