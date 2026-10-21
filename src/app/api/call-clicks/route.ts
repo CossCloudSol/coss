@@ -196,8 +196,8 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ error: 'Unrecognized phoneNumber' }, { status: 422 });
   }
 
-  // Rows only on Vercel production and preview deployments, never local or development (lib/click-rows).
-  if (!savesClickRows()) return new NextResponse(null, { status: 204 });
+  // Rows only for requests to the production host (lib/click-rows).
+  if (!savesClickRows(req.headers)) return new NextResponse(null, { status: 204 });
 
   try {
     await prisma.callClick.create({

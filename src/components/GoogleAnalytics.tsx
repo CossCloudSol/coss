@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
+import { PRODUCTION_HOST } from '@/lib/production-host';
 
 interface GoogleAnalyticsProps {
   gaId: string;
 }
-
-/** The only host that loads gtag.js. Previews and local builds keep events in dataLayer only. */
-export const GA_PRODUCTION_HOST = 'www.cosscloudsol.com';
 
 /**
  * Drop-in GA4 tag. Renders nothing when `gaId` is empty so the public site
@@ -23,16 +21,17 @@ export const GA_PRODUCTION_HOST = 'www.cosscloudsol.com';
  *   window load event), so it no longer competes with page JS and images
  *   during load. On load it replays everything queued in dataLayer.
  *
- * Only on GA_PRODUCTION_HOST: everywhere else (Vercel previews, localhost) the
- * stub still collects events in window.dataLayer, where they can be checked,
- * but gtag.js never loads, so test traffic stays out of the live property.
+ * gtag.js loads only on PRODUCTION_HOST (lib/production-host). Everywhere
+ * else (Vercel previews, localhost) the stub still collects events in
+ * window.dataLayer, where they can be checked, but nothing reaches the live
+ * GA4 property.
  */
 export default function GoogleAnalytics({
   gaId,
 }: GoogleAnalyticsProps): JSX.Element | null {
   const [onProductionHost, setOnProductionHost] = useState(false);
   useEffect(() => {
-    setOnProductionHost(window.location.hostname === GA_PRODUCTION_HOST);
+    setOnProductionHost(window.location.hostname === PRODUCTION_HOST);
   }, []);
 
   const trimmed = gaId.trim();

@@ -325,7 +325,7 @@ function ChannelSeriesPanel({
             {buckets.map((b) => (
               <div
                 key={b.label}
-                className="flex flex-1 items-end justify-center gap-[2px]"
+                className="flex h-full flex-1 items-end justify-center gap-[2px]"
                 title={`${b.label} — Form: ${b.form}, WhatsApp Leads: ${b.whatsappLead}, Call: ${b.callClick}, WhatsApp Clicks: ${b.whatsappClick}`}
               >
                 {(['form', 'whatsappLead', 'callClick', 'whatsappClick'] as const).map((key) => {
