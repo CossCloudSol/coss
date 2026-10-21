@@ -5,6 +5,7 @@ import { useLeadForm } from '@/lib/use-lead-form';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
+import { leadSourceFields } from '@/lib/intent-tracking';
 import { leadErrorKind, trackLeadEvent, trackLeadSubmitError } from '@/lib/submitLead';
 import { getAttribution } from '@/lib/first-touch';
 
@@ -97,6 +98,8 @@ export default function CorporateForm(): JSX.Element {
           requirements:   values.requirements,
           // first-touch attribution (the API stores first touch only for corporate leads)
           ...getAttribution(),
+          // the button clicked before this form, when under 30 minutes old
+          ...leadSourceFields(),
         }),
       });
     } catch (err) {

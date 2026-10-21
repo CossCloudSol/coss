@@ -265,7 +265,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
                             {b.mode}{b.centre ? ` · ${b.centre}` : ''} · {b.schedule}
                           </p>
                         </div>
-                        <WhatsAppLink
+                        <WhatsAppLink location="course_batches" ctaId="batch_whatsapp"
                           ctaType="batch"
                           pageType="course"
                           courseSlug={course.slug}
@@ -303,7 +303,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
             <div style={{ background: 'var(--bg-card)', borderRadius: '12px', padding: '18px', border: '1px solid var(--border-card)' }}>
               <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                <CallLink number={PRIMARY_PHONE} pageType="course" courseSlug={course.slug} style={{ color: '#b8531c', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+                <CallLink ctaId="call" location="course_sidebar" number={PRIMARY_PHONE} pageType="course" courseSlug={course.slug} style={{ color: '#b8531c', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                 <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
               </p>
             </div>

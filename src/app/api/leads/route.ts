@@ -9,6 +9,7 @@ import {
   MIN_FILL_MS,
   MIN_FILL_MS_POPUP,
   botCheck,
+  leadSourceData,
   nameField,
   normalizeIndianMobile,
   phoneField,
@@ -223,6 +224,8 @@ export async function POST(req: NextRequest): Promise<Response> {
           ...firstTouchData(body),
           ...lastTouchData(body),
           ...consentData(body),
+          // the button clicked before the form (intent-tracking, under 30 minutes old)
+          ...leadSourceData(body),
           submitPath: data.submitPath ?? null,
           deviceType: data.deviceType ?? null,
         },

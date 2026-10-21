@@ -6,7 +6,8 @@ import { User, Zap } from 'lucide-react';
 import { getWaStatus, type WaStatus } from '@/lib/wa-status';
 import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
-import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/components/WhatsAppLink';
+import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/lib/contact-click-log';
+import { trackIntent } from '@/lib/intent-tracking';
 import { submitLead } from '@/lib/submitLead';
 import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
@@ -92,6 +93,8 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
   const [visible, setVisible]     = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [ctaOrigin, setCtaOrigin] = useState<'widget' | 'sticky'>('widget');
+  // Where the panel was opened from: the floating button or the mobile sticky bar.
+  const widgetLocation = ctaOrigin === 'sticky' ? 'sticky_bar' : 'widget';
 
   const [form, setForm]           = useState<FormState>(defaultForm);
   const [errors, setErrors]       = useState<Partial<Record<keyof FormState, string>>>({});
@@ -242,7 +245,10 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       // here. The branch selection still reaches the message text via
       // buildFormMessage() above; nothing is lost operationally.
       branchKey: form.branch === null || form.branch === 'Online' ? undefined : form.branch.toLowerCase(),
+      ctaId: `${ctaOrigin}_send`,
+      location: widgetLocation,
     }));
+    trackIntent({ kind: 'whatsapp', ctaId: `${ctaOrigin}_send`, location: widgetLocation, destination: `https://wa.me/${WA_NUMBER}` });
     // WhatsApp still opens when the lead couldn't be saved; only a saved lead goes to /thank-you.
     if (result.ok) goToThankYou('whatsapp_widget');
     else setTimeout(() => setPanelOpen(false), 1400);
@@ -255,7 +261,10 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       ctaType: ctaOrigin,
       phoneNumber: `+${WA_NUMBER}`,
       hadPrefill: false,
+      ctaId: `${ctaOrigin}_skip`,
+      location: widgetLocation,
     }));
+    trackIntent({ kind: 'whatsapp', ctaId: `${ctaOrigin}_skip`, location: widgetLocation, destination: `https://wa.me/${WA_NUMBER}` });
     setPanelOpen(false);
   }
 

@@ -21,7 +21,7 @@ export default function EnrollSidebar() {
       <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
         <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '12px' }}>📞 Talk to Us</h4>
         <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-          <CallLink number={PRIMARY_PHONE} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+          <CallLink ctaId="call" location="enroll_sidebar" number={PRIMARY_PHONE} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
           <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--text-muted)', fontSize: '12px' }}>{CONTACT_EMAIL}</a>
         </p>
         <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border)' }}>

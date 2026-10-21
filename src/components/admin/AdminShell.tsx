@@ -23,6 +23,7 @@ const TITLE_MAP: ReadonlyArray<readonly [string, string]> = [
   ['/admin/whatsapp', 'WhatsApp Log'],
   ['/admin/seo', 'SEO Manager'],
   ['/admin/analytics', 'Analytics'],
+  ['/admin/tracking', 'Tracking'],
   ['/admin/topbar', 'Topbar / Ann. Bar'],
   ['/admin/homepage', 'Homepage Manager'],
   ['/admin/settings', 'Settings'],

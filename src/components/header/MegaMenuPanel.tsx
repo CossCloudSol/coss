@@ -97,7 +97,7 @@ export default function MegaMenuPanel({ data, soon }: { data: MenuData; soon: St
           <span className="flex-1 text-sm leading-snug text-[#17262a] dark:text-slate-200">
             <strong>Not sure where to start?</strong> Talk to a counsellor and get a suggested course.
           </span>
-          <Link href="/free-demo-class" className="flex min-h-[44px] items-center whitespace-nowrap text-sm font-bold text-[#8f3f14] hover:underline dark:text-[#f3a57a]">
+          <Link href="/free-demo-class" data-cta="book_demo" data-loc="mega_menu" className="flex min-h-[44px] items-center whitespace-nowrap text-sm font-bold text-[#8f3f14] hover:underline dark:text-[#f3a57a]">
             Book a free demo <ArrowRight className="ml-1 h-4 w-4" aria-hidden="true" />
           </Link>
         </div>

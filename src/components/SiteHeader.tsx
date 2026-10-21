@@ -327,13 +327,15 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
               <Search className="h-5 w-5" aria-hidden="true" />
             </button>
             {themeButton('order-4 hidden lg:order-2 lg:flex')}
-            <CallLink number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={`${iconButton} order-2 lg:order-3 max-lg:!border-transparent max-lg:!bg-[#c2561a] max-lg:!text-white`}>
+            <CallLink ctaId="call" location="header" number={PHONE} aria-label={`Call ${PHONE_LABEL}`} className={`${iconButton} order-2 lg:order-3 max-lg:!border-transparent max-lg:!bg-[#c2561a] max-lg:!text-white`}>
               <Phone className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">{PHONE_LABEL}</span>
             </CallLink>
             {themeButton('order-4 lg:hidden')}
             <Link
               href={DEMO_HREF}
+              data-cta="book_demo"
+              data-loc="header"
               className="order-4 hidden h-[46px] w-[158px] items-center justify-center whitespace-nowrap rounded-xl bg-[#b8531c] px-[18px] text-[15px] font-bold text-white hover:bg-[#8f3f14] lg:flex"
             >
               Book Free Demo
@@ -402,11 +404,11 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
             </ul>
 
             <div className="grid grid-cols-2 gap-2.5">
-              <CallLink number={PHONE} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#cfdadd] font-bold text-[#005663] dark:border-slate-700 dark:text-[#5ef0c8]">
+              <CallLink ctaId="call" location="mobile_menu" number={PHONE} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#cfdadd] font-bold text-[#005663] dark:border-slate-700 dark:text-[#5ef0c8]">
                 <Phone className="h-5 w-5" aria-hidden="true" />
                 Call
               </CallLink>
-              <Link href={DEMO_HREF} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#b8531c] font-bold text-white">
+              <Link href={DEMO_HREF} data-cta="book_demo" data-loc="mobile_menu" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-[#b8531c] font-bold text-white">
                 <CalendarCheck className="h-5 w-5" aria-hidden="true" />
                 Book Free Demo
               </Link>

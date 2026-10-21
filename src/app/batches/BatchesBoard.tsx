@@ -64,7 +64,7 @@ export default function BatchesBoard({ batches }: { batches: BatchCardBatch[] })
           <p className="text-gray-500 dark:text-gray-400 text-base">
             No upcoming batches right now — contact us to know next dates
           </p>
-          <WhatsAppLink
+          <WhatsAppLink location="batches_page" ctaId="no_batches_whatsapp"
             ctaType="batches_page"
             pageType="static"
             message="Hi Coss Cloud Solutions Team, I don't see any upcoming batches listed right now. Could you share the next available dates?"
@@ -85,7 +85,7 @@ export default function BatchesBoard({ batches }: { batches: BatchCardBatch[] })
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
           Not finding the right batch? We can arrange custom schedules.
         </p>
-        <WhatsAppLink
+        <WhatsAppLink location="batches_page" ctaId="custom_timing_whatsapp"
           ctaType="batches_page"
           pageType="static"
           message="Hi Coss Cloud Solutions Team, I couldn't find a batch that fits my schedule. Could we arrange a custom schedule?"

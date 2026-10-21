@@ -15,7 +15,7 @@ export interface BatchCardData {
   trainer: string | null;
 }
 
-/** wa.me link for a server-rendered anchor (the click is also logged by the page's CTA script). */
+/** wa.me link for a server-rendered anchor (GA4 and the WhatsAppClick row come from the site-wide click listener). */
 function waHref(message: string): string {
   const digits = WA_NUMBER.replace(/\D/g, '');
   const ten = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits.slice(-10);
@@ -123,6 +123,7 @@ export default function BatchBand({ batches }: { batches: BatchCardData[] }) {
                       href="#enroll-form"
                       data-cta="reserve_seat"
                       data-loc="upcoming_batches"
+                      data-kind="enroll"
                       data-prefill={b.course}
                       className="inline-flex min-h-12 flex-1 items-center justify-center rounded-xl bg-[#b8531c] px-3 font-sans text-[15px] font-bold text-white shadow-[0_8px_20px_-10px_rgba(184,83,28,0.8)] hover:bg-[#8f3f14]"
                     >
@@ -135,6 +136,7 @@ export default function BatchBand({ batches }: { batches: BatchCardData[] }) {
                       aria-label={`Ask about the ${b.course} batch on WhatsApp`}
                       data-cta="batch_whatsapp"
                       data-loc="upcoming_batches"
+                      data-wa-type="batch"
                       className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#e7f6ec] text-[#0f5a2c]"
                     >
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d={ICON.whatsapp} /></svg>
@@ -163,6 +165,7 @@ export default function BatchBand({ batches }: { batches: BatchCardData[] }) {
               rel="noopener noreferrer"
               data-cta="custom_timing_whatsapp"
               data-loc="upcoming_batches"
+              data-wa-type="batches_page"
               className="font-bold text-[#f3a57a]"
             >
               Ask on WhatsApp

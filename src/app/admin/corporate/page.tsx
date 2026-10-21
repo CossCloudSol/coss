@@ -17,6 +17,7 @@ import type {
 } from '@/app/api/admin/corporate/route';
 import { csvCell } from '@/lib/csv';
 import { istDateKey, startOfMonthIST } from '@/lib/ist-date';
+import { cameFromLabel } from '@/lib/lead-source';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants                                                                 */
@@ -642,6 +643,7 @@ function DetailModal({
               </dd>
             </div>
             <DetailItem label="Date submitted" value={submitted} />
+            <DetailItem label="Came from" value={cameFromLabel(lead) ?? '—'} />
             <div>
               <dt className="text-xs text-gray-500 dark:text-gray-400">Status</dt>
               <dd className="mt-1">
@@ -840,6 +842,7 @@ const CSV_HEADERS: ReadonlyArray<string> = [
   'Requirements',
   'Status',
   'Date Submitted',
+  'Came From',
 ];
 
 /** Wrap every value in `"…"` and escape internal `"` as `""` per the spec. */
@@ -879,6 +882,7 @@ function exportCorporateLeadsCsv(leads: AdminCorporateLeadItem[]): void {
     lead.requirements ?? '',
     lead.status,
     formatExportDate(lead.createdAt),
+    cameFromLabel(lead) ?? '',
   ]);
 
   // \r\n line endings — Excel-friendliest. UTF-8 BOM optional; we skip it

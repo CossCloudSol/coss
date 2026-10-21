@@ -363,9 +363,14 @@ export default function DemoSidebarForm({ course, courseGroups, subtitle, embedd
 
       <WhatsAppOptIn />
 
+      {/* Counted as a demo click; data-keep-source keeps the button that brought the visitor as the lead's source. */}
       <button
         type="submit"
         disabled={isSubmitting}
+        data-cta="demo_form_submit"
+        data-loc={embedded ? 'demo_sidebar' : 'demo_form'}
+        data-kind="demo"
+        data-keep-source=""
         style={{
           ...enrollBtn,
           opacity: isSubmitting ? 0.85 : 1,

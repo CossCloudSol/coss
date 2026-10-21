@@ -152,7 +152,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               </p>
             </div>
 
-            <WhatsAppLink
+            <WhatsAppLink location="job_page"
               ctaType="job"
               pageType="static"
               message={waMessage}
@@ -213,7 +213,7 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '13px', marginBottom: '20px', lineHeight: '1.6' }}>
                 Apply through Coss Cloud Solutions placement assistance. Our team will help you with resume review, interview prep, and direct referral.
               </p>
-              <WhatsAppLink
+              <WhatsAppLink location="job_page_end"
                 ctaType="job"
                 pageType="static"
                 message={waMessage}

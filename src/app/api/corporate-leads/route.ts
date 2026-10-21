@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db';
 import { firstTouchData } from '@/lib/attribution';
 import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
-import { MIN_FILL_MS, botCheck, companyNameField, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
+import { MIN_FILL_MS, botCheck, companyNameField, leadSourceData, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -154,6 +154,8 @@ export async function POST(req: NextRequest): Promise<Response> {
         // first-touch attribution and consent (submitted next to the privacy notice)
         ...firstTouchData(body),
         consentAt: new Date(),
+        // the button clicked before the form (intent-tracking, under 30 minutes old)
+        ...leadSourceData(body),
       },
       select: { id: true },
     });

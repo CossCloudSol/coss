@@ -31,6 +31,30 @@ export const nameField = z.string().transform(normalizeName).pipe(z.string().reg
 export const companyNameField = z.string().transform(normalizeCompanyName).pipe(z.string().regex(COMPANY_NAME_RE, COMPANY_NAME_ERROR));
 
 /* -------------------------------------------------------------------------- */
+/*  Source button (intent-tracking's last click, under 30 minutes old)        */
+/* -------------------------------------------------------------------------- */
+
+const emptyToUndefined = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
+const trackingId = z.preprocess(emptyToUndefined, z.string().trim().regex(/^[a-z0-9_]{1,60}$/).optional());
+
+/**
+ * sourceCta / sourceLocation / sourcePath on a lead body. Optional and best-effort: a value
+ * that doesn't fit is dropped (never a 422), since the visitor can't fix it.
+ */
+export function leadSourceData(body: unknown): { sourceCta: string | null; sourceLocation: string | null; sourcePath: string | null } {
+  const b = typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : {};
+  const pick = <T>(schema: z.ZodType<T>, v: unknown): T | undefined => {
+    const r = schema.safeParse(v);
+    return r.success ? r.data : undefined;
+  };
+  return {
+    sourceCta: pick(trackingId, b.sourceCta) ?? null,
+    sourceLocation: pick(trackingId, b.sourceLocation) ?? null,
+    sourcePath: pick(z.preprocess(emptyToUndefined, z.string().trim().max(300).regex(/^\/[a-zA-Z0-9\-_/]*$/).optional()), b.sourcePath) ?? null,
+  };
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Bot protection                                                            */
 /* -------------------------------------------------------------------------- */
 

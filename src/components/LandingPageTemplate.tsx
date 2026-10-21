@@ -582,7 +582,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
                       <p className="text-sm text-slate-300 leading-relaxed mb-3">{addr1}</p>
                       <p className="text-sm text-slate-300 leading-relaxed mb-3">{addr2}</p>
                     </div>
-                    <CallLink
+                    <CallLink ctaId="call_branch" location="landing_branch"
                       number={branchPhone}
                       pageType="course"
                       courseSlug={course.slug}
@@ -651,11 +651,14 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href={`/free-demo-class?course=${course.slug}`}
+              data-cta="book_demo"
+              data-loc="landing"
+              data-course={course.slug}
               className="px-8 py-4 bg-[#b8531c] hover:bg-[#8f3f14] text-white font-black text-base rounded-xl transition-all shadow-lg shadow-[#e47538]/25 hover:shadow-[#e47538]/40 hover:-translate-y-0.5"
             >
               Book Free Demo Class
             </Link>
-            <WhatsAppLink
+            <WhatsAppLink location="landing_cta" ctaId="whatsapp_branch"
               ctaType="hero"
               pageType="course"
               courseSlug={course.slug}

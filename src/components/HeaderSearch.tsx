@@ -142,6 +142,8 @@ function Suggestions({
             </Link>
             <Link
               href={DEMO_HREF}
+              data-cta="book_demo"
+              data-loc="search"
               tabIndex={-1}
               onClick={(e) => {
                 e.preventDefault();

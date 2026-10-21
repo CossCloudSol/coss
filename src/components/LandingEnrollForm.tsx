@@ -67,7 +67,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
         </div>
         <h3 className="text-lg font-bold text-gray-900">Seat Reserved! We&apos;ll Call Within 2 Hours.</h3>
         <p className="mt-2 text-sm text-gray-600">Our counsellor will reach you on WhatsApp to confirm your free demo slot.</p>
-        <WhatsAppLink
+        <WhatsAppLink location="landing_form"
           ctaType="hero"
           pageType="course"
           courseSlug={courseSlug}

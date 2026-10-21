@@ -23,6 +23,9 @@ export interface AdminCorporateLeadItem {
   requirements: string | null;
   status: string;
   createdAt: string; // ISO
+  sourceCta: string | null;
+  sourceLocation: string | null;
+  sourcePath: string | null;
 }
 
 export interface AdminCorporateLeadsListResponse {
@@ -56,6 +59,9 @@ export async function GET(req: NextRequest): Promise<Response> {
         requirements: true,
         status: true,
         createdAt: true,
+        sourceCta: true,
+        sourceLocation: true,
+        sourcePath: true,
       },
     });
 
@@ -71,6 +77,9 @@ export async function GET(req: NextRequest): Promise<Response> {
         requirements: row.requirements,
         status: row.status,
         createdAt: row.createdAt.toISOString(),
+        sourceCta: row.sourceCta,
+        sourceLocation: row.sourceLocation,
+        sourcePath: row.sourcePath,
       })),
     };
 

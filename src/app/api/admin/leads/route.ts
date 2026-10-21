@@ -34,6 +34,9 @@ export interface AdminLeadListItem {
   jobId: string | null;
   jobTitle: string | null;
   jobCompany: string | null;
+  sourceCta: string | null;
+  sourceLocation: string | null;
+  sourcePath: string | null;
   _count: {
     activities: number;
   };
@@ -154,6 +157,9 @@ export async function GET(req: NextRequest): Promise<Response> {
           jobId: true,
           jobTitle: true,
           jobCompany: true,
+          sourceCta: true,
+          sourceLocation: true,
+          sourcePath: true,
           _count: { select: { activities: true } },
         },
       }),
@@ -181,6 +187,9 @@ export async function GET(req: NextRequest): Promise<Response> {
         jobId: lead.jobId,
         jobTitle: lead.jobTitle,
         jobCompany: lead.jobCompany,
+        sourceCta: lead.sourceCta,
+        sourceLocation: lead.sourceLocation,
+        sourcePath: lead.sourcePath,
         _count: { activities: lead._count.activities },
       })),
       total,

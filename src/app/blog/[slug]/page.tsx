@@ -263,7 +263,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
                 <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
                 <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
-                <Link href="/free-demo-class" style={{ background: 'var(--primary-fill)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
+                <Link href="/free-demo-class" data-cta="book_demo" data-loc="blog_post_cta" style={{ background: 'var(--primary-fill)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
                   Book Free Demo Class
                 </Link>
               </div>
@@ -272,14 +272,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
               <div style={{ background: 'var(--secondary)', borderRadius: '12px', padding: '24px', color: '#fff', marginBottom: '20px' }}>
                 <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>Enroll Now</h3>
                 <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', marginBottom: '16px' }}>Start your IT career with Coss Cloud Solutions</p>
-                <Link href="/free-demo-class" style={{ display: 'block', textAlign: 'center', background: 'var(--primary-fill)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
+                <Link href="/free-demo-class" data-cta="book_demo" data-loc="blog_sidebar" style={{ display: 'block', textAlign: 'center', background: 'var(--primary-fill)', color: '#fff', padding: '11px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px' }}>
                   Book Free Demo Class
                 </Link>
               </div>
               <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
                 <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
                 <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                  <CallLink number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+                  <CallLink ctaId="call" location="blog_sidebar" number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                   <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
                 </p>
               </div>
@@ -437,7 +437,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div style={{ background: 'linear-gradient(135deg, var(--secondary), #004d5c)', borderRadius: '14px', padding: '28px', marginTop: '36px', color: '#fff', textAlign: 'center' }}>
               <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '20px', marginBottom: '8px', color: '#fff' }}>Interested in this topic?</h3>
               <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', marginBottom: '18px' }}>Join our expert-led training at Coss Cloud Solutions, Hyderabad</p>
-              <Link href="/free-demo-class" style={{ background: 'var(--primary-fill)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
+              <Link href="/free-demo-class" data-cta="book_demo" data-loc="blog_post_cta" style={{ background: 'var(--primary-fill)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', display: 'inline-block' }}>
                 Book Free Demo Class
               </Link>
             </div>
@@ -463,7 +463,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             <div style={{ background: 'var(--bg-alt)', borderRadius: '12px', padding: '20px', border: '1px solid var(--border)' }}>
               <h4 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', color: 'var(--text)', marginBottom: '10px' }}>Contact Us</h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.9' }}>
-                <CallLink number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
+                <CallLink ctaId="call" location="blog_end" number={PRIMARY_PHONE} pageType="blog" style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{PRIMARY_PHONE_LABEL}</CallLink><br />
                 <a href="mailto:info@cosscloudsol.com" style={{ color: 'var(--text-muted)', fontSize: '12px' }}>info@cosscloudsol.com</a>
               </p>
             </div>

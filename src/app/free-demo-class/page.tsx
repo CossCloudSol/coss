@@ -339,7 +339,7 @@ export default async function FreeDemoClassPage() {
             >
               Book my free demo
             </a>
-            <WhatsAppLink
+            <WhatsAppLink location="demo_page"
               ctaType="free_demo"
               pageType="static"
               message="Hi Coss Cloud Solutions Team, I'd like to book a free demo class. Could you share the available slots?"

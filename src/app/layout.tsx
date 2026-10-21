@@ -237,7 +237,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Main */}
         <main>{children}</main>
 
-        <PublicChrome>
+        {/* clickTracking: the one site-wide CTA click listener (public pages only). */}
+        <PublicChrome clickTracking>
         {/* Footer */}
         <Footer />
 

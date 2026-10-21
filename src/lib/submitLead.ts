@@ -6,6 +6,7 @@
 
 import { getAttribution, getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
+import { leadSourceFields } from '@/lib/intent-tracking';
 import { normalizeIndianMobile } from '@/lib/lead-checks';
 import type { BotFields } from '@/components/HoneypotField';
 
@@ -126,6 +127,8 @@ export async function submitLead(
     whatsappOptIn: input.whatsappOptIn === true,
     submitPath: window.location.pathname,
     deviceType: detectDeviceType(),
+    // the button clicked before this form, when under 30 minutes old
+    ...leadSourceFields(),
   };
 
   let res: Response;

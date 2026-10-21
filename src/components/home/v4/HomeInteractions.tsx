@@ -1,6 +1,7 @@
 /**
  * The homepage's whole client behaviour outside the lead forms, as one small inline script:
- *  - GA4 cta_click for every [data-cta] link (same event and parameters as TrackedCta),
+ *  (GA4 and admin counts for [data-cta] links come from the site-wide listener in PublicChrome,
+ *  lib/intent-listener; this script no longer sends them.)
  *  - [data-prefill]: attaches that course to the hero form (the event HomeHeroForm already listens for),
  *  - [data-plan] ("Send me the plan"): hands over to the WhatsApp widget, which collects name and
  *    phone, saves the lead (formType whatsapp_widget, attribution, consent, GA4 generate_lead) and
@@ -11,14 +12,6 @@ const SCRIPT = `(function(){
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target.closest('[data-cta]') : null;
     if (!t) return;
-    try {
-      if (window.gtag) window.gtag('event', 'cta_click', {
-        cta_id: t.getAttribute('data-cta'),
-        location: t.getAttribute('data-loc') || '',
-        destination: t.getAttribute('href') || '',
-        page_path: location.pathname
-      });
-    } catch (_) {}
     var course = t.getAttribute('data-prefill');
     if (course) window.dispatchEvent(new CustomEvent('coss:prefill-course', { detail: { course: course } }));
     if (t.hasAttribute('data-plan') && window.__cossWaReady) {

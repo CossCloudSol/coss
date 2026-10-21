@@ -277,7 +277,7 @@ export default function FacultyView({ trainers, courses }: Props) {
               <div data-demo-slot={t.id} data-trainer={t.name} data-label={demoLabel(t.name)} className="rounded-[18px] bg-[#eaf4f5] p-[18px]">
                 <div data-demo-fallback="">
                   <p className="font-heading text-lg font-extrabold text-[#0a3d4a]">Attend a free demo with {demoLabel(t.name).replace(/^Demo with /, '')}</p>
-                  <Link href="/free-demo-class" className="mt-1 inline-flex min-h-11 items-center font-sans text-sm font-bold text-[#8f3f14] underline">Book on the free demo page</Link>
+                  <Link href="/free-demo-class" data-cta="book_demo" data-loc="faculty_trainer" className="mt-1 inline-flex min-h-11 items-center font-sans text-sm font-bold text-[#8f3f14] underline">Book on the free demo page</Link>
                 </div>
                 <div data-demo-mount="" />
               </div>

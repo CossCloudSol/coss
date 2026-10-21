@@ -279,7 +279,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                   <p style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>
                     No {topicLabel} batch is scheduled at {localityConfig.name} right this moment — the next batch dates are available on request.
                   </p>
-                  <WhatsAppLink
+                  <WhatsAppLink location="location_page"
                     ctaType="locality"
                     pageType="locality"
                     branchKey={config.branchKey}
@@ -307,7 +307,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                         <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--primary-text)' }}>Next batch: {formatBatchDate(c.nextBatchDate)}</span>
                       </Link>
                     ) : (
-                      <WhatsAppLink
+                      <WhatsAppLink location="location_page_end"
                         key={c.slug}
                         ctaType="locality"
                         pageType="locality"

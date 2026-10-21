@@ -56,7 +56,7 @@ export default async function PlacementsPage() {
             >
               {CAREER_SUPPORT_CTA}
             </a>
-            <WhatsAppLink
+            <WhatsAppLink location="placements_hero"
               ctaType="hero"
               pageType="static"
               message="Hi, I'd like to know more about placement support at Coss."
@@ -133,7 +133,7 @@ export default async function PlacementsPage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '16px' }}>
                 No batches currently scheduled — ask us for the next available date.
               </p>
-              <WhatsAppLink
+              <WhatsAppLink location="placements_page"
                 ctaType="batches_page"
                 pageType="static"
                 message="Hi, I'd like to know the next available batch dates at Coss."
@@ -172,7 +172,7 @@ export default async function PlacementsPage() {
                         {formattedDate} · {batch.schedule} · {branchLabel}
                       </p>
                     </div>
-                    <WhatsAppLink
+                    <WhatsAppLink location="placements_end"
                       ctaType="batch"
                       pageType="static"
                       message={message}

@@ -202,7 +202,7 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
                       <p key={i} style={{ color: 'var(--text-muted)', fontSize: '13.5px', lineHeight: '1.8' }}>{line}</p>
                     ))}
                     <p style={{ marginTop: '12px', fontSize: '13.5px', color: 'var(--text)' }}>
-                      📞 <CallLink number={branch.phone} pageType="locality" branchKey={config.branchKey} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{branch.phone}</CallLink>
+                      📞 <CallLink ctaId="call" location="location_page" number={branch.phone} pageType="locality" branchKey={config.branchKey} style={{ color: 'var(--primary-text)', fontWeight: 600 }}>{branch.phone}</CallLink>
                     </p>
                     {hours.groups.map((g) => (
                       <p key={g.days} style={{ fontSize: '13.5px', color: 'var(--text)' }}>🕐 {g.days}, {g.time}</p>

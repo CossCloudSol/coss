@@ -129,7 +129,7 @@ export default function MegaMenuCallback(): JSX.Element {
           </button>
         </>
       )}
-      <WhatsAppLink
+      <WhatsAppLink location="mega_menu"
         ctaType="widget"
         message="Hi, I would like help choosing a course."
         className="relative flex min-h-[44px] items-center justify-center gap-2 text-sm font-bold text-white"
