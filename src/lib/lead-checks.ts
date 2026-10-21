@@ -75,8 +75,13 @@ export function isValidCompanyName(raw: string): boolean {
 /*  Bot protection fields                                                     */
 /* -------------------------------------------------------------------------- */
 
-/** Hidden input real visitors never see; any value means a bot filled it. */
-export const HONEYPOT_FIELD = 'website';
+/**
+ * Hidden input real visitors never see; any value means a bot filled it. Named so browser
+ * autofill leaves it alone (autofill used to fill the old "website" name for real people).
+ */
+export const HONEYPOT_FIELD = 'hp_extra';
+/** The honeypot's old name, still checked for pages opened before the rename (lead-validation). */
+export const LEGACY_HONEYPOT_FIELD = 'website';
 /** Milliseconds between the form appearing and being submitted. */
 export const FILL_TIME_FIELD = 'fillMs';
 /** Page forms submitted faster than this are treated as bots. */

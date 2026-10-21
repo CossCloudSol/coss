@@ -1,7 +1,9 @@
+import { randomUUID } from 'crypto';
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
+import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
 import { MIN_FILL_MS, botCheck, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
@@ -54,6 +56,11 @@ function allow(ip: string): boolean {
   return true;
 }
 
+/** Same shape as a Prisma cuid ("c" + 24 lowercase alphanumerics). */
+function fakeLeadId(): string {
+  return `c${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+}
+
 export async function POST(req: NextRequest): Promise<Response> {
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
   if (!allow(ip)) {
@@ -70,15 +77,16 @@ export async function POST(req: NextRequest): Promise<Response> {
     return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 422 });
   }
 
-  // Bot: same response as a saved lead, but nothing saved or sent.
+  // Bot verdict: same response as a saved lead. A body that also passes
+  // validation is saved as spam with no notification; anything else is dropped.
   const bot = botCheck(body, MIN_FILL_MS);
-  if (bot.verdict === 'bot') {
-    console.info(`[POST /api/contact] Dropped bot submission (${bot.reason})`);
-    return NextResponse.json({ success: true }, { status: 201 });
-  }
 
   const parsed = contactSchema.safeParse(body);
   if (!parsed.success) {
+    if (bot.verdict === 'bot') {
+      console.info(`[POST /api/contact] Dropped invalid bot submission (${bot.reason})`);
+      return NextResponse.json({ success: true, id: fakeLeadId() }, { status: 201 });
+    }
     return NextResponse.json(
       { success: false, errors: parsed.error.flatten().fieldErrors },
       { status: 422 },
@@ -97,7 +105,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           course: d.subject ?? null,
           branch: d.branch.toLowerCase(),
           formType: 'contact',
-          status: 'new',
+          status: bot.verdict === 'bot' ? SPAM_STATUS : 'new',
           message: d.message ?? null,
           // first + last touch and consent (best-effort fields, read from the raw body)
           ...firstTouchData(body),
@@ -109,14 +117,17 @@ export async function POST(req: NextRequest): Promise<Response> {
         select: { id: true },
       });
       await tx.leadActivity.create({
-        data: {
-          leadId: lead.id,
-          action: 'form_submitted',
-          note: 'Submitted via contact page form',
-        },
+        data: bot.verdict === 'bot'
+          ? { leadId: lead.id, action: 'spam_quarantined', note: `Held as spam (${bot.reason}), submitted via contact page form` }
+          : { leadId: lead.id, action: 'form_submitted', note: 'Submitted via contact page form' },
       });
       return lead;
     });
+
+    if (bot.verdict === 'bot') {
+      console.info(`[POST /api/contact] Held lead ${created.id} as spam (${bot.reason})`);
+      return NextResponse.json({ success: true, id: created.id }, { status: 201 });
+    }
 
     if (bot.verdict === 'human_missing_fill_time') {
       console.info(`[POST /api/contact] Accepted lead ${created.id} with no fill time (grace period)`);
@@ -136,7 +147,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       console.error('[POST /api/contact] Notification creation failed (non-fatal):', notifErr);
     }
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true, id: created.id }, { status: 201 });
   } catch (err) {
     console.error('[POST /api/contact]', err);
     return NextResponse.json({ success: false, error: 'Something went wrong' }, { status: 500 });

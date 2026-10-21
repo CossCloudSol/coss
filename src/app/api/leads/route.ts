@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
+import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
 import {
   MIN_FILL_MS,
@@ -181,16 +182,17 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  // Bot: answer exactly like a saved lead so it learns nothing, but save
-  // nothing and send no notification.
+  // Bot verdict: answer exactly like a saved lead so it learns nothing. A body
+  // that also passes validation is saved as spam (staff can restore a real
+  // person from the Spam filter) with no notification; anything else is dropped.
   const bot = botCheck(body, minFillMsFor(body));
-  if (bot.verdict === 'bot') {
-    console.info(`[POST /api/leads] Dropped bot submission (${bot.reason})`);
-    return NextResponse.json({ success: true, id: fakeLeadId() }, { status: 201 });
-  }
 
   const parsed = leadInputSchema.safeParse(body);
   if (!parsed.success) {
+    if (bot.verdict === 'bot') {
+      console.info(`[POST /api/leads] Dropped invalid bot submission (${bot.reason})`);
+      return NextResponse.json({ success: true, id: fakeLeadId() }, { status: 201 });
+    }
     const fieldErrors = parsed.error.flatten().fieldErrors;
     return NextResponse.json(
       { success: false, errors: fieldErrors },
@@ -215,7 +217,7 @@ export async function POST(req: NextRequest): Promise<Response> {
           // exists in the DB regardless of which form sent the lead.
           branch: data.branch ? data.branch.toLowerCase() : UNDECIDED_BRANCH,
           formType: data.formType,
-          status: 'new',
+          status: bot.verdict === 'bot' ? SPAM_STATUS : 'new',
           message: data.message ?? null,
           // first + last touch and consent (best-effort fields, read from the raw body)
           ...firstTouchData(body),
@@ -228,15 +230,18 @@ export async function POST(req: NextRequest): Promise<Response> {
       });
 
       await tx.leadActivity.create({
-        data: {
-          leadId: lead.id,
-          action: 'form_submitted',
-          note: `Lead submitted via ${data.formType} form`,
-        },
+        data: bot.verdict === 'bot'
+          ? { leadId: lead.id, action: 'spam_quarantined', note: `Held as spam (${bot.reason}), submitted via ${data.formType} form` }
+          : { leadId: lead.id, action: 'form_submitted', note: `Lead submitted via ${data.formType} form` },
       });
 
       return lead;
     });
+
+    if (bot.verdict === 'bot') {
+      console.info(`[POST /api/leads] Held lead ${created.id} (${data.formType}) as spam (${bot.reason})`);
+      return NextResponse.json({ success: true, id: created.id }, { status: 201 });
+    }
 
     if (bot.verdict === 'human_missing_fill_time') {
       console.info(`[POST /api/leads] Accepted lead ${created.id} (${data.formType}) with no fill time (grace period)`);

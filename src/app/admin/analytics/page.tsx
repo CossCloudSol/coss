@@ -6,6 +6,7 @@ import { Bell, Download, Loader2, RefreshCw } from 'lucide-react';
 import type { AnalyticsResponse } from '@/app/api/admin/analytics/route';
 import { conversionDisplay, MIN_SAMPLE_FOR_PERCENT } from '@/lib/conversion-display';
 import { csvCell } from '@/lib/csv';
+import { istDateKey } from '@/lib/ist-date';
 
 /* -------------------------------------------------------------------------- */
 /*  Helpers / palettes                                                        */
@@ -723,13 +724,9 @@ function ExportCsvButton({ onClick }: { onClick: () => void }): JSX.Element {
 
 /** Wrap value in `"…"` and double any internal `"`. */
 
-/** YYYY-MM-DD in local time for the filename suffix. */
+/** Today's IST date, YYYY-MM-DD, for the filename suffix. */
 function todayIsoDate(): string {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return istDateKey(new Date());
 }
 
 function downloadCsv(rows: string[][], filename: string): void {

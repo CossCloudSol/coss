@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { getAttribution, getFirstTouch } from '@/lib/first-touch';
 import { detectDeviceType } from '@/lib/click-tracking';
-import { trackLeadEvent } from '@/lib/submitLead';
+import { leadErrorKind, trackLeadEvent, trackLeadSubmitError } from '@/lib/submitLead';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import WhatsAppOptIn, { optInFromForm } from '@/components/WhatsAppOptIn';
@@ -35,10 +35,11 @@ export default function ContactForm() {
     e.preventDefault();
     setStatus('loading');
     setErrorMsg('');
+    const firstTouch = getFirstTouch();
+    const submitPath = window.location.pathname;
+    let res: Response;
     try {
-      const firstTouch = getFirstTouch();
-      const submitPath = window.location.pathname;
-      const res = await fetch('/api/contact', {
+      res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -51,26 +52,30 @@ export default function ContactForm() {
           deviceType: detectDeviceType(),
         }),
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setStatus('success');
-        trackLeadEvent({
-          formType: 'contact',
-          submitPath,
-          leadId: '',
-          utmSource: firstTouch?.utmSource,
-          landingPage: firstTouch?.landingPage,
-        });
-        goToThankYou('contact');
-      } else {
-        const errs = data.errors
-          ? (Object.values(data.errors) as string[][]).flat().join(', ')
-          : (data.error ?? 'Something went wrong');
-        setErrorMsg(errs);
-        setStatus('error');
-      }
     } catch {
+      trackLeadSubmitError({ formType: 'contact', errorKind: 'network', submitPath });
       setErrorMsg('Network error. Please try again.');
+      setStatus('error');
+      return;
+    }
+    // A non-JSON body (a platform error page) is a server failure, not a network one.
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      setStatus('success');
+      trackLeadEvent({
+        formType: 'contact',
+        submitPath,
+        leadId: typeof data.id === 'string' ? data.id : '',
+        utmSource: firstTouch?.utmSource,
+        landingPage: firstTouch?.landingPage,
+      });
+      goToThankYou('contact');
+    } else {
+      trackLeadSubmitError({ formType: 'contact', errorKind: res.ok ? 'server' : leadErrorKind(res.status), submitPath });
+      const errs = data.errors
+        ? (Object.values(data.errors) as string[][]).flat().join(', ')
+        : (data.error ?? 'Something went wrong');
+      setErrorMsg(errs);
       setStatus('error');
     }
   }

@@ -73,15 +73,18 @@ interface LeadDrawerProps {
 
 const STATUS_OPTIONS = ['new', 'contacted', 'enrolled', 'lost'] as const;
 type Status = (typeof STATUS_OPTIONS)[number];
+/** Statuses a row can show: the four staff statuses plus the bot-check quarantine. */
+type ShownStatus = Status | 'spam';
 
-const STATUS_LABEL: Record<Status, string> = {
+const STATUS_LABEL: Record<ShownStatus, string> = {
   new: 'New',
   contacted: 'Contacted',
   enrolled: 'Enrolled',
   lost: 'Lost',
+  spam: 'Spam',
 };
 
-const STATUS_STYLES: Record<Status, { pill: string; dot: string }> = {
+const STATUS_STYLES: Record<ShownStatus, { pill: string; dot: string }> = {
   new: { pill: 'bg-blue-50 text-blue-700 ring-blue-200', dot: 'bg-blue-500' },
   contacted: {
     pill: 'bg-amber-50 text-amber-700 ring-amber-200',
@@ -92,6 +95,7 @@ const STATUS_STYLES: Record<Status, { pill: string; dot: string }> = {
     dot: 'bg-emerald-500',
   },
   lost: { pill: 'bg-red-50 text-red-700 ring-red-200', dot: 'bg-red-500' },
+  spam: { pill: 'bg-gray-100 text-gray-600 ring-gray-300', dot: 'bg-gray-400' },
 };
 
 interface ActivityMeta {
@@ -104,12 +108,26 @@ const ACTIVITY_META: Record<string, ActivityMeta> = {
   status_changed: { dot: 'bg-blue-500', label: 'Status updated' },
   note: { dot: 'bg-gray-400', label: 'Note added' },
   called: { dot: 'bg-purple-500', label: 'Called' },
+  spam_quarantined: { dot: 'bg-gray-400', label: 'Held as spam' },
+  marked_not_spam: { dot: 'bg-blue-500', label: 'Marked not spam' },
 };
 
 const MAX_NOTE_LENGTH = 2000;
 
 function isStatus(value: string): value is Status {
   return (STATUS_OPTIONS as ReadonlyArray<string>).includes(value);
+}
+
+function shownStatus(value: string): ShownStatus {
+  const s = value.toLowerCase();
+  return s === 'spam' || isStatus(s) ? s : 'new';
+}
+
+/** A spam row's menu has one action, "Not spam" (back to new); other rows pick any status. */
+function statusMenu(current: ShownStatus): ReadonlyArray<{ value: Status; label: string }> {
+  return current === 'spam'
+    ? [{ value: 'new', label: 'Not spam' }]
+    : STATUS_OPTIONS.map((s) => ({ value: s, label: STATUS_LABEL[s] }));
 }
 
 function getInitials(name: string): string {
@@ -421,9 +439,7 @@ function DrawerHeader({
     return () => document.removeEventListener('mousedown', onDocClick);
   }, [pickerOpen]);
 
-  const statusKey: Status = isStatus(lead.status.toLowerCase())
-    ? (lead.status.toLowerCase() as Status)
-    : 'new';
+  const statusKey = shownStatus(lead.status);
   const style = STATUS_STYLES[statusKey];
   const waNumber = toWhatsAppNumber(lead.phone);
 
@@ -474,7 +490,7 @@ function DrawerHeader({
                 role="menu"
                 className="absolute left-0 top-full z-10 mt-1 w-40 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 shadow-lg"
               >
-                {STATUS_OPTIONS.map((s) => (
+                {statusMenu(statusKey).map(({ value: s, label }) => (
                   <button
                     key={s}
                     role="menuitem"
@@ -493,7 +509,7 @@ function DrawerHeader({
                       className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLES[s].dot}`}
                       aria-hidden="true"
                     />
-                    {STATUS_LABEL[s]}
+                    {label}
                   </button>
                 ))}
               </div>

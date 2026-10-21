@@ -16,6 +16,7 @@ import type {
   AdminCorporateLeadsListResponse,
 } from '@/app/api/admin/corporate/route';
 import { csvCell } from '@/lib/csv';
+import { istDateKey, startOfMonthIST } from '@/lib/ist-date';
 
 /* -------------------------------------------------------------------------- */
 /*  Constants                                                                 */
@@ -23,16 +24,19 @@ import { csvCell } from '@/lib/csv';
 
 const STATUS_OPTIONS = ['new', 'reviewing', 'sent', 'won', 'lost'] as const;
 type Status = (typeof STATUS_OPTIONS)[number];
+/** Statuses a row can show: the staff statuses plus the bot-check quarantine. */
+type ShownStatus = Status | 'spam';
 
-const STATUS_LABEL: Record<Status, string> = {
+const STATUS_LABEL: Record<ShownStatus, string> = {
   new: 'New',
   reviewing: 'Reviewing',
   sent: 'Sent',
   won: 'Won',
   lost: 'Lost',
+  spam: 'Spam',
 };
 
-const STATUS_STYLES: Record<Status, { pill: string; dot: string }> = {
+const STATUS_STYLES: Record<ShownStatus, { pill: string; dot: string }> = {
   new: { pill: 'bg-[#dcfce7] text-[#15803d] ring-[#bbf7d0] dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700', dot: 'bg-emerald-500' },
   reviewing: {
     pill: 'bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:ring-amber-700',
@@ -47,12 +51,18 @@ const STATUS_STYLES: Record<Status, { pill: string; dot: string }> = {
     dot: 'bg-purple-500',
   },
   lost: { pill: 'bg-red-50 text-red-700 ring-red-200 dark:bg-red-900/30 dark:text-red-400 dark:ring-red-700', dot: 'bg-red-500' },
+  spam: { pill: 'bg-gray-100 text-gray-600 ring-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:ring-gray-600', dot: 'bg-gray-400' },
 };
 
 const SEARCH_DEBOUNCE_MS = 400;
 
 function isStatus(value: string): value is Status {
   return (STATUS_OPTIONS as ReadonlyArray<string>).includes(value);
+}
+
+function shownStatus(value: string): ShownStatus {
+  const s = value.toLowerCase();
+  return s === 'spam' || isStatus(s) ? s : 'new';
 }
 
 /* -------------------------------------------------------------------------- */
@@ -68,7 +78,9 @@ export default function CorporateLeadsPage(): JSX.Element {
   // `searchDebounced` is used for actual filtering, lagging by 400ms.
   const [searchInput, setSearchInput] = useState('');
   const [searchDebounced, setSearchDebounced] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'' | Status>('');
+  const [statusFilter, setStatusFilter] = useState<'' | ShownStatus>('');
+  // Spam is fetched on its own: the default list (and the stats and export) leave it out.
+  const showSpam = statusFilter === 'spam';
   const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Modal: which lead is open. `null` means closed.
@@ -84,7 +96,7 @@ export default function CorporateLeadsPage(): JSX.Element {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/admin/corporate', {
+        const res = await fetch(showSpam ? '/api/admin/corporate?status=spam' : '/api/admin/corporate', {
           signal: controller.signal,
           cache: 'no-store',
         });
@@ -111,7 +123,7 @@ export default function CorporateLeadsPage(): JSX.Element {
       cancelled = true;
       controller.abort();
     };
-  }, []);
+  }, [showSpam]);
 
   /* ----------------------------- Search debounce ------------------------ */
   const onSearchChange = (value: string): void => {
@@ -124,8 +136,7 @@ export default function CorporateLeadsPage(): JSX.Element {
 
   /* ----------------------------- Derived state -------------------------- */
   const stats = useMemo(() => {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfMonth = startOfMonthIST(new Date());
 
     let thisMonth = 0;
     let pendingReview = 0;
@@ -142,7 +153,7 @@ export default function CorporateLeadsPage(): JSX.Element {
     const search = searchDebounced;
     return leads.filter((lead) => {
       // Status filter
-      if (statusFilter !== '' && lead.status.toLowerCase() !== statusFilter) {
+      if (statusFilter !== '' && statusFilter !== 'spam' && lead.status.toLowerCase() !== statusFilter) {
         return false;
       }
       // Search filter — company / contact / email
@@ -268,6 +279,11 @@ export default function CorporateLeadsPage(): JSX.Element {
               onClick={() => setStatusFilter(s)}
             />
           ))}
+          <StatusPill
+            active={showSpam}
+            label={STATUS_LABEL.spam}
+            onClick={() => setStatusFilter('spam')}
+          />
         </div>
       </div>
 
@@ -422,9 +438,7 @@ function CorporateRow({
   onView: (id: string) => void;
   onDelete: (id: string) => Promise<void>;
 }): JSX.Element {
-  const statusKey: Status = isStatus(lead.status.toLowerCase())
-    ? (lead.status.toLowerCase() as Status)
-    : 'new';
+  const statusKey = shownStatus(lead.status);
   const statusStyle = STATUS_STYLES[statusKey];
 
   return (
@@ -580,9 +594,7 @@ function DetailModal({
     };
   }, [onClose]);
 
-  const statusKey: Status = isStatus(lead.status.toLowerCase())
-    ? (lead.status.toLowerCase() as Status)
-    : 'new';
+  const statusKey = shownStatus(lead.status);
   const submitted = new Date(lead.createdAt).toLocaleString('en-GB', {
     day: '2-digit',
     month: 'short',
@@ -643,11 +655,21 @@ function DetailModal({
                   aria-label="Update status"
                   className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-1.5 pl-2.5 pr-8 text-sm text-gray-900 dark:text-gray-100 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 disabled:opacity-60"
                 >
-                  {STATUS_OPTIONS.map((s) => (
-                    <option key={s} value={s}>
-                      {STATUS_LABEL[s]}
-                    </option>
-                  ))}
+                  {/* A spam lead offers only "Not spam", which sets it back to new. */}
+                  {statusKey === 'spam' ? (
+                    <>
+                      <option value="spam" disabled>
+                        {STATUS_LABEL.spam}
+                      </option>
+                      <option value="new">Not spam</option>
+                    </>
+                  ) : (
+                    STATUS_OPTIONS.map((s) => (
+                      <option key={s} value={s}>
+                        {STATUS_LABEL[s]}
+                      </option>
+                    ))
+                  )}
                 </select>
               </dd>
             </div>
@@ -718,15 +740,16 @@ function MonthlySparkline({
   // Always render 12 buckets so the chart shape is consistent year-to-year.
   // We bucket only the current calendar year — older submissions are excluded
   // from the chart but the table above still shows them.
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0-11
+  // IST calendar year and months.
+  const nowKey = istDateKey(new Date());
+  const currentYear = nowKey.slice(0, 4);
+  const currentMonth = Number(nowKey.slice(5, 7)) - 1; // 0-11
 
   const counts: number[] = Array.from({ length: 12 }, () => 0);
   for (const lead of leads) {
-    const created = new Date(lead.createdAt);
-    if (created.getFullYear() === currentYear) {
-      counts[created.getMonth()] += 1;
+    const key = istDateKey(new Date(lead.createdAt));
+    if (key.slice(0, 4) === currentYear) {
+      counts[Number(key.slice(5, 7)) - 1] += 1;
     }
   }
 
@@ -837,13 +860,9 @@ function formatExportDate(iso: string): string {
     .replace(',', '');
 }
 
-/** YYYY-MM-DD in local time for the filename. */
+/** Today's IST date, YYYY-MM-DD, for the filename. */
 function todayIsoDate(): string {
-  const d = new Date();
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return istDateKey(new Date());
 }
 
 function exportCorporateLeadsCsv(leads: AdminCorporateLeadItem[]): void {

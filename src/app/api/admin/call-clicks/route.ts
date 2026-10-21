@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { DAY_MS, istDateKey, istMonthKey, istWeekKey, startOfMonthIST } from '@/lib/ist-date';
+import { NOT_SPAM } from '@/lib/lead-spam';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -51,27 +53,7 @@ export interface CallClicksAdminResponse {
 /*  Helpers                                                                   */
 /* -------------------------------------------------------------------------- */
 
-function startOfMonth(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), 1);
-}
-
-function dayKey(d: Date): string {
-  return d.toISOString().slice(0, 10); // YYYY-MM-DD
-}
-
-function monthKey(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-}
-
-/** ISO 8601 week key, e.g. "2026-W32". */
-function weekKey(d: Date): string {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = (date.getUTCDay() + 6) % 7; // Mon=0..Sun=6
-  date.setUTCDate(date.getUTCDate() - dayNum + 3); // nearest Thursday
-  const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
-  const week = 1 + Math.round(((date.getTime() - firstThursday.getTime()) / 86400000 - 3 + ((firstThursday.getUTCDay() + 6) % 7)) / 7);
-  return `${date.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
-}
+// Day, ISO-week and month buckets are IST calendar periods (lib/ist-date).
 
 /**
  * Builds an ordered array of the last `count` bucket keys (oldest first,
@@ -85,14 +67,14 @@ function bucketSeries(
   channels: { form: Date[]; whatsapp: Date[]; call: Date[] },
 ): ChannelBucket[] {
   const now = new Date();
-  const keyFor = granularity === 'day' ? dayKey : granularity === 'week' ? weekKey : monthKey;
+  const keyFor = granularity === 'day' ? istDateKey : granularity === 'week' ? istWeekKey : istMonthKey;
 
   const labels: string[] = [];
   for (let i = count - 1; i >= 0; i--) {
-    const d = new Date(now);
-    if (granularity === 'day') d.setDate(d.getDate() - i);
-    else if (granularity === 'week') d.setDate(d.getDate() - i * 7);
-    else d.setMonth(d.getMonth() - i);
+    const d =
+      granularity === 'day' ? new Date(now.getTime() - i * DAY_MS)
+      : granularity === 'week' ? new Date(now.getTime() - i * 7 * DAY_MS)
+      : startOfMonthIST(now, i);
     labels.push(keyFor(d));
   }
 
@@ -122,9 +104,9 @@ export async function GET(req: NextRequest): Promise<Response> {
   if (guard instanceof Response) return guard;
 
   const now = new Date();
-  const monthStart = startOfMonth(now);
-  const twelveMonthsAgo = new Date(now);
-  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+  const monthStart = startOfMonthIST(now);
+  // Oldest bucket is the IST month 11 months back (12 monthly buckets).
+  const twelveMonthsAgo = startOfMonthIST(now, 11);
 
   try {
     const [
@@ -172,11 +154,11 @@ export async function GET(req: NextRequest): Promise<Response> {
         },
       }),
       prisma.lead.findMany({
-        where: { formType: { in: ['hero', 'hero_demo', 'full', 'demo', 'contact'] }, createdAt: { gte: twelveMonthsAgo } },
+        where: { ...NOT_SPAM, formType: { in: ['hero', 'hero_demo', 'full', 'demo', 'contact'] }, createdAt: { gte: twelveMonthsAgo } },
         select: { createdAt: true },
       }),
       prisma.lead.findMany({
-        where: { formType: 'whatsapp_widget', createdAt: { gte: twelveMonthsAgo } },
+        where: { ...NOT_SPAM, formType: 'whatsapp_widget', createdAt: { gte: twelveMonthsAgo } },
         select: { createdAt: true },
       }),
       prisma.callClick.findMany({

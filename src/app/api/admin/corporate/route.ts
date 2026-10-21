@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { SPAM_STATUS } from '@/lib/lead-spam';
 
 // Prisma uses Node built-ins — cannot run on the Edge runtime.
 export const runtime = 'nodejs';
@@ -37,8 +38,12 @@ export async function GET(req: NextRequest): Promise<Response> {
   const guard = await requireAdmin(req);
   if (guard instanceof Response) return guard;
 
+  // ?status=spam lists only the bot-check quarantine; by default it is left out.
+  const spamOnly = new URL(req.url).searchParams.get('status') === SPAM_STATUS;
+
   try {
     const rows = await prisma.corporateLead.findMany({
+      where: { status: spamOnly ? SPAM_STATUS : { not: SPAM_STATUS } },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,

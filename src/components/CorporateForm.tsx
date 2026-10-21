@@ -5,7 +5,7 @@ import { useLeadForm } from '@/lib/use-lead-form';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
 import FormPrivacyNote from '@/components/FormPrivacyNote';
 import { goToThankYou } from '@/lib/lead-thank-you';
-import { trackLeadEvent } from '@/lib/submitLead';
+import { leadErrorKind, trackLeadEvent, trackLeadSubmitError } from '@/lib/submitLead';
 import { getAttribution } from '@/lib/first-touch';
 
 type CorporateFormValues = {
@@ -79,6 +79,7 @@ export default function CorporateForm(): JSX.Element {
 
   async function onSubmit(values: CorporateFormValues): Promise<void> {
     setState({ kind: 'submitting' });
+    const submitPath = window.location.pathname;
     let res: Response | undefined;
     try {
       res = await fetch('/api/corporate-leads', {
@@ -100,10 +101,12 @@ export default function CorporateForm(): JSX.Element {
       });
     } catch (err) {
       console.error('[CorporateForm] POST /api/corporate-leads failed:', err);
+      trackLeadSubmitError({ formType: 'corporate', errorKind: 'network', submitPath });
       setState({ kind: 'error', message: 'Network error. Please try again.' });
       return;
     }
     if (!res.ok) {
+      trackLeadSubmitError({ formType: 'corporate', errorKind: leadErrorKind(res.status), submitPath });
       let errorMsg = 'Something went wrong. Please try again.';
       try {
         const result: { success?: boolean; errors?: Record<string, string[]>; message?: string } = await res.json();
@@ -118,9 +121,14 @@ export default function CorporateForm(): JSX.Element {
       setState({ kind: 'error', message: errorMsg });
       return;
     }
+    let leadId = '';
+    try {
+      const result: { id?: unknown } = await res.json();
+      if (typeof result.id === 'string') leadId = result.id;
+    } catch { /* missing / unparsable body — still a success */ }
     setState({ kind: 'success' });
     reset();
-    trackLeadEvent({ formType: 'corporate', submitPath: window.location.pathname, leadId: '' });
+    trackLeadEvent({ formType: 'corporate', submitPath, leadId });
     goToThankYou('corporate');
   }
 
