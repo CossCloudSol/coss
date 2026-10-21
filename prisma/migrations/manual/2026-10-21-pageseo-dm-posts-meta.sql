@@ -33,7 +33,7 @@
 --
 -- INDEPENDENT REVIEW: first pass FAIL (21 Oct; must-fix applied: the "updatedAt = now()" checks
 -- could never match a TIMESTAMP(3) column; replaced by a backup-join check of the exact text).
--- Re-review: pending. Tested on in-memory Postgres.
+-- Re-review: PASS (21 Oct). Tested on in-memory Postgres (run, second run refused, rollback, missing row).
 
 -- ── STEP 1: preview (read-only): the two rows as they are now ──────────────────────────────
 SELECT "pageSlug", "metaTitle", "metaDescription", "ogTitle", "ogDescription", "updatedAt"
