@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { DAY_MS, daysBeforeIST, istDateKey, startOfMonthIST, startOfTodayIST } from '@/lib/ist-date';
+import { NOT_SPAM } from '@/lib/lead-spam';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -55,24 +57,8 @@ const BRANCHES = ['dilsukhnagar', 'ameerpet', 'online'] as const;
 const STATUSES = ['new', 'contacted', 'enrolled', 'lost'] as const;
 const FORM_TYPES = ['hero', 'hero_demo', 'full', 'demo', 'whatsapp_widget'] as const;
 
-function startOfDay(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-function startOfMonth(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), 1);
-}
-
 function pct(num: number, denom: number): number {
   return denom === 0 ? 0 : Math.round((num / denom) * 1000) / 10;
-}
-
-function isoDateKey(d: Date): string {
-  // YYYY-MM-DD in local time so the chart buckets line up with the user's day.
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -84,12 +70,11 @@ export async function GET(req: NextRequest): Promise<Response> {
   if (guard instanceof Response) return guard;
 
   const now = new Date();
-  const monthStart = startOfMonth(now);
-  const todayStart = startOfDay(now);
-  const weekAgo = new Date(todayStart);
-  weekAgo.setDate(weekAgo.getDate() - 6); // 7 days inclusive of today
-  const thirtyDaysAgo = new Date(todayStart);
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29); // 30 days inclusive of today
+  // IST calendar days and months (the server runs in UTC).
+  const monthStart = startOfMonthIST(now);
+  const todayStart = startOfTodayIST(now);
+  const weekAgo = daysBeforeIST(now, 6); // 7 days inclusive of today
+  const thirtyDaysAgo = daysBeforeIST(now, 29); // 30 days inclusive of today
 
   const [
     totalLeads,
@@ -105,47 +90,49 @@ export async function GET(req: NextRequest): Promise<Response> {
     leadsForWhatsapp,
   ] = await Promise.all([
     // 1. Total leads
-    prisma.lead.count(),
+    prisma.lead.count({ where: NOT_SPAM }),
 
     // 2. This month
-    prisma.lead.count({ where: { createdAt: { gte: monthStart } } }),
+    prisma.lead.count({ where: { ...NOT_SPAM, createdAt: { gte: monthStart } } }),
 
     // 3. Funnel — counts grouped by status
-    prisma.lead.groupBy({ by: ['status'], _count: { _all: true } }),
+    prisma.lead.groupBy({ by: ['status'], where: NOT_SPAM, _count: { _all: true } }),
 
     // 4. Branch performance — branch + status combos
     prisma.lead.groupBy({
       by: ['branch', 'status'],
+      where: NOT_SPAM,
       _count: { _all: true },
     }),
 
     // 5. Form source performance — formType + status combos
     prisma.lead.groupBy({
       by: ['formType', 'status'],
+      where: NOT_SPAM,
       _count: { _all: true },
     }),
 
     // 6. Top courses (8) — exclude null/empty
     prisma.lead.groupBy({
       by: ['course'],
-      where: { course: { not: null } },
+      where: { ...NOT_SPAM, course: { not: null } },
       _count: { _all: true },
       orderBy: { _count: { course: 'desc' } },
       take: 8,
     }),
 
     // 7. Inquiry-type breakdown — derived from `course` (Course Inquiry vs General)
-    prisma.lead.findMany({ select: { course: true } }),
+    prisma.lead.findMany({ where: NOT_SPAM, select: { course: true } }),
 
     // 8. Daily series — pull just createdAt for last 30 days, bucket client-side
     prisma.lead.findMany({
-      where: { createdAt: { gte: thirtyDaysAgo } },
+      where: { ...NOT_SPAM, createdAt: { gte: thirtyDaysAgo } },
       select: { createdAt: true },
     }),
 
     // 9. First status_changed activity per lead — for avg response time
     prisma.leadActivity.findMany({
-      where: { action: 'status_changed' },
+      where: { action: 'status_changed', lead: NOT_SPAM },
       orderBy: { createdAt: 'asc' },
       distinct: ['leadId'],
       select: { leadId: true, createdAt: true },
@@ -153,13 +140,14 @@ export async function GET(req: NextRequest): Promise<Response> {
 
     // 10. All whatsapp_sent activities — for time-bucketed WhatsApp stats
     prisma.leadActivity.findMany({
-      where: { action: 'whatsapp_sent' },
+      where: { action: 'whatsapp_sent', lead: NOT_SPAM },
       select: { leadId: true, createdAt: true },
     }),
 
     // 11. Status of every lead that has a whatsapp_sent activity — for conv rate
     prisma.lead.findMany({
       where: {
+        ...NOT_SPAM,
         activities: { some: { action: 'whatsapp_sent' } },
       },
       select: { id: true, status: true },
@@ -288,12 +276,10 @@ export async function GET(req: NextRequest): Promise<Response> {
   const dailyMap = new Map<string, number>();
   // Seed every day in the window so the chart has 30 bars even on quiet days.
   for (let i = 0; i < 30; i++) {
-    const d = new Date(thirtyDaysAgo);
-    d.setDate(d.getDate() + i);
-    dailyMap.set(isoDateKey(d), 0);
+    dailyMap.set(istDateKey(new Date(thirtyDaysAgo.getTime() + i * DAY_MS)), 0);
   }
   for (const lead of leadsForDaily) {
-    const key = isoDateKey(lead.createdAt);
+    const key = istDateKey(lead.createdAt);
     if (dailyMap.has(key)) {
       dailyMap.set(key, (dailyMap.get(key) ?? 0) + 1);
     }

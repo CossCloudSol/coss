@@ -1,4 +1,6 @@
 import { prisma } from '@/lib/db';
+import { DAY_MS, daysBeforeIST, startOfTodayIST } from '@/lib/ist-date';
+import { NOT_SPAM } from '@/lib/lead-spam';
 
 /**
  * Admin overview statistics — shared by GET /api/admin/stats and the
@@ -62,22 +64,13 @@ function isStatusKey(value: string): value is StatusKey {
   return (STATUS_KEYS as ReadonlyArray<string>).includes(value);
 }
 
-/**
- * Start of local-day (00:00:00.000). We intentionally use the server's local
- * clock — if you deploy in a different timezone to your users, set TZ on the
- * runtime (e.g. `TZ=Asia/Kolkata`) so "today" matches the admin's calendar.
- */
-function startOfToday(): Date {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-}
-
 /** Throws on DB errors — callers decide how to surface them. */
 export async function getAdminStats(): Promise<AdminStatsResponse> {
-  const todayStart = startOfToday();
-  const sevenDaysAgo = new Date(todayStart);
-  // 7 days inclusive of today => subtract 6 from today's 00:00.
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+  // IST days: the server runs in UTC, the admins work in Hyderabad.
+  const now = new Date();
+  const todayStart = startOfTodayIST(now);
+  // 7 days inclusive of today => 00:00 IST six days back.
+  const sevenDaysAgo = daysBeforeIST(now, 6);
 
   const [
     totalLeads,
@@ -94,13 +87,14 @@ export async function getAdminStats(): Promise<AdminStatsResponse> {
     draftCourses,
     draftPosts,
   ] = await Promise.all([
-    prisma.lead.count(),
-    prisma.corporateLead.count(),
-    prisma.lead.count({ where: { createdAt: { gte: todayStart } } }),
+    prisma.lead.count({ where: NOT_SPAM }),
+    prisma.corporateLead.count({ where: NOT_SPAM }),
+    prisma.lead.count({ where: { ...NOT_SPAM, createdAt: { gte: todayStart } } }),
     prisma.lead.count({ where: { status: 'enrolled' } }),
-    prisma.lead.groupBy({ by: ['branch'], _count: { _all: true } }),
-    prisma.lead.groupBy({ by: ['status'], _count: { _all: true } }),
+    prisma.lead.groupBy({ by: ['branch'], where: NOT_SPAM, _count: { _all: true } }),
+    prisma.lead.groupBy({ by: ['status'], where: NOT_SPAM, _count: { _all: true } }),
     prisma.lead.findMany({
+      where: NOT_SPAM,
       orderBy: { createdAt: 'desc' },
       take: 5,
       select: {
@@ -114,7 +108,7 @@ export async function getAdminStats(): Promise<AdminStatsResponse> {
       },
     }),
     prisma.lead.findMany({
-      where: { createdAt: { gte: sevenDaysAgo } },
+      where: { ...NOT_SPAM, createdAt: { gte: sevenDaysAgo } },
       select: { createdAt: true },
     }),
     prisma.course.count({ where: { status: 'published' } }),
@@ -152,13 +146,12 @@ export async function getAdminStats(): Promise<AdminStatsResponse> {
   }
 
   // Build a dense 7-day series (no gaps) keyed by weekday short-name.
-  const weekdayFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short' });
+  // dayStart is 00:00 IST (18:30 UTC the day before), so the weekday is read in IST.
+  const weekdayFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'Asia/Kolkata' });
   const dailyLeads: AdminStatsResponse['dailyLeads'] = [];
   for (let offset = 6; offset >= 0; offset--) {
-    const dayStart = new Date(todayStart);
-    dayStart.setDate(dayStart.getDate() - offset);
-    const dayEnd = new Date(dayStart);
-    dayEnd.setDate(dayEnd.getDate() + 1);
+    const dayStart = new Date(todayStart.getTime() - offset * DAY_MS);
+    const dayEnd = new Date(dayStart.getTime() + DAY_MS);
     const count = dailyLeadsRaw.filter(
       (lead) => lead.createdAt >= dayStart && lead.createdAt < dayEnd,
     ).length;

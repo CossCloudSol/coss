@@ -6,9 +6,9 @@
  */
 
 import { z } from 'zod';
-import { COMPANY_NAME_ERROR, COMPANY_NAME_RE, FILL_TIME_FIELD, HONEYPOT_FIELD, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, normalizeCompanyName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
+import { COMPANY_NAME_ERROR, COMPANY_NAME_RE, FILL_TIME_FIELD, HONEYPOT_FIELD, LEGACY_HONEYPOT_FIELD, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, normalizeCompanyName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
 
-export { COMPANY_NAME_ERROR, COMPANY_NAME_RE, FILL_TIME_FIELD, HONEYPOT_FIELD, MIN_FILL_MS, MIN_FILL_MS_POPUP, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, isValidCompanyName, isValidName, normalizeCompanyName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
+export { COMPANY_NAME_ERROR, COMPANY_NAME_RE, FILL_TIME_FIELD, HONEYPOT_FIELD, LEGACY_HONEYPOT_FIELD, MIN_FILL_MS, MIN_FILL_MS_POPUP, NAME_ERROR, PERSON_NAME_RE, PHONE_ERROR, isValidCompanyName, isValidName, normalizeCompanyName, normalizeIndianMobile, normalizeName } from '@/lib/lead-checks';
 
 /* -------------------------------------------------------------------------- */
 /*  Phone                                                                     */
@@ -42,6 +42,19 @@ export const companyNameField = z.string().transform(normalizeCompanyName).pipe(
  */
 export const MISSING_FILL_TIME_ACCEPTED_UNTIL = Date.parse('2026-09-29T00:00:00+05:30');
 
+/**
+ * The honeypot was renamed from "website" to "hp_extra" (autofill filled "website" for real
+ * people). Pages opened before the rename still post the old name, so until this moment a
+ * value in either field counts. 2026-10-29 00:00 IST, 7 days after the rename ships. After
+ * it only hp_extra is checked, with no further deploy. Safe to delete the legacy check once
+ * passed.
+ */
+export const LEGACY_HONEYPOT_ACCEPTED_UNTIL = Date.parse('2026-10-29T00:00:00+05:30');
+
+function filled(value: unknown): boolean {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
 export type BotCheck =
   | { verdict: 'human' }
   /** No fill time, accepted during the grace period. The caller logs it. */
@@ -57,8 +70,8 @@ export type BotCheck =
 export function botCheck(body: unknown, minFillMs: number, now: number = Date.now()): BotCheck {
   if (typeof body !== 'object' || body === null) return { verdict: 'human' };
   const fields = body as Record<string, unknown>;
-  const honeypot = fields[HONEYPOT_FIELD];
-  if (typeof honeypot === 'string' && honeypot.trim() !== '') return { verdict: 'bot', reason: 'honeypot' };
+  if (filled(fields[HONEYPOT_FIELD])) return { verdict: 'bot', reason: 'honeypot' };
+  if (now < LEGACY_HONEYPOT_ACCEPTED_UNTIL && filled(fields[LEGACY_HONEYPOT_FIELD])) return { verdict: 'bot', reason: 'honeypot' };
   const fillMs = fields[FILL_TIME_FIELD];
   if (fillMs === undefined) {
     return now < MISSING_FILL_TIME_ACCEPTED_UNTIL

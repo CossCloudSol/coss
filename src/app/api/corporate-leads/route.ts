@@ -1,7 +1,9 @@
+import { randomUUID } from 'crypto';
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { firstTouchData } from '@/lib/attribution';
+import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
 import { MIN_FILL_MS, botCheck, companyNameField, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
@@ -85,6 +87,11 @@ function allowSubmission(ip: string): boolean {
   return true;
 }
 
+/** Same shape as a Prisma cuid ("c" + 24 lowercase alphanumerics). */
+function fakeLeadId(): string {
+  return `c${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Handler                                                                   */
 /* -------------------------------------------------------------------------- */
@@ -113,15 +120,16 @@ export async function POST(req: NextRequest): Promise<Response> {
     );
   }
 
-  // Bot: same response as a saved lead, but nothing saved or sent.
+  // Bot verdict: same response as a saved lead. A body that also passes
+  // validation is saved as spam with no notification; anything else is dropped.
   const bot = botCheck(body, MIN_FILL_MS);
-  if (bot.verdict === 'bot') {
-    console.info(`[POST /api/corporate-leads] Dropped bot submission (${bot.reason})`);
-    return NextResponse.json({ success: true }, { status: 201 });
-  }
 
   const parsed = corporateLeadSchema.safeParse(body);
   if (!parsed.success) {
+    if (bot.verdict === 'bot') {
+      console.info(`[POST /api/corporate-leads] Dropped invalid bot submission (${bot.reason})`);
+      return NextResponse.json({ success: true, id: fakeLeadId() }, { status: 201 });
+    }
     const fieldErrors = parsed.error.flatten().fieldErrors;
     console.error('[POST /api/corporate-leads] Validation failed:', fieldErrors);
     return NextResponse.json(
@@ -142,13 +150,18 @@ export async function POST(req: NextRequest): Promise<Response> {
         trainingDomain: data.trainingDomain,
         employeeCount: data.employeeCount,
         requirements: data.requirements ?? null,
-        status: 'new',
+        status: bot.verdict === 'bot' ? SPAM_STATUS : 'new',
         // first-touch attribution and consent (submitted next to the privacy notice)
         ...firstTouchData(body),
         consentAt: new Date(),
       },
       select: { id: true },
     });
+
+    if (bot.verdict === 'bot') {
+      console.info(`[POST /api/corporate-leads] Held corporate lead ${created.id} as spam (${bot.reason})`);
+      return NextResponse.json({ success: true, id: created.id }, { status: 201 });
+    }
 
     if (bot.verdict === 'human_missing_fill_time') {
       console.info(`[POST /api/corporate-leads] Accepted corporate lead ${created.id} with no fill time (grace period)`);
@@ -165,7 +178,7 @@ export async function POST(req: NextRequest): Promise<Response> {
       console.error('[POST /api/corporate-leads] Notification creation failed (non-fatal):', notifErr);
     }
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true, id: created.id }, { status: 201 });
   } catch (err) {
     // Always log on the server so the real cause is in the terminal even
     // when the client only sees a generic message in production.

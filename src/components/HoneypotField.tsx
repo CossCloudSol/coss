@@ -43,7 +43,7 @@ export default function HoneypotField({ inputRef }: { inputRef: RefObject<HTMLIn
       style={{ position: 'absolute', left: '-10000px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}
     >
       <label>
-        Website
+        Leave this field empty
         <input ref={inputRef} type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" defaultValue="" />
       </label>
     </div>

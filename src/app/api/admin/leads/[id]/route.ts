@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
 
 // Prisma uses Node built-ins — cannot run on Edge.
@@ -265,6 +266,9 @@ export async function PATCH(
   // requested status matches what's already stored — avoids duplicate
   // "status changed" notifications from redundant PATCHes.
   let statusUnchanged = false;
+  // A quarantined bot-check submission restored by staff ("Not spam"): logged as its own
+  // action, not status_changed, so it doesn't count as a first response in analytics.
+  let wasSpam = false;
   if (nextStatus !== null) {
     const current = await prisma.lead.findUnique({
       where: { id: params.id },
@@ -274,6 +278,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
     statusUnchanged = current.status.toLowerCase() === nextStatus;
+    wasSpam = current.status.toLowerCase() === SPAM_STATUS;
     if (statusUnchanged) {
       console.log(
         `[PATCH /api/admin/leads/[id]] No-op: status already "${nextStatus}"`,
@@ -290,11 +295,9 @@ export async function PATCH(
           data: { status: nextStatus },
         });
         await tx.leadActivity.create({
-          data: {
-            leadId: params.id,
-            action: 'status_changed',
-            note: `Status changed to ${nextStatus}`,
-          },
+          data: wasSpam
+            ? { leadId: params.id, action: 'marked_not_spam', note: `Marked not spam (status ${nextStatus})` }
+            : { leadId: params.id, action: 'status_changed', note: `Status changed to ${nextStatus}` },
         });
       }
 

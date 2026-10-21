@@ -67,6 +67,38 @@ export function trackLeadEvent(params: {
   }
 }
 
+/** Why a submit failed, for GA4 (no field values, just the class of failure). */
+export type LeadErrorKind = 'validation' | 'rate_limit' | 'network' | 'server';
+
+/** 429 is the rate limit, any other 4xx a rejected field, everything else the server. */
+export function leadErrorKind(status: number): LeadErrorKind {
+  if (status === 429) return 'rate_limit';
+  if (status >= 400 && status < 500) return 'validation';
+  return 'server';
+}
+
+/**
+ * Fires GA4's lead_submit_error when a lead form's POST doesn't succeed. Same best-effort
+ * rules as trackLeadEvent. Parameters carry no personal data.
+ */
+export function trackLeadSubmitError(params: {
+  formType: FormType;
+  errorKind: LeadErrorKind;
+  submitPath: string;
+}): void {
+  if (typeof window === 'undefined') return;
+  if (typeof (window as any).gtag !== 'function') return;
+  try {
+    (window as any).gtag('event', 'lead_submit_error', {
+      form_type: params.formType,
+      error_kind: params.errorKind,
+      submit_path: params.submitPath,
+    });
+  } catch {
+    /* best-effort — never let tracking affect the caller */
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Submit                                                                    */
 /* -------------------------------------------------------------------------- */
@@ -105,6 +137,7 @@ export async function submitLead(
       keepalive: true,
     });
   } catch {
+    trackLeadSubmitError({ formType: input.formType, errorKind: 'network', submitPath: body.submitPath });
     return {
       ok: false,
       message: 'Network error. Please check your connection and try again.',
@@ -132,6 +165,7 @@ export async function submitLead(
     return { ok: true, id };
   }
 
+  trackLeadSubmitError({ formType: input.formType, errorKind: leadErrorKind(res.status), submitPath: body.submitPath });
   return { ok: false, message: await extractErrorMessage(res) };
 }
 

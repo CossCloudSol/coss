@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { SPAM_STATUS } from '@/lib/lead-spam';
 
 // Prisma uses Node built-ins — cannot run on the Edge runtime.
 export const runtime = 'nodejs';
@@ -49,7 +50,8 @@ export interface AdminLeadsListResponse {
 /*  Query-string validation                                                   */
 /* -------------------------------------------------------------------------- */
 
-const ALLOWED_STATUS = new Set(['new', 'contacted', 'enrolled', 'lost']);
+// 'spam' lists only the bot-check quarantine; every other view (and the CSV export) leaves it out.
+const ALLOWED_STATUS = new Set(['new', 'contacted', 'enrolled', 'lost', SPAM_STATUS]);
 const ALLOWED_BRANCH = new Set(['dilsukhnagar', 'ameerpet', 'online', 'undecided']);
 const ALLOWED_SORT = new Set<'createdAt' | 'name'>(['createdAt', 'name']);
 const ALLOWED_ORDER = new Set<'asc' | 'desc'>(['asc', 'desc']);
@@ -99,6 +101,8 @@ export async function GET(req: NextRequest): Promise<Response> {
   const where: Prisma.LeadWhereInput = {};
   if (statusParam && ALLOWED_STATUS.has(statusParam)) {
     where.status = statusParam;
+  } else {
+    where.status = { not: SPAM_STATUS };
   }
   if (branchParam && ALLOWED_BRANCH.has(branchParam)) {
     where.branch = branchParam;

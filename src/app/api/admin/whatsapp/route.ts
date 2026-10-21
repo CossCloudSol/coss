@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin-guard';
+import { startOfMonthIST } from '@/lib/ist-date';
+import { NOT_SPAM } from '@/lib/lead-spam';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -43,10 +45,6 @@ export interface WhatsAppAdminResponse {
 /*  Helpers                                                                   */
 /* -------------------------------------------------------------------------- */
 
-function startOfMonth(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), 1);
-}
-
 function pct(num: number, denom: number): number {
   return denom === 0 ? 0 : Math.round((num / denom) * 1000) / 10;
 }
@@ -61,7 +59,7 @@ export async function GET(req: NextRequest): Promise<Response> {
   const guard = await requireAdmin(req);
   if (guard instanceof Response) return guard;
 
-  const monthStart = startOfMonth(new Date());
+  const monthStart = startOfMonthIST(new Date());
 
   try {
     const [
@@ -72,14 +70,15 @@ export async function GET(req: NextRequest): Promise<Response> {
       recentLeads,
       recentActivitiesRaw,
     ] = await Promise.all([
-      prisma.lead.count({ where: { formType: WIDGET_FORM_TYPE } }),
+      prisma.lead.count({ where: { ...NOT_SPAM, formType: WIDGET_FORM_TYPE } }),
       prisma.lead.count({
-        where: { formType: WIDGET_FORM_TYPE, createdAt: { gte: monthStart } },
+        where: { ...NOT_SPAM, formType: WIDGET_FORM_TYPE, createdAt: { gte: monthStart } },
       }),
       // Top course among widget leads (excluding null/empty).
       prisma.lead.groupBy({
         by: ['course'],
         where: {
+          ...NOT_SPAM,
           formType: WIDGET_FORM_TYPE,
           course: { not: null },
         },
@@ -90,12 +89,12 @@ export async function GET(req: NextRequest): Promise<Response> {
       // Status breakdown for widget leads → conversion rate.
       prisma.lead.groupBy({
         by: ['status'],
-        where: { formType: WIDGET_FORM_TYPE },
+        where: { ...NOT_SPAM, formType: WIDGET_FORM_TYPE },
         _count: { _all: true },
       }),
       // Last 20 widget leads for the inline table.
       prisma.lead.findMany({
-        where: { formType: WIDGET_FORM_TYPE },
+        where: { ...NOT_SPAM, formType: WIDGET_FORM_TYPE },
         orderBy: { createdAt: 'desc' },
         take: 20,
         select: {

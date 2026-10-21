@@ -7,6 +7,7 @@ import { finalHref } from '@/lib/redirect-resolve';
 import { formatBatchTime } from '@/lib/batch-time';
 import { REDIRECTS } from '../../redirects.config.mjs';
 import { DEPLOY_CACHE_KEY } from '@/lib/deploy-cache-key';
+import { startOfTodayIST } from '@/lib/ist-date';
 
 /** One live batch for the menu's "Starting soon" list: branch and time only, no seat counts. */
 export interface StartingSoonBatch {
@@ -19,12 +20,6 @@ export interface StartingSoonBatch {
   where: string;
   /** The batch's time, formatted "10–11 AM"; empty when the schedule has no readable time. */
   time: string;
-}
-
-function startOfTodayIST(): Date {
-  const istOffset = 5.5 * 60 * 60 * 1000;
-  const nowIST = new Date(Date.now() + istOffset);
-  return new Date(Date.UTC(nowIST.getUTCFullYear(), nowIST.getUTCMonth(), nowIST.getUTCDate()) - istOffset);
 }
 
 async function loadStartingSoon(): Promise<StartingSoonBatch[]> {
