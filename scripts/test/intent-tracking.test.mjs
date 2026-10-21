@@ -164,15 +164,28 @@ test('/admin/tracking range: inclusive IST days', () => {
   assert.equal(parseTrackingRange('2024-01-01', '2026-10-21', now), null, 'over 366 days');
 });
 
-test('click rows are saved only on the production deployment', () => {
+test('click rows are saved on Vercel production and preview, never local or development', () => {
   assert.equal(savesClickRows('production'), true);
-  assert.equal(savesClickRows('preview'), false);
+  assert.equal(savesClickRows('preview'), true);
+  assert.equal(savesClickRows('development'), false);
   assert.equal(savesClickRows(undefined), false);
   for (const f of ['src/app/api/cta-clicks/route.ts', 'src/app/api/call-clicks/route.ts', 'src/app/api/whatsapp-clicks/route.ts']) {
     const s = fs.readFileSync(f, 'utf8');
     const gate = s.indexOf('if (!savesClickRows()) return new NextResponse(null, { status: 204 });');
     assert.ok(gate > 0 && gate < s.indexOf('.create({'), `${f}: no production gate before the insert`);
   }
+});
+
+test('gtag.js loads only on the production host; elsewhere events stay in dataLayer', () => {
+  const s = fs.readFileSync('src/components/GoogleAnalytics.tsx', 'utf8');
+  assert.match(s, /GA_PRODUCTION_HOST = 'www\.cosscloudsol\.com'/);
+  assert.match(s, /window\.location\.hostname === GA_PRODUCTION_HOST/);
+  // The stub (dataLayer + gtag) is unconditional; only the library <Script src> is gated.
+  const stub = s.indexOf("function gtag(){dataLayer.push(arguments);}");
+  const gate = s.indexOf('{onProductionHost ? (');
+  const lib = s.indexOf('googletagmanager.com/gtag/js');
+  assert.ok(stub > 0 && gate > stub && lib > gate, 'library not behind the host check');
+  assert.equal((s.match(/googletagmanager\.com/g) ?? []).length, 1);
 });
 
 test('every public demo / syllabus / brochure / tel: / wa.me link is tagged', async () => {

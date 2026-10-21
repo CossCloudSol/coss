@@ -83,7 +83,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   }
   const d = parsed.data;
 
-  // Rows only on the production deployment (lib/click-rows): previews share the production DB.
+  // Rows only on Vercel production and preview deployments, never local or development (lib/click-rows).
   if (!savesClickRows()) return new NextResponse(null, { status: 204 });
 
   try {
