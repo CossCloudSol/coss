@@ -164,28 +164,43 @@ test('/admin/tracking range: inclusive IST days', () => {
   assert.equal(parseTrackingRange('2024-01-01', '2026-10-21', now), null, 'over 366 days');
 });
 
-test('click rows are saved on Vercel production and preview, never local or development', () => {
-  assert.equal(savesClickRows('production'), true);
-  assert.equal(savesClickRows('preview'), true);
-  assert.equal(savesClickRows('development'), false);
-  assert.equal(savesClickRows(undefined), false);
+test('click rows are saved only for requests to the production host', () => {
+  const h = (o) => new Headers(o);
+  assert.equal(savesClickRows(h({ 'x-forwarded-host': 'www.cosscloudsol.com' })), true);
+  assert.equal(savesClickRows(h({ host: 'www.cosscloudsol.com' })), true, 'host when there is no x-forwarded-host');
+  assert.equal(savesClickRows(h({ 'x-forwarded-host': 'WWW.CossCloudSol.com:443' })), true);
+  assert.equal(savesClickRows(h({ 'x-forwarded-host': 'coss-git-feat-x-cosscloudsolutions.vercel.app', host: 'www.cosscloudsol.com' })), false, 'x-forwarded-host wins');
+  assert.equal(savesClickRows(h({ host: 'coss-git-feat-x-cosscloudsolutions.vercel.app' })), false, 'preview');
+  assert.equal(savesClickRows(h({ host: 'localhost:3000' })), false);
+  assert.equal(savesClickRows(h({ host: 'cosscloudsol.com' })), false, 'apex is not the production host');
+  assert.equal(savesClickRows(h({})), false);
+  assert.match(fs.readFileSync('src/lib/click-rows.ts', 'utf8'), /PRODUCTION_HOST/);
+  assert.doesNotMatch(fs.readFileSync('src/lib/click-rows.ts', 'utf8'), /VERCEL_ENV/);
   for (const f of ['src/app/api/cta-clicks/route.ts', 'src/app/api/call-clicks/route.ts', 'src/app/api/whatsapp-clicks/route.ts']) {
     const s = fs.readFileSync(f, 'utf8');
-    const gate = s.indexOf('if (!savesClickRows()) return new NextResponse(null, { status: 204 });');
+    const gate = s.indexOf('if (!savesClickRows(req.headers)) return new NextResponse(null, { status: 204 });');
     assert.ok(gate > 0 && gate < s.indexOf('.create({'), `${f}: no production gate before the insert`);
   }
 });
 
 test('gtag.js loads only on the production host; elsewhere events stay in dataLayer', () => {
   const s = fs.readFileSync('src/components/GoogleAnalytics.tsx', 'utf8');
-  assert.match(s, /GA_PRODUCTION_HOST = 'www\.cosscloudsol\.com'/);
-  assert.match(s, /window\.location\.hostname === GA_PRODUCTION_HOST/);
+  assert.match(fs.readFileSync('src/lib/production-host.ts', 'utf8'), /PRODUCTION_HOST = 'www\.cosscloudsol\.com'/);
+  assert.match(s, /window\.location\.hostname === PRODUCTION_HOST/);
   // The stub (dataLayer + gtag) is unconditional; only the library <Script src> is gated.
   const stub = s.indexOf("function gtag(){dataLayer.push(arguments);}");
   const gate = s.indexOf('{onProductionHost ? (');
   const lib = s.indexOf('googletagmanager.com/gtag/js');
   assert.ok(stub > 0 && gate > stub && lib > gate, 'library not behind the host check');
   assert.equal((s.match(/googletagmanager\.com/g) ?? []).length, 1);
+});
+
+test('daily chart bar columns have a height, so percentage bar heights render', () => {
+  for (const f of ['src/components/admin/TrackingReport.tsx', 'src/app/admin/call-clicks/page.tsx', 'src/app/admin/whatsapp-clicks/page.tsx']) {
+    const s = fs.readFileSync(f, 'utf8');
+    assert.match(s, /className="flex h-full flex-1 items-end justify-center gap-\[2px\]"/, f);
+    assert.doesNotMatch(s, /className="flex flex-1 items-end justify-center gap-\[2px\]"/, `${f}: a column without h-full`);
+  }
 });
 
 test('every public demo / syllabus / brochure / tel: / wa.me link is tagged', async () => {

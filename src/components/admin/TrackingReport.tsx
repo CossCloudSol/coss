@@ -215,7 +215,7 @@ function DailyChart({ data }: { data: TrackingResponse }): JSX.Element {
             {data.daily.map((d) => (
               <div
                 key={d.date}
-                className="flex flex-1 items-end justify-center gap-[2px]"
+                className="flex h-full flex-1 items-end justify-center gap-[2px]"
                 title={`${d.date}: ${SERIES.map((s) => `${s.label} ${d[s.key]}`).join(', ')}`}
               >
                 {SERIES.map((s) => (

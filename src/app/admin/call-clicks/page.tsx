@@ -242,7 +242,7 @@ function ChannelSeriesPanel({
         <div style={{ minWidth: `${buckets.length * 28}px` }}>
           <div className="flex h-[140px] items-end gap-[6px]">
             {buckets.map((b) => (
-              <div key={b.label} className="flex flex-1 items-end justify-center gap-[2px]" title={`${b.label} — Form: ${b.form}, WhatsApp: ${b.whatsapp}, Call: ${b.call}`}>
+              <div key={b.label} className="flex h-full flex-1 items-end justify-center gap-[2px]" title={`${b.label} — Form: ${b.form}, WhatsApp: ${b.whatsapp}, Call: ${b.call}`}>
                 {(['form', 'whatsapp', 'call'] as const).map((key) => {
                   const value = b[key];
                   const heightPercent = (value / max) * 100;

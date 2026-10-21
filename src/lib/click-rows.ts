@@ -1,10 +1,18 @@
+import { PRODUCTION_HOST } from '@/lib/production-host';
+
+/** The host a request was made to: x-forwarded-host (set by Vercel), else host; lowercase, no port. */
+export function requestHost(headers: Headers): string {
+  const raw = headers.get('x-forwarded-host') ?? headers.get('host') ?? '';
+  return (raw.split(',')[0] ?? '').trim().toLowerCase().replace(/:\d+$/, '');
+}
+
 /**
- * Click-logging endpoints (/api/cta-clicks, /api/call-clicks, /api/whatsapp-clicks) write rows
- * only on Vercel deployments: production, and previews (which have their own database, so
- * /admin/tracking can be checked there). Local and development runs have no VERCEL_ENV (or
- * 'development') and write nothing; the endpoints still validate the body and answer 204.
- * GA4 events fire from the browser either way.
+ * Click-logging endpoints (/api/cta-clicks, /api/call-clicks, /api/whatsapp-clicks) save rows
+ * only for requests to the production host. Vercel previews have written to the production
+ * database, so a check by deployment type is not enough; on any other host (previews,
+ * localhost) the endpoints still validate the body but answer 204 and save nothing. GA4
+ * events fire from the browser either way.
  */
-export function savesClickRows(env: string | undefined = process.env.VERCEL_ENV): boolean {
-  return env === 'production' || env === 'preview';
+export function savesClickRows(headers: Headers): boolean {
+  return requestHost(headers) === PRODUCTION_HOST;
 }
