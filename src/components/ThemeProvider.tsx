@@ -25,11 +25,11 @@ function applyTheme(theme: Theme) {
 }
 
 /**
- * Theme state. The inline script in app/layout.tsx sets the `dark` class
- * before first paint (saved choice, else the system setting), so there is no
- * flash; this provider only reads that result, never overwrites it on load.
- * Until the visitor picks a theme it keeps following the system setting;
- * a click on the toggle saves the choice.
+ * Theme state. Light by default: the inline script in app/layout.tsx sets the
+ * `dark` class before first paint only when the visitor chose dark with the
+ * toggle ('coss-theme' === 'dark'), so there is no flash; this provider only
+ * reads that result. The system setting is never followed. A click on the
+ * toggle applies and saves the choice.
  */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // 'light' for SSR/hydration; synced from the DOM right after mount.
@@ -37,23 +37,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-
-    let saved: string | null = null;
-    try {
-      saved = localStorage.getItem(STORAGE_KEY);
-    } catch {
-      /* storage unavailable: follow the system */
-    }
-    if (saved === 'dark' || saved === 'light') return;
-
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const onChange = (e: MediaQueryListEvent) => {
-      const next: Theme = e.matches ? 'dark' : 'light';
-      applyTheme(next);
-      setTheme(next);
-    };
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
   }, []);
 
   const toggleTheme = useCallback(() => {
