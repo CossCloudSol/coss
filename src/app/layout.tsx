@@ -193,9 +193,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* Theme init — synchronous, prevents dark-mode flash on first paint */}
         <script
           dangerouslySetInnerHTML={{
-            // Before first paint: the visitor's saved choice ('coss-theme', written only
-            // by the toggle), else the system setting. ThemeProvider reads the result.
-            __html: `(function(){try{var d=document.documentElement,s=null;try{s=localStorage.getItem('coss-theme')}catch(e){}var dark=s==='dark'||(s!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);d.classList.toggle('dark',dark);d.style.colorScheme=dark?'dark':'light';}catch(e){}})();`,
+            // Before first paint: dark only when the visitor chose it with the toggle
+            // ('coss-theme' === 'dark'); light otherwise, whatever the system setting.
+            // ThemeProvider reads the result.
+            __html: `(function(){try{var d=document.documentElement,s=null;try{s=localStorage.getItem('coss-theme')}catch(e){}var dark=s==='dark';d.classList.toggle('dark',dark);d.style.colorScheme=dark?'dark':'light';}catch(e){}})();`,
           }}
         />
 

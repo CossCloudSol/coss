@@ -183,6 +183,88 @@ test('click rows are saved only for requests to the production host', () => {
   }
 });
 
+/* 22-24 Oct production: every demo button pointing at "#enroll-form" (homepage course tiles,
+   final CTA, mobile sticky bar) got 422 from /api/cta-clicks, because the destination was cut
+   at "#" and arrived empty. Each case below builds the payload the browser sends and runs the
+   endpoint's own body check on it. */
+const { ctaClickSchema } = await import('../../src/lib/cta-click-schema.ts');
+
+async function sentPayload(input, page = {}) {
+  reset();
+  const saved = { ...window.location };
+  const savedRef = document.referrer;
+  Object.assign(window.location, { pathname: '/', search: '' }, page.location ?? {});
+  document.referrer = page.referrer ?? '';
+  try {
+    it.trackIntent(input);
+    assert.equal(beacons.length, 1, 'one beacon');
+    assert.equal(beacons[0].url, '/api/cta-clicks');
+    return JSON.parse(await beacons[0].blob.text());
+  } finally {
+    Object.assign(window.location, saved);
+    document.referrer = savedRef;
+  }
+}
+
+function assertAccepted(payload, label) {
+  const r = ctaClickSchema.safeParse(payload);
+  assert.ok(r.success, `${label}: rejected ${JSON.stringify(r.error?.flatten().fieldErrors)}`);
+}
+
+test('cta-clicks: an in-page "#enroll-form" demo button is accepted (was 422: empty destination)', async () => {
+  for (const location of ['popular_courses', 'final_cta', 'sticky_bar']) {
+    const p = await sentPayload({ kind: 'demo', ctaId: 'book_demo', location, destination: '#enroll-form' });
+    assert.equal(p.destination, '#enroll-form');
+    assertAccepted(p, location);
+  }
+});
+
+test('cta-clicks: a tagged button with no href, or "#", is accepted', async () => {
+  for (const destination of ['#', '', '   ']) {
+    const p = await sentPayload({ kind: 'other', ctaId: 'finder_plan', location: 'course_finder', destination });
+    assert.equal(p.destination, '#');
+    assertAccepted(p, JSON.stringify(destination));
+  }
+});
+
+test('cta-clicks: destinations the endpoint would reject fall back to an accepted value, never a query string', async () => {
+  const cases = [
+    ['/free-demo-class?course=aws-devops', '/free-demo-class'],
+    ['https://www.cosscloudsol.com/free-demo-class#top', 'https://www.cosscloudsol.com/free-demo-class'],
+    ['https://wa.me/918885166007?text=My%20name%20is%20Ravi', 'https://wa.me/918885166007'],
+    ['tel:+918885166007', 'tel:'],
+    ['mailto:someone@example.com?subject=hi', 'mailto:'],
+    ['#faq?x=1', '#faq'],
+    ['http://example.com/x', '#'],
+    ['free-demo-class', '#'],
+    ['#enroll form', '#'],
+  ];
+  for (const [href, want] of cases) {
+    assert.equal(it.cleanDestination(href), want, href);
+    assertAccepted(await sentPayload({ kind: 'other', ctaId: 'x', location: 'page', destination: href }), href);
+  }
+});
+
+test('cta-clicks: a long referrer and utm tags over 100 characters are accepted (trimmed)', async () => {
+  const long = 'x'.repeat(400);
+  const p = await sentPayload(
+    { kind: 'demo', ctaId: 'book_demo', location: 'header', destination: '/free-demo-class' },
+    {
+      location: { pathname: '/courses/aws', search: `?utm_source=${long}&utm_medium=${long}&utm_campaign=${long}&gclid=${long}` },
+      referrer: `https://www.google.com/search?q=${'y'.repeat(900)}`,
+    },
+  );
+  assert.equal(p.utmCampaign.length, 100);
+  assert.equal(p.referrer.length, 500);
+  assertAccepted(p, 'long referrer/utm');
+});
+
+test('cta-clicks: every page type the classifier returns is accepted', async () => {
+  for (const pathname of ['/', '/courses', '/courses/aws', '/blog/x', '/locations/ameerpet', '/contact-us', '/aws-devops-training-institute-in-hyderabad']) {
+    assertAccepted(await sentPayload({ kind: 'demo', ctaId: 'book_demo', location: 'header', destination: '/free-demo-class' }, { location: { pathname } }), pathname);
+  }
+});
+
 test('gtag.js loads only on the production host; elsewhere events stay in dataLayer', () => {
   const s = fs.readFileSync('src/components/GoogleAnalytics.tsx', 'utf8');
   assert.match(fs.readFileSync('src/lib/production-host.ts', 'utf8'), /PRODUCTION_HOST = 'www\.cosscloudsol\.com'/);

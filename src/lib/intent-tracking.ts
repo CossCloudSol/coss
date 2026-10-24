@@ -61,9 +61,28 @@ export function toTrackingId(raw: string | null | undefined, fallback = 'page'):
   return id || fallback;
 }
 
-/** A destination safe to log: no query string (a wa.me ?text= can carry a course or a name). */
+/**
+ * The destinations /api/cta-clicks accepts: a path, an in-page anchor, an https link, or a bare
+ * "tel:" / "mailto:" (no number or address) — never a query string. The endpoint validates with
+ * this same pattern, so cleanDestination's output always passes.
+ */
+export const DESTINATION_REGEX = /^(\/[a-zA-Z0-9\-_/.]*|#[a-zA-Z0-9\-_]*|https:\/\/[a-zA-Z0-9\-_.]+(\/[a-zA-Z0-9\-_/.%]*)?|tel:|mailto:)$/;
+
+/**
+ * A destination safe to log: no query string (a wa.me ?text= can carry a course or a name).
+ * An in-page anchor such as "#enroll-form" keeps its id (cutting at "#" left it empty, and the
+ * endpoint answered 422). tel:/mailto: drop the number or address. Anything the endpoint would
+ * still reject (an empty href, a relative link, http://) becomes "#", so the click is counted.
+ */
 export function cleanDestination(href: string): string {
-  return href.trim().split(/[?#]/)[0].slice(0, 300);
+  const h = (href ?? '').trim();
+  let dest: string;
+  if (h.startsWith('#')) dest = h.split('?')[0];
+  else if (/^tel:/i.test(h)) dest = 'tel:';
+  else if (/^mailto:/i.test(h)) dest = 'mailto:';
+  else dest = h.split(/[?#]/)[0];
+  dest = dest.slice(0, 300);
+  return DESTINATION_REGEX.test(dest) ? dest : '#';
 }
 
 /* ------------------------------ GA4 parameters ----------------------------- */
@@ -178,7 +197,8 @@ export function trackIntent(raw: IntentInput, opts: { logRow?: boolean; remember
   };
   if (input.courseSlug) payload.courseSlug = input.courseSlug;
   if (document.referrer) payload.referrer = document.referrer.slice(0, 500);
-  Object.assign(payload, extractUtmParams());
+  // The endpoint caps utm_* at 100 characters; a longer tag must not cost the click.
+  for (const [k, v] of Object.entries(extractUtmParams())) if (v) payload[k] = v.slice(0, 100);
   const gclid = new URLSearchParams(window.location.search).get('gclid');
   if (gclid) payload.gclid = gclid.slice(0, 255);
   beacon('/api/cta-clicks', payload);

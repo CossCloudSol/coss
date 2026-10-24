@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { savesClickRows } from '@/lib/click-rows';
 import { isBotUserAgent } from '@/lib/bot-ua';
+import { ctaClickSchema } from '@/lib/cta-click-schema';
 import { clientIp, createRateLimiter } from '@/lib/rate-limit';
 
 // Prisma needs the Node runtime — and we never want this cached.
@@ -16,42 +16,6 @@ export const dynamic = 'force-dynamic';
 /*  floods (same policy as /api/call-clicks), and bot user agents are         */
 /*  ignored. No personal data is accepted.                                    */
 /* -------------------------------------------------------------------------- */
-
-const KIND_VALUES = ['demo', 'syllabus', 'brochure_download', 'enroll', 'other'] as const;
-const PAGE_TYPE_VALUES = ['course', 'category', 'locality', 'blog', 'static'] as const;
-const DEVICE_TYPE_VALUES = ['mobile', 'desktop'] as const;
-
-// Pathname only (no query string); same rule as /api/call-clicks.
-const PATH_REGEX = /^\/[a-zA-Z0-9\-_/]*$/;
-// Button and section ids: snake_case words, e.g. "book_demo", "sticky_bar".
-const ID_REGEX = /^[a-z0-9_]{1,60}$/;
-// A path, an in-page anchor, or an https link — never a query string.
-const DESTINATION_REGEX = /^(\/[a-zA-Z0-9\-_/.]*|#[a-zA-Z0-9\-_]*|https:\/\/[a-zA-Z0-9\-_.]+(\/[a-zA-Z0-9\-_/.%]*)?)$/;
-
-const optionalText = (max: number) =>
-  z.preprocess(
-    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
-    z.string().trim().max(max).optional(),
-  );
-
-const ctaClickSchema = z.object({
-  kind: z.enum(KIND_VALUES),
-  ctaId: z.string().trim().regex(ID_REGEX),
-  location: z.string().trim().regex(ID_REGEX),
-  path: z.string().trim().min(1).max(300).regex(PATH_REGEX),
-  pageType: z.enum(PAGE_TYPE_VALUES),
-  destination: z.string().trim().min(1).max(300).regex(DESTINATION_REGEX),
-  courseSlug: z.preprocess(
-    (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
-    z.string().trim().max(255).regex(/^[a-z0-9-]+$/).optional(),
-  ),
-  deviceType: z.enum(DEVICE_TYPE_VALUES),
-  referrer: optionalText(500),
-  utmSource: optionalText(100),
-  utmMedium: optionalText(100),
-  utmCampaign: optionalText(100),
-  gclid: optionalText(255),
-});
 
 const limiter = createRateLimiter({ max: 20, windowMs: 10 * 60 * 1000 });
 
