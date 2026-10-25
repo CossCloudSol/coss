@@ -3,6 +3,7 @@ import { HeroBanner, CtaBanner, ResponsivePageStyles } from '@/components/shared
 
 import { buildPageMetadata } from '@/lib/get-page-seo';
 import PageSchema from '@/components/PageSchema';
+import TopCta from '@/components/TopCta';
 
 export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 export async function generateMetadata(): Promise<Metadata> {
@@ -44,6 +45,7 @@ export default function AboutUsPage() {
         ]}
         ctaText="2 Branches in Hyderabad · Dilsukhnagar & Ameerpet"
         breadcrumb={[{ label: 'About Us', href: '/about-us' }]}
+        afterTitle={<TopCta course={{ href: '/courses', label: 'Browse all IT courses' }} pageType="static" align="center" />}
       />
 
       {/* Who We Are */}

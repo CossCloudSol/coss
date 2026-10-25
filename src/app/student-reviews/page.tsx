@@ -5,6 +5,7 @@ import { GBP_SAME_AS } from '@/lib/get-branch-settings';
 import { getGoogleRating } from '@/lib/google-rating';
 import GoogleRatingBadge from '@/components/GoogleRatingBadge';
 import PageSchema from '@/components/PageSchema';
+import TopCta from '@/components/TopCta';
 
 export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,6 +30,7 @@ export default async function StudentReviewsPage() {
         ]}
         ctaText="Join 5,000+ students who trained with us"
         breadcrumb={[{ label: 'About Us', href: '/about-us' }, { label: 'Student Reviews', href: '/student-reviews' }]}
+        afterTitle={<TopCta course={{ href: '/courses', label: 'Browse all IT courses' }} pageType="static" align="center" />}
       />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '48px 20px 0', textAlign: 'center' }}>

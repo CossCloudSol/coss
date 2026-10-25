@@ -33,6 +33,7 @@ import { courseCanonicalPath } from '@/lib/course-canonical';
 import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 import { courseJsonLd } from '@/lib/course-jsonld';
 import { breadcrumbList, collectionPage, jsonLdGraph } from '@/lib/structured-data';
+import TopCta from '@/components/TopCta';
 
 export const revalidate = 86400;
 
@@ -265,6 +266,13 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
           <h1 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>
             {course.title}
           </h1>
+          <TopCta
+            course={course.categorySlug ? { href: `/courses/${course.categorySlug}`, label: `All ${course.category} courses` } : { href: '/courses', label: 'Browse all IT courses' }}
+            demoHref={`/free-demo-class?course=${course.slug}`}
+            courseSlug={course.slug}
+            pageType="course"
+            whatsappMessage={`Hi, I'd like details about the ${course.title} course.`}
+          />
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '24px' }}>
             {sanitizeDescription(course.excerpt)}
           </p>
@@ -467,6 +475,12 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
 
 // ─── Category Landing View ─────────────────────────────────────────────────────
 
+/** The top CTA row's course link on a category page: the category's first course, else the course list. */
+function topCourseLink(category: CategoryDetail): { href: string; label: string } {
+  const first = category.courses?.[0];
+  return first ? { href: courseCanonicalPath(first), label: first.title } : { href: '/courses', label: 'Browse all IT courses' };
+}
+
 async function CategoryLandingView({ category, customSchema }: { category: CategoryDetail; customSchema: object | null }) {
   const courseGridBanners = await getPromoBanners('course-grid');
   const pageUrl = `${SITE_URL}/courses/${category.slug}`;
@@ -508,6 +522,7 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
               {category.name} Training in Hyderabad
             </h1>
           </div>
+          <TopCta course={topCourseLink(category)} pageType="category" margin="0 0 16px" />
           {category.description && (
             <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '16px' }}>
               {sanitizeDescription(category.description)}

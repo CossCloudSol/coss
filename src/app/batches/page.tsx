@@ -4,6 +4,7 @@ import BatchesBoard from './BatchesBoard';
 import { findBatches } from '@/lib/batch-queries';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import type { BatchCardBatch } from '@/components/BatchCard';
+import TopCta from '@/components/TopCta';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.cosscloudsol.com';
 
@@ -57,6 +58,7 @@ export default async function BatchesPage() {
           <h1 className="font-extrabold text-white leading-tight mb-3" style={{ fontSize: 'clamp(28px,4vw,46px)' }}>
             Upcoming Batches
           </h1>
+          <TopCta course={{ href: '/courses', label: 'Browse all IT courses' }} pageType="static" align="center" margin="0 0 14px" />
           <p className="text-base max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Classroom at Dilsukhnagar &amp; Ameerpet · Online via Zoom
           </p>

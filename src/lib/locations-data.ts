@@ -98,9 +98,10 @@ export const LOCALITIES: LocalityConfig[] = [
     slug: 'dilsukhnagar',
     branchKey: 'dilsukhnagar',
     name: 'Dilsukhnagar',
-    metaTitle: 'IT Training Institute in Dilsukhnagar, Hyderabad',
+    // Search Console (28 days to 22 Oct): brand searches plus "aws/devops training in dilsukhnagar".
+    metaTitle: 'IT Training in Dilsukhnagar – AWS, DevOps & Free Demo Class',
     metaDescription:
-      'Coss Cloud Solutions Dilsukhnagar branch — classroom IT training in Cloud, DevOps, Data Science & more. 5 mins from Dilsukhnagar Metro. Free demo class, placement support.',
+      'Coss Cloud Solutions Dilsukhnagar, 5 mins from the Metro: AWS, DevOps, Data Science and Cyber Security classes, classroom or online. Book a free demo.',
     keywords: 'IT training institute Dilsukhnagar, software training Dilsukhnagar Hyderabad, Coss Cloud Solutions Dilsukhnagar, computer courses near Dilsukhnagar metro',
     badge: 'DILSUKHNAGAR BRANCH — LB NAGAR SIDE OF HYDERABAD',
     h1Pre: 'IT Training Institute in ',
@@ -129,9 +130,10 @@ export const LOCALITIES: LocalityConfig[] = [
     slug: 'ameerpet',
     branchKey: 'ameerpet',
     name: 'Ameerpet',
-    metaTitle: 'IT Training Institute in Ameerpet, Hyderabad',
+    // Search Console (28 days to 22 Oct): brand searches plus "aws/devops training in ameerpet".
+    metaTitle: 'IT Training in Ameerpet – AWS, DevOps & Free Demo Class',
     metaDescription:
-      'Coss Cloud Solutions Ameerpet branch — Hyderabad\'s IT-training hub. Classroom batches in Cloud, DevOps, Data Science & more, steps from Ameerpet Metro interchange. Free demo class.',
+      'Coss Cloud Solutions Ameerpet, near the Metro interchange: AWS, DevOps, Data Science and Cyber Security classes, classroom or online. Book a free demo.',
     keywords: 'IT training institute Ameerpet, software training institute Ameerpet Hyderabad, IT training institute near Ameerpet Metro, Coss Cloud Solutions Ameerpet',
     badge: 'AMEERPET BRANCH — HYDERABAD\'S IT TRAINING HUB',
     h1Pre: 'IT Training Institute in ',
