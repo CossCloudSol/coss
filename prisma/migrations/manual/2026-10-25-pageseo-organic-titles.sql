@@ -20,8 +20,8 @@
 --                       partners, branches in Dilsukhnagar and Ameerpet. Book a free demo class with Coss.
 --   pageSlug student-reviews  (/student-reviews)
 --     metaTitle       → Student Reviews – IT Training Institute in Hyderabad
---     metaDescription → Google reviews from Coss Cloud Solutions students at Dilsukhnagar and
---                       Ameerpet, Hyderabad. 5,000+ students trained since 2010. Book a free demo class.
+--     metaDescription → Read Coss Cloud Solutions student reviews on Google for our Dilsukhnagar and
+--                       Ameerpet branches, Hyderabad. 5,000+ students trained since 2010.
 --   pageSlug contact          (/contact-us)
 --     metaTitle       → Contact Us – Dilsukhnagar & Ameerpet Branches, Hyderabad
 --     metaDescription → Contact Coss Cloud Solutions in Dilsukhnagar or Ameerpet, Hyderabad: call or
@@ -113,7 +113,7 @@ BEGIN
      'IT training in Hyderabad since 2010: 5,000+ students trained, 50+ hiring partners, branches in Dilsukhnagar and Ameerpet. Book a free demo class with Coss.'),
     ('student-reviews',
      'Student Reviews – IT Training Institute in Hyderabad',
-     'Google reviews from Coss Cloud Solutions students at Dilsukhnagar and Ameerpet, Hyderabad. 5,000+ students trained since 2010. Book a free demo class.'),
+     'Read Coss Cloud Solutions student reviews on Google for our Dilsukhnagar and Ameerpet branches, Hyderabad. 5,000+ students trained since 2010.'),
     ('contact',
      'Contact Us – Dilsukhnagar & Ameerpet Branches, Hyderabad',
      'Contact Coss Cloud Solutions in Dilsukhnagar or Ameerpet, Hyderabad: call or WhatsApp +91 88851 66007, get directions, or book a free demo class.'),
@@ -142,7 +142,7 @@ BEGIN
            'IT training in Hyderabad since 2010: 5,000+ students trained, 50+ hiring partners, branches in Dilsukhnagar and Ameerpet. Book a free demo class with Coss.'),
           ('student-reviews',
            'Student Reviews – IT Training Institute in Hyderabad',
-           'Google reviews from Coss Cloud Solutions students at Dilsukhnagar and Ameerpet, Hyderabad. 5,000+ students trained since 2010. Book a free demo class.'),
+           'Read Coss Cloud Solutions student reviews on Google for our Dilsukhnagar and Ameerpet branches, Hyderabad. 5,000+ students trained since 2010.'),
           ('contact',
            'Contact Us – Dilsukhnagar & Ameerpet Branches, Hyderabad',
            'Contact Coss Cloud Solutions in Dilsukhnagar or Ameerpet, Hyderabad: call or WhatsApp +91 88851 66007, get directions, or book a free demo class.'),
