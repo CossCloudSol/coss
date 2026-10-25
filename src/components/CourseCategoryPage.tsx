@@ -14,6 +14,7 @@ import { prisma } from '@/lib/db';
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support';
 import { canonicalCourseLink } from '@/lib/course-canonical';
 import MobileInlineDemo from '@/components/MobileInlineDemo';
+import TopCta from '@/components/TopCta';
 import { safeJsonLd } from '@/lib/safe-json-ld';
 import { SITE_URL, breadcrumbList, collectionPage, faqPage, jsonLdGraph } from '@/lib/structured-data';
 
@@ -121,6 +122,9 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
   const listed = (cardSource && cardSource.length > 0)
     ? cardSource.map((c) => ({ name: c.title, href: c.href }))
     : ((data.courses ?? []) as Array<{ title?: string; href?: string }>).map((c) => ({ name: c.title ?? '', href: c.href ? canonicalCourseLink(c.href) : '' }));
+  // The top CTA row's course link: the first course listed below, else the course list.
+  const firstListed = listed.find((c) => c.name && c.href && c.href !== '#');
+  const topCourse = firstListed ? { href: firstListed.href, label: firstListed.name } : { href: '/courses', label: 'Browse all IT courses' };
   const categoryGraph = jsonLdGraph([
     ...collectionPage({
       url: pageUrl,
@@ -143,6 +147,7 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
       <PageBanner
         title={`${data.name} Training in Hyderabad`}
         breadcrumb={[{ label: 'Courses', href: '/courses' }, { label: data.name, href: `/courses/${breadcrumbSlug}` }]}
+        afterTitle={<TopCta course={topCourse} pageType="category" align="center" margin="0 0 14px" />}
       />
 
       {demoCourses.length > 0 && (

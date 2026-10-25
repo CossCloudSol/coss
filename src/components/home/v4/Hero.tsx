@@ -4,6 +4,7 @@ import HomeHeroForm, { type NextBatchStrip } from '@/components/home/HomeHeroFor
 import GoogleRatingBadge from '@/components/GoogleRatingBadge';
 import type { GoogleRating } from '@/lib/google-places';
 import { DESIGN_HEADLINE, DESIGN_SUBTEXT, HERO_POPULAR, HERO_STATS } from '@/lib/home-v4';
+import TopCta from '@/components/TopCta';
 
 interface Props {
   headline: string;
@@ -46,6 +47,8 @@ export default function Hero({ headline, subtext, rating, nextBatch }: Props) {
               </>
             )}
           </h1>
+          {/* The demo form is further down on phones; this row keeps a demo, WhatsApp and course link above the fold. */}
+          <TopCta course={{ href: '/courses', label: 'Browse all IT courses' }} demoHref="#enroll-form" pageType="static" margin="0" />
           <p className="max-w-[560px] on-dark-sub font-sans text-base leading-[1.6] lg:text-[19px]">
             {customSubtext ? subtext : DESIGN_SUBTEXT}
           </p>

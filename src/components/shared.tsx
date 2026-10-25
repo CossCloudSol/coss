@@ -6,7 +6,7 @@
 // lives in its own file for that reason.
 
 /* ── Page Banner ── */
-export function PageBanner({ title, breadcrumb }: { title: string; breadcrumb?: { label: string; href: string }[] }) {
+export function PageBanner({ title, breadcrumb, afterTitle }: { title: string; breadcrumb?: { label: string; href: string }[]; afterTitle?: React.ReactNode }) {
   return (
     <div className="page-banner">
       {/* Decorative glow & dot grid */}
@@ -14,6 +14,7 @@ export function PageBanner({ title, breadcrumb }: { title: string; breadcrumb?: 
       <div className="page-banner-dots" aria-hidden="true" />
       <div className="page-banner-inner">
         <h1 className="page-banner-title">{title}</h1>
+        {afterTitle}
         <nav className="page-banner-crumb" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           {breadcrumb?.map(b => (
@@ -41,8 +42,10 @@ interface HeroBannerProps {
   ctaText: string;
   breadcrumb: { label: string; href: string }[];
   ariaLabel?: string;
+  /** Rendered right under the H1 (the top-of-page CTA row), so it stays above the fold on phones. */
+  afterTitle?: React.ReactNode;
 }
-export function HeroBanner({ badge, titlePre, accentText, titlePost = '', titleLine2, subtitle, stats, ctaText, breadcrumb, ariaLabel }: HeroBannerProps) {
+export function HeroBanner({ badge, titlePre, accentText, titlePost = '', titleLine2, subtitle, stats, ctaText, breadcrumb, ariaLabel, afterTitle }: HeroBannerProps) {
   return (
     <section className="hero-banner" aria-label={ariaLabel ?? `${titlePre}${accentText}${titlePost}`}>
       <div className="page-banner-glow" aria-hidden="true" />
@@ -67,6 +70,7 @@ export function HeroBanner({ badge, titlePre, accentText, titlePost = '', titleL
           {titlePre}<span className="hero-banner-accent">{accentText}</span>{titlePost}
           {titleLine2 && <><br />{titleLine2}</>}
         </h1>
+        {afterTitle}
         <p className="hero-banner-sub">{subtitle}</p>
         <div className="hero-banner-stats" data-count={stats.length} aria-label="Key statistics">
           {stats.map(s => (

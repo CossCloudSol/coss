@@ -114,6 +114,8 @@ function UrlWatcher({ onChange }: { onChange: (search: string) => void }): null 
 interface Props {
   courses: CatalogCourse[];
   banner: PromoBannerData | null;
+  /** Server-rendered top-of-page CTA row (components/TopCta), shown under the H1. */
+  topCta?: React.ReactNode;
 }
 
 /**
@@ -121,7 +123,7 @@ interface Props {
  * are hidden, not omitted); search, tabs, filters, sort and "Load more" run
  * on the client, with the state kept in the URL.
  */
-export default function CoursesExplorer({ courses, banner }: Props): JSX.Element {
+export default function CoursesExplorer({ courses, banner, topCta }: Props): JSX.Element {
   const [f, setF] = useState<Filters>(EMPTY);
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -405,6 +407,7 @@ export default function CoursesExplorer({ courses, banner }: Props): JSX.Element
             <Link href="/" className="text-white/85 hover:text-white">Home</Link> / Courses
           </nav>
           <h1 className="font-heading text-[26px] font-extrabold text-white md:text-[40px]">IT Courses in Hyderabad</h1>
+          {topCta}
           <p className="hidden text-base text-white/85 md:block">
             {courses.length} courses · Classrooms in Dilsukhnagar and Ameerpet · Live online · Free demo class for every course
           </p>

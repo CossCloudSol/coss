@@ -26,6 +26,7 @@ import { bannerForSlot } from '@/lib/promo-banner-slots';
 import { publicBadge } from '@/lib/course-badge';
 import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 import { courseJsonLd } from '@/lib/course-jsonld';
+import TopCta from '@/components/TopCta';
 
 export const revalidate = 86400;
 
@@ -148,6 +149,13 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
           <h1 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 800, fontSize: 'clamp(24px, 4vw, 38px)', color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>
             {course.title}
           </h1>
+          <TopCta
+            course={{ href: `/courses/${params.slug}`, label: `All ${course.category} courses` }}
+            demoHref={`/free-demo-class?course=${course.slug}`}
+            courseSlug={course.slug}
+            pageType="course"
+            whatsappMessage={`Hi, I'd like details about the ${course.title} course.`}
+          />
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '24px' }}>
             {sanitizeDescription(course.excerpt)}
           </p>

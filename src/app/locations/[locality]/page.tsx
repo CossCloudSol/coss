@@ -15,6 +15,7 @@ import { courseCanonicalPath } from '@/lib/course-canonical';
 import MobileInlineDemo from '@/components/MobileInlineDemo';
 import { COURSE_GROUPS } from '@/data/course-options';
 import { getBranchHours } from '@/lib/branch-hours';
+import TopCta from '@/components/TopCta';
 
 export const revalidate = 604800; // 7 days; admin saves revalidate on demand (usage plan, 10 Oct)
 
@@ -181,6 +182,15 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
           ]}
           ctaText={`${branch.addressLine2 || branch.city}, Hyderabad · Free career counselling`}
           breadcrumb={[{ label: config.name, href: `/locations/${config.slug}` }]}
+          afterTitle={
+            // AWS DevOps: the top non-brand search on both branch pages (Search Console, 28 days to 22 Oct).
+            <TopCta
+              course={{ href: '/aws-devops-training-institute-in-hyderabad', label: `AWS DevOps course near ${config.name}` }}
+              pageType="locality"
+              align="center"
+              whatsappMessage={`Hi, I'd like details about IT courses at your ${config.name} branch.`}
+            />
+          }
         />
         <MobileInlineDemo courseGroups={COURSE_GROUPS} subtitle={`${config.name} · see a class before you decide`} />
 

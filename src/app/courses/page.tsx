@@ -6,6 +6,7 @@ import { bannerForSlot } from '@/lib/promo-banner-slots';
 import { COURSE_FILTER_PARAMS } from '@/lib/course-search';
 import CoursesExplorer from '@/components/courses/CoursesExplorer';
 import PageSchema from '@/components/PageSchema';
+import TopCta from '@/components/TopCta';
 
 export const revalidate = 86400;
 
@@ -28,7 +29,17 @@ export default async function CoursesPage() {
     <>
       <PageSchema slug="courses" />
       <script dangerouslySetInnerHTML={{ __html: PENDING_SCRIPT }} />
-      <CoursesExplorer courses={index.courses} banner={bannerForSlot(banners, 0)} />
+      <CoursesExplorer
+        courses={index.courses}
+        banner={bannerForSlot(banners, 0)}
+        topCta={
+          <TopCta
+            course={{ href: '/aws-devops-training-institute-in-hyderabad', label: 'AWS DevOps course in Hyderabad' }}
+            pageType="category"
+            margin="0"
+          />
+        }
+      />
     </>
   );
 }
