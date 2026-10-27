@@ -591,6 +591,16 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
                     >
                       <PhoneIcon cls="w-5 h-5 text-orange-400" /> {branchPhone}
                     </CallLink>
+                    <Link
+                      href={`/locations/${branchKey}`}
+                      data-cta={`branch_${branchKey}`}
+                      data-loc="landing_branch"
+                      data-kind="other"
+                      data-course={course.slug}
+                      className="mt-2 inline-flex min-h-[44px] items-center text-sm font-bold text-orange-300 underline hover:text-orange-200"
+                    >
+                      {branchKey === 'ameerpet' ? 'Ameerpet' : 'Dilsukhnagar'} branch: timings &amp; directions
+                    </Link>
                     {(() => {
                       const mapSrc = (branchObj?.mapEmbedUrl || '') || BRANCH_MAP_EMBED[branchKey as BranchKey]
                       return (

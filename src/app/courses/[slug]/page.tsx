@@ -34,6 +34,7 @@ import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 import { courseJsonLd } from '@/lib/course-jsonld';
 import { breadcrumbList, collectionPage, jsonLdGraph } from '@/lib/structured-data';
 import TopCta from '@/components/TopCta';
+import BranchBlock from '@/components/course/BranchBlock';
 
 export const revalidate = 86400;
 
@@ -310,6 +311,8 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
               <h2 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '18px', color: 'var(--text)', marginBottom: '14px' }}>Course Overview</h2>
               <p style={{ color: 'var(--text-muted)', fontSize: '14.5px', lineHeight: '1.8', whiteSpace: 'pre-wrap' }}>{sanitizeDescription(course.description)}</p>
             </div>
+
+            <BranchBlock courseTitle={course.title} courseSlug={course.slug} />
 
             {course.highlights.length > 0 && (
               <div style={{ background: 'var(--bg-card)', borderRadius: '14px', padding: '28px', border: '1px solid var(--border-card)', marginBottom: '24px' }}>
