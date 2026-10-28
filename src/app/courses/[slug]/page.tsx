@@ -35,6 +35,7 @@ import { courseJsonLd } from '@/lib/course-jsonld';
 import { breadcrumbList, collectionPage, jsonLdGraph } from '@/lib/structured-data';
 import TopCta from '@/components/TopCta';
 import BranchBlock from '@/components/course/BranchBlock';
+import { formatFromPrice, priceNoteFor } from '@/lib/course-price';
 
 export const revalidate = 86400;
 
@@ -287,10 +288,10 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
                 {item.icon} {item.label}
               </span>
             ))}
-            {course.price != null && (
+            {formatFromPrice(course.price) && (
               <span style={{ background: '#b8531c', color: '#fff', fontSize: '13px', fontWeight: 700, padding: '6px 14px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif' }}>
-                {course.originalPrice && <span style={{ textDecoration: 'line-through', opacity: 0.7, marginRight: '6px', fontWeight: 400 }}>₹{course.originalPrice.toLocaleString()}</span>}
-                ₹{course.price.toLocaleString()}
+                {formatFromPrice(course.price)}
+                {priceNoteFor(course.slug) && <span style={{ fontWeight: 400, marginLeft: '6px' }}>· {priceNoteFor(course.slug)}</span>}
               </span>
             )}
           </div>
@@ -372,7 +373,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
           </div>
 
           <div style={{ position: 'sticky', top: '80px' }}>
-            <EnquirySidebar price={course.price} originalPrice={course.originalPrice} courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
+            <EnquirySidebar price={course.price} courseSlug={course.slug} courseTitle={course.title} brochureUrl={course.brochureUrl} />
           </div>
         </div>
       </div>
@@ -447,7 +448,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
   );
 }
 
-function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochureUrl }: { price: number | null; originalPrice: number | null; courseSlug: string; courseTitle: string; brochureUrl: string | null }) {
+function EnquirySidebar({ price, courseSlug, courseTitle, brochureUrl }: { price: number | null; courseSlug: string; courseTitle: string; brochureUrl: string | null }) {
   return (
     <>
       {brochureUrl && (
@@ -457,10 +458,10 @@ function EnquirySidebar({ price, originalPrice, courseSlug, courseTitle, brochur
       )}
       <div style={{ background: 'var(--secondary)', borderRadius: '14px', padding: '16px', color: '#fff', marginBottom: '16px' }}>
         <h3 style={{ fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '16px', marginBottom: '6px', color: '#fff' }}>
-          {price != null ? `₹${price.toLocaleString()}` : 'Enroll Now'}
+          {formatFromPrice(price) ?? 'Enroll Now'}
         </h3>
-        {originalPrice && price && (
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', textDecoration: 'line-through', marginBottom: '4px' }}>₹{originalPrice.toLocaleString()}</p>
+        {formatFromPrice(price) && priceNoteFor(courseSlug) && (
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', marginBottom: '4px' }}>{priceNoteFor(courseSlug)}</p>
         )}
         <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', marginBottom: '18px' }}>Start your IT career with Coss Cloud Solutions</p>
         <DemoSidebarForm course={courseTitle} subtitle={`${courseTitle} · see a class before you decide`} embedded />
@@ -571,19 +572,12 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
                   course.highlight1 ?? course.highlights?.[0] ?? 'Industry-relevant curriculum',
                   course.highlight2 ?? course.highlights?.[1] ?? 'Placement support included',
                 ] as [string, string],
-                originalPrice: (() => {
-                    const val = course.originalPrice ?? course.mrp ?? ''
-                    if (!val) return ''
-                    const num = parseInt(String(val).replace(/[^0-9]/g, ''))
-                    return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
-                  })(),
                 discountedPrice: (() => {
                     const val = course.price ?? course.fee ?? course.discountedPrice ?? ''
                     if (!val) return ''
                     const num = parseInt(String(val).replace(/[^0-9]/g, ''))
                     return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
                   })(),
-                emi: course.emi ?? 'Easy EMI available',
                 href: courseCanonicalPath({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
                 animationIndex: i,
               }
