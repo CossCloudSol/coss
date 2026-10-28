@@ -187,12 +187,12 @@ export default async function ContactUsPage() {
 
               {/* Accepted methods */}
               <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12.5px', marginBottom: '14px' }}>
-                Accepted: UPI, Credit/Debit Card, Net Banking, EMI
+                Accepted: UPI, Credit/Debit Card, Net Banking
               </p>
 
               {/* Payment method badges */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginBottom: '22px' }}>
-                {['UPI', 'Visa', 'Mastercard', 'Net Banking', 'EMI'].map(m => (
+                {['UPI', 'Visa', 'Mastercard', 'Net Banking'].map(m => (
                   <span key={m} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontSize: '11.5px', padding: '5px 12px', borderRadius: '6px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 500 }}>{m}</span>
                 ))}
               </div>

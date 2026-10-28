@@ -15,7 +15,6 @@ export interface CourseCardProps {
   highlights: [string, string]
   /** The course fee, as a number or digits ("30000", "₹30,000"); shown as "From ₹30,000". */
   discountedPrice: string
-  emi: string
   href: string
   animationIndex?: number
 }
@@ -56,7 +55,6 @@ export default function CourseCard({
   description,
   highlights,
   discountedPrice,
-  emi,
   href,
   animationIndex = 0,
 }: CourseCardProps) {
@@ -153,7 +151,6 @@ export default function CourseCard({
           <div className="font-display text-[22px] font-bold text-[#0D1B2A] leading-none">
             {formatFromPrice(Number(String(discountedPrice).replace(/[^0-9.]/g, ''))) ?? 'Free demo class'}
           </div>
-          <div className="text-[10px] text-slate-500 mt-[2px]">{emi}</div>
         </div>
         <Link
           href={href}

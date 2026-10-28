@@ -578,7 +578,6 @@ async function CategoryLandingView({ category, customSchema }: { category: Categ
                     const num = parseInt(String(val).replace(/[^0-9]/g, ''))
                     return isNaN(num) ? String(val) : '₹' + num.toLocaleString('en-IN')
                   })(),
-                emi: course.emi ?? 'Easy EMI available',
                 href: courseCanonicalPath({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
                 animationIndex: i,
               }

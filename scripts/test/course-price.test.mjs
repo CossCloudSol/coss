@@ -46,3 +46,9 @@ test('formatFromPrice: "From ₹30,000"; nothing for missing, zero or invalid pr
   assert.equal(formatFromPrice(0), null);
   assert.equal(formatFromPrice(Number.NaN), null);
 });
+
+test('no EMI offer on public pages until the client enables EMI (LMS + automation stack)', () => {
+  const legal = /src[\\/]app[\\/](terms-conditions|refund-cancellation-policy)[\\/]/; // policy text: the client's call
+  const offenders = publicFiles('src').filter((f) => !legal.test(f) && /\bEMI\b/.test(read(f)));
+  assert.deepEqual(offenders, [], `EMI mentioned in: ${offenders.join(', ')}`);
+});

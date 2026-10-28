@@ -273,7 +273,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     description: 'Master Python, ML, deep learning, and NLP with live projects and expert trainers. Build a job-ready portfolio covering the full data science pipeline.',
     highlights: ['Python, ML & Deep Learning included', 'Real-world capstone projects'],
     discountedPrice: '₹32,000',
-    emi: 'EMI from ₹2,700/mo',
     href: '/courses/data-science-training-institute-in-hyderabad',
   },
   {
@@ -288,7 +287,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     description: 'Learn supervised & unsupervised ML, Scikit-learn, and feature engineering with live labs. Deploy production-ready models on real datasets.',
     highlights: ['Scikit-learn & feature engineering', 'Model deployment on cloud'],
     discountedPrice: '₹20,000',
-    emi: 'EMI from ₹1,700/mo',
     href: '/machine-learning-training-institute-in-hyderabad',
   },
   {
@@ -303,7 +301,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     description: 'From neural networks to Generative AI and LLMs — build AI apps using TensorFlow, PyTorch, and OpenAI APIs with hands-on labs.',
     highlights: ['TensorFlow, PyTorch & Generative AI', 'Industry AI project portfolio'],
     discountedPrice: '₹28,000',
-    emi: 'EMI from ₹2,350/mo',
     href: '/artificial-intelligence-ai-training-institute-in-hyderabad',
   },
   {
@@ -318,7 +315,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     description: 'Create stunning dashboards with DAX, data modeling, and Power Query. The most in-demand BI tool in India — learn it in just 6 weeks.',
     highlights: ['DAX measures & Power Query', 'Interactive dashboards from scratch'],
     discountedPrice: '₹12,000',
-    emi: 'EMI from ₹1,000/mo',
     href: '/full-stack-power-bi-training-institute-in-hyderabad',
   },
   {
@@ -333,7 +329,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     description: 'The complete Power BI program — SQL, Excel, data warehousing, Power BI Service, and paginated reports for enterprise analytics roles.',
     highlights: ['SQL + Power BI + Excel combo', 'Power BI Service deployment'],
     discountedPrice: '₹22,000',
-    emi: 'EMI from ₹1,850/mo',
     href: '/full-stack-power-bi-training-institute-in-hyderabad',
   },
   {
@@ -348,7 +343,6 @@ export const dataAnalyticsBiCourses: CourseCardProps[] = [
     description: 'Combine Azure Synapse Analytics with Power BI for enterprise analytics and DP-100 exam prep with real Azure environment access.',
     highlights: ['Azure Synapse & Power BI integration', 'DP-100 exam preparation'],
     discountedPrice: '₹17,000',
-    emi: 'EMI from ₹1,450/mo',
     href: '/courses/data-analytics-training-institute-in-hyderabad',
   },
 ];
@@ -366,7 +360,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     description: 'Become an AWS Certified Solutions Architect with hands-on labs on EC2, S3, RDS, Lambda, and VPC. Includes exam assistance.',
     highlights: ['AWS Solutions Architect exam prep', 'Hands-on labs on real AWS'],
     discountedPrice: '₹18,000',
-    emi: 'EMI from ₹1,500/mo',
     href: '/aws-cloud-training-in-hyderabad',
   },
   {
@@ -381,7 +374,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     description: 'Master Azure Virtual Machines, Active Directory, AKS, and Azure DevOps. Prepare for AZ-900 and AZ-104 certifications with live lab access.',
     highlights: ['AZ-900 / AZ-104 certification prep', 'Live Azure environment access'],
     discountedPrice: '₹18,000',
-    emi: 'EMI from ₹1,500/mo',
     href: '/azure-training-institute-in-hyderabad',
   },
   {
@@ -396,7 +388,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     description: 'Explore GCP core services, BigQuery, Dataflow, and Kubernetes Engine. Prepare for the Associate Cloud Engineer certification with expert trainers.',
     highlights: ['Associate Cloud Engineer certification', 'BigQuery & GKE hands-on labs'],
     discountedPrice: '₹16,000',
-    emi: 'EMI from ₹1,350/mo',
     href: '/google-cloud-training-institute-in-hyderabad',
   },
   {
@@ -411,7 +402,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     description: 'Master AWS, Azure, and GCP together — cloud migration, cost optimization, and multi-cloud architecture for enterprise environments.',
     highlights: ['AWS + Azure + GCP combined', 'Multi-cloud architecture projects'],
     discountedPrice: '₹30,000',
-    emi: 'EMI from ₹2,500/mo',
     href: '/courses/multi-cloud-architecture-training-in-hyderabad',
   },
   {
@@ -426,7 +416,6 @@ export const cloudComputingCourses: CourseCardProps[] = [
     description: 'Design high-availability, DR-ready cloud solutions with advanced cost management strategies. Build enterprise-grade cloud architecture skills.',
     highlights: ['High availability & DR design', 'Cloud cost optimization strategies'],
     discountedPrice: '₹26,000',
-    emi: 'EMI from ₹2,200/mo',
     href: '/courses/cloud-computing',
   },
 ];
@@ -444,7 +433,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     description: 'Master CodePipeline, CodeDeploy, ECS, EKS, and CloudWatch for complete AWS DevOps workflows. AWS DevOps Professional exam prep included.',
     highlights: ['CodePipeline & EKS deployment', 'AWS DevOps Professional prep'],
     discountedPrice: '₹22,000',
-    emi: 'EMI from ₹1,850/mo',
     href: '/aws-devops-course-in-hyderabad-by-coss-cloud-solutions',
   },
   {
@@ -459,7 +447,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     description: 'Learn Azure Pipelines, Boards, Repos, AKS, and ARM Templates. Prepare for Azure DevOps Expert certification with real project labs.',
     highlights: ['Azure Pipelines & AKS deployment', 'Azure DevOps Expert certification'],
     discountedPrice: '₹22,000',
-    emi: 'EMI from ₹1,850/mo',
     href: '/azure-devops-courses-in-hyderabad-by-coss-cloud-solutions',
   },
   {
@@ -474,7 +461,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     description: 'Build, ship, and orchestrate containers from fundamentals to production. CKA exam prep and real-world deployment projects included.',
     highlights: ['CKA exam prep & practice labs', 'Real-world deployment projects'],
     discountedPrice: '₹18,000',
-    emi: 'EMI from ₹1,500/mo',
     href: '/devops-training-institute-in-hyderabad',
   },
   {
@@ -489,7 +475,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     description: 'Provision multi-cloud infrastructure with Terraform — state management, modules, workspaces, and CI/CD integration with live labs.',
     highlights: ['Multi-cloud Terraform provisioning', 'CI/CD pipeline integration'],
     discountedPrice: '₹14,000',
-    emi: 'EMI from ₹1,200/mo',
     href: '/devops-training-in-hyderabad',
   },
   {
@@ -504,7 +489,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     description: 'Master Jenkins pipelines, Git integration, build automation, and deployment strategies for real-world CI/CD workflows.',
     highlights: ['Pipeline as Code with Jenkins', 'Git + Jenkins deployment strategies'],
     discountedPrice: '₹10,000',
-    emi: 'EMI from ₹850/mo',
     href: '/devops-training-in-hyderabad',
   },
   {
@@ -519,7 +503,6 @@ export const devopsMultiCloudCourses: CourseCardProps[] = [
     description: 'The complete DevOps journey — Git, Linux, Docker, Kubernetes, AWS/Azure, Jenkins, and Terraform in one comprehensive program.',
     highlights: ['Git + Linux + Docker + K8s + AWS', 'End-to-end DevOps project portfolio'],
     discountedPrice: '₹38,000',
-    emi: 'EMI from ₹3,200/mo',
     href: '/devops-training-in-hyderabad',
   },
 ];
@@ -537,7 +520,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     description: 'Build enterprise web apps with Core Java, Spring Boot, Microservices, React.js, and MySQL — the complete full-stack Java career program.',
     highlights: ['Spring Boot & Microservices project', 'React.js + MySQL integration'],
     discountedPrice: '₹34,000',
-    emi: 'EMI from ₹2,850/mo',
     href: '/java-training-institute-in-hyderabad',
   },
   {
@@ -552,7 +534,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     description: 'Learn Python fundamentals, Django/Flask, React.js, and REST APIs — build complete full-stack applications from backend to frontend.',
     highlights: ['Django/Flask + React.js full stack', 'REST API development projects'],
     discountedPrice: '₹30,000',
-    emi: 'EMI from ₹2,500/mo',
     href: '/python-training-institute-in-hyderabad',
   },
   {
@@ -567,7 +548,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     description: 'Master MongoDB, Express.js, React.js, and Node.js to build modern web applications end-to-end with real-world startup projects.',
     highlights: ['MongoDB + Node.js backend', 'React.js frontend with Redux'],
     discountedPrice: '₹26,000',
-    emi: 'EMI from ₹2,200/mo',
     href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
   },
   {
@@ -582,7 +562,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     description: 'Build dynamic single-page applications with React Hooks, Redux, and API integration. Learn component architecture through hands-on projects.',
     highlights: ['React Hooks & Redux state management', 'API integration projects'],
     discountedPrice: '₹15,000',
-    emi: 'EMI from ₹1,250/mo',
     href: '/courses/programming-full-stack/full-stack-java-developer-training-in-hyderabad',
   },
   {
@@ -597,7 +576,6 @@ export const programmingFullStackCourses: CourseCardProps[] = [
     description: 'Build strong Java fundamentals — OOPs, Collections, Exception Handling, and JDBC. The essential foundation for any Java developer career.',
     highlights: ['OOPs, Collections & JDBC mastery', 'Hands-on project assignments'],
     discountedPrice: '₹12,000',
-    emi: 'EMI from ₹1,000/mo',
     href: '/java-training-institute-in-hyderabad',
   },
 ];
@@ -615,7 +593,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     description: 'Master Azure Data Factory, Azure Synapse Analytics, and Databricks for enterprise data pipelines. DP-203 certification exam prep included.',
     highlights: ['Azure Data Factory & Synapse', 'DP-203 certification preparation'],
     discountedPrice: '₹22,000',
-    emi: 'EMI from ₹1,850/mo',
     href: '/courses/data-engineering/azure-data-factory-training-in-hyderabad',
   },
   {
@@ -630,7 +607,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     description: 'Process massive datasets with Apache Spark, PySpark DataFrames, Spark Streaming, and Spark ML. Hands-on cluster labs included.',
     highlights: ['PySpark DataFrames & Streaming', 'Spark ML pipeline projects'],
     discountedPrice: '₹18,000',
-    emi: 'EMI from ₹1,500/mo',
     href: '/data-engineering-training-institute-in-hyderabad',
   },
   {
@@ -645,7 +621,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     description: 'Learn HDFS, MapReduce, Hive, Pig, HBase, Sqoop, and Flume — the complete Hadoop ecosystem for big data engineering roles.',
     highlights: ['HDFS, Hive & HBase hands-on', 'Sqoop & Flume data ingestion'],
     discountedPrice: '₹15,000',
-    emi: 'EMI from ₹1,250/mo',
     href: '/data-engineering-training-institute-in-hyderabad',
   },
   {
@@ -660,7 +635,6 @@ export const dataEngineeringCourses: CourseCardProps[] = [
     description: 'Design and build data pipelines with SSIS, Informatica, and Apache Airflow. Learn ETL patterns and pipeline orchestration for production systems.',
     highlights: ['SSIS, Informatica & Airflow', 'ETL design patterns & orchestration'],
     discountedPrice: '₹13,000',
-    emi: 'EMI from ₹1,100/mo',
     href: '/data-engineering-training-institute-in-hyderabad',
   },
 ];
@@ -678,7 +652,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     description: 'Learn penetration testing, network scanning, and vulnerability assessment. CEH certification preparation with live ethical hacking labs.',
     highlights: ['CEH certification preparation', 'Live penetration testing labs'],
     discountedPrice: '₹22,000',
-    emi: 'EMI from ₹1,850/mo',
     href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions',
   },
   {
@@ -693,7 +666,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     description: 'Master SIEM tools, incident response, threat intelligence, and log analysis. Build the skills to work in enterprise security operations centers.',
     highlights: ['SIEM & incident response', 'Threat intelligence & log analysis'],
     discountedPrice: '₹17,000',
-    emi: 'EMI from ₹1,450/mo',
     href: '/ethical-hacking-in-hyderabad-coss-cloud-solutions',
   },
   {
@@ -708,7 +680,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     description: 'Build a solid networking foundation with routing & switching, VLANs, and CCNA certification prep. Hands-on Cisco lab equipment included.',
     highlights: ['CCNA certification preparation', 'Hands-on Cisco lab access'],
     discountedPrice: '₹14,000',
-    emi: 'EMI from ₹1,200/mo',
     href: '/ccna-networking-training-in-hyderabad',
   },
   {
@@ -723,7 +694,6 @@ export const cyberSecurityCourses: CourseCardProps[] = [
     description: 'Configure firewalls, VPNs, IDS/IPS systems, and security policies in real enterprise network environments with live labs.',
     highlights: ['Firewall & VPN configuration', 'IDS/IPS & security policy labs'],
     discountedPrice: '₹16,000',
-    emi: 'EMI from ₹1,350/mo',
     href: '/ccna-networking-training-in-hyderabad',
   },
 ];
@@ -741,7 +711,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     description: 'Complete SAP FI/CO consultant training — GL, accounts payable/receivable, cost centre accounting, and S/4HANA workflows. SAP certified trainer.',
     highlights: ['SAP certified trainer, live system', 'GL, AP/AR & cost centre accounting'],
     discountedPrice: '₹28,000',
-    emi: 'EMI from ₹2,350/mo',
     href: '/sap-fico-training-institute-in-hyderabad',
   },
   {
@@ -756,7 +725,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     description: 'Become a Salesforce Admin — master Sales Cloud, Service Cloud, and Salesforce certification with real CRM project experience.',
     highlights: ['Salesforce Admin certification', 'Sales & Service Cloud projects'],
     discountedPrice: '₹18,000',
-    emi: 'EMI from ₹1,500/mo',
     href: '/salesforce-training-center-in-hyderabad',
   },
   {
@@ -771,7 +739,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     description: 'Become an Oracle HCM consultant — master Global HR, Payroll, Talent Management, and Workforce Compensation on Oracle Fusion Cloud.',
     highlights: ['Live Oracle cloud tenant access', 'Global HR, Payroll & Talent Management'],
     discountedPrice: '₹24,000',
-    emi: 'EMI from ₹2,000/mo',
     href: '/oracle-fusion-cloud-hcm-training-in-hyderabad',
   },
   {
@@ -786,7 +753,6 @@ export const erpCrmCourses: CourseCardProps[] = [
     description: 'Learn SAP HR modules — Personnel Management, Payroll, Org Management, and Time Management with real SAP system configuration.',
     highlights: ['SAP Payroll & Org Management', 'Real SAP system configuration'],
     discountedPrice: '₹19,000',
-    emi: 'EMI from ₹1,600/mo',
     href: '/sap-fico-training-institute-in-hyderabad',
   },
 ];
@@ -804,7 +770,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     description: 'Learn SDLC, STLC, test case design, bug reporting, and Agile/Scrum methodologies. The essential foundation for any QA career.',
     highlights: ['SDLC, STLC & Agile testing', 'Bug reporting with JIRA'],
     discountedPrice: '₹10,000',
-    emi: 'EMI from ₹850/mo',
     href: '/software-testing-training-institute-in-hyderabad',
   },
   {
@@ -819,7 +784,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     description: 'Automate web testing with Selenium WebDriver, TestNG, PyTest, and CI/CD pipeline integration. Java/Python with Selenium covered.',
     highlights: ['Selenium WebDriver + TestNG', 'CI/CD pipeline integration'],
     discountedPrice: '₹15,000',
-    emi: 'EMI from ₹1,250/mo',
     href: '/software-testing-training-institute-in-hyderabad',
   },
   {
@@ -834,7 +798,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     description: 'Master Linux commands, shell scripting, user management, and server administration. The essential skill for cloud, DevOps, and networking careers.',
     highlights: ['Shell scripting & user management', 'Server admin for cloud & DevOps'],
     discountedPrice: '₹14,000',
-    emi: 'EMI from ₹1,200/mo',
     href: '/linux-training-in-hyderabad',
   },
   {
@@ -849,7 +812,6 @@ export const softwareTestingCourses: CourseCardProps[] = [
     description: 'Test REST & SOAP APIs with Postman and REST Assured. Learn JSON/XML parsing and integrate API tests into CI/CD pipelines.',
     highlights: ['Postman & REST Assured testing', 'CI/CD API test integration'],
     discountedPrice: '₹10,000',
-    emi: 'EMI from ₹850/mo',
     href: '/software-testing-training-institute-in-hyderabad',
   },
 ];
@@ -867,7 +829,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     description: 'Master SEO, Google Ads, Social Media Marketing, Email Marketing, and Google Analytics. Build campaigns on real ad accounts with live budgets.',
     highlights: ['Live Google Ads & Meta campaigns', 'SEO & Google Analytics mastery'],
     discountedPrice: '₹18,000',
-    emi: 'EMI from ₹1,500/mo',
     href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions',
   },
   {
@@ -882,7 +843,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     description: 'Design wireframes, prototypes, and design systems using Figma and Adobe XD. Conduct user research and build a portfolio of real-world projects.',
     highlights: ['Figma & Adobe XD full course', 'User research & portfolio projects'],
     discountedPrice: '₹15,000',
-    emi: 'EMI from ₹1,250/mo',
     href: '/ui-ux-design-training-institute-in-hyderabad',
   },
   {
@@ -897,7 +857,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     description: 'Create stunning visuals with Adobe Photoshop, Illustrator, and Canva. Build brand identity designs and a freelance-ready portfolio.',
     highlights: ['Photoshop & Illustrator mastery', 'Brand identity design projects'],
     discountedPrice: '₹12,000',
-    emi: 'EMI from ₹1,000/mo',
     href: '/digital-marketing-course-in-hyderabad-by-coss-cloud-solutions',
   },
   {
@@ -912,7 +871,6 @@ export const digitalDesignCourses: CourseCardProps[] = [
     description: 'Master on-page & off-page SEO, content strategy, link building, and SEO audits. Learn to rank websites and drive organic traffic.',
     highlights: ['On-page & off-page SEO mastery', 'Content strategy & link building'],
     discountedPrice: '₹12,000',
-    emi: 'EMI from ₹1,000/mo',
     href: '/digital-marketing-training-institute-in-dilsukhnagar-hyderabad',
   },
 ];
@@ -930,7 +888,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     description: 'Master Excel formulas, Pivot Tables, Word processing, PowerPoint presentations, and Excel Macros & VBA for office productivity.',
     highlights: ['Excel Macros & VBA included', 'Pivot Tables & advanced formulas'],
     discountedPrice: '₹10,000',
-    emi: 'EMI from ₹850/mo',
     href: '/ms-office-course-near-me-in-hyderabad-coss-cloud-solutions',
   },
   {
@@ -945,7 +902,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     description: 'Improve grammar, pronunciation, and business communication for workplace success. Group discussions and mock interview practice included.',
     highlights: ['Business English & pronunciation', 'Group discussion & mock interviews'],
     discountedPrice: '₹10,000',
-    emi: 'EMI from ₹850/mo',
     href: '/spoken-english-institute-in-hyderabad-coss-cloud-solutions',
   },
   {
@@ -960,7 +916,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     description: 'Develop public speaking, business writing, presentation skills, and confident body language for professional environments.',
     highlights: ['Public speaking & presentations', 'Business writing & body language'],
     discountedPrice: '₹8,000',
-    emi: 'EMI from ₹680/mo',
     href: '/communication-skills-training-in-hyderabad-coss-cloud-solutions',
   },
   {
@@ -975,7 +930,6 @@ export const professionalSoftSkillsCourses: CourseCardProps[] = [
     description: 'Learn GST accounting, payroll management, inventory management, TDS, and reports with Tally ERP 9 — the most used accounting software in India.',
     highlights: ['GST accounting & payroll in Tally', 'TDS, inventory & financial reports'],
     discountedPrice: '₹8,000',
-    emi: 'EMI from ₹680/mo',
     href: '/tally-classes-in-hyderabad',
   },
 ];
@@ -993,7 +947,6 @@ export const humanResourceCourses: CourseCardProps[] = [
     description: 'Launch your HR career with industry-focused recruitment training covering sourcing, interviewing, onboarding, and HR tools — built for freshers.',
     highlights: ['Live projects + mock interviews', 'Placement assistance included'],
     discountedPrice: '₹25,000',
-    emi: 'EMI from ₹2,100/mo',
     href: '/enroll-now-with-coss',
   },
   {
@@ -1008,7 +961,6 @@ export const humanResourceCourses: CourseCardProps[] = [
     description: 'Use data analytics to drive HR decisions — workforce planning, attrition analysis, and people metrics with Excel, Power BI, and Python.',
     highlights: ['Workforce & attrition analytics', 'Power BI HR dashboard projects'],
     discountedPrice: '₹17,000',
-    emi: 'EMI from ₹1,450/mo',
     href: '/enroll-now-with-coss',
   },
   {
@@ -1023,7 +975,6 @@ export const humanResourceCourses: CourseCardProps[] = [
     description: 'Master end-to-end HR operations — payroll processing, compliance, employee lifecycle management, and HRMS tools used in Indian companies.',
     highlights: ['Payroll & compliance processes', 'HRMS tools & employee lifecycle'],
     discountedPrice: '₹14,000',
-    emi: 'EMI from ₹1,200/mo',
     href: '/enroll-now-with-coss',
   },
 ];
@@ -1041,7 +992,6 @@ export const quantumComputingCourses: CourseCardProps[] = [
     description: 'Explore qubits, quantum gates, superposition, and entanglement. Build the conceptual foundation for quantum computing with hands-on simulations.',
     highlights: ['Qubit & quantum gate fundamentals', 'Quantum circuit simulations'],
     discountedPrice: '₹15,000',
-    emi: 'EMI from ₹1,250/mo',
     href: '/enroll-now-with-coss',
   },
   {
@@ -1056,7 +1006,6 @@ export const quantumComputingCourses: CourseCardProps[] = [
     description: 'Program real quantum computers with IBM Qiskit and Python. Build quantum circuits, run jobs on IBM Quantum cloud, and explore variational algorithms.',
     highlights: ['IBM Qiskit & quantum cloud access', 'Variational quantum algorithms'],
     discountedPrice: '₹20,000',
-    emi: 'EMI from ₹1,700/mo',
     href: '/enroll-now-with-coss',
   },
   {
@@ -1071,7 +1020,6 @@ export const quantumComputingCourses: CourseCardProps[] = [
     description: "Study Shor's, Grover's, and QAOA algorithms with applications in cryptography and optimization. Hands-on IBM Quantum and Python implementation.",
     highlights: ["Shor's & Grover's algorithms", 'Quantum cryptography projects'],
     discountedPrice: '₹22,000',
-    emi: 'EMI from ₹1,850/mo',
     href: '/enroll-now-with-coss',
   },
 ];

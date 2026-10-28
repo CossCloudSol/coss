@@ -241,7 +241,6 @@ export default async function CourseCategoryPage({ data, breadcrumbSlug, dbCours
                             course.highlight2 ?? course.highlights?.[1] ?? 'Placement support included',
                           ] as [string, string],
                           discountedPrice: String(course.price ?? course.fee ?? course.discountedPrice ?? ''),
-                          emi: course.emi ?? 'Easy EMI available',
                           href: course.href ? canonicalCourseLink(course.href) : '#',
                           animationIndex: i,
                         }
