@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { formatFromPrice } from '@/lib/course-price'
 
 export interface CourseCardProps {
   title: string
@@ -12,7 +13,7 @@ export interface CourseCardProps {
   level: string
   description: string
   highlights: [string, string]
-  originalPrice: string
+  /** The course fee, as a number or digits ("30000", "₹30,000"); shown as "From ₹30,000". */
   discountedPrice: string
   emi: string
   href: string
@@ -54,7 +55,6 @@ export default function CourseCard({
   level,
   description,
   highlights,
-  originalPrice,
   discountedPrice,
   emi,
   href,
@@ -150,8 +150,9 @@ export default function CourseCard({
       {/* Card Footer */}
       <div className="flex items-center justify-between gap-3 px-5 pt-[14px] pb-[18px]">
         <div>
-          <div className="text-[11px] text-slate-500 line-through mb-[1px]">{originalPrice}</div>
-          <div className="font-display text-[22px] font-bold text-[#0D1B2A] leading-none">{discountedPrice}</div>
+          <div className="font-display text-[22px] font-bold text-[#0D1B2A] leading-none">
+            {formatFromPrice(Number(String(discountedPrice).replace(/[^0-9.]/g, ''))) ?? 'Free demo class'}
+          </div>
           <div className="text-[10px] text-slate-500 mt-[2px]">{emi}</div>
         </div>
         <Link

@@ -68,7 +68,6 @@ export function dbCoursesToCards(courses: DbCourse[], categorySlug: string): Cou
         course.highlights[0] ?? 'Industry-relevant curriculum',
         course.highlights[1] ?? 'Placement support included',
       ] as [string, string],
-      originalPrice: course.originalPrice ? '₹' + course.originalPrice.toLocaleString('en-IN') : '',
       discountedPrice: course.price ? '₹' + course.price.toLocaleString('en-IN') : '',
       emi: 'Easy EMI available',
       href: courseCanonicalPath({ urlType: course.urlType, categorySlug: course.categorySlug, slug: course.slug }),
