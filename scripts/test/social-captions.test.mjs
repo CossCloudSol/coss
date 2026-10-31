@@ -114,9 +114,22 @@ test('Instagram needs an image: a course (with a hook) or an image with alt text
   assert.deepEqual(ruleErrors(checkPost({ ...ig, imageUrl: 'https://i/x.png', imageAltText: 'Banner' })), []);
 });
 
-test('Instagram limits: 2,200 characters and 10 hashtags', () => {
+test('Instagram: long text is trimmed to fit (Buffer rejects over 2,196); CTA and hashtags kept; 10 hashtags max', () => {
   const ig = { ...base, channels: ['instagram'], hasCourse: true, hook: 'Ship faster.' };
-  assert.match(ruleErrors(checkPost({ ...ig, content: 'x'.repeat(2200) })).join(), /Instagram: Caption is .* limit is 2,200/);
+  const tags = Array.from({ length: 10 }, (_, i) => `#Tag${i}`).join(' ');
+  const para = 'Learn AWS DevOps with live projects in Hyderabad. Classroom or online batches every month.';
+  const long = Array.from({ length: 40 }, () => para).join('\n\n'); // ~3,700 characters
+  const cap = buildCaption('instagram', { content: long, hashtags: tags });
+  assert.ok(cap.length <= 2150, `caption ${cap.length}`);
+  assert.ok(cap.length > 1800, 'trims only what it must');
+  assert.ok(cap.endsWith(`${IG_CTA}\n\n${tags}`), 'CTA and hashtags are kept');
+  assert.match(cap.split(`\n\n${IG_CTA}`)[0], /\.$/, 'cut at a paragraph or sentence end');
+  // Emoji count as 2 (UTF-16), so the real caption is never over Buffer's limit.
+  const emoji = buildCaption('instagram', { content: '🚀 '.repeat(1500), hashtags: '' });
+  assert.ok(emoji.length <= 2150, `emoji caption ${emoji.length}`);
+  // Long Instagram text is no longer an error; short text is unchanged.
+  assert.deepEqual(ruleErrors(checkPost({ ...ig, content: long })), []);
+  assert.equal(buildCaption('instagram', { content: 'Hi', hashtags: '' }), `Hi\n\n${IG_CTA}`);
   assert.match(ruleErrors(checkPost({ ...ig, hashtags: Array.from({ length: 11 }, (_, i) => `t${i}`).join(' ') })).join(), /11 hashtags/);
   // The same long text is fine on LinkedIn (3,000).
   assert.deepEqual(ruleErrors(checkPost({ ...base, content: 'x'.repeat(2500) })), []);

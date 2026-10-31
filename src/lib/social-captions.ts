@@ -17,8 +17,14 @@ export type SocialChannel = 'linkedin' | 'facebook' | 'instagram';
 export const SOCIAL_CHANNELS: readonly SocialChannel[] = ['linkedin', 'facebook', 'instagram'];
 export const CHANNEL_LABEL: Record<SocialChannel, string> = { linkedin: 'LinkedIn', facebook: 'Facebook', instagram: 'Instagram' };
 
-/** Caption length limits per network. */
-export const CAPTION_LIMIT: Record<SocialChannel, number> = { linkedin: 3000, facebook: 63206, instagram: 2200 };
+/**
+ * Caption length limits per network. Instagram's own limit is 2,200, but Buffer rejects captions
+ * over 2,196 ("Instagram posts cannot exceed 2196 characters", 31 Oct 2026), and networks count
+ * emoji and line breaks differently, so Instagram captions are kept to 2,150 with a margin, and
+ * buildCaption trims the post text to fit (the CTA and hashtags are always kept).
+ */
+export const CAPTION_LIMIT: Record<SocialChannel, number> = { linkedin: 3000, facebook: 63206, instagram: 2150 };
+export const IG_TRIM_MARK = '…';
 export const IG_MAX_HASHTAGS = 10;
 export const IG_CTA = 'Link in bio / DM us';
 export const HOOK_MAX = 80;
@@ -110,7 +116,30 @@ export function buildCaption(channel: SocialChannel, post: { content: string; ha
   const text = post.content.trim();
   if (channel !== 'instagram') return text;
   const tags = normalizeHashtags(post.hashtags).slice(0, IG_MAX_HASHTAGS);
-  return [stripLinks(text), IG_CTA, tags.join(' ')].filter(Boolean).join('\n\n');
+  const tail = [IG_CTA, tags.join(' ')].filter(Boolean).join('\n\n');
+  const body = fitInstagramBody(stripLinks(text), CAPTION_LIMIT.instagram - tail.length - 2);
+  return [body, tail].filter(Boolean).join('\n\n');
+}
+
+/**
+ * Shortens Instagram post text to `budget` characters (UTF-16 length, which counts an emoji as 2,
+ * so it never under-counts): cut at the last paragraph break, else line break, else sentence end,
+ * else word break that fits, then "…". Text that already fits is returned unchanged.
+ */
+export function fitInstagramBody(text: string, budget: number): string {
+  if (text.length <= budget) return text;
+  const room = budget - IG_TRIM_MARK.length;
+  if (room <= 0) return '';
+  const head = text.slice(0, room);
+  const minKeep = Math.floor(room * 0.5); // don't throw away more than half to find a clean break
+  for (const re of [/\n\s*\n(?![\s\S]*\n\s*\n)/, /\n(?![\s\S]*\n)/, /[.!?](?=\s)(?![\s\S]*[.!?]\s)/, /\s(?![\s\S]*\s)/]) {
+    const m = re.exec(head);
+    if (m && m.index >= minKeep) {
+      const cut = /[.!?]/.test(m[0]) ? m.index + 1 : m.index;
+      return head.slice(0, cut).trimEnd() + (/[.!?]$/.test(head.slice(0, cut).trimEnd()) ? '' : IG_TRIM_MARK);
+    }
+  }
+  return head.trimEnd() + IG_TRIM_MARK;
 }
 
 // ── Claims ───────────────────────────────────────────────────────────────
