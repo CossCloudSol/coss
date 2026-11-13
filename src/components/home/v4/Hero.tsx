@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import HomeHeroForm, { type NextBatchStrip } from '@/components/home/HomeHeroForm';
@@ -26,6 +27,11 @@ export default function Hero({ headline, subtext, rating, nextBatch }: Props) {
   const customHeadline = headline && headline !== OLD_DEFAULT_HEADLINE && headline !== DESIGN_HEADLINE;
   const customSubtext = subtext && subtext !== OLD_DEFAULT_SUBTEXT && subtext !== DESIGN_SUBTEXT;
   return (
+    <>
+    {/* Phones: "16 Years of Experience" strip under the navbar (homepage only; scrolls away). Fixed height, so nothing shifts when the image loads. */}
+    <div className="flex h-[52px] items-center justify-center border-b border-[#e3eaec] bg-white px-4 lg:hidden dark:border-slate-800 dark:bg-slate-100">
+      <Image src="/16-years-of-experience.png" alt="16 years of experience, since 2010" width={230} height={38} className="h-[38px] w-auto" />
+    </div>
     <section
       aria-label="Book a free demo class"
       className="on-dark relative overflow-hidden bg-gradient-to-br from-[#0a3d4a] via-[#005663] to-[#00707f] [background-size:100%_100%]">
@@ -34,10 +40,16 @@ export default function Hero({ headline, subtext, rating, nextBatch }: Props) {
       <span aria-hidden="true" className="pointer-events-none absolute -bottom-[120px] left-[38%] hidden h-[280px] w-[280px] rounded-full bg-[#f3a57a]/[0.18] lg:block" />
       <div className="relative mx-auto flex max-w-[1280px] flex-col gap-0 px-4 pt-[26px] lg:flex-row lg:items-center lg:gap-10 lg:px-8 lg:pb-16 lg:pt-14">
         <div className="flex min-w-0 flex-col gap-4 lg:flex-[999_1_520px] lg:gap-[22px]">
-          <p className="inline-flex items-center gap-2 self-start rounded-full border border-white/25 bg-white/10 px-3 py-[7px] font-sans text-sm font-semibold text-white lg:px-3.5 lg:py-2">
-            <span aria-hidden="true" className="h-[7px] w-[7px] rounded-full bg-[#f3a57a] lg:h-2 lg:w-2" />
-            IT training in Hyderabad since 2010
-          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p className="inline-flex items-center gap-2 self-start rounded-full border border-white/25 bg-white/10 px-3 py-[7px] font-sans text-sm font-semibold text-white lg:self-auto lg:px-3.5 lg:py-2">
+              <span aria-hidden="true" className="h-[7px] w-[7px] rounded-full bg-[#f3a57a] lg:h-2 lg:w-2" />
+              IT training in Hyderabad since 2010
+            </p>
+            {/* Desktop: the 16 Years badge beside the pill (phones get the strip above the hero). White chip: the artwork is dark teal. */}
+            <span className="hidden h-[52px] items-center rounded-full bg-white px-5 lg:inline-flex">
+              <Image src="/16-years-of-experience.png" alt="16 years of experience, since 2010" width={230} height={38} className="h-[38px] w-auto" />
+            </span>
+          </div>
           <h1 className="font-heading text-[35px] font-extrabold leading-[1.1] text-white lg:text-[58px] lg:leading-[1.06] lg:tracking-[-0.01em]">
             {customHeadline ? (
               headline
@@ -120,5 +132,6 @@ export default function Hero({ headline, subtext, rating, nextBatch }: Props) {
         </div>
       </div>
     </section>
+    </>
   );
 }

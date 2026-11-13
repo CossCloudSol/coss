@@ -245,18 +245,20 @@ export default function SiteHeader({ nextBatchAt = null, drawerCourses, megaMenu
       {menuOpen && <div aria-hidden="true" onClick={() => setMenuOpen(false)} className="fixed inset-0 bg-[rgba(10,30,36,0.55)]" />}
       <div className="relative h-16 bg-white lg:h-[76px] lg:pt-3 dark:bg-slate-950">
         {/* The 64px content box: centred in the 76px row at rest, flush once stuck. */}
-        <div className={`mx-auto flex h-16 max-w-[1280px] items-center gap-3 px-4 transition-transform duration-200 xl:gap-4 ${scrolled ? '' : 'lg:-translate-y-1.5'}`}>
+        <div className={`mx-auto flex h-16 max-w-[1280px] items-center gap-2 px-4 transition-transform duration-200 lg:gap-3 xl:gap-4 ${scrolled ? '' : 'lg:-translate-y-1.5'}`}>
           {/* px-1 in both themes so toggling never moves anything; the white backdrop
-              keeps the orange/teal logo legible on the dark header. */}
+              keeps the orange/teal logo legible on the dark header.
+              /logo-header.png is /logo.png with its transparent margin trimmed, so the
+              artwork fills the box (was ~38px of a 48px box on phones). */}
           <Link href="/" className="logo-link shrink-0 rounded-lg px-1 dark:bg-white" aria-label="Coss Cloud Solutions — Home">
             {/* priority: on mobile the logo is often the LCP element. */}
             <Image
-              src="/logo.png"
+              src="/logo-header.png"
               alt="Coss Cloud Solutions"
-              width={74}
-              height={62}
+              width={67}
+              height={58}
               priority
-              className="h-[48px] w-auto lg:h-[54px]"
+              className="h-[50px] w-auto lg:h-[58px]"
               style={{ objectFit: 'contain', display: 'block' }}
             />
           </Link>
