@@ -5,6 +5,8 @@ import { prisma } from '@/lib/db';
 import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
 import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
+import { waitUntil } from '@vercel/functions';
+import { forwardLeadSafely } from '@/lib/enquify-forward';
 import {
   MIN_FILL_MS,
   MIN_FILL_MS_POPUP,
@@ -249,6 +251,19 @@ export async function POST(req: NextRequest): Promise<Response> {
     if (bot.verdict === 'human_missing_fill_time') {
       console.info(`[POST /api/leads] Accepted lead ${created.id} (${data.formType}) with no fill time (grace period)`);
     }
+
+    // Optional copy to the Enquify lead hub (off unless ENQUIFY_FORWARD=1).
+    // Deferred, so the response never waits on it or fails because of it.
+    waitUntil(forwardLeadSafely({
+      id: created.id,
+      name: data.name,
+      phone: data.phone,
+      email: data.email ?? null,
+      course: data.course ?? null,
+      branch: data.branch ?? null,
+      message: data.message ?? null,
+      ...firstTouchData(body),
+    }));
 
     try {
       const isBrochure = data.formType === 'brochure_request';

@@ -5,6 +5,8 @@ import { prisma } from '@/lib/db';
 import { consentData, firstTouchData, lastTouchData } from '@/lib/attribution';
 import { SPAM_STATUS } from '@/lib/lead-spam';
 import { createNotification } from '@/lib/notifications';
+import { waitUntil } from '@vercel/functions';
+import { forwardLeadSafely } from '@/lib/enquify-forward';
 import { MIN_FILL_MS, botCheck, leadSourceData, nameField, normalizeIndianMobile, phoneField } from '@/lib/lead-validation';
 
 export const runtime = 'nodejs';
@@ -134,6 +136,19 @@ export async function POST(req: NextRequest): Promise<Response> {
     if (bot.verdict === 'human_missing_fill_time') {
       console.info(`[POST /api/contact] Accepted lead ${created.id} with no fill time (grace period)`);
     }
+
+    // Optional copy to the Enquify lead hub (off unless ENQUIFY_FORWARD=1).
+    // Deferred, so the response never waits on it or fails because of it.
+    waitUntil(forwardLeadSafely({
+      id: created.id,
+      name: d.name,
+      phone: d.phone,
+      email: d.email ?? null,
+      course: d.subject ?? null,
+      branch: d.branch,
+      message: d.message ?? null,
+      ...firstTouchData(body),
+    }));
 
     // Staff alert, same path as course enquiries (/api/leads): in-app
     // notification plus instant email and push to Admissions & Sales and
