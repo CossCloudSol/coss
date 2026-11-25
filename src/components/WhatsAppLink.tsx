@@ -7,6 +7,8 @@ import { buildWhatsAppClickPayload, logWhatsAppClick, toWaDigits, type WhatsAppC
 import { TRACKED_ATTR, trackIntent } from '@/lib/intent-tracking';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { currentRefChannel, waHrefWithRef } from '@/lib/wa-ref';
+import { getPageCourse } from '@/lib/page-course';
+import { usePageCourse } from '@/lib/use-page-course';
 
 /* -------------------------------------------------------------------------- */
 /*  Single source of truth for every WhatsApp CTA on the site, mirroring      */
@@ -22,7 +24,7 @@ export type { WhatsAppCtaType, WhatsAppClickPayload } from '@/lib/contact-click-
 export { buildWhatsAppClickPayload, logWhatsAppClick } from '@/lib/contact-click-log';
 
 export interface WhatsAppLinkProps {
-  /** Visible course name for the prefilled text, when this link is about one course (a batch card). Else the course comes from courseSlug or the course page's path. */
+  /** Visible course name for the prefilled text, when this link is about one course (a batch card). Else, on a course page, the page's course (lib/page-course). */
   courseName?: string;
   /** Which CTA this is — required, used to tell apart the many WhatsApp buttons sharing a page/pageType. */
   ctaType: WhatsAppCtaType;
@@ -67,11 +69,15 @@ export default function WhatsAppLink({
   if (number && !/^91\d{10}$/.test(digits)) {
     console.warn(`[WhatsAppLink] normalized number "${digits}" (from override "${number}") does not match the expected 91XXXXXXXXXX shape`);
   }
+  // A link that names no course (header, footer) names the course page it is on, once the page has
+  // said which it is. The page's slug is for the ref code only; the logged click keeps its own courseSlug.
+  const pageCourse = usePageCourse();
   // Server-rendered with channel D; the real first-touch channel is put in at click time.
-  const href = waHrefWithRef(`https://wa.me/${digits}`, { pathname, courseName, courseSlug, channel: 'D' });
+  const href = waHrefWithRef(`https://wa.me/${digits}`, { pathname, courseName: courseName ?? pageCourse?.name, courseSlug: courseSlug ?? pageCourse?.slug, channel: 'D' });
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.currentTarget.href = waHrefWithRef(href, { pathname, courseName, courseSlug, channel: currentRefChannel() });
+    const page = getPageCourse();
+    e.currentTarget.href = waHrefWithRef(href, { pathname, courseName: courseName ?? page?.name, courseSlug: courseSlug ?? page?.slug, channel: currentRefChannel() });
     const id = ctaId ?? ctaType;
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,

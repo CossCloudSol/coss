@@ -26,13 +26,22 @@ export interface RefCourse {
   area: (typeof REF_AREAS)[number];
   /** Matched against the lower-case course slug / name. */
   match: RegExp;
+  /** Shown beside the label in the admin legend when the code covers more than the label says. */
+  note?: string;
 }
 
 /** The single code map, in the confirmed display order. */
 export const REF_COURSES: ReadonlyArray<RefCourse> = [
   { code: 'AWSDEVOPS', label: 'AWS DevOps', area: REF_AREAS[0], match: /aws.{0,20}devops/ },
   { code: 'AZDEVOPS', label: 'Azure DevOps', area: REF_AREAS[0], match: /azure.{0,20}devops/ },
-  { code: 'GENAI', label: 'Generative AI & LLM Engineering', area: REF_AREAS[1], match: /generative|gen[\s-]?ai\b|\bllm\b/ },
+  {
+    code: 'GENAI',
+    label: 'Generative AI & LLM Engineering',
+    area: REF_AREAS[1],
+    note: 'also the Artificial Intelligence and AI Foundation courses',
+    // generative-ai, genai, llm, agentic, prompt-engineering, and the Artificial Intelligence / AI Foundation courses.
+    match: /generative|gen[\s-]?ai\b|\bllm\b|agentic|prompt[\s-]*engineering|artificial[\s-]*intelligence|\bai[\s-]*foundation/,
+  },
   { code: 'DS', label: 'Data Science', area: REF_AREAS[1], match: /data[\s-]*science/ },
   { code: 'DA', label: 'Data Analytics', area: REF_AREAS[1], match: /data[\s-]*analy/ },
   { code: 'LINUX', label: 'Linux', area: REF_AREAS[2], match: /linux/ },
@@ -119,20 +128,23 @@ export function refCode(courseCode: string | null | undefined, channel: RefChann
 
 export interface WaRefContext {
   pathname?: string | null;
-  /** Visible course name, when the link knows it (batch card, course page). */
+  /** Visible course name, when the link or the course page being viewed knows it. Always what the text names. */
   courseName?: string | null;
   courseSlug?: string | null;
   channel: RefChannel;
 }
 
-/** The prefilled text: course form when a course is known, else the general form. */
+/**
+ * The prefilled text: course form when a course name is known, else the general form.
+ * The name is only ever a real one (the link's own, or the course page's, see lib/page-course);
+ * the course code may also come from the path of a course page, so a code is never lost.
+ */
 export function buildWaText(ctx: WaRefContext): string {
-  // A course can come from the link itself, or from the path of a course page only.
   const path = ctx.pathname ?? '';
   const onCoursePage = path !== '' && classifyPageType(path) === 'course';
   const lastSegment = onCoursePage ? path.split('/').filter(Boolean).pop() : undefined;
   const entry = refCourseFor(ctx.courseSlug, ctx.courseName) ?? refCourseFor(lastSegment);
-  const name = ctx.courseName?.trim() || entry?.label || null;
+  const name = ctx.courseName?.trim() || null;
   const code = refCode(entry?.code, ctx.channel);
   return name
     ? `Hi, I'd like fees and next batch dates for ${name} (ref ${code})`
@@ -140,13 +152,23 @@ export function buildWaText(ctx: WaRefContext): string {
 }
 
 const REF_IN_TEXT = /\(ref (W-[A-Z]+)-[A-Z]\)/;
+const GENERAL_TEXT = /^Hi, I'd like to know about courses and batches/;
+
+/** True for the general text (no course named). */
+export function isGeneralWaText(text: string): boolean {
+  return GENERAL_TEXT.test(text);
+}
 
 /** The same text with its channel letter replaced (server-rendered links start as D). */
 export function swapRefChannel(text: string, channel: RefChannel): string {
   return text.replace(REF_IN_TEXT, `(ref $1-${channel})`);
 }
 
-/** A wa.me href carrying the standard text for `ctx` (existing standard text keeps its course, gets the channel). */
+/**
+ * A wa.me href carrying the standard text for `ctx`. Existing standard text keeps the course it
+ * names and only gets the channel; the one exception is the general text, which becomes the course
+ * form when `ctx` names a course (a course page's site-wide links).
+ */
 export function waHrefWithRef(href: string, ctx: WaRefContext): string {
   const q = href.indexOf('?');
   const base = q === -1 ? href : href.slice(0, q);
@@ -158,7 +180,9 @@ export function waHrefWithRef(href: string, ctx: WaRefContext): string {
       text = null;
     }
   }
-  const out = text && REF_IN_TEXT.test(text) ? swapRefChannel(text, ctx.channel) : buildWaText(ctx);
+  const hasRef = !!text && REF_IN_TEXT.test(text);
+  const namesCourse = !!ctx.courseName?.trim();
+  const out = hasRef && !(namesCourse && isGeneralWaText(text as string)) ? swapRefChannel(text as string, ctx.channel) : buildWaText(ctx);
   return `${base}?text=${encodeURIComponent(out)}`;
 }
 

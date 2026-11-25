@@ -12,6 +12,7 @@ import RelatedCourses from '@/components/RelatedCourses'
 import CallLink from '@/components/CallLink'
 import WhatsAppLink from '@/components/WhatsAppLink'
 import MobileWaFees from '@/components/MobileWaFees'
+import PageCourse from '@/components/PageCourse'
 import { optimizeCldUrl } from '@/lib/cloudinary'
 import { safeJsonLd } from '@/lib/safe-json-ld'
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
@@ -238,6 +239,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
         </div>
       </section>
 
+      <PageCourse name={course.title} slug={course.slug} />
       <MobileWaFees courseName={course.title} courseSlug={course.slug} />
 
       {/* ── Promo banner, below the hero ── */}

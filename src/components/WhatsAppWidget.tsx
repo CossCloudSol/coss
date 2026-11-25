@@ -9,6 +9,7 @@ import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/lib/contact-click-log';
 import { trackIntent } from '@/lib/intent-tracking';
 import { buildWaText, currentRefChannel } from '@/lib/wa-ref';
+import { getPageCourse } from '@/lib/page-course';
 import { submitLead } from '@/lib/submitLead';
 import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
@@ -197,7 +198,11 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
   }, [panelOpen]);
 
   /* ── Helpers ── */
-  const openingFor = (course?: string) => buildWaText({ pathname, courseName: course || undefined, channel: currentRefChannel() });
+  // The course the visitor picked in the form, else the course page they are on (also for the sticky bar, which opens this panel).
+  const openingFor = (course?: string) => {
+    const page = course ? null : getPageCourse();
+    return buildWaText({ pathname, courseName: course || page?.name, courseSlug: page?.slug, channel: currentRefChannel() });
+  };
   const directUrl = () => buildWaUrl(openingFor());
 
   function validate(): boolean {
@@ -258,7 +263,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       pathname,
       ctaType: ctaOrigin,
       phoneNumber: `+${WA_NUMBER}`,
-      hadPrefill: false,
+      hadPrefill: true,
       ctaId: `${ctaOrigin}_skip`,
       location: widgetLocation,
     }));

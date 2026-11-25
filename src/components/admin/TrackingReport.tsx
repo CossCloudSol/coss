@@ -222,7 +222,10 @@ function RefLegend(): JSX.Element {
                 {REF_COURSES.filter((c) => c.area === area).map((c) => (
                   <tr key={c.code}>
                     <td className="py-0.5 pr-3 font-mono text-xs">W-{c.code}</td>
-                    <td className="py-0.5">{c.label}</td>
+                    <td className="py-0.5">
+                      {c.label}
+                      {c.note && <span className="text-xs text-gray-500 dark:text-gray-400"> ({c.note})</span>}
+                    </td>
                   </tr>
                 ))}
               </Fragment>

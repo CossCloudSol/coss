@@ -16,6 +16,7 @@
 
 import { INTENT_KINDS, TRACKED_ATTR, inferIntentKind, trackIntent, type IntentInput, type IntentKind } from '@/lib/intent-tracking';
 import { currentRefChannel, isWaHref, waHrefWithRef } from '@/lib/wa-ref';
+import { getPageCourse } from '@/lib/page-course';
 import { WHATSAPP_CTA_TYPES, buildWhatsAppClickPayload, logCallClick, logWhatsAppClick, toE164India, type WhatsAppCtaType } from '@/lib/contact-click-log';
 
 /** The small slice of the DOM this file uses, so it can be tested without a browser. */
@@ -115,13 +116,22 @@ export function countIntent(intent: ResolvedIntent, pathname: string): void {
 /**
  * A wa.me link is opened with the standard text carrying this visitor's first-touch channel.
  * Server-rendered links start with channel D; the click puts the real letter in before the
- * browser navigates (capture phase, so also for links with their own handlers).
+ * browser navigates (capture phase, so also for links with their own handlers). A link whose text
+ * names no course gets the course page's course when the visitor is on one; a link that names a
+ * course keeps it.
  */
 export function applyWaRef(target: Element | null, pathname: string): void {
   const link = target?.closest?.('a[href]') as HTMLAnchorElement | null | undefined;
   const href = link?.getAttribute('href');
   if (!link || !isWaHref(href)) return;
-  link.setAttribute('href', waHrefWithRef(href as string, { pathname, courseName: link.getAttribute('data-wa-course'), courseSlug: link.getAttribute('data-course'), channel: currentRefChannel() }));
+  const own = link.getAttribute('data-wa-course');
+  const page = own ? null : getPageCourse();
+  link.setAttribute('href', waHrefWithRef(href as string, {
+    pathname,
+    courseName: own ?? page?.name ?? null,
+    courseSlug: page ? page.slug ?? null : link.getAttribute('data-course'),
+    channel: currentRefChannel(),
+  }));
 }
 
 /** Adds the capture-phase listener; returns the remover. */

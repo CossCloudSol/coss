@@ -27,6 +27,7 @@ import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 import { courseJsonLd } from '@/lib/course-jsonld';
 import TopCta from '@/components/TopCta';
 import MobileWaFees from '@/components/MobileWaFees';
+import PageCourse from '@/components/PageCourse';
 import BranchBlock from '@/components/course/BranchBlock';
 import { formatFromPrice, priceNoteFor } from '@/lib/course-price';
 
@@ -181,6 +182,7 @@ export default async function NestedCourseDetailPage({ params }: { params: { slu
         </div>
       </div>
 
+      <PageCourse name={course.title} slug={course.slug} />
       <MobileWaFees courseName={course.title} courseSlug={course.slug} />
       <MobileInlineDemo course={course.title} subtitle={`${course.title} · see a class before you decide`} />
 
