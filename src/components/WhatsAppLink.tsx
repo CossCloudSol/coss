@@ -6,6 +6,9 @@ import type { PageType } from '@/lib/click-tracking';
 import { buildWhatsAppClickPayload, logWhatsAppClick, toWaDigits, type WhatsAppCtaType } from '@/lib/contact-click-log';
 import { TRACKED_ATTR, trackIntent } from '@/lib/intent-tracking';
 import { WA_NUMBER } from '@/lib/whatsapp';
+import { currentRefChannel, waHrefWithRef } from '@/lib/wa-ref';
+import { getPageCourse } from '@/lib/page-course';
+import { usePageCourse } from '@/lib/use-page-course';
 
 /* -------------------------------------------------------------------------- */
 /*  Single source of truth for every WhatsApp CTA on the site, mirroring      */
@@ -21,8 +24,8 @@ export type { WhatsAppCtaType, WhatsAppClickPayload } from '@/lib/contact-click-
 export { buildWhatsAppClickPayload, logWhatsAppClick } from '@/lib/contact-click-log';
 
 export interface WhatsAppLinkProps {
-  /** Prebuilt message text (batchBookingMessage(), jobApplyMessage(), etc.). Omit for a bare wa.me link with no text= param. */
-  message?: string;
+  /** Visible course name for the prefilled text, when this link is about one course (a batch card). Else, on a course page, the page's course (lib/page-course). */
+  courseName?: string;
   /** Which CTA this is — required, used to tell apart the many WhatsApp buttons sharing a page/pageType. */
   ctaType: WhatsAppCtaType;
   /** Which part of the page, e.g. "footer", "batch_card", "contact_page". */
@@ -35,8 +38,10 @@ export interface WhatsAppLinkProps {
   branchKey?: string;
   /** Raw phone number in any spacing/format, e.g. a branch's own number — normalized for both the href and the logged event. Defaults to the central WA_NUMBER. */
   number?: string;
-  /** Defaults to Boolean(message?.trim()) — override when a message is present but not meaningfully personalized (e.g. the widget's "skip" path), or vice versa. */
+  /** Every link carries the standard prefill with a ref code (lib/wa-ref), so this defaults to true. */
   hadPrefill?: boolean;
+  /** data-cta for the button (tracked links are skipped by the site-wide listener, so this only names the button in the DOM). */
+  dataCta?: string;
   className?: string;
   style?: React.CSSProperties;
   'aria-label'?: string;
@@ -44,7 +49,7 @@ export interface WhatsAppLinkProps {
 }
 
 export default function WhatsAppLink({
-  message,
+  courseName,
   ctaType,
   location,
   ctaId,
@@ -53,6 +58,7 @@ export default function WhatsAppLink({
   branchKey,
   number,
   hadPrefill,
+  dataCta,
   className,
   style,
   'aria-label': ariaLabel,
@@ -63,23 +69,29 @@ export default function WhatsAppLink({
   if (number && !/^91\d{10}$/.test(digits)) {
     console.warn(`[WhatsAppLink] normalized number "${digits}" (from override "${number}") does not match the expected 91XXXXXXXXXX shape`);
   }
-  const href = `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
+  // A link that names no course (header, footer) names the course page it is on, once the page has
+  // said which it is. The page's slug is for the ref code only; the logged click keeps its own courseSlug.
+  const pageCourse = usePageCourse();
+  // Server-rendered with channel D; the real first-touch channel is put in at click time.
+  const href = waHrefWithRef(`https://wa.me/${digits}`, { pathname, courseName: courseName ?? pageCourse?.name, courseSlug: courseSlug ?? pageCourse?.slug, channel: 'D' });
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    const page = getPageCourse();
+    e.currentTarget.href = waHrefWithRef(href, { pathname, courseName: courseName ?? page?.name, courseSlug: courseSlug ?? page?.slug, channel: currentRefChannel() });
     const id = ctaId ?? ctaType;
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
       pageType,
       ctaType,
       phoneNumber: `+${digits}`,
-      hadPrefill: hadPrefill ?? Boolean(message?.trim()),
+      hadPrefill: hadPrefill ?? true,
       ctaId: id,
       location,
       courseSlug,
       branchKey,
     }));
     trackIntent({ kind: 'whatsapp', ctaId: id, location, destination: `https://wa.me/${digits}`, courseSlug, pageType });
-  }, [pathname, pageType, ctaType, ctaId, location, courseSlug, branchKey, digits, hadPrefill, message]);
+  }, [href, pathname, pageType, ctaType, ctaId, location, courseName, courseSlug, branchKey, digits, hadPrefill]);
 
   return (
     <a
@@ -90,6 +102,7 @@ export default function WhatsAppLink({
       style={style}
       aria-label={ariaLabel}
       onClick={handleClick}
+      {...(dataCta ? { 'data-cta': dataCta } : {})}
       {...{ [TRACKED_ATTR]: '' }}
     >
       {children}

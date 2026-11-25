@@ -59,7 +59,6 @@ export default async function PlacementsPage() {
             <WhatsAppLink location="placements_hero"
               ctaType="hero"
               pageType="static"
-              message="Hi, I'd like to know more about placement support at Coss."
               style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.08)', color: '#fff', padding: '13px 28px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14.5px', border: '1px solid rgba(255,255,255,0.25)', textDecoration: 'none' }}
             >
               Ask us on WhatsApp
@@ -136,7 +135,6 @@ export default async function PlacementsPage() {
               <WhatsAppLink location="placements_page"
                 ctaType="batches_page"
                 pageType="static"
-                message="Hi, I'd like to know the next available batch dates at Coss."
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#15803d', color: '#fff', padding: '12px 24px', borderRadius: '10px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px', textDecoration: 'none' }}
               >
                 Ask on WhatsApp
@@ -147,7 +145,6 @@ export default async function PlacementsPage() {
               {batches.map(batch => {
                 const formattedDate = formatBatchDate(batch.startDate);
                 const branchLabel = batch.mode === 'Online' ? 'Online' : (batch.centre ?? 'Coss Cloud Solutions');
-                const message = `Hi, I'd like to know about the ${batch.course.title} batch starting ${formattedDate} at ${branchLabel}.`;
 
                 return (
                   <div
@@ -172,10 +169,9 @@ export default async function PlacementsPage() {
                         {formattedDate} · {batch.schedule} · {branchLabel}
                       </p>
                     </div>
-                    <WhatsAppLink location="placements_end"
+                    <WhatsAppLink location="placements_end" courseName={batch.course.title}
                       ctaType="batch"
                       pageType="static"
-                      message={message}
                       style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#15803d', color: '#fff', padding: '10px 18px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '13px', textDecoration: 'none', whiteSpace: 'nowrap' }}
                     >
                       Ask about this batch

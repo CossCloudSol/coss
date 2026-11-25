@@ -8,6 +8,8 @@ import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/lib/contact-click-log';
 import { trackIntent } from '@/lib/intent-tracking';
+import { buildWaText, currentRefChannel } from '@/lib/wa-ref';
+import { getPageCourse } from '@/lib/page-course';
 import { submitLead } from '@/lib/submitLead';
 import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
 import HoneypotField, { useBotGuard } from '@/components/HoneypotField';
@@ -30,16 +32,12 @@ const FOCUSABLE_SELECTORS =
 /*  Helpers                                                        */
 /* ─────────────────────────────────────────────────────────────── */
 
-// Skip path never collected a name/course/branch, so its message stays generic —
-// see handleSkip, which uses this instead of buildFormMessage.
-const SKIP_MESSAGE = "Hi Coss Cloud Solutions! I'd like to know more about your courses. Please get in touch.";
-
-function buildFormMessage(name: string, course: string, branch: Branch | null): string {
-  const parts: string[] = ["Hi Coss Cloud Solutions! I'd like to know more about your courses."];
+// Every message opens with the standard fees-and-batches line and its ref code (lib/wa-ref);
+// the skip path never collected a name/course/branch, so it is that line alone.
+function buildFormMessage(opening: string, name: string, branch: Branch | null): string {
+  const parts: string[] = [opening];
   if (name.trim()) parts.push(`My name is ${name.trim()}.`);
-  if (course) parts.push(`I'm interested in: ${course}.`);
   if (branch) parts.push(branch === 'Online' ? "I'd like to join online classes." : `I'd prefer the ${branch} branch.`);
-  parts.push('Please get in touch.');
   return parts.join(' ');
 }
 
@@ -200,7 +198,12 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
   }, [panelOpen]);
 
   /* ── Helpers ── */
-  const directUrl = buildWaUrl(SKIP_MESSAGE);
+  // The course the visitor picked in the form, else the course page they are on (also for the sticky bar, which opens this panel).
+  const openingFor = (course?: string) => {
+    const page = course ? null : getPageCourse();
+    return buildWaText({ pathname, courseName: course || page?.name, courseSlug: page?.slug, channel: currentRefChannel() });
+  };
+  const directUrl = () => buildWaUrl(openingFor());
 
   function validate(): boolean {
     const next: typeof errors = {};
@@ -233,7 +236,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
     }
 
     setSubmitted(true);
-    const message = buildFormMessage(form.name, form.course, form.branch);
+    const message = buildFormMessage(openingFor(form.course), form.name, form.branch);
     navigatePendingWindow(pending, buildWaUrl(message));
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
@@ -255,12 +258,12 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
   }
 
   function handleSkip() {
-    window.open(directUrl, '_blank', 'noopener,noreferrer');
+    window.open(directUrl(), '_blank', 'noopener,noreferrer');
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
       ctaType: ctaOrigin,
       phoneNumber: `+${WA_NUMBER}`,
-      hadPrefill: false,
+      hadPrefill: true,
       ctaId: `${ctaOrigin}_skip`,
       location: widgetLocation,
     }));

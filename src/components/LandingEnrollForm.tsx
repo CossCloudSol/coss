@@ -30,7 +30,6 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
   const [branch, setBranch] = useState<'Dilsukhnagar' | 'Ameerpet' | 'Online'>('Dilsukhnagar')
   const { honeypotRef, botFields } = useBotGuard()
 
-  const waMessage = `Hi Coss Cloud Solutions Team, I just booked a free demo for the ${courseTitle} course. Could you confirm my slot?`
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -73,7 +72,7 @@ export default function LandingEnrollForm({ courseTitle, duration, level, phone1
           courseSlug={courseSlug}
           branchKey="dilsukhnagar"
           number={phone1}
-          message={waMessage}
+          courseName={courseTitle}
           className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#15803d] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#20BD5C]"
         >
           <WaIcon /> Chat on WhatsApp

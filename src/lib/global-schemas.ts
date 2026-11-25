@@ -108,7 +108,9 @@ export async function buildGlobalSchemas(): Promise<object[]> {
     '@type': ['Organization', 'EducationalOrganization'],
     '@id': `${SITE_URL}/#organization`,
     name: 'Coss Cloud Solutions',
-    alternateName: ['Coss', 'Coss Cloud Solutions Hyderabad'],
+    legalName: 'Coss Cloud Solutions',
+    // Schema only; never shown as page text.
+    alternateName: ['Coss', 'Complete Open Source Solutions'],
     url: SITE_URL,
     logo: {
       '@type': 'ImageObject',

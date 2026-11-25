@@ -8,7 +8,6 @@ import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { courseCanonicalUrl } from '@/lib/course-canonical';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
-import { batchBookingMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
 import CourseGrid from '@/components/CourseGrid';
@@ -34,6 +33,8 @@ import { PRIMARY_PHONE, PRIMARY_PHONE_LABEL } from '@/lib/nap';
 import { courseJsonLd } from '@/lib/course-jsonld';
 import { breadcrumbList, collectionPage, jsonLdGraph } from '@/lib/structured-data';
 import TopCta from '@/components/TopCta';
+import MobileWaFees from '@/components/MobileWaFees';
+import PageCourse from '@/components/PageCourse';
 import BranchBlock from '@/components/course/BranchBlock';
 import { formatFromPrice, priceNoteFor } from '@/lib/course-price';
 
@@ -273,7 +274,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
             demoHref={`/free-demo-class?course=${course.slug}`}
             courseSlug={course.slug}
             pageType="course"
-            whatsappMessage={`Hi, I'd like details about the ${course.title} course.`}
+            courseName={course.title}
           />
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '24px' }}>
             {sanitizeDescription(course.excerpt)}
@@ -298,6 +299,8 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
         </div>
       </div>
 
+      <PageCourse name={course.title} slug={course.slug} />
+      <MobileWaFees courseName={course.title} courseSlug={course.slug} />
       <MobileInlineDemo course={course.title} subtitle={`${course.title} · see a class before you decide`} />
 
       {/* Promo banner, below the hero */}
@@ -414,7 +417,6 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
         {batches.map((b) => {
           const badge = getBatchStatusBadge(b.status, b.startDate);
           const dateStr = formatBatchDate(b.startDate);
-          const waMsg = batchBookingMessage({ courseName: courseTitle, mode: b.mode, startDate: dateStr, centre: b.centre, schedule: b.schedule });
           return (
             <div key={b.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
               <div style={{ flex: 1, minWidth: '180px' }}>
@@ -435,7 +437,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
                 ctaType="batch"
                 pageType="category"
                 courseSlug={courseSlug}
-                message={waMsg}
+                courseName={courseTitle}
                 style={{ background: '#b8531c', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
               >
                 Book Seat

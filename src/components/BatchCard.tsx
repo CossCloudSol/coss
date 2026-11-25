@@ -1,7 +1,6 @@
 'use client';
 
 import { Calendar, Clock, MapPin, Wifi } from 'lucide-react';
-import { batchBookingMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
 
@@ -38,21 +37,6 @@ interface BatchCardProps {
 export default function BatchCard({ batch }: BatchCardProps) {
   const statusBadge = getBatchStatusBadge(batch.status, batch.startDate);
   const formattedDate = formatBatchDate(batch.startDate);
-
-  const bookMsg = batchBookingMessage({
-    courseName: batch.course.title,
-    mode: batch.mode,
-    startDate: formattedDate,
-    centre: batch.centre,
-    schedule: batch.schedule,
-  });
-  const enrollMsg = batchBookingMessage({
-    courseName: batch.course.title,
-    mode: 'Online',
-    startDate: formattedDate,
-    centre: null,
-    schedule: batch.schedule,
-  });
 
   return (
     <article className="flex flex-col rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden transition-shadow hover:shadow-lg">
@@ -117,7 +101,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
         {(batch.mode === 'Classroom' || batch.mode === 'Hybrid') && (
           <WhatsAppLink location="batch_card" ctaId="batch_classroom_whatsapp"
             ctaType="batch"
-            message={bookMsg}
+            courseName={batch.course.title}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
             style={{ background: '#15803d' }}
           >
@@ -130,7 +114,7 @@ export default function BatchCard({ batch }: BatchCardProps) {
         {(batch.mode === 'Online' || batch.mode === 'Hybrid') && (
           <WhatsAppLink location="batch_card" ctaId="batch_online_whatsapp"
             ctaType="batch"
-            message={enrollMsg}
+            courseName={batch.course.title}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
             style={{ background: '#b8531c' }}
           >

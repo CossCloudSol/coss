@@ -180,13 +180,6 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
     ],
   };
 
-  const noBatchMessage = `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${topicLabel} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
-
-  // Same "ask on WhatsApp" CTA as the zero-batch fallback above, but scoped
-  // to one course — used by catalogue courses that have no batch currently
-  // scheduled at this branch.
-  const courseWhatsAppMessage = (courseTitle: string) =>
-    `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${courseTitle} course at your ${localityConfig.name} branch. Could you share the next available batch dates?\n\nThank you!`;
 
   const hours = await getBranchHours(branch);
   const localBusinessSchema = branch.schemaEnabled ? buildLocalBusinessSchema(branch, hours.periods) : null;
@@ -283,7 +276,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                     ctaType="locality"
                     pageType="locality"
                     branchKey={config.branchKey}
-                    message={noBatchMessage}
+                    courseName={topicLabel}
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: 700, color: '#fff', background: '#15803d' }}
                   >
                     Ask for Next Batch Dates on WhatsApp
@@ -313,7 +306,7 @@ export default async function LocalityTopicPage({ params }: { params: Promise<{ 
                         pageType="locality"
                         branchKey={config.branchKey}
                         courseSlug={c.slug}
-                        message={courseWhatsAppMessage(c.title)}
+                        courseName={c.title}
                         style={{ display: 'flex', flexDirection: 'column', gap: '3px', padding: '9px 16px', borderRadius: '8px', background: 'transparent', border: '1px dashed var(--border)' }}
                       >
                         <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-muted)' }}>{c.title}</span>

@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { attachmentUrl } from '@/lib/cloudinary';
 import { WA_NUMBER } from '@/lib/whatsapp';
+import { buildWaText } from '@/lib/wa-ref';
 import type { SyllabusLink } from '@/components/PromoBanner';
 import {
   PROMO_BANNER_BLOCK_TYPE,
@@ -40,7 +41,7 @@ const getCachedVisibleBanners = unstable_cache(
  */
 export function syllabusLinkFor(course: { title: string; brochureUrl: string | null }): SyllabusLink {
   if (course.brochureUrl) return { href: attachmentUrl(course.brochureUrl), external: true };
-  const message = `Hi, please send me the syllabus for ${course.title}`;
+  const message = buildWaText({ courseName: course.title, channel: 'D' });
   return { href: `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`, external: true };
 }
 

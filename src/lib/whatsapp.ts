@@ -1,30 +1,11 @@
 import { normalizeIndianMobile, PHONE_ERROR } from '@/lib/lead-checks'
 import { PRIMARY_PHONE } from '@/lib/nap'
+import { buildWaText } from '@/lib/wa-ref'
 
 // WhatsApp defaults to the main number (src/lib/nap.ts), digits only.
 // Every WhatsApp CTA resolves its number through this export (directly, or
 // via <WhatsAppLink>'s default) instead of hardcoding its own copy.
 export const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? PRIMARY_PHONE.replace(/D/g, '')
-
-export function batchBookingMessage(params: {
-  courseName: string
-  mode: string
-  startDate: string
-  centre?: string | null
-  schedule: string
-}): string {
-  if (params.mode === 'Online') {
-    return `Hi Coss Cloud Solutions Team,\n\nI want to enroll in the online ${params.courseName} batch.\n\nBatch details:\n- Start date: ${params.startDate}\n- Schedule: ${params.schedule}\n- Mode: Online\n\nPlease share enrollment details. Thank you!`
-  }
-  return `Hi Coss Cloud Solutions Team,\n\nI want to book a seat for the ${params.courseName} batch.\n\nBatch details:\n- Start date: ${params.startDate}\n- Centre: ${params.centre || 'Coss Cloud Solutions'}\n- Schedule: ${params.schedule}\n- Mode: ${params.mode}\n\nPlease confirm my seat. Thank you!`
-}
-
-export function jobApplyMessage(params: {
-  jobTitle: string
-  company: string
-}): string {
-  return `Hi Coss Cloud Solutions Team,\n\nI'm interested in the ${params.jobTitle} position at ${params.company}.\n\nI found this job on your website and would like to know more about applying through Coss Cloud Solutions placement assistance.\n\nPlease guide me on next steps. Thank you!`
-}
 
 export type BrochureDeliveryResult =
   | { ok: true; waLink: string; normalizedPhone: string }
@@ -43,7 +24,8 @@ export function buildBrochureDelivery(phone: string, courseName: string): Brochu
   if (normalizedPhone === null) {
     return { ok: false, error: PHONE_ERROR }
   }
-  const message = `Hi, please send me the syllabus for ${courseName}`
+  // Same standard text as every WhatsApp link (course + ref code); the real channel is put in at click time.
+  const message = buildWaText({ courseName, channel: 'D' })
   return {
     ok: true,
     waLink: `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`,

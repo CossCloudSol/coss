@@ -11,6 +11,8 @@ import BrochureButton from '@/components/BrochureButton'
 import RelatedCourses from '@/components/RelatedCourses'
 import CallLink from '@/components/CallLink'
 import WhatsAppLink from '@/components/WhatsAppLink'
+import MobileWaFees from '@/components/MobileWaFees'
+import PageCourse from '@/components/PageCourse'
 import { optimizeCldUrl } from '@/lib/cloudinary'
 import { safeJsonLd } from '@/lib/safe-json-ld'
 import { PLACEMENT_PROVIDERS_CONFIRMED } from '@/lib/career-support'
@@ -96,7 +98,6 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
 
   const phone1 = dilsukhnagar?.phone ?? PRIMARY_PHONE_LABEL
   const phone2 = ameerpet?.phone ?? PRIMARY_PHONE_LABEL
-  const waMessage = `Hi Coss Cloud Solutions Team, I'm interested in the ${course.title} course. Could you share the batch details?`
 
   const h1 = `${course.title} in Hyderabad`
   const categoryName = course.courseCategory?.name ?? course.category
@@ -237,6 +238,9 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
           </div>
         </div>
       </section>
+
+      <PageCourse name={course.title} slug={course.slug} />
+      <MobileWaFees courseName={course.title} courseSlug={course.slug} />
 
       {/* ── Promo banner, below the hero ── */}
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 pt-6">
@@ -674,7 +678,7 @@ export default async function LandingPageTemplate({ course, branches, pageSlug, 
               courseSlug={course.slug}
               branchKey="dilsukhnagar"
               number={phone1}
-              message={waMessage}
+              courseName={course.title}
               className="px-8 py-4 bg-green-700 hover:bg-green-800 text-white font-black text-base rounded-xl transition-all flex items-center gap-2.5 shadow-lg shadow-green-600/25 hover:-translate-y-0.5"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

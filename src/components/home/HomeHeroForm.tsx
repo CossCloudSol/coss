@@ -249,7 +249,6 @@ export default function HomeHeroForm({ nextBatch = null }: { nextBatch?: NextBat
           <WhatsAppLink location="hero_form"
             ctaType="hero"
             pageType="static"
-            message="Hi, I'd like to book a free demo class at Coss Cloud Solutions."
             className="inline-flex min-h-10 items-center gap-1.5 font-bold text-[#005663]"
           >
             <MessageCircle className="h-4 w-4" aria-hidden="true" />

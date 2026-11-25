@@ -342,7 +342,6 @@ export default async function FreeDemoClassPage() {
             <WhatsAppLink location="demo_page"
               ctaType="free_demo"
               pageType="static"
-              message="Hi Coss Cloud Solutions Team, I'd like to book a free demo class. Could you share the available slots?"
               className="bg-[#8f3f14] text-white font-semibold px-8 py-4 rounded-xl text-base border border-white/30 hover:bg-[#74330f] transition-colors flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

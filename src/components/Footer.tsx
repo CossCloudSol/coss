@@ -189,7 +189,6 @@ export default async function Footer() {
             </a>
             <WhatsAppLink location="footer_mobile"
               ctaType="footer"
-              message="Hi Coss Cloud Solutions Team, I'd like to know about your courses and batch timings. Could you help me?"
               className="footer-maction"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
