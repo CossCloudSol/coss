@@ -6,7 +6,7 @@ import type { PageType } from '@/lib/click-tracking';
 import { buildWhatsAppClickPayload, logWhatsAppClick, toWaDigits, type WhatsAppCtaType } from '@/lib/contact-click-log';
 import { TRACKED_ATTR, trackIntent } from '@/lib/intent-tracking';
 import { WA_NUMBER } from '@/lib/whatsapp';
-import { currentRefChannel, waHrefWithRef } from '@/lib/wa-ref';
+import { currentRefChannel, refCodeFromHref, waHrefWithRef } from '@/lib/wa-ref';
 import { getPageCourse } from '@/lib/page-course';
 import { usePageCourse } from '@/lib/use-page-course';
 
@@ -77,7 +77,8 @@ export default function WhatsAppLink({
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
     const page = getPageCourse();
-    e.currentTarget.href = waHrefWithRef(href, { pathname, courseName: courseName ?? page?.name, courseSlug: courseSlug ?? page?.slug, channel: currentRefChannel() });
+    const opened = waHrefWithRef(href, { pathname, courseName: courseName ?? page?.name, courseSlug: courseSlug ?? page?.slug, channel: currentRefChannel() });
+    e.currentTarget.href = opened;
     const id = ctaId ?? ctaType;
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
@@ -89,6 +90,8 @@ export default function WhatsAppLink({
       location,
       courseSlug,
       branchKey,
+      // the full code the chat opens with, read back from the link the browser is about to follow
+      refCode: refCodeFromHref(opened),
     }));
     trackIntent({ kind: 'whatsapp', ctaId: id, location, destination: `https://wa.me/${digits}`, courseSlug, pageType });
   }, [href, pathname, pageType, ctaType, ctaId, location, courseName, courseSlug, branchKey, digits, hadPrefill]);

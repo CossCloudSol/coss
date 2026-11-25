@@ -125,3 +125,28 @@ test('weekly page: read-only, printable, behind analytics:view', () => {
   assert.match(page, /@media print/);
   assert.doesNotMatch(page + read('src/lib/weekly-report-data.ts'), /\.(create|update|delete|upsert)(Many)?\(/);
 });
+
+test('WhatsApp channels: the ref code a click carries wins, older clicks are classified from UTM and referrer', () => {
+  const none = { leads: [], corporate: [], calls: [], cta: [] };
+  const rows = [
+    // paid by gclid only: the browser wrote the P, the row has no utm and no referrer
+    { createdAt: d('2026-11-17T05:00:00Z'), refCode: 'W-DS-P' },
+    // the code says AI assistant even though the row's referrer is Google: the code is what the chat opened with
+    { createdAt: d('2026-11-17T06:00:00Z'), refCode: 'W-GEN-A', referrer: 'https://www.google.com/' },
+    // a stored code that is not a real one is ignored: back to the referrer
+    { createdAt: d('2026-11-18T05:00:00Z'), refCode: 'not a code', referrer: 'https://www.google.com/' },
+    // a click from before codes were stored: UTM and referrer as before
+    { createdAt: d('2026-11-19T05:00:00Z'), utmMedium: 'cpc' },
+    { createdAt: d('2026-11-19T06:00:00Z'), refCode: null },
+    // the week before
+    { createdAt: d('2026-11-10T05:00:00Z'), refCode: 'W-AWSDEVOPS-S' },
+  ];
+  const rep = r.buildWeeklyReport({ ...none, whatsapp: rows }, at('2026-11-25T04:30:00Z'));
+  assert.deepEqual(rep.now.whatsappByChannel, { G: 1, A: 1, P: 2, S: 0, R: 0, D: 1 });
+  assert.equal(rep.now.whatsapp, 5);
+  assert.equal(rep.now.aiWhatsapp, 1);
+  assert.deepEqual(rep.before.whatsappByChannel, { G: 0, A: 0, P: 0, S: 1, R: 0, D: 0 });
+  // the report says where the channel comes from, and the loader reads the column
+  assert.match(r.AI_NOTE, /ref code/);
+  assert.match(read('src/lib/weekly-report-data.ts'), /whatsAppClick\.findMany\([^)]*refCode: true/);
+});

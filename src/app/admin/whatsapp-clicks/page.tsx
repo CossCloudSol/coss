@@ -406,6 +406,9 @@ function RecentWhatsAppClicksTable({ rows }: { rows: WhatsAppClickRow[] }): JSX.
                 {row.branchKey ? (
                   <span className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5">{row.branchKey}</span>
                 ) : null}
+                {row.refCode ? (
+                  <span className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5 font-mono">{row.refCode}</span>
+                ) : null}
                 <span className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5">
                   {DEVICE_LABEL[row.deviceType] ?? row.deviceType}
                 </span>
@@ -430,6 +433,7 @@ function RecentWhatsAppClicksTable({ rows }: { rows: WhatsAppClickRow[] }): JSX.
               <th scope="col" className="px-5 py-2.5">CTA</th>
               <th scope="col" className="px-5 py-2.5">Page Type</th>
               <th scope="col" className="px-5 py-2.5">Course / Branch</th>
+              <th scope="col" className="px-5 py-2.5">Ref code</th>
               <th scope="col" className="px-5 py-2.5">Number</th>
               <th scope="col" className="px-5 py-2.5">Prefill</th>
               <th scope="col" className="px-5 py-2.5">Device</th>
@@ -439,7 +443,7 @@ function RecentWhatsAppClicksTable({ rows }: { rows: WhatsAppClickRow[] }): JSX.
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
             {rows.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                <td colSpan={9} className="px-5 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
                   No WhatsApp clicks yet — taps on any WhatsApp button will appear here.
                 </td>
               </tr>
@@ -457,6 +461,9 @@ function RecentWhatsAppClicksTable({ rows }: { rows: WhatsAppClickRow[] }): JSX.
                   </td>
                   <td className="px-5 py-3 text-gray-700 dark:text-gray-300">
                     {row.courseSlug ?? row.branchKey ?? <span className="text-gray-400 dark:text-gray-500">—</span>}
+                  </td>
+                  <td className="whitespace-nowrap px-5 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">
+                    {row.refCode ?? <span className="text-gray-400 dark:text-gray-500">—</span>}
                   </td>
                   <td className="whitespace-nowrap px-5 py-3 text-gray-700 dark:text-gray-300">{row.phoneNumber}</td>
                   <td className="px-5 py-3">

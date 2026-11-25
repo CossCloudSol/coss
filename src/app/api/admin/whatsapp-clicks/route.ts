@@ -21,6 +21,8 @@ export interface WhatsAppClickRow {
   phoneNumber: string;
   hadPrefill: boolean;
   deviceType: string;
+  /** The ref code the chat opened with, e.g. W-AWSDEVOPS-G; null for clicks from before it was recorded. */
+  refCode: string | null;
   createdAt: string; // ISO
 }
 
@@ -151,6 +153,7 @@ export async function GET(req: NextRequest): Promise<Response> {
           phoneNumber: true,
           hadPrefill: true,
           deviceType: true,
+          refCode: true,
           createdAt: true,
         },
       }),
@@ -201,6 +204,7 @@ export async function GET(req: NextRequest): Promise<Response> {
         phoneNumber: r.phoneNumber,
         hadPrefill: r.hadPrefill,
         deviceType: r.deviceType,
+        refCode: r.refCode,
         createdAt: r.createdAt.toISOString(),
       })),
       series: {

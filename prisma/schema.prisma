@@ -426,6 +426,10 @@ model WhatsAppClick {
   utmSource   String?
   utmMedium   String?
   utmCampaign String?
+  /// The ref code the chat opened with, e.g. "W-AWSDEVOPS-G": a course code and the visitor's
+  /// first-touch channel letter (lib/wa-ref), exactly as the browser put it in the message. Null for
+  /// rows from before the column existed. Added by prisma/migrations/manual/2026-11-26-whatsapp-click-refcode.sql.
+  refCode     String?
 
   @@index([createdAt])
   @@index([pageType])

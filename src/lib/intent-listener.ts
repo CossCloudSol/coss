@@ -15,7 +15,7 @@
 /* -------------------------------------------------------------------------- */
 
 import { INTENT_KINDS, TRACKED_ATTR, inferIntentKind, trackIntent, type IntentInput, type IntentKind } from '@/lib/intent-tracking';
-import { currentRefChannel, isWaHref, waHrefWithRef } from '@/lib/wa-ref';
+import { currentRefChannel, isWaHref, refCodeFromHref, waHrefWithRef } from '@/lib/wa-ref';
 import { getPageCourse } from '@/lib/page-course';
 import { WHATSAPP_CTA_TYPES, buildWhatsAppClickPayload, logCallClick, logWhatsAppClick, toE164India, type WhatsAppCtaType } from '@/lib/contact-click-log';
 
@@ -105,6 +105,8 @@ export function countIntent(intent: ResolvedIntent, pathname: string): void {
         ctaId: intent.ctaId,
         location: intent.location,
         courseSlug: intent.courseSlug,
+        // applyWaRef has already put the real channel in the link, so this is the code the chat opens with
+        refCode: refCodeFromHref(intent.href),
       }));
     }
   } else if (intent.kind === 'call') {

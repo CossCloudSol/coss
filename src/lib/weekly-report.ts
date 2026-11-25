@@ -7,7 +7,7 @@
 /* -------------------------------------------------------------------------- */
 
 import { DAY_MS, IST_OFFSET_MS, istDateKey, startOfTodayIST } from '@/lib/ist-date'
-import { REF_CHANNELS, channelFromTouch, type RefChannel } from '@/lib/wa-ref'
+import { REF_CHANNELS, channelFromTouch, isRefCode, type RefChannel } from '@/lib/wa-ref'
 import { csvCell } from '@/lib/csv'
 import { WEEKLY_REPORT_PATH, WEEKLY_REPORT_SITE } from '@/lib/report-config'
 
@@ -46,7 +46,7 @@ export interface TimedRow {
 export interface ReportInput {
   leads: Array<TimedRow & Touch>
   corporate: TimedRow[]
-  whatsapp: Array<TimedRow & Touch & { courseSlug?: string | null }>
+  whatsapp: Array<TimedRow & Touch & { courseSlug?: string | null; refCode?: string | null }>
   calls: Array<TimedRow & { courseSlug?: string | null }>
   /** CtaClick rows: kind is demo | syllabus | brochure_download | ... */
   cta: Array<TimedRow & { kind: string; courseSlug?: string | null }>
@@ -90,6 +90,16 @@ function channelOf(t: Touch): RefChannel {
   })
 }
 
+/**
+ * A WhatsApp click's channel: the letter of the ref code the chat opened with when the click has
+ * one (the browser put in the full channel, a paid gclid visit included), else classified from the
+ * click's own UTM and referrer like clicks recorded before ref codes were stored.
+ */
+function clickChannel(r: Touch & { refCode?: string | null }): RefChannel {
+  if (isRefCode(r.refCode)) return r.refCode.slice(-1) as RefChannel
+  return channelOf(r)
+}
+
 const within = (d: Date, w: WeekWindow) => d >= w.start && d < w.end
 
 export function summarizeWeek(input: ReportInput, w: WeekWindow): WeekNumbers {
@@ -99,7 +109,7 @@ export function summarizeWeek(input: ReportInput, w: WeekWindow): WeekNumbers {
   const cta = input.cta.filter((r) => within(r.createdAt, w))
 
   const byChannel = Object.fromEntries(REF_CHANNELS.map((c) => [c.code, 0])) as Record<RefChannel, number>
-  for (const r of wa) byChannel[channelOf(r)] += 1
+  for (const r of wa) byChannel[clickChannel(r)] += 1
 
   const courses = new Map<string, number>()
   for (const r of [...cta, ...calls, ...wa]) {
@@ -165,7 +175,7 @@ export function weekLabel(w: WeekWindow): string {
   return `${w.from} to ${w.to}`
 }
 
-export const AI_NOTE = 'AI-assistant sessions are not recorded; only leads and WhatsApp clicks whose first touch was an AI assistant are counted. WhatsApp channels come from the stored UTM and referrer of each click.'
+export const AI_NOTE = 'AI-assistant sessions are not recorded; only leads and WhatsApp clicks whose first touch was an AI assistant are counted. The channel of a WhatsApp click is the one in the ref code its chat opened with; clicks from before ref codes were stored are classified from their UTM and referrer.'
 
 export function weeklyCsv(r: WeeklyReport): string {
   const lines: string[] = [['Metric', `This week (${weekLabel(r.current)})`, `Previous week (${weekLabel(r.previous)})`, 'Change'].map(csvCell).join(',')]

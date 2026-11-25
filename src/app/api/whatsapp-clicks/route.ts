@@ -4,6 +4,7 @@ import { prisma } from '@/lib/db';
 import { savesClickRows } from '@/lib/click-rows';
 import { WA_NUMBER as WA_NUMBER_DIGITS } from '@/lib/whatsapp';
 import { normalizeIndianMobile } from '@/lib/lead-validation';
+import { isRefCode } from '@/lib/wa-ref';
 
 // Prisma needs the Node runtime — and we never want this cached.
 export const runtime = 'nodejs';
@@ -77,6 +78,9 @@ const whatsAppClickSchema = z.object({
       (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
       z.string().trim().max(100).optional(),
     ),
+  // The ref code the chat opened with (W-<COURSE>-<CH>). Never a reason to refuse the click:
+  // anything that is not exactly that shape is dropped when the row is saved (isRefCode).
+  refCode: z.unknown().optional(),
 });
 
 /* -------------------------------------------------------------------------- */
@@ -232,6 +236,7 @@ export async function POST(req: NextRequest): Promise<Response> {
         utmSource: data.utmSource ?? null,
         utmMedium: data.utmMedium ?? null,
         utmCampaign: data.utmCampaign ?? null,
+        refCode: isRefCode(data.refCode) ? data.refCode : null,
       },
     });
   } catch (err) {
