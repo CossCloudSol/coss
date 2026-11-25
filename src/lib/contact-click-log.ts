@@ -8,6 +8,7 @@
 
 import { type PageType, classifyPageType, detectDeviceType, extractUtmParams } from '@/lib/click-tracking';
 import { beacon, toTrackingId } from '@/lib/intent-tracking';
+import { isRefCode } from '@/lib/wa-ref';
 
 export type WhatsAppCtaType =
   | 'footer' | 'hero' | 'contact_page' | 'free_demo' | 'batches_page'
@@ -57,6 +58,8 @@ export interface WhatsAppClickPayload {
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
+  /** The ref code the chat opened with (lib/wa-ref), e.g. "W-AWSDEVOPS-G". */
+  refCode?: string;
 }
 
 export function buildWhatsAppClickPayload(params: {
@@ -70,6 +73,8 @@ export function buildWhatsAppClickPayload(params: {
   location: string;
   courseSlug?: string;
   branchKey?: string;
+  /** The code in the text WhatsApp is being opened with, as the browser put it there (the full code, paid channel included). */
+  refCode?: string | null;
 }): WhatsAppClickPayload {
   const payload = {
     ...pageContext(params.pathname, params.pageType),
@@ -81,6 +86,7 @@ export function buildWhatsAppClickPayload(params: {
   } as WhatsAppClickPayload;
   if (params.courseSlug) payload.courseSlug = params.courseSlug;
   if (params.branchKey) payload.branchKey = params.branchKey;
+  if (isRefCode(params.refCode)) payload.refCode = params.refCode;
   return payload;
 }
 

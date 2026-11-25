@@ -8,7 +8,7 @@ import type { CourseGroup } from '@/data/course-options';
 import { WA_NUMBER } from '@/lib/whatsapp';
 import { logWhatsAppClick, buildWhatsAppClickPayload } from '@/lib/contact-click-log';
 import { trackIntent } from '@/lib/intent-tracking';
-import { buildWaText, currentRefChannel } from '@/lib/wa-ref';
+import { buildWaText, currentRefChannel, refCodeFromText } from '@/lib/wa-ref';
 import { getPageCourse } from '@/lib/page-course';
 import { submitLead } from '@/lib/submitLead';
 import { NAME_ERROR, PHONE_ERROR, isValidName, normalizeIndianMobile } from '@/lib/lead-checks';
@@ -203,7 +203,6 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
     const page = course ? null : getPageCourse();
     return buildWaText({ pathname, courseName: course || page?.name, courseSlug: page?.slug, channel: currentRefChannel() });
   };
-  const directUrl = () => buildWaUrl(openingFor());
 
   function validate(): boolean {
     const next: typeof errors = {};
@@ -236,7 +235,8 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
     }
 
     setSubmitted(true);
-    const message = buildFormMessage(openingFor(form.course), form.name, form.branch);
+    const opening = openingFor(form.course);
+    const message = buildFormMessage(opening, form.name, form.branch);
     navigatePendingWindow(pending, buildWaUrl(message));
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
@@ -250,6 +250,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       branchKey: form.branch === null || form.branch === 'Online' ? undefined : form.branch.toLowerCase(),
       ctaId: `${ctaOrigin}_send`,
       location: widgetLocation,
+      refCode: refCodeFromText(opening),
     }));
     trackIntent({ kind: 'whatsapp', ctaId: `${ctaOrigin}_send`, location: widgetLocation, destination: `https://wa.me/${WA_NUMBER}` });
     // WhatsApp still opens when the lead couldn't be saved; only a saved lead goes to /thank-you.
@@ -258,7 +259,8 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
   }
 
   function handleSkip() {
-    window.open(directUrl(), '_blank', 'noopener,noreferrer');
+    const opening = openingFor();
+    window.open(buildWaUrl(opening), '_blank', 'noopener,noreferrer');
     logWhatsAppClick(buildWhatsAppClickPayload({
       pathname,
       ctaType: ctaOrigin,
@@ -266,6 +268,7 @@ export default function WhatsAppWidget({ courseGroups }: WhatsAppWidgetProps): J
       hadPrefill: true,
       ctaId: `${ctaOrigin}_skip`,
       location: widgetLocation,
+      refCode: refCodeFromText(opening),
     }));
     trackIntent({ kind: 'whatsapp', ctaId: `${ctaOrigin}_skip`, location: widgetLocation, destination: `https://wa.me/${WA_NUMBER}` });
     setPanelOpen(false);

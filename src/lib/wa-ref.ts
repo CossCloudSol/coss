@@ -191,6 +191,34 @@ export function isWaHref(href: string | null | undefined): boolean {
   return !!href && /^https?:\/\/(wa\.me|api\.whatsapp\.com)\//i.test(href);
 }
 
+/* ----------------------- the code, as it is stored ------------------------ */
+
+/** A whole ref code: W-<COURSE>-<CH>. The course part is a REF_COURSES code or GEN. */
+export const REF_CODE_RE = /^W-[A-Z]{2,12}-[GAPSRD]$/;
+
+export function isRefCode(value: unknown): value is string {
+  return typeof value === 'string' && REF_CODE_RE.test(value);
+}
+
+const FULL_REF_IN_TEXT = /\(ref (W-[A-Z]+-[A-Z])\)/;
+
+/** The ref code in a prefilled text ("... (ref W-DS-G)"), or null. */
+export function refCodeFromText(text: string | null | undefined): string | null {
+  const code = text?.match(FULL_REF_IN_TEXT)?.[1];
+  return isRefCode(code) ? code : null;
+}
+
+/** The ref code in a wa.me href's text parameter, i.e. in what the browser is about to open, or null. */
+export function refCodeFromHref(href: string | null | undefined): string | null {
+  const q = href ? href.indexOf('?') : -1;
+  if (!href || q === -1) return null;
+  try {
+    return refCodeFromText(new URLSearchParams(href.slice(q + 1)).get('text'));
+  } catch {
+    return null;
+  }
+}
+
 /* ------------------------------ browser ---------------------------------- */
 
 /** This visitor's first-touch channel (browser only; falls back to the current visit). */
