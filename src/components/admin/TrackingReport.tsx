@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Download, Loader2, MousePointerClick } from 'lucide-react';
 import type { TrackingResponse, TrackingSeries } from '@/app/api/admin/tracking/route';
 import { csvCell, withCsvBom } from '@/lib/csv';
 import { DAY_MS, istDateKey, startOfTodayIST } from '@/lib/ist-date';
+import { REF_AREAS, REF_CHANNELS, REF_COURSES, GENERIC_COURSE_CODE } from '@/lib/wa-ref';
 
 /* -------------------------------------------------------------------------- */
 /*  /admin/tracking: leads and intent clicks for an IST date range.           */
@@ -186,7 +187,71 @@ export function TrackingReport(): JSX.Element {
           </div>
         </>
       ) : null}
+
+      <RefLegend />
     </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Ref codes legend: what the "(ref W-<COURSE>-<CH>)" in a WhatsApp chat means */
+/* -------------------------------------------------------------------------- */
+
+function RefLegend(): JSX.Element {
+  return (
+    <section className="rounded-xl border border-[#e2e8f0] bg-white p-5 dark:border-gray-700 dark:bg-gray-800">
+      <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Ref codes</h2>
+      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+        Every WhatsApp chat from the site starts with &quot;(ref W-COURSE-CHANNEL)&quot;. The channel is the visitor&apos;s first touch.
+      </p>
+      <div className="mt-3 grid gap-4 sm:grid-cols-2">
+        <table className="w-full text-left text-sm">
+          <caption className="sr-only">Course codes</caption>
+          <thead>
+            <tr className="text-xs text-gray-500 dark:text-gray-400">
+              <th className="py-1 pr-3 font-medium">Code</th>
+              <th className="py-1 font-medium">Course</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-800 dark:text-gray-200">
+            {REF_AREAS.map((area) => (
+              <Fragment key={area}>
+                <tr>
+                  <td colSpan={2} className="pt-2 text-xs font-semibold text-gray-500 dark:text-gray-400">{area}</td>
+                </tr>
+                {REF_COURSES.filter((c) => c.area === area).map((c) => (
+                  <tr key={c.code}>
+                    <td className="py-0.5 pr-3 font-mono text-xs">W-{c.code}</td>
+                    <td className="py-0.5">{c.label}</td>
+                  </tr>
+                ))}
+              </Fragment>
+            ))}
+            <tr>
+              <td className="pt-2 pr-3 font-mono text-xs">W-{GENERIC_COURSE_CODE}</td>
+              <td className="pt-2">Any other course, or a non-course page</td>
+            </tr>
+          </tbody>
+        </table>
+        <table className="w-full text-left text-sm">
+          <caption className="sr-only">Channel letters</caption>
+          <thead>
+            <tr className="text-xs text-gray-500 dark:text-gray-400">
+              <th className="py-1 pr-3 font-medium">Letter</th>
+              <th className="py-1 font-medium">First-touch channel</th>
+            </tr>
+          </thead>
+          <tbody className="text-gray-800 dark:text-gray-200">
+            {REF_CHANNELS.map((c) => (
+              <tr key={c.code}>
+                <td className="py-0.5 pr-3 font-mono text-xs">{c.code}</td>
+                <td className="py-0.5">{c.label}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
 

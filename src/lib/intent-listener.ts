@@ -15,6 +15,7 @@
 /* -------------------------------------------------------------------------- */
 
 import { INTENT_KINDS, TRACKED_ATTR, inferIntentKind, trackIntent, type IntentInput, type IntentKind } from '@/lib/intent-tracking';
+import { currentRefChannel, isWaHref, waHrefWithRef } from '@/lib/wa-ref';
 import { WHATSAPP_CTA_TYPES, buildWhatsAppClickPayload, logCallClick, logWhatsAppClick, toE164India, type WhatsAppCtaType } from '@/lib/contact-click-log';
 
 /** The small slice of the DOM this file uses, so it can be tested without a browser. */
@@ -111,9 +112,26 @@ export function countIntent(intent: ResolvedIntent, pathname: string): void {
   }
 }
 
+/**
+ * A wa.me link is opened with the standard text carrying this visitor's first-touch channel.
+ * Server-rendered links start with channel D; the click puts the real letter in before the
+ * browser navigates (capture phase, so also for links with their own handlers).
+ */
+export function applyWaRef(target: Element | null, pathname: string): void {
+  const link = target?.closest?.('a[href]') as HTMLAnchorElement | null | undefined;
+  const href = link?.getAttribute('href');
+  if (!link || !isWaHref(href)) return;
+  link.setAttribute('href', waHrefWithRef(href as string, { pathname, courseName: link.getAttribute('data-wa-course'), courseSlug: link.getAttribute('data-course'), channel: currentRefChannel() }));
+}
+
 /** Adds the capture-phase listener; returns the remover. */
 export function installIntentListener(): () => void {
   const onClick = (e: MouseEvent): void => {
+    try {
+      applyWaRef(e.target instanceof Element ? e.target : null, window.location.pathname);
+    } catch {
+      /* best-effort */
+    }
     try {
       const intent = resolveIntent(e.target instanceof Element ? (e.target as unknown as ElementLike) : null);
       if (!intent) return;

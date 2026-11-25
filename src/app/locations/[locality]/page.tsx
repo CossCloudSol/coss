@@ -188,7 +188,6 @@ export default async function LocalityPage({ params }: { params: Promise<{ local
               course={{ href: '/aws-devops-training-institute-in-hyderabad', label: `AWS DevOps course near ${config.name}` }}
               pageType="locality"
               align="center"
-              whatsappMessage={`Hi, I'd like details about IT courses at your ${config.name} branch.`}
             />
           }
         />

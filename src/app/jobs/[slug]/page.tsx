@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { jobApplyMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { buildPageMetadataWithFallback } from '@/lib/get-page-seo';
 import { getActiveJobBySlug } from '@/lib/job-queries';
@@ -74,7 +73,6 @@ export default async function JobDetailPage({ params }: { params: { slug: string
   const job = await getJob(params.slug);
   if (!job) notFound();
 
-  const waMessage = jobApplyMessage({ jobTitle: job.title, company: job.company });
 
   const jobSchema = jsonLdGraph([
     jobPosting({
@@ -155,7 +153,6 @@ export default async function JobDetailPage({ params }: { params: { slug: string
             <WhatsAppLink location="job_page"
               ctaType="job"
               pageType="static"
-              message={waMessage}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 background: '#b8531c', color: '#fff', fontWeight: 700, fontSize: '14px',
@@ -216,7 +213,6 @@ export default async function JobDetailPage({ params }: { params: { slug: string
               <WhatsAppLink location="job_page_end"
                 ctaType="job"
                 pageType="static"
-                message={waMessage}
                 style={{ display: 'block', textAlign: 'center', background: '#b8531c', color: '#fff', fontWeight: 700, fontSize: '14px', padding: '14px', borderRadius: '10px', textDecoration: 'none' }}
               >
                 Apply via WhatsApp

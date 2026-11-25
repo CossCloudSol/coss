@@ -8,7 +8,6 @@ import type { Metadata } from 'next';
 import { ResponsivePageStyles } from '@/components/shared';
 import { courseCanonicalUrl } from '@/lib/course-canonical';
 import { formatBatchDate, getBatchStatusBadge } from '@/lib/batch-utils';
-import { batchBookingMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { CategoryIconDisplay } from '@/components/CategoryIconDisplay';
 import CourseGrid from '@/components/CourseGrid';
@@ -273,7 +272,7 @@ async function CourseDetailView({ course, customSchema }: { course: CourseDetail
             demoHref={`/free-demo-class?course=${course.slug}`}
             courseSlug={course.slug}
             pageType="course"
-            whatsappMessage={`Hi, I'd like details about the ${course.title} course.`}
+            courseName={course.title}
           />
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '15px', lineHeight: '1.75', maxWidth: '700px', marginBottom: '24px' }}>
             {sanitizeDescription(course.excerpt)}
@@ -414,7 +413,6 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
         {batches.map((b) => {
           const badge = getBatchStatusBadge(b.status, b.startDate);
           const dateStr = formatBatchDate(b.startDate);
-          const waMsg = batchBookingMessage({ courseName: courseTitle, mode: b.mode, startDate: dateStr, centre: b.centre, schedule: b.schedule });
           return (
             <div key={b.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
               <div style={{ flex: 1, minWidth: '180px' }}>
@@ -435,7 +433,7 @@ function CourseBatches({ batches, courseTitle, courseSlug }: { batches: BatchIte
                 ctaType="batch"
                 pageType="category"
                 courseSlug={courseSlug}
-                message={waMsg}
+                courseName={courseTitle}
                 style={{ background: '#b8531c', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
               >
                 Book Seat

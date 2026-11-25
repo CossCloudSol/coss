@@ -23,8 +23,8 @@ export interface TopCtaProps {
   pageType?: PageType;
   /** "dark" on the coloured heroes (white text), "light" on white or pale sections. */
   tone?: 'dark' | 'light';
-  /** WhatsApp message; omit for a bare chat link. */
-  whatsappMessage?: string;
+  /** Visible course name for the WhatsApp text (the ref code comes from lib/wa-ref). */
+  courseName?: string;
   /** Spacing around the row, e.g. "0 0 20px". */
   margin?: string;
   /** "center" inside the centred page banners. */
@@ -39,7 +39,7 @@ export default function TopCta({
   courseSlug,
   pageType,
   tone = 'dark',
-  whatsappMessage,
+  courseName,
   margin = '0 0 20px',
   align = 'start',
 }: TopCtaProps): JSX.Element {
@@ -77,7 +77,7 @@ export default function TopCta({
           location={TOP_CTA_LOCATION}
           pageType={pageType}
           courseSlug={courseSlug}
-          message={whatsappMessage}
+          courseName={courseName}
           aria-label="Chat with Coss Cloud Solutions on WhatsApp"
           style={{
             ...pill,

@@ -384,7 +384,6 @@ export default function CoursesExplorer({ courses, banner, topCta }: Props): JSX
       <WhatsAppLink location="courses_page"
         ctaType="hero"
         pageType="static"
-        message="Hi, I'd like a free counselling call to choose a course."
         className="flex h-[46px] items-center justify-center gap-1.5 rounded-[10px] bg-white text-sm font-bold text-[#005663] hover:bg-[#e6f0f1]"
       >
         Free counselling call <ArrowRight className="h-4 w-4" aria-hidden="true" />

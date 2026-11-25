@@ -67,7 +67,6 @@ export default function BatchesBoard({ batches }: { batches: BatchCardBatch[] })
           <WhatsAppLink location="batches_page" ctaId="no_batches_whatsapp"
             ctaType="batches_page"
             pageType="static"
-            message="Hi Coss Cloud Solutions Team, I don't see any upcoming batches listed right now. Could you share the next available dates?"
             className="inline-block mt-4 text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline"
           >
             Ask on WhatsApp →
@@ -88,7 +87,6 @@ export default function BatchesBoard({ batches }: { batches: BatchCardBatch[] })
         <WhatsAppLink location="batches_page" ctaId="custom_timing_whatsapp"
           ctaType="batches_page"
           pageType="static"
-          message="Hi Coss Cloud Solutions Team, I couldn't find a batch that fits my schedule. Could we arrange a custom schedule?"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
           style={{ background: '#15803d' }}
         >

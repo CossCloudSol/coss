@@ -8,6 +8,7 @@
 
 import { type PageType, classifyPageType, detectDeviceType, extractUtmParams } from '@/lib/click-tracking';
 import { beacon, toTrackingId } from '@/lib/intent-tracking';
+import { getFirstTouch } from '@/lib/first-touch';
 
 export type WhatsAppCtaType =
   | 'footer' | 'hero' | 'contact_page' | 'free_demo' | 'batches_page'
@@ -59,6 +60,30 @@ export interface WhatsAppClickPayload {
   utmCampaign?: string;
 }
 
+/**
+ * The ref code's channel is the visitor's first touch, so a click made after browsing several pages
+ * still carries the campaign / site that brought them in (existing columns only; no ref column exists).
+ * Only fills what the current page lacks: the page's own UTM params and an external referrer win.
+ */
+function fillFromFirstTouch(payload: WhatsAppClickPayload): void {
+  try {
+    const first = getFirstTouch();
+    if (!first) return;
+    if (!payload.utmSource && !payload.utmMedium && !payload.utmCampaign) {
+      if (first.utmSource) payload.utmSource = first.utmSource.slice(0, 100);
+      if (first.utmMedium) payload.utmMedium = first.utmMedium.slice(0, 100);
+      if (first.utmCampaign) payload.utmCampaign = first.utmCampaign.slice(0, 100);
+    }
+    let sameSite = !payload.referrer;
+    if (payload.referrer) {
+      try { sameSite = new URL(payload.referrer).host === window.location.host; } catch { sameSite = true; }
+    }
+    if (sameSite && first.referrer) payload.referrer = first.referrer.slice(0, 500);
+  } catch {
+    /* best-effort */
+  }
+}
+
 export function buildWhatsAppClickPayload(params: {
   pathname: string | null;
   pageType?: PageType;
@@ -79,6 +104,7 @@ export function buildWhatsAppClickPayload(params: {
     ctaId: toTrackingId(params.ctaId ?? params.ctaType, 'untagged'),
     location: toTrackingId(params.location),
   } as WhatsAppClickPayload;
+  fillFromFirstTouch(payload);
   if (params.courseSlug) payload.courseSlug = params.courseSlug;
   if (params.branchKey) payload.branchKey = params.branchKey;
   return payload;

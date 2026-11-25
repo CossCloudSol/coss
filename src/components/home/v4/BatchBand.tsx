@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { WA_NUMBER } from '@/lib/whatsapp';
+import { buildWaText } from '@/lib/wa-ref';
 import SectionHead, { CARD, CONTAINER, SECTION_PAD } from '@/components/home/v4/SectionHead';
 import { bannerStyle, courseLook, dateParts, ICON } from '@/lib/home-v4';
 
@@ -16,7 +17,8 @@ export interface BatchCardData {
 }
 
 /** wa.me link for a server-rendered anchor (GA4 and the WhatsAppClick row come from the site-wide click listener). */
-function waHref(message: string): string {
+function waHref(courseName?: string): string {
+  const message = buildWaText({ courseName, channel: 'D' });
   const digits = WA_NUMBER.replace(/\D/g, '');
   const ten = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits.slice(-10);
   return `https://wa.me/91${ten}?text=${encodeURIComponent(message)}`;
@@ -130,7 +132,7 @@ export default function BatchBand({ batches }: { batches: BatchCardData[] }) {
                       Reserve my seat
                     </a>
                     <a
-                      href={waHref(`Hi, I'd like to know more about the ${b.course} batch starting ${parts.day} ${parts.mon}.`)}
+                      href={waHref(b.course)}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Ask about the ${b.course} batch on WhatsApp`}
@@ -160,7 +162,7 @@ export default function BatchBand({ batches }: { batches: BatchCardData[] }) {
           <span className="on-dark-sub hidden font-sans text-[15px] lg:inline">
             Need a custom timing?{' '}
             <a
-              href={waHref('Hi, I need a custom batch timing at Coss Cloud Solutions.')}
+              href={waHref()}
               target="_blank"
               rel="noopener noreferrer"
               data-cta="custom_timing_whatsapp"

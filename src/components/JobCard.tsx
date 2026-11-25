@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { jobApplyMessage } from '@/lib/whatsapp';
 import WhatsAppLink from '@/components/WhatsAppLink';
 import { optimizeCldUrl } from '@/lib/cloudinary';
 
@@ -46,7 +45,6 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
   const color = getCompanyColor(job.company);
   const initial = job.company.trim()[0]?.toUpperCase() ?? '?';
 
-  const waMessage = jobApplyMessage({ jobTitle: job.title, company: job.company });
 
   const categorySlug = job.category
     .toLowerCase()
@@ -134,7 +132,6 @@ export default function JobCard({ job, showCourseLink = false }: JobCardProps) {
         </div>
         <WhatsAppLink location="job_card"
           ctaType="job"
-          message={waMessage}
           className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
           style={{ background: '#b8531c' }}
         >

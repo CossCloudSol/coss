@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FINDER_QUESTIONS, type FinderSuggestion } from "@/lib/home-tracks";
 import { ICON } from "@/lib/home-v4";
 import { WA_NUMBER } from "@/lib/whatsapp";
+import { buildWaText } from "@/lib/wa-ref";
 import { CARD, CONTAINER, ICON_TILE, SECTION_PAD, TONE } from "@/components/home/v4/SectionHead";
 
 function slugOf(label: string): string {
@@ -22,7 +23,7 @@ export default function CourseFinder({ suggestions }: { suggestions: Record<stri
   const digits = WA_NUMBER.replace(/\D/g, "");
   const ten = digits.length === 12 && digits.startsWith("91") ? digits.slice(2) : digits.slice(-10);
   const fallback0 = Object.values(suggestions)[0] ?? null;
-  const fallback = `https://wa.me/91${ten}?text=${encodeURIComponent("Hi, please send me a course plan.")}`;
+  const fallback = `https://wa.me/91${ten}?text=${encodeURIComponent(buildWaText({ channel: "D" }))}`;
   return (
     <section aria-labelledby="finder-title" className={`home-finder ${TONE.tint} ${SECTION_PAD}`}>
       <div className={CONTAINER}>

@@ -107,7 +107,6 @@ export default async function ContactUsPage() {
               <WhatsAppLink location="contact_page"
                 ctaType="contact_page"
                 pageType="static"
-                message="Hi Coss Cloud Solutions Team, I'd like to know more about your courses. Could you help me?"
                 style={{ display: 'block', background: 'var(--bg-card)', color: 'var(--wa-text)', padding: '10px', borderRadius: '8px', fontFamily: 'var(--font-poppins), Poppins, sans-serif', fontWeight: 700, fontSize: '14px' }}
               >
                 Chat Now on WhatsApp
